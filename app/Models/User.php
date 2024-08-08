@@ -11,10 +11,13 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
+ * @property int $id
  * @property string $name
+ * @property string $surname
  * @property string $email
  * @property string $password
  * @property Carbon $email_verified_at
+ * @property int $school_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
