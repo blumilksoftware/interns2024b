@@ -17,6 +17,7 @@ google-credentials.json
 .idea/
 .vscode/
 .composer
+.vite
 /public/build/
 supervisord.pid
 *.cache
