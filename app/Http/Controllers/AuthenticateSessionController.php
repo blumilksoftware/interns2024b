@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
@@ -17,20 +19,19 @@ class AuthenticateSessionController extends Controller
 
     public function authenticate(Request $request): RedirectResponse
     {
-
         $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
+            "email" => "required|email",
+            "password" => "required|string",
         ]);
-
 
         if (auth()->attempt($credentials)) {
             $request->session()->regenerate();
-            return Redirect::route("home")->with('succes');
+
+            return Redirect::route("home")->with("succes");
         }
 
         return back()->withErrors([
-            'The provided mail or password is invalid, try again.',
+            "The provided mail or password is invalid, try again.",
         ]);
     }
 }
