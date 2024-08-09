@@ -17,7 +17,7 @@ class QuestionResource extends JsonResource
             "updatedAt" => $this->updated_at,
             "locked" => $this->isLocked,
             "correct" => $this->correctAnswer?->id,
-            "answers" => AnswerResource::collection($this->answers)
+            "answers" => AnswerResource::collection($this->answers),
         ];
     }
 }

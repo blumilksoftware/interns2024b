@@ -36,7 +36,7 @@ class QuizController extends Controller
     {
         $quiz = Quiz::query()
             ->with("questions.answers")
-        ->findOrFail($quiz);
+            ->findOrFail($quiz);
 
         return Inertia::render("Quiz/Show", ["quiz" => new QuizResource($quiz)]);
     }
