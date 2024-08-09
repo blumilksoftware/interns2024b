@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 
 /**
  * @property int $id
@@ -29,5 +30,5 @@ class School extends Model
         "building_number",
         "apartment_number",
         "zipCode",
-        ];
+    ];
 }
