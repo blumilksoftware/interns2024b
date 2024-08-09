@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property ?Answer $correctAnswer
  * @property Collection<Answer> $answers
- * @property Test $test
+ * @property Quiz $quiz
  */
 class Question extends Model
 {
@@ -39,18 +39,18 @@ class Question extends Model
         return $this->belongsTo(Answer::class, "correct_answer_id");
     }
 
-    protected function test(): BelongsTo
+    public function quiz(): BelongsTo
     {
-        return $this->belongsTo(Test::class);
+        return $this->belongsTo(Quiz::class);
     }
 
-    protected function answers(): HasMany
+    public function answers(): HasMany
     {
         return $this->hasMany(Answer::class);
     }
 
-    protected function isLocked(): Attribute
+    public function isLocked(): Attribute
     {
-        return Attribute::get(fn(): bool => $this->test->isLocked);
+        return Attribute::get(fn(): bool => $this->quiz->isLocked);
     }
 }

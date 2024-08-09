@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon $updated_at
  *
  * @property bool $isLocked
+ * @property bool $isCorrect
  *
  * @property Question $question
  */
@@ -31,11 +32,16 @@ class Answer extends Model
 
     public function question(): BelongsTo
     {
-        return $this->belongsTo(self::class);
+        return $this->belongsTo(Question::class);
     }
 
-    protected function isLocked(): Attribute
+    public function isLocked(): Attribute
     {
         return Attribute::get(fn(): bool => $this->question->isLocked);
+    }
+
+    public function isCorrect(): Attribute
+    {
+        return Attribute::get(fn(): bool => $this->question->correctAnswer()->is($this));
     }
 }

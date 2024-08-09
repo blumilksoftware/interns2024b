@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\Question;
-use App\Models\Test;
+use App\Models\Quiz;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,14 +17,14 @@ class QuestionFactory extends Factory
     {
         return [
             "text" => fake()->realText(),
-            "test_id" => Test::factory(),
+            "quiz_id" => Quiz::factory(),
         ];
     }
 
     public function locked(): static
     {
         return $this->state(fn(array $attributes): array => [
-            "test_id" => Test::factory()->locked(),
+            "quiz_id" => Quiz::factory()->locked(),
         ]);
     }
 }

@@ -24,7 +24,7 @@ use Illuminate\Support\Collection;
  * @property Collection<Question> $questions
  * @property Collection<Answer> $answers
  */
-class Test extends Model
+class Quiz extends Model
 {
     use HasFactory;
 
@@ -32,17 +32,17 @@ class Test extends Model
         "name",
     ];
 
-    protected function questions(): HasMany
+    public function questions(): HasMany
     {
         return $this->hasMany(Question::class);
     }
 
-    protected function answers(): HasManyThrough
+    public function answers(): HasManyThrough
     {
         return $this->hasManyThrough(Answer::class, Question::class);
     }
 
-    protected function isLocked(): Attribute
+    public function isLocked(): Attribute
     {
         return Attribute::get(fn(): bool => $this->locked_at !== null);
     }

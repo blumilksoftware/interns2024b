@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Schema;
 return new class() extends Migration {
     public function up(): void
     {
-        Schema::create("tests", function (Blueprint $table): void {
+        Schema::create("quizzes", function (Blueprint $table): void {
             $table->id();
             $table->timestamps();
             $table->timestamp("locked_at")->nullable();
@@ -19,6 +19,6 @@ return new class() extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists("tests");
+        Schema::dropIfExists("quizzes");
     }
 };

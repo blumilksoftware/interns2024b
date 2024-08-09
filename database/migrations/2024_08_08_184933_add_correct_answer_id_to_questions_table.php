@@ -11,7 +11,7 @@ return new class() extends Migration {
     public function up(): void
     {
         Schema::table("questions", function (Blueprint $table): void {
-            $table->foreignIdFor(Answer::class, "correct_answer_id")->nullable()->constrained("answers")->cascadeOnDelete();
+            $table->foreignIdFor(Answer::class, "correct_answer_id")->nullable()->constrained("answers")->nullOnDelete();
         });
     }
 
