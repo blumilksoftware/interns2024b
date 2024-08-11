@@ -18,8 +18,11 @@
                class="bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-inset ring-primary/30 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6"
         >
       </div>
+      <div class="mt-2">
+        <a href="#" class="font-semibold leading-6 text-primary hover:text-primary-950">Forgot password?</a>
+      </div>
     </div>
-
+    
     <div>
       <button type="submit" class="
               rounded-lg text-md flex w-full justify-center bg-primary p-3 font-bold text-white transition hover:bg-primary-950
