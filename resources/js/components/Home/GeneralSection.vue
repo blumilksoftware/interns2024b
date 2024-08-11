@@ -1,0 +1,29 @@
+
+<script lang="ts" setup>
+import InformationButton from '@/components/Home/InformationButton.vue'
+</script>
+
+<template>
+  <section class="w-full h-[calc(100vh-4rem)] lg:h-screen flex flex-col overflow-hidden">
+    <div data-name="left" class="flex flex-col justify-center w-full gap-10 p-10 pb-16">
+      <img class="h-40 object-contain" src="@/../assets/header-logo.png" alt="header logo">
+      <InformationButton />
+    </div>
+    
+    <div data-name="right" class="flex flex-col size-full justify-center">
+      <h1 class="text-center text-[1.5rem] font-bold">SPONSORS</h1>
+      <div>
+        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+          <h2 class="text-center text-lg font-semibold leading-8 text-gray-900">Trusted by the world’s most innovative teams</h2>
+          <div class="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10">
+            <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 max-h-12 w-full object-contain" src="https://tailwindui.com/img/logos/158x48/transistor-logo-gray-900.svg" alt="Transistor" width="158" height="48">
+            <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 max-h-12 w-full object-contain" src="https://tailwindui.com/img/logos/158x48/reform-logo-gray-900.svg" alt="Reform" width="158" height="48">
+            <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 max-h-12 w-full object-contain" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width="158" height="48">
+            <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 max-h-12 w-full object-contain sm:col-start-2" src="https://tailwindui.com/img/logos/158x48/savvycal-logo-gray-900.svg" alt="SavvyCal" width="158" height="48">
+            <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 col-start-2 max-h-12 w-full object-contain sm:col-start-auto" src="https://tailwindui.com/img/logos/158x48/statamic-logo-gray-900.svg" alt="Statamic" width="158" height="48">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
