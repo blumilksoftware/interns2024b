@@ -227,4 +227,52 @@ class QuizTest extends TestCase
             ->delete("/quizzes/1")
             ->assertStatus(404);
     }
+
+    public function testUserCanCopyQuiz(): void
+    {
+        $user = User::factory()->create();
+        $quiz = Quiz::factory()->create();
+        $questions = Question::factory()->count(2)->create(["quiz_id" => $quiz->id]);
+
+        Answer::factory()->count(10)->create(["question_id" => $questions[0]->id]);
+        Answer::factory()->count(10)->create(["question_id" => $questions[1]->id]);
+
+        $this->assertDatabaseCount("quizzes", 1);
+        $this->assertDatabaseCount("questions", 2);
+        $this->assertDatabaseCount("answers", 20);
+
+        $this->actingAs($user)
+            ->from("/")
+            ->post("/quizzes/{$quiz->id}/clone")
+            ->assertRedirect("/");
+
+        $this->assertDatabaseCount("quizzes", 2);
+        $this->assertDatabaseCount("questions", 4);
+        $this->assertDatabaseCount("answers", 40);
+    }
+
+    public function testUserCanCopyLockedQuiz(): void
+    {
+        $user = User::factory()->create();
+        $quiz = Quiz::factory()->locked()->create();
+
+        $this->assertDatabaseCount("quizzes", 1);
+
+        $this->actingAs($user)
+            ->from("/")
+            ->post("/quizzes/{$quiz->id}/clone")
+            ->assertRedirect("/");
+
+        $this->assertDatabaseCount("quizzes", 2);
+    }
+
+    public function testUserCannotCopyQuizThatNotExisted(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->from("/")
+            ->post("/quizzes/2/clone")
+            ->assertStatus(404);
+    }
 }
