@@ -9,7 +9,7 @@ import Checkbox from '@/components/Common/Checkbox.vue'
         <label for="name" class="text-sm font-medium leading-6 text-gray-900">Name</label>
         <div class="mt-2 w-full">
           <input id="name" required name="name" type="text"
-                 class="ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                 class="duration-200 ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
           >
         </div>
       </div>
@@ -18,7 +18,7 @@ import Checkbox from '@/components/Common/Checkbox.vue'
         <label for="surname" class="text-sm font-medium leading-6 text-gray-900">Surname</label>
         <div class="mt-2 w-full">
           <input id="surname" required name="surname" type="text"
-                 class="ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+                 class="duration-200 ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
           >
         </div>
       </div>
@@ -27,7 +27,7 @@ import Checkbox from '@/components/Common/Checkbox.vue'
       <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
       <div class="mt-2">
         <input id="email" required name="email" type="email" autocomplete="email"
-               class="ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+               class="duration-200 ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
         >
       </div>
     </div>
@@ -38,7 +38,7 @@ import Checkbox from '@/components/Common/Checkbox.vue'
       </div>
       <div class="mt-2">
         <input id="password" required name="password" type="password" autocomplete="current-password"
-               class="ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
+               class="duration-200 ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400 sm:text-sm sm:leading-6"
         >
       </div>
     </div>
