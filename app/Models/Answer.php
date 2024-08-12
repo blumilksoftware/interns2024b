@@ -55,9 +55,9 @@ class Answer extends Model
             throw new AuthorizationException();
         }
 
-        $cloned = $this->replicate();
-        $cloned->question()->associate($question)->save();
+        $clone = $this->replicate();
+        $clone->question()->associate($question)->save();
 
-        return $cloned;
+        return $clone;
     }
 }
