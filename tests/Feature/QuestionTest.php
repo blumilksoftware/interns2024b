@@ -228,6 +228,11 @@ class QuestionTest extends TestCase
     {
         $user = User::factory()->create();
         $question = Question::factory()->create(["text" => "question"]);
+        Answer::factory()->create(["question_id" => $question->id]);
+
+        $this->assertDatabaseCount("quizzes", 1);
+        $this->assertDatabaseCount("questions", 1);
+        $this->assertDatabaseCount("answers", 1);
 
         $this->actingAs($user)
             ->from("/")
@@ -235,6 +240,9 @@ class QuestionTest extends TestCase
             ->assertRedirect("/");
 
         $this->assertDatabaseMissing("questions", ["text" => "question"]);
+        $this->assertDatabaseCount("quizzes", 1);
+        $this->assertDatabaseCount("questions", 0);
+        $this->assertDatabaseCount("answers", 0);
     }
 
     public function testUserCannotDeleteLockedQuestion(): void
