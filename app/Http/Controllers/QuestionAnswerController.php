@@ -8,6 +8,7 @@ use App\Http\Requests\AnswerRequest;
 use App\Http\Resources\AnswerResource;
 use App\Models\Answer;
 use App\Models\Question;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -21,10 +22,17 @@ class QuestionAnswerController extends Controller
         ]);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function store(Question $question, AnswerRequest $request): RedirectResponse
     {
+        if ($question->isLocked) {
+            throw new AuthorizationException();
+        }
+
         Answer::query()
-            ->create($request->validated())
+            ->make($request->validated())
             ->question()->associate($question)
             ->save();
 
@@ -35,11 +43,16 @@ class QuestionAnswerController extends Controller
 
     public function show(Answer $answer): Response
     {
-        return Inertia::render("Answer/show", ["answer" => new AnswerResource($answer)]);
+        return Inertia::render("Answer/Show", ["answer" => new AnswerResource($answer)]);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function markAsCorrect(Answer $answer): RedirectResponse
     {
+        $this->authorize('modify', $answer);
+
         $answer->question->correctAnswer()->associate($answer)->save();
 
         return redirect()
@@ -47,8 +60,13 @@ class QuestionAnswerController extends Controller
             ->with("success", "Answer marked as the correct one");
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function update(AnswerRequest $request, Answer $answer): RedirectResponse
     {
+        $this->authorize('modify', $answer);
+
         $answer->update($request->validated());
 
         return redirect()
@@ -56,8 +74,13 @@ class QuestionAnswerController extends Controller
             ->with("success", "Answer updated");
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function destroy(Answer $answer): RedirectResponse
     {
+        $this->authorize('destroy', $answer);
+
         $answer->delete();
 
         return redirect()
