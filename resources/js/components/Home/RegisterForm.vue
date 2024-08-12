@@ -73,7 +73,7 @@ import Checkbox from '@/components/Common/Checkbox.vue'
               rounded-lg text-md flex w-full justify-center bg-primary p-3 font-bold text-white transition hover:bg-primary-950
               focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
-        Sign Up
+        Continue
       </button>
     </div>
   </form>
