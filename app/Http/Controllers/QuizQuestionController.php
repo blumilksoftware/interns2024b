@@ -8,6 +8,7 @@ use App\Http\Requests\QuestionRequest;
 use App\Http\Resources\QuestionResource;
 use App\Models\Question;
 use App\Models\Quiz;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -25,10 +26,17 @@ class QuizQuestionController extends Controller
         ]);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function store(Quiz $quiz, QuestionRequest $request): RedirectResponse
     {
+        if ($quiz->isLocked) {
+            throw new AuthorizationException();
+        }
+
         Question::query()
-            ->create($request->validated())
+            ->make($request->validated())
             ->quiz()->associate($quiz)
             ->save();
 
@@ -46,8 +54,13 @@ class QuizQuestionController extends Controller
         return Inertia::render("Question/Show", ["question" => new QuestionResource($test)]);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function update(QuestionRequest $request, Question $question): RedirectResponse
     {
+        $this->authorize('modify', $question);
+
         $question->update($request->validated());
 
         return redirect()
@@ -55,8 +68,13 @@ class QuizQuestionController extends Controller
             ->with("success", "Question updated");
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function destroy(Question $question): RedirectResponse
     {
+        $this->authorize('destroy', $question);
+
         $question->delete();
 
         return redirect()
