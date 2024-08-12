@@ -1,4 +1,4 @@
-import {type Answer} from "@/Types/Answer";
+import {type Answer} from '@/Types/Answer'
 
 export interface Question {
   id: number
