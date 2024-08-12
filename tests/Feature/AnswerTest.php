@@ -254,4 +254,114 @@ class AnswerTest extends TestCase
             ->delete("/answers/1")
             ->assertStatus(404);
     }
+
+    public function testUserCanMarkAnswerAsCorrect(): void
+    {
+        $user = User::factory()->create();
+        $answer = Answer::factory()->create(["text" => "answer"]);
+
+        $this->actingAs($user)
+            ->from("/quizzes")
+            ->post("/answers/{$answer->id}/correct")
+            ->assertRedirect("/quizzes");
+
+        $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
+    }
+
+    public function testUserCanChangeCorrectAnswerOne(): void
+    {
+        $user = User::factory()->create();
+        $question = Question::factory()->create();
+        $answerA = Answer::factory()->create(["text" => "answer A", "question_id" => $question->id]);
+        $answerB = Answer::factory()->create(["text" => "answer B", "question_id" => $question->id]);
+
+        $question->correctAnswer()->associate($answerA);
+        $question->save();
+
+        $this->assertDatabaseHas("questions", ["correct_answer_id" => $answerA->id]);
+
+        $this->actingAs($user)
+            ->from("/quizzes")
+            ->post("/answers/{$answerB->id}/correct")
+            ->assertRedirect("/quizzes");
+
+        $this->assertDatabaseHas("questions", ["correct_answer_id" => $answerB->id]);
+    }
+
+    public function testUserCanDeleteCorrectAnswer(): void
+    {
+        $user = User::factory()->create();
+        $question = Question::factory()->create();
+        $answer = Answer::factory()->create(["text" => "answer", "question_id" => $question->id]);
+
+        $question->correctAnswer()->associate($answer);
+        $question->save();
+
+        $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
+
+        $this->actingAs($user)
+            ->from("/quizzes")
+            ->delete("/answers/{$answer->id}")
+            ->assertRedirect("/quizzes");
+
+        $this->assertDatabaseHas("questions", ["correct_answer_id" => null]);
+    }
+
+    public function testUserCannotChangeCorrectAnswerInLockedQuestion(): void
+    {
+        $user = User::factory()->create();
+        $question = Question::factory()->locked()->create();
+        $answerA = Answer::factory()->create(["text" => "answer A", "question_id" => $question->id]);
+        $answerB = Answer::factory()->create(["text" => "answer B", "question_id" => $question->id]);
+
+        $question->correctAnswer()->associate($answerA);
+        $question->save();
+
+        $this->assertDatabaseHas("questions", ["correct_answer_id" => $answerA->id]);
+
+        $this->actingAs($user)
+            ->from("/quizzes")
+            ->post("/answers/{$answerB->id}/correct")
+            ->assertStatus(403);
+
+        $this->assertDatabaseHas("questions", ["correct_answer_id" => $answerA->id]);
+    }
+
+    public function testUserCanChangeCorrectAnswerToInvalid(): void
+    {
+        $user = User::factory()->create();
+        $question = Question::factory()->create();
+        $answer = Answer::factory()->create(["text" => "answer", "question_id" => $question->id]);
+
+        $question->correctAnswer()->associate($answer);
+        $question->save();
+
+        $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
+
+        $this->actingAs($user)
+            ->from("/quizzes")
+            ->post("/answers/{$answer->id}/invalid")
+            ->assertRedirect("/quizzes");
+
+        $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
+    }
+
+    public function testUserCannotChangeCorrectAnswerToInvalidInLockedQuestion(): void
+    {
+        $user = User::factory()->create();
+        $question = Question::factory()->locked()->create();
+        $answer = Answer::factory()->create(["text" => "answer", "question_id" => $question->id]);
+
+        $question->correctAnswer()->associate($answer);
+        $question->save();
+
+        $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
+
+        $this->actingAs($user)
+            ->from("/quizzes")
+            ->post("/answers/{$answer->id}/invalid")
+            ->assertStatus(403);
+
+        $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
+    }
 }

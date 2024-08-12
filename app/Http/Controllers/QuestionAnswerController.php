@@ -57,7 +57,24 @@ class QuestionAnswerController extends Controller
 
         return redirect()
             ->back()
-            ->with("success", "Answer marked as the correct one");
+            ->with("success", "Answer marked as correct");
+    }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function markAsInvalid(Answer $answer): RedirectResponse
+    {
+        $this->authorize("modify", $answer);
+
+        if ($answer->isCorrect) {
+            $answer->question->correct_answer_id = null;
+            $answer->save();
+        }
+
+        return redirect()
+            ->back()
+            ->with("success", "Answer marked as incorrect");
     }
 
     /**
