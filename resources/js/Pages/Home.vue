@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, provide } from 'vue'
 import Footer from '@/components/Home/Footer.vue'
-import RegisterBanner from '@/components/Home/RegisterBanner.vue'
+import AuthBanner from '@/components/Home/AuthBanner.vue'
 import GeneralSection from '@/components/Home/GeneralSection.vue'
 import AuthSection from '@/components/Home/AuthSection.vue'
 import BackgroundEffect from '@/components/Home/BackgroundEffect.vue'
@@ -12,7 +12,7 @@ provide('isLoginRef', isLogin)
 
 <template>
   <BackgroundEffect />
-  <RegisterBanner :is-login="isLogin" />
+  <AuthBanner :is-login="isLogin" />
   <div class="flex flex-col lg:flex-row lg:justify-evenly lg:gap-x-[5vw] lg:px-[5vw]">
     <GeneralSection />
     <AuthSection ref="isLogin" />
