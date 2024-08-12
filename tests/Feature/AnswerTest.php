@@ -52,7 +52,7 @@ class AnswerTest extends TestCase
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Answer/Show")
-                    ->where("answer.id", $answer->id)
+                    ->where("answer.id", $answer->id),
             );
     }
 
@@ -69,7 +69,7 @@ class AnswerTest extends TestCase
                 fn(Assert $page) => $page
                     ->component("Answer/Show")
                     ->where("answer.id", $answer->id)
-                    ->where("answer.locked", true)
+                    ->where("answer.locked", true),
             );
     }
 
@@ -89,7 +89,7 @@ class AnswerTest extends TestCase
         $this->actingAs($user)
             ->from("/quizzes")
             ->post("/questions/{$question->id}/answers", ["text" => "Example answer"])
-            ->assertRedirect('/quizzes');
+            ->assertRedirect("/quizzes");
 
         $this->assertDatabaseHas("answers", [
             "text" => "Example answer",
@@ -105,20 +105,19 @@ class AnswerTest extends TestCase
         $this->actingAs($user)
             ->from("/quizzes")
             ->post("/questions/{$question->id}/answers", ["text" => "Example answer 1"])
-            ->assertRedirect('/quizzes');
+            ->assertRedirect("/quizzes");
 
         $this->from("/quizzes")
             ->post("/questions/{$question->id}/answers", ["text" => "Example answer 2"])
-            ->assertRedirect('/quizzes');
+            ->assertRedirect("/quizzes");
 
         $this->from("/quizzes")
             ->post("/questions/{$question->id}/answers", ["text" => "Example answer 3"])
-            ->assertRedirect('/quizzes');
+            ->assertRedirect("/quizzes");
 
-
-        $this->assertDatabaseHas("answers", ["text" => "Example answer 1" ]);
-        $this->assertDatabaseHas("answers", ["text" => "Example answer 2" ]);
-        $this->assertDatabaseHas("answers", ["text" => "Example answer 2" ]);
+        $this->assertDatabaseHas("answers", ["text" => "Example answer 1"]);
+        $this->assertDatabaseHas("answers", ["text" => "Example answer 2"]);
+        $this->assertDatabaseHas("answers", ["text" => "Example answer 2"]);
     }
 
     public function testUserCannotCreateAnswerToQuestionThatNotExisted(): void
@@ -150,7 +149,6 @@ class AnswerTest extends TestCase
         ]);
     }
 
-
     public function testUserCannotCreateInvalidAnswer(): void
     {
         $user = User::factory()->create();
@@ -159,11 +157,11 @@ class AnswerTest extends TestCase
         $this->actingAs($user)
             ->from("/quizzes")
             ->post("/questions/{$question->id}/answers", [])
-            ->assertRedirect('/quizzes')->assertSessionHasErrors(["text"]);
+            ->assertRedirect("/quizzes")->assertSessionHasErrors(["text"]);
 
         $this->from("/quizzes")
             ->post("/questions/{$question->id}/answers", ["text" => false])
-            ->assertRedirect('/quizzes')->assertSessionHasErrors(["text"]);
+            ->assertRedirect("/quizzes")->assertSessionHasErrors(["text"]);
 
         $this->assertDatabaseCount("answers", 0);
     }
@@ -199,11 +197,11 @@ class AnswerTest extends TestCase
         $this->actingAs($user)
             ->from("/quizzes")
             ->patch("/answers/{$answer->id}", [])
-            ->assertRedirect('/quizzes')->assertSessionHasErrors(["text"]);
+            ->assertRedirect("/quizzes")->assertSessionHasErrors(["text"]);
 
         $this->from("/quizzes")
             ->patch("/answers/{$answer->id}", ["text" => true])
-            ->assertRedirect('/quizzes')->assertSessionHasErrors(["text"]);
+            ->assertRedirect("/quizzes")->assertSessionHasErrors(["text"]);
 
         $this->assertDatabaseHas("answers", ["text" => "Old answer"]);
     }

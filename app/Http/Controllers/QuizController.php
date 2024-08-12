@@ -47,7 +47,7 @@ class QuizController extends Controller
      */
     public function update(QuizRequest $request, Quiz $quiz): RedirectResponse
     {
-        $this->authorize('modify', $quiz);
+        $this->authorize("modify", $quiz);
 
         $quiz->update($request->validated());
 
@@ -71,7 +71,7 @@ class QuizController extends Controller
      */
     public function destroy(Quiz $quiz): RedirectResponse
     {
-        $this->authorize('destroy', $quiz);
+        $this->authorize("destroy", $quiz);
 
         $quiz->delete();
 

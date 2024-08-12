@@ -51,7 +51,7 @@ class QuestionAnswerController extends Controller
      */
     public function markAsCorrect(Answer $answer): RedirectResponse
     {
-        $this->authorize('modify', $answer);
+        $this->authorize("modify", $answer);
 
         $answer->question->correctAnswer()->associate($answer)->save();
 
@@ -65,7 +65,7 @@ class QuestionAnswerController extends Controller
      */
     public function update(AnswerRequest $request, Answer $answer): RedirectResponse
     {
-        $this->authorize('modify', $answer);
+        $this->authorize("modify", $answer);
 
         $answer->update($request->validated());
 
@@ -79,7 +79,7 @@ class QuestionAnswerController extends Controller
      */
     public function destroy(Answer $answer): RedirectResponse
     {
-        $this->authorize('destroy', $answer);
+        $this->authorize("destroy", $answer);
 
         $answer->delete();
 
