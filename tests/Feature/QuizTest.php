@@ -25,7 +25,6 @@ class QuizTest extends TestCase
 
         $this->assertDatabaseCount("quizzes", 2);
         $this->assertDatabaseCount("questions", 10);
-        $this->assertDatabaseCount("answers", 10);
 
         $this->actingAs($user)
             ->get("/quizzes")
@@ -34,9 +33,7 @@ class QuizTest extends TestCase
                     ->component("Quiz/Index")
                     ->has("quizzes", 2)
                     ->has('quizzes.0.questions', 5)
-                    ->has('quizzes.0.questions.0.answer', 1)
                     ->has('quizzes.1.questions', 5)
-                    ->has('quizzes.1.questions.0.answer', 1)
             );
     }
 
@@ -160,7 +157,7 @@ class QuizTest extends TestCase
     public function testUserCannotMakeInvalidEdit(): void
     {
         $user = User::factory()->create();
-        $quiz = Question::factory()->create(["name" => "Old quiz"]);
+        $quiz = Quiz::factory()->create(["name" => "Old quiz"]);
 
         $this->actingAs($user)
             ->from("/")
@@ -169,7 +166,7 @@ class QuizTest extends TestCase
 
         $this->from("/")
             ->patch("/quizzes/{$quiz->id}", ["name" => true])
-            ->assertRedirect('/')->assertSessionHasErrors(["text"]);
+            ->assertRedirect('/')->assertSessionHasErrors(["name"]);
 
         $this->assertDatabaseHas("quizzes", ["name" => "Old quiz"]);
     }
@@ -177,11 +174,11 @@ class QuizTest extends TestCase
     public function testUserCannotEditLockedQuiz(): void
     {
         $user = User::factory()->create();
-        $quiz = Question::factory()->locked()->create(["name" => "Old quiz"]);
+        $quiz = Quiz::factory()->locked()->create(["name" => "Old quiz"]);
 
         $this->actingAs($user)
             ->from("/")
-            ->patch("/questions/{$quiz->id}", ["name" => "New quiz"])
+            ->patch("/quizzes/{$quiz->id}", ["name" => "New quiz"])
             ->assertStatus(403);
 
         $this->assertDatabaseHas("quizzes", ["name" => "Old quiz"]);
@@ -190,7 +187,9 @@ class QuizTest extends TestCase
     public function testUserCanDeleteQuiz(): void
     {
         $user = User::factory()->create();
-        $quiz = Question::factory()->create(["name" => "quiz"]);
+        $quiz = Quiz::factory()->create(["name" => "quiz"]);
+        $question = Question::factory()->create(["quiz_id" => $quiz->id]);
+        Answer::factory()->create(["question_id" => $question->id]);
 
         $this->assertDatabaseCount("quizzes", 1);
         $this->assertDatabaseCount("questions", 1);
@@ -210,7 +209,7 @@ class QuizTest extends TestCase
     public function testUserCannotDeleteLockedQuiz(): void
     {
         $user = User::factory()->create();
-        $quiz = Question::factory()->locked()->create(["name" => "quiz"]);
+        $quiz = Quiz::factory()->locked()->create(["name" => "quiz"]);
 
         $this->actingAs($user)
             ->from("/")

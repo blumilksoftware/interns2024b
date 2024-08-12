@@ -216,7 +216,7 @@ class QuestionTest extends TestCase
     public function testUserCannotEditLockedQuestion(): void
     {
         $user = User::factory()->create();
-        $question = Question::factory()->locked()->create(["text" => "Old questions"]);
+        $question = Question::factory()->locked()->create(["text" => "Old question"]);
 
         $this->actingAs($user)
             ->from("/")

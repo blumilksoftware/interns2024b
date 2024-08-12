@@ -8,6 +8,7 @@ use App\Http\Requests\QuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
 use Carbon\Carbon;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -41,8 +42,13 @@ class QuizController extends Controller
         return Inertia::render("Quiz/Show", ["quiz" => new QuizResource($quiz)]);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function update(QuizRequest $request, Quiz $quiz): RedirectResponse
     {
+        $this->authorize('modify', $quiz);
+
         $quiz->update($request->validated());
 
         return redirect()
@@ -60,8 +66,13 @@ class QuizController extends Controller
             ->with("success", "Quiz locked");
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function destroy(Quiz $quiz): RedirectResponse
     {
+        $this->authorize('destroy', $quiz);
+
         $quiz->delete();
 
         return redirect()
