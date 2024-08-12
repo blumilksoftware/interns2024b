@@ -211,14 +211,14 @@ class AnswerTest extends TestCase
     public function testUserCannotEditLockedAnswer(): void
     {
         $user = User::factory()->create();
-        $answer = Answer::factory()->create(["text" => "Old answer"]);
+        $answer = Answer::factory()->locked()->create(["text" => "Old answer"]);
 
         $this->actingAs($user)
             ->from("/quizzes")
             ->patch("/answers/{$answer->id}", ["text" => "New answer"])
-            ->assertRedirect("/quizzes");
+            ->assertStatus(403);
 
-        $this->assertDatabaseHas("answers", ["text" => "New answer"]);
+        $this->assertDatabaseHas("answers", ["text" => "Old answer"]);
     }
 
     public function testUserCanDeleteAnswer(): void

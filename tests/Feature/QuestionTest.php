@@ -37,7 +37,7 @@ class QuestionTest extends TestCase
             );
     }
 
-    public function testUserCannotViewQuestionsOfQuiThatNotExisted(): void
+    public function testUserCannotViewQuestionsOfQuizThatNotExisted(): void
     {
         $user = User::factory()->create();
 
@@ -216,14 +216,14 @@ class QuestionTest extends TestCase
     public function testUserCannotEditLockedQuestion(): void
     {
         $user = User::factory()->create();
-        $question = Question::factory()->create(["text" => "Old questions"]);
+        $question = Question::factory()->locked()->create(["text" => "Old questions"]);
 
         $this->actingAs($user)
             ->from("/")
             ->patch("/questions/{$question->id}", ["text" => "New question"])
-            ->assertRedirect("/");
+            ->assertStatus(403);
 
-        $this->assertDatabaseHas("questions", ["text" => "New question"]);
+        $this->assertDatabaseHas("questions", ["text" => "Old question"]);
     }
 
     public function testUserCanDeleteQuestion(): void
