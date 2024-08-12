@@ -9,14 +9,9 @@ use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $rootView = "app";
 
-    /**
-     * @see https://inertiajs.com/asset-versioning
-     */
     public function version(Request $request): ?string
     {
         return parent::version($request);
