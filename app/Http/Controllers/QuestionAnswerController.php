@@ -104,4 +104,16 @@ class QuestionAnswerController extends Controller
             ->back()
             ->with("success", "Answer deleted");
     }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function clone(Answer $answer, Question $question): RedirectResponse
+    {
+        $answer->cloneTo($question);
+
+        return redirect()
+            ->back()
+            ->with("success", "Answer cloned");
+    }
 }

@@ -11,6 +11,7 @@ use Inertia\Response;
 Route::get("/", fn(): Response => inertia("Welcome"));
 
 Route::post("/quizzes/{quiz}/lock", [QuizController::class, "lock"]);
+Route::post("/questions/{question}/clone/{quiz}", [QuizQuestionController::class, "clone"]);
 Route::post("/answers/{answer}/correct", [QuestionAnswerController::class, "markAsCorrect"]);
 Route::post("/answers/{answer}/invalid", [QuestionAnswerController::class, "markAsInvalid"]);
 Route::post("/answers/{answer}/clone/{question}", [QuestionAnswerController::class, "clone"]);

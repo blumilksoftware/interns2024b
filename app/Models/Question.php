@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -52,5 +53,30 @@ class Question extends Model
     public function isLocked(): Attribute
     {
         return Attribute::get(fn(): bool => $this->quiz->isLocked);
+    }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function cloneTo(Quiz $quiz): self
+    {
+        if ($quiz->isLocked) {
+            throw new AuthorizationException();
+        }
+
+        $questionCopy = $this->replicate();
+        $questionCopy->quiz()->associate($quiz)->save();
+
+        foreach ($this->answers as $answer) {
+            $answerCopy = $answer->cloneTo($questionCopy);
+
+            if ($answer->isCorrect) {
+                $questionCopy->correctAnswer()->associate($answerCopy);
+            }
+        }
+
+        $questionCopy->save();
+
+        return $questionCopy;
     }
 }

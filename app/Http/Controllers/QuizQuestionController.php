@@ -81,4 +81,16 @@ class QuizQuestionController extends Controller
             ->back()
             ->with("success", "Question deleted");
     }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function clone(Question $question, Quiz $quiz): RedirectResponse
+    {
+        $question->cloneTo($quiz);
+
+        return redirect()
+            ->back()
+            ->with("success", "Question cloned");
+    }
 }
