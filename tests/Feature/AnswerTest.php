@@ -268,7 +268,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
     }
 
-    public function testUserCanChangeCorrectAnswerOne(): void
+    public function testUserCanChangeCorrectAnswer(): void
     {
         $user = User::factory()->create();
         $question = Question::factory()->create();
@@ -363,5 +363,101 @@ class AnswerTest extends TestCase
             ->assertStatus(403);
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
+    }
+
+    public function testUserCanCopyAnswer(): void
+    {
+        $user = User::factory()->create();
+        $questionA = Question::factory()->create();
+        $questionB = Question::factory()->create();
+        $answer = Answer::factory()->create(["question_id" => $questionA->id]);
+
+        $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
+
+        $this->actingAs($user)
+            ->from("/quizzes")
+            ->post("/answers/{$answer->id}/clone/{$questionB->id}")
+            ->assertRedirect("/quizzes");
+
+        $this->assertDatabaseHas("answers", ["question_id" => $questionB->id]);
+    }
+
+    public function testUserCanCopyLockedAnswer(): void
+    {
+        $user = User::factory()->create();
+        $questionA = Question::factory()->locked()->create();
+        $questionB = Question::factory()->create();
+        $answer = Answer::factory()->create(["question_id" => $questionA->id]);
+
+        $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
+
+        $this->actingAs($user)
+            ->from("/quizzes")
+            ->post("/answers/{$answer->id}/clone/{$questionB->id}")
+            ->assertRedirect("/quizzes");
+
+        $this->assertDatabaseHas("answers", ["question_id" => $questionB->id]);
+    }
+
+    public function testUserCannotCopyAnswerToLockedQuestion(): void
+    {
+        $user = User::factory()->create();
+        $questionA = Question::factory()->create();
+        $questionB = Question::factory()->locked()->create();
+        $answer = Answer::factory()->create(["question_id" => $questionA->id]);
+
+        $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
+
+        $this->actingAs($user)
+            ->from("/quizzes")
+            ->post("/answers/{$answer->id}/clone/{$questionB->id}")
+            ->assertStatus(403);
+
+        $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
+    }
+
+    public function testUserCanCopyCorrectAnswer(): void
+    {
+        $user = User::factory()->create();
+        $questionA = Question::factory()->create();
+        $questionB = Question::factory()->create();
+        $answer = Answer::factory()->create(["question_id" => $questionA->id]);
+
+        $questionA->correctAnswer()->associate($answer);
+        $questionA->save();
+
+        $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
+        $this->assertDatabaseHas("questions", ["id" => $questionA->id, "correct_answer_id" => $answer->id]);
+
+        $this->actingAs($user)
+            ->from("/quizzes")
+            ->post("/answers/{$answer->id}/clone/{$questionB->id}")
+            ->assertRedirect("/quizzes");
+
+        $this->assertDatabaseHas("answers", ["question_id" => $questionB->id]);
+        $this->assertDatabaseHas("questions", ["id" => $questionA->id, "correct_answer_id" => $answer->id]);
+        $this->assertDatabaseHas("questions", ["id" => $questionB->id, "correct_answer_id" => null]);
+    }
+
+    public function testUserCannotCopyAnswerThatNotExisted(): void
+    {
+        $user = User::factory()->create();
+        $question = Question::factory()->create();
+
+        $this->actingAs($user)
+            ->from("/quizzes")
+            ->post("/answers/2/clone/{$question->id}")
+            ->assertStatus(404);
+    }
+
+    public function testUserCannotCopyAnswerToQuestionThatNotExisted(): void
+    {
+        $user = User::factory()->create();
+        $answer = Answer::factory()->create();
+
+        $this->actingAs($user)
+            ->from("/quizzes")
+            ->post("/answers/{$answer->id}/clone/2")
+            ->assertStatus(404);
     }
 }
