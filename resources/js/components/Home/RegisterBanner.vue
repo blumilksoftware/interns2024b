@@ -53,7 +53,7 @@ function gotoLoginSection() {
          class="lg:hidden top-0 duration-200 justify-evenly z-10 backdrop-blur-md bg-white/30 lg:bg-white fixed w-full flex items-center gap-x-6 px-6 py-2.5"
     >
       <div class="justify-center flex-1 hidden lg:flex" />
-      <div class="flex lg:justify-center flex-1">
+      <div class="hidden lg:justify-center flex-1 xs:flex">
         <p class="text-sm leading-6 text-gray-900">Collegium Witelona Test </p>
       </div>
       <div class="flex justify-end flex-1 gap-6 items-center">
