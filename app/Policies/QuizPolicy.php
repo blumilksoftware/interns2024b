@@ -9,12 +9,12 @@ use App\Models\User;
 
 class QuizPolicy
 {
-    public function modify(User $user, Quiz $quiz): bool
+    public function update(User $user, Quiz $quiz): bool
     {
         return !$quiz->isLocked;
     }
 
-    public function destroy(User $user, Quiz $quiz): bool
+    public function delete(User $user, Quiz $quiz): bool
     {
         return !$quiz->isLocked;
     }

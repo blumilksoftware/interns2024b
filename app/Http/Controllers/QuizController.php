@@ -8,13 +8,22 @@ use App\Http\Requests\QuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
 use Carbon\Carbon;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class QuizController extends Controller
+class QuizController extends Controller implements HasMiddleware
 {
+    public static function middleware()
+    {
+        return [
+            new Middleware("can:update,quiz", only: ["update"]),
+            new Middleware("can:delete,quiz", only: ["destroy"]),
+        ];
+    }
+
     public function index(): Response
     {
         $quizzes = Quiz::query()
@@ -42,13 +51,8 @@ class QuizController extends Controller
         return Inertia::render("Quiz/Show", ["quiz" => new QuizResource($quiz)]);
     }
 
-    /**
-     * @throws AuthorizationException
-     */
     public function update(QuizRequest $request, Quiz $quiz): RedirectResponse
     {
-        $this->authorize("modify", $quiz);
-
         $quiz->update($request->validated());
 
         return redirect()
@@ -66,13 +70,8 @@ class QuizController extends Controller
             ->with("success", "Quiz locked");
     }
 
-    /**
-     * @throws AuthorizationException
-     */
     public function destroy(Quiz $quiz): RedirectResponse
     {
-        $this->authorize("destroy", $quiz);
-
         $quiz->delete();
 
         return redirect()
@@ -80,9 +79,6 @@ class QuizController extends Controller
             ->with("success", "Quiz deleted");
     }
 
-    /**
-     * @throws AuthorizationException
-     */
     public function clone(Quiz $quiz): RedirectResponse
     {
         $quiz->clone();

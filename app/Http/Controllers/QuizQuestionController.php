@@ -8,13 +8,24 @@ use App\Http\Requests\QuestionRequest;
 use App\Http\Resources\QuestionResource;
 use App\Models\Question;
 use App\Models\Quiz;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class QuizQuestionController extends Controller
+class QuizQuestionController extends Controller implements HasMiddleware
 {
+    public static function middleware()
+    {
+        return [
+            new Middleware("can:create," . Question::class . ",quiz", only: ["store"]),
+            new Middleware("can:clone,question,quiz", only: ["clone"]),
+            new Middleware("can:update,question", only: ["update"]),
+            new Middleware("can:delete,question", only: ["destroy"]),
+        ];
+    }
+
     public function index(Quiz $quiz): Response
     {
         $questions = $quiz->questions()
@@ -26,15 +37,8 @@ class QuizQuestionController extends Controller
         ]);
     }
 
-    /**
-     * @throws AuthorizationException
-     */
     public function store(Quiz $quiz, QuestionRequest $request): RedirectResponse
     {
-        if ($quiz->isLocked) {
-            throw new AuthorizationException();
-        }
-
         Question::query()
             ->make($request->validated())
             ->quiz()->associate($quiz)
@@ -54,13 +58,8 @@ class QuizQuestionController extends Controller
         return Inertia::render("Question/Show", ["question" => new QuestionResource($test)]);
     }
 
-    /**
-     * @throws AuthorizationException
-     */
     public function update(QuestionRequest $request, Question $question): RedirectResponse
     {
-        $this->authorize("modify", $question);
-
         $question->update($request->validated());
 
         return redirect()
@@ -68,13 +67,8 @@ class QuizQuestionController extends Controller
             ->with("success", "Question updated");
     }
 
-    /**
-     * @throws AuthorizationException
-     */
     public function destroy(Question $question): RedirectResponse
     {
-        $this->authorize("destroy", $question);
-
         $question->delete();
 
         return redirect()
@@ -82,9 +76,6 @@ class QuizQuestionController extends Controller
             ->with("success", "Question deleted");
     }
 
-    /**
-     * @throws AuthorizationException
-     */
     public function clone(Question $question, Quiz $quiz): RedirectResponse
     {
         $question->cloneTo($quiz);
