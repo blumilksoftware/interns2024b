@@ -16,6 +16,10 @@ Route::get("/auth/login", [AuthenticateSessionController::class, "create"])->nam
 Route::post("/auth/login", [AuthenticateSessionController::class, "authenticate"])->name("login");
 Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
 Route::get("/email/verify", [EmailVerifyController::class, "create"])->middleware("auth")->name("verification.notice");
-Route::get("/email/verify/{id}/{hash}", [EmailVerifyController::class, "verify"])->name("verification.verify");
+Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["signed", "throttle:6,1"])->name("verification.verify");
+Route::post("email/verification-notification", [EmailVerifyController::class, "send"])->middleware("auth", "throttle:6,1")->name("verification.send");
+
 Route::get("/auth/forgot-password", [PasswordResetLinkController::class, "create"])->middleware("guest")->name("password.request");
 Route::post("/auth/forgot-password", [PasswordResetLinkController::class, "store"])->middleware("guest")->name("password.email");
+Route::get("/auth/password/reset/{token}", [PasswordResetLinkController::class, "resetCreate"])->middleware("guest")->name("password.reset");
+Route::post("/auth/password/reset", [PasswordResetLinkController::class, "resetStore"])->name("password.update");

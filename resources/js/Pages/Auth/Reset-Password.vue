@@ -1,0 +1,31 @@
+<script setup lang="ts">
+import { reactive } from 'vue'
+import { router } from '@inertiajs/vue3'
+
+const props = defineProps<{ token: string }>()
+
+const form = reactive({
+  email: null,
+  password: null,
+  password_confirmation: null,
+  token: props.token,
+
+})
+
+function submit() {
+  router.post('/auth/password/reset', form)
+}
+</script>
+
+<template>
+  <form @submit.prevent="submit">
+    <label for="email">Email:</label>
+    <input v-model="form.email" name="email" type="email"><br>
+    <label for="email">Password:</label>
+    <input v-model="form.password" name="password" type="password" required><br>
+    <label for="email">Password Confirmation:</label>
+    <input v-model="form.password_confirmation" name="password_confirmation" type="password"><br>
+    <input v-model="form.token" name="token" type="hidden">
+    <button type="submit">Change Password?</button>
+  </form>
+</template>

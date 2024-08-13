@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\RegisterUserRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -27,6 +28,7 @@ class RegisterUserController extends Controller
         $user->save();
 
         event(new Registered($user));
+        Auth::login($user);
 
         return Redirect::route("home");
     }

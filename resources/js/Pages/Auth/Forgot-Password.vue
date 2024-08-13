@@ -8,7 +8,7 @@ const form = reactive({
 })
 
 function submit() {
-  router.post('/auth/forget-password', form)
+  router.post('/auth/forgot-password', form)
 }
 </script>
 
