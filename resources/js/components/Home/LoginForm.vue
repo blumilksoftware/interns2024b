@@ -19,7 +19,7 @@
         >
       </div>
       <div class="mt-2">
-        <a href="#" class="duration-200 font-semibold leading-6 text-primary hover:text-primary-950 text-sm">Zapomniałeś hasła?</a>
+        <a href="#" class="duration-200 font-semibold leading-6 text-primary hover:text-primary-950 text-sm">Nie pamiętam hasła</a>
       </div>
     </div>
     
