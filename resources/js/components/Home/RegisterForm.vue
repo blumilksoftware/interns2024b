@@ -79,7 +79,7 @@ const onListOptionClick = (obj:any)=>{
 
     <div>
       <div class="flex items-center justify-between">
-        <label for="search-schools" class="block text-sm font-medium leading-6 text-gray-900">Szukaj szkół</label>
+        <label for="search-schools" class="block text-sm font-medium leading-6 text-gray-900">Wybierz szkołę</label>
       </div>
       <div :class="{'scale-y-100 max-h-80':isSearchFocused}" class="overflow-hidden max-h-12 flex flex-col mt-2 bg-white/30 placeholder:text-gray-400 rounded-[.5rem] ring-2 ring-primary/30 ring-inset">
         <input 
