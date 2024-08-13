@@ -1,5 +1,9 @@
 <script lang="ts" setup>
 import Checkbox from '@/components/Common/Checkbox.vue'
+function submitForm() {
+  // handle form submission
+  // ...  
+}
 </script>
 
 <template>
