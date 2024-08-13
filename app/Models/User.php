@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @property int $id
@@ -25,9 +25,8 @@ use Laravel\Sanctum\HasApiTokens;
  *
  * @property School $school
  */
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
-    use HasApiTokens;
     use HasFactory;
     use Notifiable;
 
@@ -35,7 +34,6 @@ class User extends Authenticatable implements MustVerifyEmail
         "name",
         "surname",
         "email",
-        "password",
         "school_id",
     ];
     protected $hidden = [
