@@ -4,9 +4,6 @@
       <span class="text-sm text-gray-500 sm:text-center dark:text-gray-200">© Collegium Witelona</span>
       <ul class="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-500 dark:text-gray-200 sm:mt-0">
         <li>
-          <a href="#" class="hover:underline me-4 md:me-6">O nas</a>
-        </li>
-        <li>
           <a href="#" class="hover:underline me-4 md:me-6">Polityka prywatności</a>
         </li>
         <li>
