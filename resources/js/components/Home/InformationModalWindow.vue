@@ -21,7 +21,7 @@ function setHidden() {
         </p>
         <hr>
         <div class="flex justify-end p-5">
-          <button class="font-bold text-primary" @click="setHidden">Return</button>
+          <button class="font-bold text-primary" @click="setHidden">Powrót</button>
         </div>
       </div>
     </div>

@@ -11,7 +11,7 @@ const setVisible = () => {
 
 <template>
   <div class="flex h-12 justify-center items-center">
-    <button class="text-primary text-[1.5rem] font-bold text-center hover:text-[1.75rem] duration-200" @click="setVisible">INFORMATION</button>
+    <button class="text-primary text-[1.5rem] font-bold text-center hover:text-[1.75rem] duration-200" @click="setVisible">INFORMACJA</button>
   </div>
   <InformationModalWindow v-model:is-visible="isInformationVisible" />
 </template>

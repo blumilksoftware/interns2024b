@@ -16,7 +16,7 @@ const handleCheckboxChange = () => {
       :class="{ 'translate-x-full' : props.isLogin}"
       class="left-2 w-[calc(50%-.5rem)] absolute h-[calc(100%-1rem)] rounded-md bg-primary duration-200"
     />
-    <span :class="{ 'text-white': !props.isLogin}" class="z-10 w-full text-center duration-200 py-3 text-primary font-bold">Sign Up</span>
-    <span :class="{ 'text-white': props.isLogin }" class="z-10 w-full text-center duration-200 py-3 text-primary font-bold">Sign In</span>
+    <span :class="{ 'text-white': !props.isLogin}" class="z-10 w-full text-center duration-200 py-3 text-primary font-bold">Rejestracja</span>
+    <span :class="{ 'text-white': props.isLogin }" class="z-10 w-full text-center duration-200 py-3 text-primary font-bold">Logowanie</span>
   </label>
 </template>
