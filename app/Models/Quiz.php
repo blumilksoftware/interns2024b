@@ -18,9 +18,7 @@ use Illuminate\Support\Collection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $locked_at
- *
  * @property bool $isLocked
- *
  * @property Collection<Question> $questions
  * @property Collection<Answer> $answers
  */

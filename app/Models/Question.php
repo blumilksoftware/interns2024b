@@ -19,9 +19,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $correct_answer_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property bool $isLocked
- *
  * @property ?Answer $correctAnswer
  * @property Collection<Answer> $answers
  * @property Quiz $quiz

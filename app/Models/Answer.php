@@ -16,10 +16,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $question_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property bool $isLocked
  * @property bool $isCorrect
- *
  * @property Question $question
  */
 class Answer extends Model
