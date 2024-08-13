@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import Checkbox from '@/components/Common/Checkbox.vue'
 function submitForm() {
-  // obsługuje przesyłanie formularza
   // ...  
 }
 
@@ -122,7 +121,7 @@ const onListOptionClick = (obj:any)=>{
               rounded-lg text-md flex w-full justify-center bg-primary p-3 font-bold text-white transition hover:bg-primary-950
               focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
-        Kontynuuj
+        Zarejestruj się
       </button>
     </div>
   </form>
