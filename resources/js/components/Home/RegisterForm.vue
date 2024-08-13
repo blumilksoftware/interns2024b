@@ -4,6 +4,38 @@ function submitForm() {
   // handle form submission
   // ...  
 }
+
+import {ref, computed} from 'vue'
+
+// example data schools data
+const providedSchoolsData = ref([
+  {id: 0, data: 'School #1'},
+  {id: 1, data: 'School #2'},
+  {id: 2, data: 'School #3'},
+  {id: 3, data: 'School #4'},
+  {id: 4, data: 'School #5'},
+  {id: 5, data: 'School #6'},
+  {id: 6, data: 'School #7'},
+  {id: 7, data: 'School #8'},
+])
+
+const isSearchFocused = ref(false)
+const schoolsSearchBar = ref('')
+const filteredSchools: any = computed(
+  () => {
+    return providedSchoolsData.value.filter(
+      obj => obj.data.toString().includes(schoolsSearchBar.value),
+    )
+  },
+)
+const selectedSchool = ref('')
+
+const onListOptionClick = (obj:any)=>{
+  schoolsSearchBar.value=obj.data
+  selectedSchool.value=obj.data
+  console.log(schoolsSearchBar.value)
+  console.log(selectedSchool.value)
+}
 </script>
 
 <template>
@@ -49,17 +81,31 @@ function submitForm() {
 
     <div>
       <div class="flex items-center justify-between">
-        <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Choose a school</label>
+        <label for="search-schools" class="block text-sm font-medium leading-6 text-gray-900">Search schools</label>
       </div>
-      <div class="mt-2">
-        <select id="cars" name="cars"
-                class="bg-white/30 rounded-lg transition block w-full p-3 text-gray-900 ring-2 ring-inset ring-primary/30 placeholder:text-gray-400 focus:ring-2 focus:ring-primary"
+      <div :class="{'scale-y-100 max-h-80':isSearchFocused}" class="overflow-hidden max-h-12 duration-200 flex flex-col mt-2 bg-white/30 placeholder:text-gray-400 rounded-[.5rem] ring-2 ring-primary/30 ring-inset">
+        <input 
+          v-model="schoolsSearchBar"
+          class="outline-none focus:duration-200 focus:ring-inset focus:ring focus:ring-primary rounded-[.5rem] p-3 bg-transparent w-full text-gray-900" required name="search-schools"
+          :class="{'cursor-pointer' : !isSearchFocused}"
+          type="text"
+          @focus="isSearchFocused = true"
+          @blur="isSearchFocused = false"
         >
-          <option value="School #1">School #1</option>
-          <option value="School #2">School #2</option>
-          <option value="School #3">School #3</option>
-          <option value="School #4">School #4</option>
-        </select>
+        <Transition>
+          <div v-show="true" class="m-0.5 mt-0 py-2 overflow-auto">
+            <div v-if="filteredSchools.length>0">
+              <span v-for="obj in filteredSchools"
+                    :key="obj.id"
+                    class="cursor-pointer block px-4 py-2 hover:bg-primary/10 text-[0.9rem]"
+                    @click="console.log('clicked')"
+              >{{ obj.data }}</span>
+            </div>
+            <span v-else class="block px-4 py-2 text-sm">
+              No school was found
+            </span>
+          </div>
+        </Transition>
       </div>
     </div>
 
@@ -82,3 +128,27 @@ function submitForm() {
     </div>
   </form>
 </template>
+
+<style scoped>
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff4c; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #262c8926;
+  border-radius: 1rem;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #262c894c;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+</style>
