@@ -1,7 +1,7 @@
 <template>
   <form class="row-start-1 col-start-1 space-y-6" action="#" method="POST">
     <div>
-      <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Adres e-mail</label>
+      <label for="email" class="block text-sm font-medium leading-6 text-gray-900">E-mail</label>
       <div class="mt-2">
         <input id="email" required name="email" type="email" autocomplete="email"
                class="duration-200 ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400"
