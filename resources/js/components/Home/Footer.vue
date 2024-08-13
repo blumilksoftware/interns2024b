@@ -7,9 +7,6 @@
           <a href="#" class="hover:underline me-4 md:me-6">Polityka prywatności</a>
         </li>
         <li>
-          <a href="#" class="hover:underline me-4 md:me-6">Licencjonowanie</a>
-        </li>
-        <li>
           <a href="#" class="hover:underline">Kontakt</a>
         </li>
       </ul>

@@ -110,9 +110,9 @@ const onListOptionClick = (obj:any)=>{
     <div class="mx-2 mt-4 flex flex-row items-center gap-4">
       <Checkbox />
       <p class="w-fit text-sm text-gray-500">
-        Akceptując ten warunek, zgadzasz się na
-        <a href="#" class="font-semibold leading-6 text-primary hover:primary">warunki usługi</a> oraz
-        <a href="#" class="font-semibold leading-6 text-primary hover:primary">regulamin</a>
+        Akceptuję
+        <a href="#" class="font-semibold leading-6 text-primary hover:primary">regulamin</a> i
+        <a href="#" class="font-semibold leading-6 text-primary hover:primary">politykę prywatności</a>
       </p>
     </div>
 
