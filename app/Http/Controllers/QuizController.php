@@ -9,21 +9,11 @@ use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class QuizController extends Controller implements HasMiddleware
+class QuizController extends Controller
 {
-    public static function middleware()
-    {
-        return [
-            new Middleware("can:update,quiz", only: ["update"]),
-            new Middleware("can:delete,quiz", only: ["destroy"]),
-        ];
-    }
-
     public function index(): Response
     {
         $quizzes = Quiz::query()

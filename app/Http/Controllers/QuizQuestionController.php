@@ -9,23 +9,11 @@ use App\Http\Resources\QuestionResource;
 use App\Models\Question;
 use App\Models\Quiz;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class QuizQuestionController extends Controller implements HasMiddleware
+class QuizQuestionController extends Controller
 {
-    public static function middleware()
-    {
-        return [
-            new Middleware("can:create," . Question::class . ",quiz", only: ["store"]),
-            new Middleware("can:clone,question,quiz", only: ["clone"]),
-            new Middleware("can:update,question", only: ["update"]),
-            new Middleware("can:delete,question", only: ["destroy"]),
-        ];
-    }
-
     public function index(Quiz $quiz): Response
     {
         $questions = $quiz->questions()

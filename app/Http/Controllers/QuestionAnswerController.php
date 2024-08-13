@@ -9,23 +9,11 @@ use App\Http\Resources\AnswerResource;
 use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Routing\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class QuestionAnswerController extends Controller implements HasMiddleware
+class QuestionAnswerController extends Controller
 {
-    public static function middleware()
-    {
-        return [
-            new Middleware("can:create," . Answer::class . ",question", only: ["store"]),
-            new Middleware("can:clone,answer,question", only: ["clone"]),
-            new Middleware("can:update,answer", only: ["update", "markAsCorrect", "markAsInvalid"]),
-            new Middleware("can:delete,answer", only: ["destroy"]),
-        ];
-    }
-
     public function index(Question $question): Response
     {
         return Inertia::render("Answer/Index", [
