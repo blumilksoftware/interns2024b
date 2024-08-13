@@ -83,7 +83,7 @@ const onListOptionClick = (obj:any)=>{
       <div class="flex items-center justify-between">
         <label for="search-schools" class="block text-sm font-medium leading-6 text-gray-900">Search schools</label>
       </div>
-      <div :class="{'scale-y-100 max-h-80':isSearchFocused}" class="overflow-hidden max-h-12 duration-200 flex flex-col mt-2 bg-white/30 placeholder:text-gray-400 rounded-[.5rem] ring-2 ring-primary/30 ring-inset">
+      <div :class="{'scale-y-100 max-h-80':isSearchFocused}" class="overflow-hidden max-h-12 flex flex-col mt-2 bg-white/30 placeholder:text-gray-400 rounded-[.5rem] ring-2 ring-primary/30 ring-inset">
         <input 
           v-model="schoolsSearchBar"
           class="outline-none focus:duration-200 focus:ring-inset focus:ring focus:ring-primary rounded-[.5rem] p-3 bg-transparent w-full text-gray-900" required name="search-schools"
