@@ -33,8 +33,6 @@ const selectedSchool = ref('')
 const onListOptionClick = (obj:any)=>{
   schoolsSearchBar.value=obj.data
   selectedSchool.value=obj.data
-  console.log(schoolsSearchBar.value)
-  console.log(selectedSchool.value)
 }
 </script>
 
@@ -89,8 +87,8 @@ const onListOptionClick = (obj:any)=>{
           class="outline-none focus:duration-200 focus:ring-inset focus:ring focus:ring-primary rounded-[.5rem] p-3 bg-transparent w-full text-gray-900" required name="search-schools"
           :class="{'cursor-pointer' : !isSearchFocused}"
           type="text"
-          @focus="isSearchFocused = true"
-          @blur="isSearchFocused = false"
+          @focus="isSearchFocused = true; schoolsSearchBar=''"
+          @blur="isSearchFocused = false; schoolsSearchBar=selectedSchool"
         >
         <Transition>
           <div v-show="true" class="m-0.5 mt-0 py-2 overflow-auto">
@@ -98,7 +96,7 @@ const onListOptionClick = (obj:any)=>{
               <span v-for="obj in filteredSchools"
                     :key="obj.id"
                     class="cursor-pointer block px-4 py-2 hover:bg-primary/10 text-[0.9rem]"
-                    @click="console.log('clicked')"
+                    @mousedown="onListOptionClick(obj)"
               >{{ obj.data }}</span>
             </div>
             <span v-else class="block px-4 py-2 text-sm">
