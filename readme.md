@@ -1,6 +1,7 @@
 ## @blumilksoftware/interns2024b
 ### About application
-> placeholder
+![desktop-home](screenshots/desktop/homepage.png)
+![mobile-home](screenshots/mobile/homepage.png)
 
 ### Local development
 ```
