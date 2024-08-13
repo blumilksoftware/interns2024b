@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -17,6 +18,9 @@ class AuthenticateSessionController extends Controller
         return Inertia::render("Auth/Login");
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function authenticate(Request $request): RedirectResponse
     {
         $credentials = $request->validate([
@@ -27,11 +31,21 @@ class AuthenticateSessionController extends Controller
         if (auth()->attempt($credentials)) {
             $request->session()->regenerate();
 
-            return Redirect::route("home")->with("succes");
+            return Redirect::route("home")->with("success");
         }
 
-        return back()->withErrors([
-            "The provided mail or password is invalid, try again.",
+        throw ValidationException::withMessages([
+            "email" => "Wrong email or password",
         ]);
+    }
+
+    public function logout(): RedirectResponse
+    {
+        auth()->logout();
+
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+
+        return Redirect::route("home")->with("succes");
     }
 }
