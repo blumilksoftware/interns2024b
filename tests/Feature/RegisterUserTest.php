@@ -52,7 +52,6 @@ class RegisterUserTest extends TestCase
             "password" => "123456890",
             "school_id" => $school->id,
         ])->assertRedirect("/")->assertSessionHasErrors(["email" => "The email has already been taken."]);
-
     }
 
     public function testUserCanNotRegisterWithWrongSchool(): void
@@ -64,8 +63,7 @@ class RegisterUserTest extends TestCase
             "surname" => "Test",
             "email" => "test@example.com",
             "password" => "123456890",
-            "school_id" => $school->id+99999,
+            "school_id" => $school->id + 99999,
         ])->assertRedirect("/")->assertSessionHasErrors(["school_id" => "The selected school id is invalid."]);
-
     }
 }

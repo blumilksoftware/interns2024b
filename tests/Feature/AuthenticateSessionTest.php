@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Models\School;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -30,7 +29,7 @@ class AuthenticateSessionTest extends TestCase
     {
         $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
 
-        $this->from('/test')->post("/auth/login", [
+        $this->from("/test")->post("/auth/login", [
             "email" => "test@example.com",
             "password" => "wrongPasswordExample",
         ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "Wrong email or password"]);
@@ -40,7 +39,7 @@ class AuthenticateSessionTest extends TestCase
     {
         $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
 
-        $this->from('/test')->post("/auth/login", [
+        $this->from("/test")->post("/auth/login", [
             "email" => "test",
             "password" => "wrongPasswordExample",
         ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "The email field must be a valid email address."]);
@@ -50,7 +49,7 @@ class AuthenticateSessionTest extends TestCase
     {
         $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
 
-        $this->from('/test')->post("/auth/login", [
+        $this->from("/test")->post("/auth/login", [
             "email" => null,
             "password" => null,
         ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "The email field is required.", "password" => "The password field is required."]);
