@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\QuestionAnswerController;
-use App\Http\Controllers\QuizController;
-use App\Http\Controllers\QuizQuestionController;
-use App\Models\Answer;
-use App\Models\Question;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
 use App\Http\Controllers\EmailVerifyController;
 use App\Http\Controllers\PasswordResetLinkController;
+use App\Http\Controllers\QuestionAnswerController;
+use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\RegisterUserController;
+use App\Models\Answer;
+use App\Models\Question;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", [ContestController::class, "index"])->name("home");
