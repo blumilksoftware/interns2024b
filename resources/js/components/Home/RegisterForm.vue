@@ -1,38 +1,23 @@
 <script lang="ts" setup>
+import {ref} from 'vue'
 import Checkbox from '@/components/Common/Checkbox.vue'
+import Searchbar from '@/components/Common/Searchbar.vue'
+
 function submitForm() {
   // ...  
 }
 
-import {ref, computed} from 'vue'
-
-// example school data
-const providedSchoolsData = ref([
-  {id: 0, data: 'Szkoła #1'},
-  {id: 1, data: 'Szkoła #2'},
-  {id: 2, data: 'Szkoła #3'},
-  {id: 3, data: 'Szkoła #4'},
-  {id: 4, data: 'Szkoła #5'},
-  {id: 5, data: 'Szkoła #6'},
-  {id: 6, data: 'Szkoła #7'},
-  {id: 7, data: 'Szkoła #8'},
+// example options for schools school
+const searchbarOptions = ref([
+  {id: 0, option: 'Szkoła #1'},
+  {id: 1, option: 'Szkoła #2'},
+  {id: 2, option: 'Szkoła #3'},
+  {id: 3, option: 'Szkoła #4'},
+  {id: 4, option: 'Szkoła #5'},
+  {id: 5, option: 'Szkoła #6'},
+  {id: 6, option: 'Szkoła #7'},
+  {id: 7, option: 'Szkoła #8'},
 ])
-
-const isSearchFocused = ref(false)
-const schoolsSearchBar = ref('')
-const filteredSchools: any = computed(
-  () => {
-    return providedSchoolsData.value.filter(
-      obj => obj.data.toString().includes(schoolsSearchBar.value),
-    )
-  },
-)
-const selectedSchool = ref('')
-
-const onListOptionClick = (obj:any)=>{
-  schoolsSearchBar.value=obj.data
-  selectedSchool.value=obj.data
-}
 </script>
 
 <template>
@@ -61,30 +46,7 @@ const onListOptionClick = (obj:any)=>{
       <div class="flex items-center justify-between">
         <label for="search-schools" class="block text-sm font-medium leading-6 text-gray-900">Wybierz szkołę</label>
       </div>
-      <div :class="{'scale-y-100 max-h-80':isSearchFocused}" class="overflow-hidden max-h-12 flex flex-col mt-2 bg-white/30 placeholder:text-gray-400 rounded-[.5rem] ring-2 ring-primary/30 ring-inset">
-        <input 
-          v-model="schoolsSearchBar"
-          class="outline-none focus:duration-200 focus:ring-inset focus:ring focus:ring-primary rounded-[.5rem] p-3 bg-transparent w-full text-gray-900" required name="search-schools"
-          :class="{'cursor-pointer' : !isSearchFocused}"
-          type="text"
-          @focus="isSearchFocused = true; schoolsSearchBar=''"
-          @blur="isSearchFocused = false; schoolsSearchBar=selectedSchool"
-        >
-        <Transition>
-          <div v-show="true" class="m-0.5 mt-0 py-2 overflow-auto">
-            <div v-if="filteredSchools.length>0">
-              <span v-for="obj in filteredSchools"
-                    :key="obj.id"
-                    class="cursor-pointer block px-4 py-2 hover:bg-primary/10 text-[0.9rem]"
-                    @mousedown="onListOptionClick(obj)"
-              >{{ obj.data }}</span>
-            </div>
-            <span v-else class="block px-4 py-2 text-sm">
-              Nie znaleziono szkoły
-            </span>
-          </div>
-        </Transition>
-      </div>
+      <Searchbar :options="searchbarOptions" />
     </div>
 
     <div>
@@ -127,3 +89,27 @@ const onListOptionClick = (obj:any)=>{
     </div>
   </form>
 </template>
+
+<style scoped>
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff4c; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #262c8926;
+  border-radius: 1rem;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #262c894c;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+</style>
