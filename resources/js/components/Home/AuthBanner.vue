@@ -54,7 +54,7 @@ function gotoLoginSection() {
     >
       <div class="justify-center flex-1 hidden lg:flex" />
       <div class="hidden lg:justify-center flex-1 xs:flex">
-        <p class="text-sm leading-6 text-gray-900">Collegium Witelona Test </p>
+        <p class="font-bold text-sm leading-6 text-gray-900">Testy</p>
       </div>
       <div class="flex justify-end flex-1 gap-6 items-center">
         <b><button class="text-sm text-primary" @click="gotoLoginSection">Sign In </button></b>
