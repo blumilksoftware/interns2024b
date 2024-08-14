@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -21,11 +22,9 @@ class PasswordResetLinkController extends Controller
         return Inertia::render("Auth/Forgot-Password");
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(ForgotPasswordRequest $request): RedirectResponse
     {
-        $request->validate([
-            "email" => "required|string|email",
-        ]);
+        $request->only("email");
 
         $status = Password::sendResetLink(
             $request->only("email"),
@@ -41,14 +40,8 @@ class PasswordResetLinkController extends Controller
         return Inertia::render("Auth/Reset-Password", ["token" => $token]);
     }
 
-    public function resetStore(Request $request): RedirectResponse
+    public function resetStore(ResetPasswordRequest $request): RedirectResponse
     {
-        $request->validate([
-            "token" => "required",
-            "email" => "required|email",
-            "password" => "required|min:8|confirmed",
-        ]);
-
         $status = Password::reset(
             $request->only("email", "password", "password_confirmation", "token"),
             function (User $user, string $password): void {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\AuthenticateSessionRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -21,12 +21,9 @@ class AuthenticateSessionController extends Controller
     /**
      * @throws ValidationException
      */
-    public function authenticate(Request $request): RedirectResponse
+    public function authenticate(AuthenticateSessionRequest $request): RedirectResponse
     {
-        $credentials = $request->validate([
-            "email" => "required|email",
-            "password" => "required|string",
-        ]);
+        $credentials = $request->only("email", "password");
 
         if (auth()->attempt($credentials)) {
             $request->session()->regenerate();
@@ -46,6 +43,6 @@ class AuthenticateSessionController extends Controller
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 
-        return Redirect::route("home")->with("succes");
+        return Redirect::route("home")->with("success");
     }
 }

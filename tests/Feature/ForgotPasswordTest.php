@@ -16,16 +16,15 @@ class ForgotPasswordTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * A basic feature test example.
      * @throws JsonException
      */
     public function testUserCanSendForgotPasswordRequest(): void
     {
         Notification::fake();
-        $user = User::factory()->create(["email" => "test@example.com"]);
+        $user = User::factory()->create(["email" => "test@gmail.com"]);
 
         $this->post("/auth/forgot-password", [
-            "email" => "test@example.com",
+            "email" => "test@gmail.com",
         ])->assertSessionHasNoErrors();
 
         Notification::assertSentTo(
@@ -37,16 +36,16 @@ class ForgotPasswordTest extends TestCase
     public function testUserCanNotSendForgotPasswordRequestWithWrongEmail(): void
     {
         Notification::fake();
-        $user = User::factory()->create(["email" => "test@example.com"]);
+        $user = User::factory()->create(["email" => "test@gmail.com"]);
 
         $this->post("/auth/forgot-password", [
-            "email" => "wrongTest@example.com",
+            "email" => "wrongTest@gmail.com",
         ])->assertSessionHasErrors(["email" => "We can't find a user with that email address."]);
         Notification::assertNothingSent();
 
         $this->post("/auth/forgot-password", [
             "email" => "wrongTest",
-        ])->assertSessionHasErrors(["email" => "The email field must be a valid email address."]);
+        ])->assertSessionHasErrors(["email" => "Your email is invalid."]);
         Notification::assertNothingSent();
 
         $this->post("/auth/forgot-password", [

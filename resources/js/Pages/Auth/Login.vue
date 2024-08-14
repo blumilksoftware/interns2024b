@@ -1,6 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import { reactive } from 'vue'
 import { router } from '@inertiajs/vue3'
+
+const { errors } = defineProps<{
+  errors: Record<string, string[]>
+}>()
 
 const form = reactive({
   email: null,
@@ -14,10 +18,16 @@ function submit() {
 
 <template>
   <form @submit.prevent="submit">
-    <label for="email">Email:</label>
-    <input v-model="form.email" name="email" type="email">
-    <label for="password">password:</label>
-    <input v-model="form.password" name="password" type="password">
+    <div>
+      <label for="email">Email:</label>
+      <input v-model="form.email" name="email" type="email">
+      <div v-if="errors.email">{{ errors.email }}</div>
+    </div>
+    <div>
+      <label for="password">password:</label>
+      <input v-model="form.password" name="password" type="password">
+      <div v-if="errors.password">{{ errors.password }}</div>
+    </div>
     <button type="submit">Login</button>
   </form>
 

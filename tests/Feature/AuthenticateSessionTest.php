@@ -12,9 +12,6 @@ class AuthenticateSessionTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * A basic feature test example.
-     */
     public function testUserCanLogin(): void
     {
         $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
@@ -42,7 +39,7 @@ class AuthenticateSessionTest extends TestCase
         $this->from("/test")->post("/auth/login", [
             "email" => "test",
             "password" => "wrongPasswordExample",
-        ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "The email field must be a valid email address."]);
+        ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "Your email is invalid."]);
     }
 
     public function testUserCanNotLoginWithEmptyEmailAndPassword(): void
