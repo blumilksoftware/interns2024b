@@ -127,27 +127,3 @@ const onListOptionClick = (obj:any)=>{
     </div>
   </form>
 </template>
-
-<style scoped>
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #ffffff4c; 
-}
- 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #262c8926;
-  border-radius: 1rem;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #262c894c;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-</style>

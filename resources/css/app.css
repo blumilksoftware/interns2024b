@@ -6,8 +6,36 @@
 .v-leave-active {
   transition: opacity 0.3s ease;
 }
-
+html {
+  overflow-y: scroll;
+}
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  position: fixed;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff4c; 
+  position: fixed;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #262c8926;
+  border-radius: 1rem;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  position: fixed;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #262c894c;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  position: fixed;
 }
