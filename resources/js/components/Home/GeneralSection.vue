@@ -9,7 +9,7 @@ import InformationButton from '@/components/Home/InformationButton.vue'
       <InformationButton />
     </div>
     
-    <div data-name="right" class="p-16 flex flex-col size-full justify-center">
+    <div data-name="right" class="p-16 flex flex-col size-full">
       <h1 class="text-center text-[1.5rem] font-bold">SPONSORZY</h1>
       <div>
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
