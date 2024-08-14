@@ -6,7 +6,7 @@ function submitForm() {
 
 import {ref, computed} from 'vue'
 
-// przykładowe dane szkół
+// example school data
 const providedSchoolsData = ref([
   {id: 0, data: 'Szkoła #1'},
   {id: 1, data: 'Szkoła #2'},
