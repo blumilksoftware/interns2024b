@@ -3,13 +3,13 @@ import InformationButton from '@/components/Home/InformationButton.vue'
 </script>
 
 <template>
-  <section class="w-full h-[calc(100vh-4rem)] lg:h-screen flex flex-col overflow-hidden">
+  <section class="w-full lg:h-screen flex flex-col overflow-hidden">
     <div data-name="left" class="flex flex-col justify-center w-full gap-10 p-10 pb-16">
       <img class="h-40 object-contain" src="@/../assets/header-logo.png" alt="logo nagłówka">
       <InformationButton />
     </div>
     
-    <div data-name="right" class="flex flex-col size-full justify-center">
+    <div data-name="right" class="p-16 flex flex-col size-full justify-center">
       <h1 class="text-center text-[1.5rem] font-bold">SPONSORZY</h1>
       <div>
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
