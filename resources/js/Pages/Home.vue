@@ -11,11 +11,13 @@ provide('isLoginRef', isLogin)
 </script>
 
 <template>
-  <BackgroundEffect />
-  <AuthBanner :is-login="isLogin" />
-  <div class="flex flex-col lg:flex-row lg:justify-evenly lg:gap-x-[5vw] lg:px-[5vw]">
-    <GeneralSection />
-    <AuthSection ref="isLogin" />
+  <div class="flex flex-col h-screen">
+    <BackgroundEffect />
+    <AuthBanner :is-login="isLogin" />
+    <div class="flex flex-col lg:flex-row lg:justify-evenly lg:gap-x-[5vw] lg:px-[5vw]">
+      <GeneralSection />
+      <AuthSection ref="isLogin" />
+    </div>
+    <Footer />
   </div>
-  <Footer />
 </template>

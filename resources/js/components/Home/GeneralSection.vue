@@ -3,7 +3,7 @@ import InformationButton from '@/components/Home/InformationButton.vue'
 </script>
 
 <template>
-  <section class="w-full lg:h-screen flex flex-col overflow-hidden">
+  <section class="w-full flex flex-col overflow-hidden">
     <div data-name="left" class="flex flex-col justify-center w-full gap-10 p-10 pb-16">
       <img class="h-40 object-contain" src="@/../assets/header-logo.png" alt="logo nagłówka">
       <InformationButton />
