@@ -58,6 +58,23 @@ class Quiz extends Model
         return $quizCopy;
     }
 
+    public function createSubmission(User $user): QuizSubmission
+    {
+        $submission = new QuizSubmission();
+        $submission->quiz()->associate($this);
+        $submission->user()->associate($user);
+        $submission->save();
+
+        foreach ($this->questions as $question) {
+            $answerRecord = new AnswerRecord();
+            $answerRecord->quizSubmission()->associate($submission);
+            $answerRecord->question()->associate($question);
+            $answerRecord->save();
+        }
+
+        return $submission;
+    }
+
     protected function casts(): array
     {
         return [

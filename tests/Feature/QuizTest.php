@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use App\Models\Answer;
 use App\Models\Question;
 use App\Models\Quiz;
+use App\Models\QuizSubmission;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -22,7 +23,6 @@ class QuizTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
         Carbon::setTestNow(Carbon::create(2024, 1, 1, 10));
         $this->user = User::factory()->create();
     }
@@ -299,5 +299,45 @@ class QuizTest extends TestCase
             ->from("/")
             ->post("/admin/quizzes/2/clone")
             ->assertStatus(404);
+    }
+
+    public function testUserCanStartQuiz(): void
+    {
+        $quiz = Quiz::factory()->locked()->create();
+
+        $response = $this->actingAs($this->user)
+            ->from("/")
+            ->post("/quizzes/{$quiz->id}/start");
+
+        $submission = QuizSubmission::query()->where([
+            "user_id" => $this->user->id,
+            "quiz_id" => $quiz->id,
+        ])->firstOrFail();
+
+        $response->assertRedirect("/submissions/$submission->id/");
+    }
+
+    public function testUserCannotStartAlreadyStartedQuiz(): void
+    {
+        $submission = QuizSubmission::factory()->create(["user_id" => $this->user->id]);
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->post("/quizzes/{$submission->quiz->id}/start")
+            ->assertRedirect("/submissions/{$submission->id}/");
+
+        $this->assertDatabaseCount("quiz_submissions", 1);
+    }
+
+    public function testUserCannotStartUnlockedQuiz(): void
+    {
+        $quiz = Quiz::factory()->create();
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->post("/quizzes/{$quiz->id}/start")
+            ->assertStatus(403);
+
+        $this->assertDatabaseCount("quiz_submissions", 0);
     }
 }

@@ -5,6 +5,8 @@ declare(strict_types=1);
 use App\Http\Controllers\QuestionAnswerController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
+use App\Http\Controllers\QuizSubmissionController;
+use App\Http\Middleware\EnsureQuizIsNotAlreadyStarted;
 use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Support\Facades\Route;
@@ -36,3 +38,6 @@ Route::group(["prefix" => "admin"], function (): void {
     Route::post("/answers/{answer}/correct", [QuestionAnswerController::class, "markAsCorrect"])->can("update,answer");
     Route::post("/answers/{answer}/invalid", [QuestionAnswerController::class, "markAsInvalid"])->can("update,answer");
 });
+
+Route::post("/quizzes/{quiz}/start", [QuizController::class, "createSubmission"])->middleware(EnsureQuizIsNotAlreadyStarted::class)->can("submit,quiz");
+Route::get("/submissions/{quizSubmission}/", [QuizSubmissionController::class, "show"])->can("view,quizSubmission");

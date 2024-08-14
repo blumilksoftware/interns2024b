@@ -8,6 +8,7 @@ use App\Http\Requests\QuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -65,5 +66,13 @@ class QuizController extends Controller
         return redirect()
             ->back()
             ->with("success", "Quiz cloned");
+    }
+
+    public function createSubmission(Request $request, Quiz $quiz): RedirectResponse
+    {
+        $user = $request->user();
+        $submission = $quiz->createSubmission($user);
+
+        return redirect("/submissions/{$submission->id}/");
     }
 }
