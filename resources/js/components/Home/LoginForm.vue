@@ -41,4 +41,3 @@ function submitForm() {
     </div>
   </form>
 </template>
-
