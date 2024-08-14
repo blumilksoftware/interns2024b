@@ -11,16 +11,12 @@ import InformationButton from '@/components/Home/InformationButton.vue'
     
     <div data-name="right" class="p-16 flex flex-col size-full">
       <h1 class="text-center text-[1.5rem] font-bold">SPONSORZY</h1>
-      <div>
-        <div class="mx-auto max-w-7xl px-6 lg:px-8">
-          <div class="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:max-w-xl sm:grid-cols-6 sm:gap-x-10">
-            <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 max-h-12 w-full object-contain" src="https://tailwindui.com/img/logos/158x48/transistor-logo-gray-900.svg" alt="Transistor" width="158" height="48">
-            <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 max-h-12 w-full object-contain" src="https://tailwindui.com/img/logos/158x48/reform-logo-gray-900.svg" alt="Reform" width="158" height="48">
-            <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 max-h-12 w-full object-contain" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width="158" height="48">
-            <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 max-h-12 w-full object-contain sm:col-start-2" src="https://tailwindui.com/img/logos/158x48/savvycal-logo-gray-900.svg" alt="SavvyCal" width="158" height="48">
-            <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 col-start-2 max-h-12 w-full object-contain sm:col-start-auto" src="https://tailwindui.com/img/logos/158x48/statamic-logo-gray-900.svg" alt="Statamic" width="158" height="48">
-          </div>
-        </div>
+      <div class="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:grid-cols-6">
+        <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 max-h-12 w-full object-contain" src="https://tailwindui.com/img/logos/158x48/transistor-logo-gray-900.svg" alt="Transistor" width="158" height="48">
+        <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 max-h-12 w-full object-contain" src="https://tailwindui.com/img/logos/158x48/reform-logo-gray-900.svg" alt="Reform" width="158" height="48">
+        <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 max-h-12 w-full object-contain" src="https://tailwindui.com/img/logos/158x48/tuple-logo-gray-900.svg" alt="Tuple" width="158" height="48">
+        <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 max-h-12 w-full object-contain sm:col-start-2" src="https://tailwindui.com/img/logos/158x48/savvycal-logo-gray-900.svg" alt="SavvyCal" width="158" height="48">
+        <img class="cursor-pointer duration-200 hover:scale-110 col-span-2 col-start-2 max-h-12 w-full object-contain sm:col-start-auto" src="https://tailwindui.com/img/logos/158x48/statamic-logo-gray-900.svg" alt="Statamic" width="158" height="48">
       </div>
     </div>
   </section>
