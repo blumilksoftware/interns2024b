@@ -8,6 +8,7 @@ use App\Models\Answer;
 use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
@@ -22,7 +23,14 @@ class QuizTest extends TestCase
     {
         parent::setUp();
 
+        Carbon::setTestNow(Carbon::create(2024, 1, 1, 10));
         $this->user = User::factory()->create();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        Carbon::setTestNow();
     }
 
     public function testUserCanViewQuizzes(): void
@@ -86,11 +94,27 @@ class QuizTest extends TestCase
     {
         $this->actingAs($this->user)
             ->from("/")
+            ->post("/admin/quizzes", ["name" => "Example quiz", "scheduled_at" => "2024-02-10 11:40:00"])
+            ->assertRedirect("/");
+
+        $this->assertDatabaseHas("quizzes", [
+            "name" => "Example quiz",
+            "scheduled_at" => "2024-02-10 11:40:00",
+        ]);
+    }
+
+    public function testUserCanCreateQuizWithoutDate(): void
+    {
+        Carbon::setTestNow(Carbon::create(2024, 1, 1, 10));
+
+        $this->actingAs($this->user)
+            ->from("/")
             ->post("/admin/quizzes", ["name" => "Example quiz"])
             ->assertRedirect("/");
 
         $this->assertDatabaseHas("quizzes", [
             "name" => "Example quiz",
+            "scheduled_at" => null,
         ]);
     }
 
@@ -125,19 +149,27 @@ class QuizTest extends TestCase
             ->post("/admin/quizzes", ["name" => false])
             ->assertRedirect("/")->assertSessionHasErrors(["name"]);
 
+        $this->from("/")
+            ->post("/admin/quizzes", ["name" => "correct", "scheduled_at" => "invalid format"])
+            ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
+
+        $this->from("/")
+            ->post("/admin/quizzes", ["name" => "correct", "scheduled_at" => "2022-01-01 01:01:01"])
+            ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
+
         $this->assertDatabaseCount("quizzes", 0);
     }
 
     public function testUserCanEditQuiz(): void
     {
-        $quiz = Quiz::factory()->create(["name" => "Old quiz"]);
+        $quiz = Quiz::factory()->create(["name" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "New quiz"])
+            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "New quiz", "scheduled_at" => "2024-03-10 12:15:00"])
             ->assertRedirect("/");
 
-        $this->assertDatabaseHas("quizzes", ["name" => "New quiz"]);
+        $this->assertDatabaseHas("quizzes", ["name" => "New quiz", "scheduled_at" => "2024-03-10 12:15:00"]);
     }
 
     public function testUserCannotEditQuizThatNotExisted(): void
@@ -160,6 +192,14 @@ class QuizTest extends TestCase
         $this->from("/")
             ->patch("/admin/quizzes/{$quiz->id}", ["name" => true])
             ->assertRedirect("/")->assertSessionHasErrors(["name"]);
+
+        $this->from("/")
+            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "correct", "scheduled_at" => "invalid format"])
+            ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
+
+        $this->from("/")
+            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "correct", "scheduled_at" => "2022-01-01 01:01:01"])
+            ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
 
         $this->assertDatabaseHas("quizzes", ["name" => "Old quiz"]);
     }

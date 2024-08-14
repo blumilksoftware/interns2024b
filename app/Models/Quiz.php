@@ -17,7 +17,7 @@ use Illuminate\Support\Collection;
  * @property string $name
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property Carbon $locked_at
+ * @property Carbon $scheduled_at
  * @property bool $isLocked
  * @property Collection<Question> $questions
  * @property Collection<Answer> $answers
@@ -28,6 +28,7 @@ class Quiz extends Model
 
     protected $fillable = [
         "name",
+        "scheduled_at",
     ];
 
     public function questions(): HasMany
@@ -42,7 +43,7 @@ class Quiz extends Model
 
     public function isLocked(): Attribute
     {
-        return Attribute::get(fn(): bool => $this->locked_at !== null);
+        return Attribute::get(fn(): bool => $this->scheduled_at !== null && $this->scheduled_at <= Carbon::now());
     }
 
     public function clone(): self
@@ -60,7 +61,7 @@ class Quiz extends Model
     protected function casts(): array
     {
         return [
-            "locked_at" => "datetime",
+            "scheduled_at" => "datetime",
         ];
     }
 }

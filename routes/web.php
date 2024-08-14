@@ -12,14 +12,12 @@ use Inertia\Response;
 
 Route::get("/", fn(): Response => inertia("Welcome"));
 
-Route::group(["prefix" => "admin"], function () {
-
+Route::group(["prefix" => "admin"], function (): void {
     Route::get("/quizzes", [QuizController::class, "index"]);
     Route::post("/quizzes", [QuizController::class, "store"]);
     Route::get("/quizzes/{quiz}", [QuizController::class, "show"]);
     Route::patch("/quizzes/{quiz}", [QuizController::class, "update"])->can("update,quiz");
     Route::delete("/quizzes/{quiz}", [QuizController::class, "destroy"])->can("delete,quiz");
-    Route::post("/quizzes/{quiz}/lock", [QuizController::class, "lock"]);
     Route::post("/quizzes/{quiz}/clone/", [QuizController::class, "clone"]);
 
     Route::get("/quizzes/{quiz}/questions", [QuizQuestionController::class, "index"]);
