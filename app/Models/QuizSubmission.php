@@ -16,7 +16,7 @@ use Illuminate\Support\Collection;
  * @property int $id
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property ?Carbon $closed_at
+ * @property Carbon $closed_at
  * @property int $quiz_id
  * @property int $user_id
  * @property bool $isClosed

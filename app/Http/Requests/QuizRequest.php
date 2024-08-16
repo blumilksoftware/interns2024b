@@ -22,6 +22,7 @@ class QuizRequest extends FormRequest
         return [
             "name" => ["required", "string"],
             "scheduled_at" => ["date", "date_format:Y-m-d H:i:s", "after:now"],
+            "duration" => ["integer", "min:1"],
         ];
     }
 }

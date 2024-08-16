@@ -157,6 +157,14 @@ class QuizTest extends TestCase
             ->post("/admin/quizzes", ["name" => "correct", "scheduled_at" => "2022-01-01 01:01:01"])
             ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
 
+        $this->from("/")
+            ->post("/admin/quizzes", ["name" => "correct", "duration" => -100])
+            ->assertRedirect("/")->assertSessionHasErrors(["duration"]);
+
+        $this->from("/")
+            ->post("/admin/quizzes", ["name" => "correct", "duration" => 0])
+            ->assertRedirect("/")->assertSessionHasErrors(["duration"]);
+
         $this->assertDatabaseCount("quizzes", 0);
     }
 
@@ -166,10 +174,10 @@ class QuizTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "New quiz", "scheduled_at" => "2024-03-10 12:15:00"])
+            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "New quiz", "scheduled_at" => "2024-03-10 12:15:00", "duration" => 7200])
             ->assertRedirect("/");
 
-        $this->assertDatabaseHas("quizzes", ["name" => "New quiz", "scheduled_at" => "2024-03-10 12:15:00"]);
+        $this->assertDatabaseHas("quizzes", ["name" => "New quiz", "scheduled_at" => "2024-03-10 12:15:00", "duration" => 7200]);
     }
 
     public function testUserCannotEditQuizThatNotExisted(): void
@@ -200,6 +208,14 @@ class QuizTest extends TestCase
         $this->from("/")
             ->patch("/admin/quizzes/{$quiz->id}", ["name" => "correct", "scheduled_at" => "2022-01-01 01:01:01"])
             ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
+
+        $this->from("/")
+            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "correct", "duration" => -100])
+            ->assertRedirect("/")->assertSessionHasErrors(["duration"]);
+
+        $this->from("/")
+            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "correct", "duration" => 0])
+            ->assertRedirect("/")->assertSessionHasErrors(["duration"]);
 
         $this->assertDatabaseHas("quizzes", ["name" => "Old quiz"]);
     }

@@ -18,7 +18,9 @@ use Illuminate\Support\Collection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $scheduled_at
+ * @property ?int $duration
  * @property bool $isLocked
+ * @property ?Carbon $closeAt
  * @property Collection<Question> $questions
  * @property Collection<Answer> $answers
  */
@@ -29,6 +31,7 @@ class Quiz extends Model
     protected $fillable = [
         "name",
         "scheduled_at",
+        "duration"
     ];
 
     public function questions(): HasMany
@@ -43,7 +46,17 @@ class Quiz extends Model
 
     public function isLocked(): Attribute
     {
-        return Attribute::get(fn(): bool => $this->scheduled_at !== null && $this->scheduled_at <= Carbon::now());
+        return Attribute::get(fn(): bool => $this->canBeScheduled() && $this->scheduled_at <= Carbon::now());
+    }
+
+    public function closeAt(): Attribute
+    {
+        return Attribute::get(fn(): ?Carbon => $this->canBeScheduled() ? $this->scheduled_at->copy()->addSeconds($this->duration) : null);
+    }
+
+    protected function canBeScheduled(): bool
+    {
+        return $this->scheduled_at !== null && $this->duration !== null;
     }
 
     public function clone(): self
@@ -61,6 +74,7 @@ class Quiz extends Model
     public function createSubmission(User $user): QuizSubmission
     {
         $submission = new QuizSubmission();
+        $submission->closed_at = $this->closeAt;
         $submission->quiz()->associate($this);
         $submission->user()->associate($user);
         $submission->save();
