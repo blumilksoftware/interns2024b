@@ -31,7 +31,7 @@ class Quiz extends Model
     protected $fillable = [
         "name",
         "scheduled_at",
-        "duration"
+        "duration",
     ];
 
     public function questions(): HasMany
@@ -52,11 +52,6 @@ class Quiz extends Model
     public function closeAt(): Attribute
     {
         return Attribute::get(fn(): ?Carbon => $this->canBeScheduled() ? $this->scheduled_at->copy()->addSeconds($this->duration) : null);
-    }
-
-    protected function canBeScheduled(): bool
-    {
-        return $this->scheduled_at !== null && $this->duration !== null;
     }
 
     public function clone(): self
@@ -87,6 +82,11 @@ class Quiz extends Model
         }
 
         return $submission;
+    }
+
+    protected function canBeScheduled(): bool
+    {
+        return $this->scheduled_at !== null && $this->duration !== null;
     }
 
     protected function casts(): array

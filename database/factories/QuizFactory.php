@@ -7,6 +7,7 @@ namespace Database\Factories;
 use App\Models\Quiz;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
+
 use function rand;
 
 /**
