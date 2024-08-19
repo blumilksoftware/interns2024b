@@ -4,18 +4,6 @@ import { inject } from 'vue'
 const isLoginRef: Ref<any, any> | undefined = inject('isLoginRef')
 
 
-// const props = defineProps(['isLogin'])
-
-// function gotoAuthSection() {
-// props.authForm.authForm
-// authFormRef.value.authForm
-
-// props.authForm.authForm.value.authForm.scrollIntoView({
-//   behavior: 'smooth',
-//   block: 'center', 
-// })
-
-// }
 
 const isHidden = ref(false)
 

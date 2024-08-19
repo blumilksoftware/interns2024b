@@ -7,7 +7,6 @@ const isLogin = ref(false)
 defineExpose({ isLogin })
 </script>
 
-
 <template>
   <section class="w-full flex flex-col items-center overflow-hidden backdrop-blur bg-white/30 lg:backdrop-blur-none lg:bg-transparent">
     <div class="w-full flex flex-col gap-10 max-w-lg px-5 py-20">

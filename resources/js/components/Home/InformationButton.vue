@@ -8,7 +8,6 @@ const setVisible = () => {
 }
 </script>
 
-
 <template>
   <div class="flex h-12 justify-center items-center">
     <button class="text-primary text-[1.5rem] font-bold text-center hover:text-[1.55rem] duration-200" @click="setVisible">INFORMACJE O KONKURSIE</button>
