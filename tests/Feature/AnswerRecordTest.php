@@ -31,7 +31,7 @@ class AnswerRecordTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/answers/{$record->id}/{$answer->id}")
+            ->patch(route("answers.answer", ["answerRecord" => $record->id, "answer" => $answer->id]))
             ->assertRedirect("/");
 
         $this->assertDatabaseHas("answer_records", [
@@ -45,7 +45,7 @@ class AnswerRecordTest extends TestCase
         $answer = Answer::factory()->locked()->create();
 
         $this->actingAs($this->user)
-            ->patch("/answers/0/{$answer->id}")
+            ->patch(route("answers.answer", ["answerRecord" => 0, "answer" => $answer->id]))
             ->assertStatus(404);
     }
 
@@ -58,7 +58,7 @@ class AnswerRecordTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/answers/{$record->id}/{$answer->id}")
+            ->patch(route("answers.answer", ["answerRecord" => $record->id, "answer" => $answer->id]))
             ->assertStatus(403);
 
         $this->assertDatabaseMissing("answer_records", [
@@ -78,7 +78,7 @@ class AnswerRecordTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/answers/{$record->id}/{$answer->id}")
+            ->patch(route("answers.answer", ["answerRecord" => $record->id, "answer" => $answer->id]))
             ->assertStatus(403);
 
         $this->assertDatabaseMissing("answer_records", [
@@ -95,7 +95,7 @@ class AnswerRecordTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/answers/{$record->id}/4")
+            ->patch(route("answers.answer", ["answerRecord" => $record->id, "answer" => 4]))
             ->assertStatus(404);
 
         $this->assertDatabaseMissing("answer_records", [
@@ -114,7 +114,7 @@ class AnswerRecordTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/answers/{$record->id}/{$answer1->id}")
+            ->patch(route("answers.answer", ["answerRecord" => $record->id, "answer" => $answer1->id]))
             ->assertStatus(403);
 
         $this->assertDatabaseMissing("answer_records", [
