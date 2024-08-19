@@ -216,7 +216,6 @@ class QuestionTest extends TestCase
     }
 
     public function testUserCanDeleteQuestion(): void
-
     {
         $question = Question::factory()->create(["text" => "question"]);
         Answer::factory()->create(["question_id" => $question->id]);
