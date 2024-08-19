@@ -46,12 +46,12 @@ class Quiz extends Model
 
     public function isLocked(): Attribute
     {
-        return Attribute::get(fn(): bool => $this->canBeLocked() && $this->scheduled_at <= Carbon::now());
+        return Attribute::get(fn(): bool => $this->isReadyToBePublished() && $this->scheduled_at <= Carbon::now());
     }
 
     public function closeAt(): Attribute
     {
-        return Attribute::get(fn(): ?Carbon => $this->canBeLocked() ? $this->scheduled_at->copy()->addSeconds($this->duration) : null);
+        return Attribute::get(fn(): ?Carbon => $this->isReadyToBePublished() ? $this->scheduled_at->copy()->addSeconds($this->duration) : null);
     }
 
     public function clone(): self
@@ -84,7 +84,7 @@ class Quiz extends Model
         return $submission;
     }
 
-    protected function canBeLocked(): bool
+    protected function isReadyToBePublished(): bool
     {
         return $this->scheduled_at !== null && $this->duration !== null;
     }
