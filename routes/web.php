@@ -12,6 +12,7 @@ use Inertia\Response;
 
 Route::get("/", fn(): Response => inertia("Welcome"));
 
+Route::get("/admin/quizzes", fn(): Response => inertia("QuizzesPanel"));
 Route::get("/quizzes", [QuizController::class, "index"]);
 Route::post("/quizzes", [QuizController::class, "store"]);
 Route::get("/quizzes/{quiz}", [QuizController::class, "show"]);
