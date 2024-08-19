@@ -20,7 +20,7 @@ class EnsureQuizIsNotAlreadyStarted
         $submission = QuizSubmission::query()->where(["quiz_id" => $quiz->id, "user_id" => $user->id])->first();
 
         if ($submission) {
-            return redirect("/submissions/{$submission->id}/");
+            return redirect(route("submissions.show", $submission->id));
         }
 
         return $next($request);

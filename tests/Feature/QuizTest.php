@@ -43,7 +43,7 @@ class QuizTest extends TestCase
         $this->assertDatabaseCount("questions", 10);
 
         $this->actingAs($this->user)
-            ->get("/admin/quizzes")
+            ->get(route("admin.quizzes.index"))
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Quiz/Index")
@@ -55,7 +55,7 @@ class QuizTest extends TestCase
 
     public function testUserCannotViewQuizThatNotExisted(): void
     {
-        $this->actingAs($this->user)->get("/admin/quizzes/1")
+        $this->actingAs($this->user)->get(route("admin.quizzes.show", 1))
             ->assertStatus(404);
     }
 
@@ -66,7 +66,7 @@ class QuizTest extends TestCase
         $this->assertDatabaseCount("quizzes", 1);
 
         $this->actingAs($this->user)
-            ->get("/admin/quizzes/{$quiz->id}")
+            ->get(route("admin.quizzes.show", $quiz->id))
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Quiz/Show")
@@ -81,7 +81,7 @@ class QuizTest extends TestCase
         $this->assertDatabaseCount("quizzes", 1);
 
         $this->actingAs($this->user)
-            ->get("/admin/quizzes/{$quiz->id}")
+            ->get(route("admin.quizzes.show", $quiz->id))
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Quiz/Show")
@@ -94,7 +94,7 @@ class QuizTest extends TestCase
     {
         $this->actingAs($this->user)
             ->from("/")
-            ->post("/admin/quizzes", ["name" => "Example quiz", "scheduled_at" => "2024-02-10 11:40:00"])
+            ->post(route("admin.quizzes.store"), ["name" => "Example quiz", "scheduled_at" => "2024-02-10 11:40:00"])
             ->assertRedirect("/");
 
         $this->assertDatabaseHas("quizzes", [
@@ -109,7 +109,7 @@ class QuizTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->post("/admin/quizzes", ["name" => "Example quiz"])
+            ->post(route("admin.quizzes.store"), ["name" => "Example quiz"])
             ->assertRedirect("/");
 
         $this->assertDatabaseHas("quizzes", [
@@ -122,15 +122,15 @@ class QuizTest extends TestCase
     {
         $this->actingAs($this->user)
             ->from("/")
-            ->post("/admin/quizzes", ["name" => "Example quiz 1"])
+            ->post(route("admin.quizzes.store"), ["name" => "Example quiz 1"])
             ->assertRedirect("/");
 
         $this->from("/")
-            ->post("/admin/quizzes", ["name" => "Example quiz 2"])
+            ->post(route("admin.quizzes.store"), ["name" => "Example quiz 2"])
             ->assertRedirect("/");
 
         $this->from("/")
-            ->post("/admin/quizzes", ["name" => "Example quiz 3"])
+            ->post(route("admin.quizzes.store"), ["name" => "Example quiz 3"])
             ->assertRedirect("/");
 
         $this->assertDatabaseHas("quizzes", ["name" => "Example quiz 1"]);
@@ -142,27 +142,27 @@ class QuizTest extends TestCase
     {
         $this->actingAs($this->user)
             ->from("/")
-            ->post("/admin/quizzes", [])
+            ->post(route("admin.quizzes.store"), [])
             ->assertRedirect("/")->assertSessionHasErrors(["name"]);
 
         $this->from("/")
-            ->post("/admin/quizzes", ["name" => false])
+            ->post(route("admin.quizzes.store"), ["name" => false])
             ->assertRedirect("/")->assertSessionHasErrors(["name"]);
 
         $this->from("/")
-            ->post("/admin/quizzes", ["name" => "correct", "scheduled_at" => "invalid format"])
+            ->post(route("admin.quizzes.store"), ["name" => "correct", "scheduled_at" => "invalid format"])
             ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
 
         $this->from("/")
-            ->post("/admin/quizzes", ["name" => "correct", "scheduled_at" => "2022-01-01 01:01:01"])
+            ->post(route("admin.quizzes.store"), ["name" => "correct", "scheduled_at" => "2022-01-01 01:01:01"])
             ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
 
         $this->from("/")
-            ->post("/admin/quizzes", ["name" => "correct", "duration" => -100])
+            ->post(route("admin.quizzes.store"), ["name" => "correct", "duration" => -100])
             ->assertRedirect("/")->assertSessionHasErrors(["duration"]);
 
         $this->from("/")
-            ->post("/admin/quizzes", ["name" => "correct", "duration" => 0])
+            ->post(route("admin.quizzes.store"), ["name" => "correct", "duration" => 0])
             ->assertRedirect("/")->assertSessionHasErrors(["duration"]);
 
         $this->assertDatabaseCount("quizzes", 0);
@@ -174,7 +174,7 @@ class QuizTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "New quiz", "scheduled_at" => "2024-03-10 12:15:00", "duration" => 7200])
+            ->patch(route("admin.quizzes.update", $quiz->id), ["name" => "New quiz", "scheduled_at" => "2024-03-10 12:15:00", "duration" => 7200])
             ->assertRedirect("/");
 
         $this->assertDatabaseHas("quizzes", ["name" => "New quiz", "scheduled_at" => "2024-03-10 12:15:00", "duration" => 7200]);
@@ -184,7 +184,7 @@ class QuizTest extends TestCase
     {
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/admin/quizzes/1", ["name" => "New quiz"])
+            ->patch(route("admin.quizzes.update", 1), ["name" => "New quiz"])
             ->assertStatus(404);
     }
 
@@ -194,27 +194,27 @@ class QuizTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", [])
+            ->patch(route("admin.quizzes.update", $quiz->id), [])
             ->assertRedirect("/")->assertSessionHasErrors(["name"]);
 
         $this->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => true])
+            ->patch(route("admin.quizzes.update", $quiz->id), ["name" => true])
             ->assertRedirect("/")->assertSessionHasErrors(["name"]);
 
         $this->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "correct", "scheduled_at" => "invalid format"])
+            ->patch(route("admin.quizzes.update", $quiz->id), ["name" => "correct", "scheduled_at" => "invalid format"])
             ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
 
         $this->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "correct", "scheduled_at" => "2022-01-01 01:01:01"])
+            ->patch(route("admin.quizzes.update", $quiz->id), ["name" => "correct", "scheduled_at" => "2022-01-01 01:01:01"])
             ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
 
         $this->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "correct", "duration" => -100])
+            ->patch(route("admin.quizzes.update", $quiz->id), ["name" => "correct", "duration" => -100])
             ->assertRedirect("/")->assertSessionHasErrors(["duration"]);
 
         $this->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "correct", "duration" => 0])
+            ->patch(route("admin.quizzes.update", $quiz->id), ["name" => "correct", "duration" => 0])
             ->assertRedirect("/")->assertSessionHasErrors(["duration"]);
 
         $this->assertDatabaseHas("quizzes", ["name" => "Old quiz"]);
@@ -226,7 +226,7 @@ class QuizTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "New quiz"])
+            ->patch(route("admin.quizzes.update", $quiz->id), ["name" => "New quiz"])
             ->assertStatus(403);
 
         $this->assertDatabaseHas("quizzes", ["name" => "Old quiz"]);
@@ -244,7 +244,7 @@ class QuizTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->delete("/admin/quizzes/{$quiz->id}")
+            ->delete(route("admin.quizzes.destroy", $quiz->id))
             ->assertRedirect("/");
 
         $this->assertDatabaseMissing("quizzes", ["name" => "quiz"]);
@@ -259,7 +259,7 @@ class QuizTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->delete("/admin/quizzes/{$quiz->id}")
+            ->delete(route("admin.quizzes.destroy", $quiz->id))
             ->assertStatus(403);
 
         $this->assertDatabaseHas("quizzes", ["name" => "quiz"]);
@@ -269,7 +269,7 @@ class QuizTest extends TestCase
     {
         $this->actingAs($this->user)
             ->from("/")
-            ->delete("/admin/quizzes/1")
+            ->delete(route("admin.quizzes.destroy", 1))
             ->assertStatus(404);
     }
 
@@ -287,7 +287,7 @@ class QuizTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->post("/admin/quizzes/{$quiz->id}/clone")
+            ->post(route("admin.quizzes.clone", $quiz->id))
             ->assertRedirect("/");
 
         $this->assertDatabaseCount("quizzes", 2);
@@ -303,7 +303,7 @@ class QuizTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->post("/admin/quizzes/{$quiz->id}/clone")
+            ->post(route("admin.quizzes.clone", $quiz->id))
             ->assertRedirect("/");
 
         $this->assertDatabaseCount("quizzes", 2);
@@ -313,7 +313,7 @@ class QuizTest extends TestCase
     {
         $this->actingAs($this->user)
             ->from("/")
-            ->post("/admin/quizzes/2/clone")
+            ->post(route("admin.quizzes.clone", 2))
             ->assertStatus(404);
     }
 
@@ -323,7 +323,7 @@ class QuizTest extends TestCase
 
         $response = $this->actingAs($this->user)
             ->from("/")
-            ->post("/quizzes/{$quiz->id}/start");
+            ->post(route("quizzes.start", $quiz->id));
 
         $submission = QuizSubmission::query()->where([
             "user_id" => $this->user->id,
@@ -339,8 +339,8 @@ class QuizTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->post("/quizzes/{$submission->quiz->id}/start")
-            ->assertRedirect("/submissions/{$submission->id}/");
+            ->post(route("quizzes.start", $submission->quiz->id))
+            ->assertRedirect(route("submissions.show", $submission->id));
 
         $this->assertDatabaseCount("quiz_submissions", 1);
     }
@@ -351,7 +351,7 @@ class QuizTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->post("/quizzes/{$quiz->id}/start")
+            ->post(route("quizzes.start", $quiz->id))
             ->assertStatus(403);
 
         $this->assertDatabaseCount("quiz_submissions", 0);
