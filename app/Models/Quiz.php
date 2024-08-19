@@ -51,7 +51,7 @@ class Quiz extends Model
 
     public function closeAt(): Attribute
     {
-        return Attribute::get(fn(): ?Carbon => $this->isReadyToBePublished() ? $this->scheduled_at->copy()->addSeconds($this->duration) : null);
+        return Attribute::get(fn(): ?Carbon => $this->isReadyToBePublished() ? $this->scheduled_at->copy()->addMinutes($this->duration) : null);
     }
 
     public function clone(): self
