@@ -39,7 +39,7 @@ class AuthenticateSessionTest extends TestCase
         $this->from("/test")->post("/auth/login", [
             "email" => "test",
             "password" => "wrongPasswordExample",
-        ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "Your email is invalid."]);
+        ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "Pole e-mail nie jest poprawnym adresem e-mail."]);
     }
 
     public function testUserCanNotLoginWithEmptyEmailAndPassword(): void
@@ -49,6 +49,6 @@ class AuthenticateSessionTest extends TestCase
         $this->from("/test")->post("/auth/login", [
             "email" => null,
             "password" => null,
-        ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "The email field is required.", "password" => "The password field is required."]);
+        ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "Pole e-mail jest wymagane.", "password" => "Pole hasło jest wymagane."]);
     }
 }

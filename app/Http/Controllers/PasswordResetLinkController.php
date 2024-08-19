@@ -19,7 +19,7 @@ class PasswordResetLinkController extends Controller
 {
     public function create(): Response
     {
-        return Inertia::render("Auth/Forgot-Password");
+        return Inertia::render("Auth/ForgotPassword");
     }
 
     public function store(ForgotPasswordRequest $request): RedirectResponse
@@ -37,7 +37,7 @@ class PasswordResetLinkController extends Controller
 
     public function resetCreate(string $token): Response
     {
-        return Inertia::render("Auth/Reset-Password", ["token" => $token]);
+        return Inertia::render("Auth/ResetPassword", ["token" => $token]);
     }
 
     public function resetStore(ResetPasswordRequest $request): RedirectResponse

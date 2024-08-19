@@ -40,17 +40,17 @@ class ForgotPasswordTest extends TestCase
 
         $this->post("/auth/forgot-password", [
             "email" => "wrongTest@gmail.com",
-        ])->assertSessionHasErrors(["email" => "We can't find a user with that email address."]);
+        ])->assertSessionHasErrors(["email" => "Nie znaleziono użytkownika z takim adresem e-mail."]);
         Notification::assertNothingSent();
 
         $this->post("/auth/forgot-password", [
             "email" => "wrongTest",
-        ])->assertSessionHasErrors(["email" => "Your email is invalid."]);
+        ])->assertSessionHasErrors(["email" => "Pole e-mail nie jest poprawnym adresem e-mail."]);
         Notification::assertNothingSent();
 
         $this->post("/auth/forgot-password", [
             "email" => null,
-        ])->assertSessionHasErrors(["email" => "The email field is required."]);
+        ])->assertSessionHasErrors(["email" => "Pole e-mail jest wymagane."]);
         Notification::assertNothingSent();
     }
 }

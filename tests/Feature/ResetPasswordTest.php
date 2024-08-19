@@ -111,7 +111,7 @@ class ResetPasswordTest extends TestCase
         ]);
 
         $response->assertRedirect();
-        $response->assertSessionHasErrors(["password" => trans("validation.confirmed", ["attribute" => "password"])]);
+        $response->assertSessionHasErrors(["password" => trans("validation.confirmed", ["attribute" => "hasło"])]);
 
         $this->assertTrue(Hash::check("oldPassword", $user->fresh()->password));
     }
