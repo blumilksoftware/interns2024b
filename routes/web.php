@@ -10,7 +10,7 @@ use App\Models\Question;
 use Illuminate\Support\Facades\Route;
 use Inertia\Response;
 
-Route::get("/", fn(): Response => inertia("Welcome"));
+Route::get("/", fn(): Response => inertia("Home"));
 
 Route::get("/quizzes", [QuizController::class, "index"]);
 Route::post("/quizzes", [QuizController::class, "store"]);
