@@ -3,10 +3,6 @@ import {ref} from 'vue'
 import Checkbox from '@/components/Common/Checkbox.vue'
 import Searchbar from '@/components/Common/Searchbar.vue'
 
-function submitForm() {
-  // ...  
-}
-
 // example options for schools school
 const searchbarOptions = ref([
   {id: 0, option: 'Szkoła #1'},
@@ -21,7 +17,7 @@ const searchbarOptions = ref([
 </script>
 
 <template>
-  <form class="row-start-1 col-start-1 space-y-6" method="POST" @submit.prevent="submitForm">
+  <form class="row-start-1 col-start-1 space-y-6" method="POST" @submit.prevent="">
     <div class="flex flex-row gap-6">
       <div class="w-full">
         <label for="name" class="text-sm font-medium leading-6 text-gray-900">Imię</label>

@@ -1,12 +1,5 @@
-<script setup lang="ts">
-
-function submitForm() {
-  // ...  
-}
-</script>
-
 <template>
-  <form class="row-start-1 col-start-1 space-y-6" method="POST" @submit.prevent="submitForm">
+  <form class="row-start-1 col-start-1 space-y-6" method="POST" @submit.prevent="">
     <div>
       <label for="email" class="block text-sm font-medium leading-6 text-gray-900">E-mail</label>
       <div class="mt-2">
