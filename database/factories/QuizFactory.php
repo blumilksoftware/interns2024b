@@ -8,8 +8,6 @@ use App\Models\Quiz;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-use function rand;
-
 /**
  * @extends Factory<Quiz>
  */
@@ -19,7 +17,7 @@ class QuizFactory extends Factory
     {
         return [
             "name" => fake()->name(),
-            "duration" => rand(3600, 7200),
+            "duration" => fake()->numberBetween(3600, 7200),
         ];
     }
 
