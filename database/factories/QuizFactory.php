@@ -8,7 +8,6 @@ use App\Models\Quiz;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-
 /**
  * @extends Factory<Quiz>
  */
