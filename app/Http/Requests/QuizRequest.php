@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Helpers\DateFormatHelper;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -21,7 +22,7 @@ class QuizRequest extends FormRequest
     {
         return [
             "name" => ["required", "string"],
-            "scheduled_at" => ["date", "date_format:Y-m-d H:i:s", "after:now"],
+            "scheduled_at" => ["date", "date_format:" . DateFormatHelper::DATETIME_FORMAT, "after:now"],
             "duration" => ["integer", "min:1"],
         ];
     }
