@@ -1,15 +1,6 @@
 ## @blumilksoftware/interns2024b
 ### About application
-#### Homepage
-##### full page
-![desktop-home](screenshots/desktop/full.png)
-![mobile-home](screenshots/mobile/full.png)
-##### Register & Log In
-![desktop-register](screenshots/desktop/register.png)
-![mobile-register](screenshots/mobile/register.png)
-![login](screenshots/desktop/login.png)
-##### Information window
-![information](screenshots/desktop/modal.png)
+> placeholder
 
 ### Local development
 ```
