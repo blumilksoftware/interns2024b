@@ -17,7 +17,7 @@ class QuizFactory extends Factory
     {
         return [
             "name" => fake()->name(),
-            "duration" => fake()->numberBetween(3600, 7200),
+            "duration" => fake()->numberBetween(60, 120),
         ];
     }
 
