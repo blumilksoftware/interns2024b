@@ -18,7 +18,7 @@ const searchbarOptions = ref([
 
 <template>
   <form class="row-start-1 col-start-1 space-y-6" method="POST" @submit.prevent="">
-    <div class="flex flex-row gap-6">
+    <div class="flex flex-col gap-6 sm:flex-row">
       <div class="w-full">
         <label for="name" class="text-sm font-medium leading-6 text-gray-900">Imię</label>
         <div class="mt-2 w-full">
