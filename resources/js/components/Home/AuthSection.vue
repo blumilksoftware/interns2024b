@@ -3,8 +3,15 @@ import { ref, defineExpose } from 'vue'
 import AuthButton from '@/components/Common/AuthButton.vue'
 import RegisterForm from '@/components/Home/RegisterForm.vue'
 import LoginForm from '@/components/Home/LoginForm.vue'
+import type {School} from '@/Types/School'
 const isLogin = ref(false)
 defineExpose({ isLogin })
+
+const { errors, schools } = defineProps<{
+  errors: Record<string, string[]>
+  schools: School[]
+}>()
+
 </script>
 
 <template>
@@ -13,8 +20,8 @@ defineExpose({ isLogin })
       <AuthButton v-model:is-login="isLogin" />
       <div class="grid">
         <Transition :name="isLogin ? 'slide-right' : 'slide-left'">
-          <LoginForm v-if="isLogin" key="on" />
-          <RegisterForm v-else key="off" />
+          <LoginForm v-if="isLogin" key="on" :errors />
+          <RegisterForm v-else key="off" :errors="errors" :schools="schools" />
         </Transition>
       </div>
     </div>

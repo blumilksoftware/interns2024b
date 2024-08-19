@@ -11,16 +11,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class RegisterUserController extends Controller
 {
-    public function create(): Response
-    {
-        return Inertia::render("Auth/Register");
-    }
-
     public function store(RegisterUserRequest $request): RedirectResponse
     {
         $userExists = User::query()->where("email", $request->email)->exists();

@@ -8,16 +8,9 @@ use App\Http\Requests\Auth\AuthenticateSessionRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\ValidationException;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class AuthenticateSessionController extends Controller
 {
-    public function create(): Response
-    {
-        return Inertia::render("Auth/Login");
-    }
-
     /**
      * @throws ValidationException
      */
