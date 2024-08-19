@@ -2,9 +2,12 @@
 import { reactive } from 'vue'
 import { router } from '@inertiajs/vue3'
 
-const { errors } = defineProps<{
+const { errors, status } = defineProps<{
   errors: Record<string, string[]>
+  status?: string
 }>()
+
+console.log(status)
 
 const form = reactive({
   email: null,
@@ -21,8 +24,9 @@ function submit() {
     <div>
       <label for="email">Email:</label>
       <input v-model="form.email" name="email" type="email">
+      <button type="submit">Reset?</button>
       <div v-if="errors.email">{{ errors.email }}</div>
     </div>
-    <button type="submit">Reset?</button>
+    <div v-if="status" class="alert alert-success">{{ status }}</div>
   </form>
 </template>

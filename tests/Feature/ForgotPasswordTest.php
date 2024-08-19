@@ -36,11 +36,11 @@ class ForgotPasswordTest extends TestCase
     public function testUserCanNotSendForgotPasswordRequestWithWrongEmail(): void
     {
         Notification::fake();
-        $user = User::factory()->create(["email" => "test@gmail.com"]);
+        User::factory()->create(["email" => "test@gmail.com"]);
 
         $this->post("/auth/forgot-password", [
             "email" => "wrongTest@gmail.com",
-        ])->assertSessionHasErrors(["email" => "Nie znaleziono użytkownika z takim adresem e-mail."]);
+        ])->assertSessionHasErrors(["email" => "Przypomnienie hasła zostało wysłane!"]);
         Notification::assertNothingSent();
 
         $this->post("/auth/forgot-password", [

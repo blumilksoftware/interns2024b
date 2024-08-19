@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Auth;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterUserRequest extends FormRequest
@@ -17,7 +16,7 @@ class RegisterUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "email" => "required|string|email:rfc,dns|max:255|unique:" . User::class,
+            "email" => "required|string|email:rfc,dns|max:255",
             "name" => "required|string|max:255",
             "surname" => "required|string|max:255",
             "password" => "required|string|min:8",

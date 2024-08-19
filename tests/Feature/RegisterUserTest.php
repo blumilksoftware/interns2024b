@@ -38,10 +38,10 @@ class RegisterUserTest extends TestCase
         ]);
     }
 
-    public function testUserCanNotRegisterWithAlreadyTakenEmail(): void
+    public function testUserCanNotCheckIfEmailIsAlreadyTakenViaRegisterForm(): void
     {
         $school = School::factory()->create();
-        $user = User::factory()->create([
+        User::factory()->create([
             "email" => "test@gmail.com",
         ]);
 
@@ -51,8 +51,7 @@ class RegisterUserTest extends TestCase
             "email" => "test@gmail.com",
             "password" => "123456890",
             "school_id" => $school->id,
-        ])->assertRedirect("/")
-            ->assertSessionHasErrors(["email" => "Taki e-mail już występuje."]);
+        ])->assertRedirect("/");
     }
 
     public function testUserCanNotRegisterWithWrongSchoolIndex(): void
