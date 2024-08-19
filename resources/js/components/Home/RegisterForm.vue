@@ -40,7 +40,7 @@ const searchbarOptions = ref([
 
     <div>
       <div class="flex items-center justify-between">
-        <label for="search-schools" class="block text-sm font-medium leading-6 text-gray-900">Wybierz szkołę</label>
+        <label for="search-schools" class="block text-sm font-medium leading-6 text-gray-900">Szkoła</label>
       </div>
       <Searchbar :options="searchbarOptions" />
     </div>
