@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
 use App\Http\Controllers\EmailVerifyController;
 use App\Http\Controllers\PasswordResetLinkController;
+use App\Http\Controllers\ProfileUserController;
 use App\Http\Controllers\QuestionAnswerController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get("/", [ContestController::class, "index"])->name("home");
 Route::post("/auth/register", [RegisterUserController::class, "store"])->name("register");
+Route::get("/auth/login", fn() => redirect("/"))->name("login");
 Route::post("/auth/login", [AuthenticateSessionController::class, "authenticate"])->name("login");
 Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
 Route::get("/email/verify", [EmailVerifyController::class, "create"])->middleware("auth")->name("verification.notice");
@@ -27,9 +29,15 @@ Route::post("email/verification-notification", [EmailVerifyController::class, "s
 Route::middleware(["guest"])->group(function (): void {
     Route::get("/auth/forgot-password", [PasswordResetLinkController::class, "create"])->name("password.request");
     Route::post("/auth/forgot-password", [PasswordResetLinkController::class, "store"])->name("password.email");
-    Route::get("/auth/password/reset/{token}", [PasswordResetLinkController::class, "resetCreate"])->name("password.reset");
 });
 
+Route::middleware("auth")->group(function (): void {
+    Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
+    Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
+    Route::post("/profile/forgot-password", [ProfileUserController::class, "forgotPassword"])->name("profile.password.request");
+});
+
+Route::get("/auth/password/reset/{token}", [PasswordResetLinkController::class, "resetCreate"])->name("password.reset");
 Route::post("/auth/password/reset", [PasswordResetLinkController::class, "resetStore"])->name("password.update");
 
 Route::group(["prefix" => "admin"], function (): void {
