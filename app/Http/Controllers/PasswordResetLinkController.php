@@ -32,7 +32,7 @@ class PasswordResetLinkController extends Controller
 
         return $status === Password::RESET_LINK_SENT
             ? back()->with(["status" => __($status)])
-            : back()->withErrors(["email" => __("passwords.sent")]);
+            : back()->with(["status" => __("passwords.sent")]);
     }
 
     public function resetCreate(string $token): Response
