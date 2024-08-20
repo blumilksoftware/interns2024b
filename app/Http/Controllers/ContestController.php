@@ -13,7 +13,7 @@ class ContestController extends Controller
 {
     public function index(): Response
     {
-        $schools = School::all();
+        $schools = School::all()->sortBy("name");
 
         return Inertia::render("Home", ["schools" => SchoolResource::collection($schools)]);
     }
