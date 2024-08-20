@@ -20,7 +20,7 @@ class QuizSubmissionFactory extends Factory
         return [
             "quiz_id" => Quiz::factory()->locked(),
             "user_id" => User::factory(),
-            "closed_at" => Carbon::now()->addSeconds(3600),
+            "closed_at" => Carbon::now()->addMinutes(60),
         ];
     }
 
