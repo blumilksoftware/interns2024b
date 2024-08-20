@@ -330,7 +330,7 @@ class QuizTest extends TestCase
             "quiz_id" => $quiz->id,
         ])->firstOrFail();
 
-        $response->assertRedirect("/submissions/$submission->id/");
+        $response->assertRedirect(route("submissions.show", $submission->id));
     }
 
     public function testUserCannotStartAlreadyStartedQuiz(): void
