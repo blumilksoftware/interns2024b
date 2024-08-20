@@ -60,4 +60,4 @@ jobs:
         run: composer cs
 
       - name: Execute tests
-        run: php artisan test --env=ci
+        run: php artisan test --env=ci --verbose
