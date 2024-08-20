@@ -16,7 +16,7 @@ return new class() extends Migration {
             $table->string("street");
             $table->string("building_number");
             $table->string("apartment_number")->nullable();
-            $table->string("zipCode");
+            $table->string("zip_code");
             $table->timestamps();
         });
     }

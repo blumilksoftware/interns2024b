@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $street
  * @property string $building_number
  * @property string $apartment_number
- * @property string $zipCode
+ * @property string $zip_code
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
@@ -29,6 +29,6 @@ class School extends Model
         "street",
         "building_number",
         "apartment_number",
-        "zipCode",
+        "zip_code",
     ];
 }
