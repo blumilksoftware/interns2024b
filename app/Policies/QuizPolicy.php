@@ -18,4 +18,9 @@ class QuizPolicy
     {
         return !$quiz->isLocked;
     }
+
+    public function submit(User $user, Quiz $quiz): bool
+    {
+        return $quiz->isLocked;
+    }
 }
