@@ -16,8 +16,8 @@ class AuthenticateSessionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "email" => "required|email|max:255",
-            "password" => "required|string",
+            "email" => ["required", "email", "max:255"],
+            "password" => ["required", "string"],
         ];
     }
 }
