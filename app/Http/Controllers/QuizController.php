@@ -7,6 +7,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\QuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,11 +18,14 @@ class QuizController extends Controller
 {
     public function index(): Response
     {
+        $user = User::query()->firstOrFail();
+        auth()->login($user);
+        
         $quizzes = Quiz::query()
             ->with("questions.answers")
             ->get();
 
-        return Inertia::render("Quiz/Index", ["quizzes" => QuizResource::collection($quizzes)]);
+        return Inertia::render("QuizzesPanel", ["quizzes" => QuizResource::collection($quizzes)]);
     }
 
     public function store(QuizRequest $request): RedirectResponse
