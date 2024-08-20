@@ -7,8 +7,6 @@ const { errors, status } = defineProps<{
   status?: string
 }>()
 
-console.log(status)
-
 const form = reactive({
   email: null,
 

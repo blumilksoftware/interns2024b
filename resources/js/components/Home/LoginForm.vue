@@ -15,7 +15,6 @@ function submit() {
   router.post('/auth/login', form)
 }
 
-
 </script>
 
 <template>

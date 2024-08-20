@@ -2,21 +2,17 @@
 import { reactive } from 'vue'
 import { router } from '@inertiajs/vue3'
 
-
 const props = defineProps<
 {
   token: string
   errors: Record<string, string[]>
 }>()
 
-
-
 const form = reactive({
   email: null,
   password: null,
   password_confirmation: null,
   token: props.token,
-
 })
 
 function submit() {
@@ -38,7 +34,6 @@ function submit() {
       <input v-model="form.password_confirmation" name="password_confirmation" type="password"><br>
       <div v-if="errors.password">{{ errors.password }}</div>
     </div>
-
 
     <div>
       <input v-model="form.token" name="token" type="hidden">

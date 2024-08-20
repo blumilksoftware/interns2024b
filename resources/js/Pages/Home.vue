@@ -14,7 +14,6 @@ const { errors, schools } = defineProps<{
   schools: School[]
 }>()
 
-
 provide('isLoginRef', isLogin)
 </script>
 

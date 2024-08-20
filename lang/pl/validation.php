@@ -129,7 +129,6 @@ return [
             "max" => "Pole :attribute nie może być dłuższe niż :max znaków.",
         ],
     ],
-
     "attributes" => [
         "name" => "imię",
         "surname" => "nazwisko",
