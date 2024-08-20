@@ -17,10 +17,10 @@ class RegisterUserController extends Controller
     public function store(RegisterUserRequest $request): RedirectResponse
     {
         $userExists = User::query()->where("email", $request->email)->exists();
-        $user = new User($request->validated());
-        $user->password = Hash::make($request->password);
 
         if (!$userExists) {
+            $user = new User($request->validated());
+            $user->password = Hash::make($request->password);
             $user->save();
             event(new Registered($user));
             Auth::login($user);
