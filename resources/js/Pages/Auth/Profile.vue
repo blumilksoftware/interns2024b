@@ -7,11 +7,13 @@ const props = defineProps<{
     name: string
     surname: string
     email: string
+    school: {
+      name: string
+      }
     }
   errors: Record<string, string[]>
   status?: string
   }>()
-
 
 function submit() {
   router.post('/profile/forgot-password')
@@ -23,6 +25,7 @@ function submit() {
     <p>Imię: {{ props.user.name }}</p>
     <p>Nazwisko: {{ props.user.surname }}</p>
     <p>Email: {{ props.user.email }}</p>
+    <p>Szkoła: {{ props.user.school.name }}</p>
     <form @submit.prevent="submit">
       <button type="submit">Zmiana hasła</button>
     </form>

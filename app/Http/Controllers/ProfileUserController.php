@@ -13,7 +13,7 @@ class ProfileUserController extends Controller
 {
     public function create(): Response
     {
-        $user = auth()->user();
+        $user = auth()->user()->load("school");
 
         return Inertia::render(
             "Auth/Profile",
@@ -29,8 +29,7 @@ class ProfileUserController extends Controller
         $userEmail = auth()->user()->email;
         $request = ForgotPasswordRequest::create("/forgot-password", "POST", ["email" => $userEmail]);
         $passwordResetLinkController = new PasswordResetLinkController();
-
-        $response = $passwordResetLinkController->store($request);
+        $passwordResetLinkController->store($request);
 
         return redirect()->route("profile")->with("status", session("status"));
     }
