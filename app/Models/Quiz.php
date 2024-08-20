@@ -17,8 +17,10 @@ use Illuminate\Support\Collection;
  * @property string $name
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property Carbon $locked_at
+ * @property Carbon $scheduled_at
+ * @property ?int $duration
  * @property bool $isLocked
+ * @property ?Carbon $closeAt
  * @property Collection<Question> $questions
  * @property Collection<Answer> $answers
  */
@@ -28,6 +30,8 @@ class Quiz extends Model
 
     protected $fillable = [
         "name",
+        "scheduled_at",
+        "duration",
     ];
 
     public function questions(): HasMany
@@ -42,7 +46,12 @@ class Quiz extends Model
 
     public function isLocked(): Attribute
     {
-        return Attribute::get(fn(): bool => $this->locked_at !== null);
+        return Attribute::get(fn(): bool => $this->isReadyToBePublished() && $this->scheduled_at <= Carbon::now());
+    }
+
+    public function closeAt(): Attribute
+    {
+        return Attribute::get(fn(): ?Carbon => $this->isReadyToBePublished() ? $this->scheduled_at->copy()->addMinutes($this->duration) : null);
     }
 
     public function clone(): self
@@ -57,10 +66,33 @@ class Quiz extends Model
         return $quizCopy;
     }
 
+    public function createSubmission(User $user): QuizSubmission
+    {
+        $submission = new QuizSubmission();
+        $submission->closed_at = $this->closeAt;
+        $submission->quiz()->associate($this);
+        $submission->user()->associate($user);
+        $submission->save();
+
+        foreach ($this->questions as $question) {
+            $answerRecord = new AnswerRecord();
+            $answerRecord->quizSubmission()->associate($submission);
+            $answerRecord->question()->associate($question);
+            $answerRecord->save();
+        }
+
+        return $submission;
+    }
+
+    protected function isReadyToBePublished(): bool
+    {
+        return $this->scheduled_at !== null && $this->duration !== null;
+    }
+
     protected function casts(): array
     {
         return [
-            "locked_at" => "datetime",
+            "scheduled_at" => "datetime",
         ];
     }
 }

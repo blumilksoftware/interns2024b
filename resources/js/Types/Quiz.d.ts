@@ -5,6 +5,7 @@ export interface Quiz {
   name: string
   createdAt: number
   updatedAt: number
+  duration?: number
   locked: boolean
   questions: Question[]
 }
