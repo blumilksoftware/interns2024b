@@ -12,6 +12,7 @@ class QuizResource extends JsonResource
     {
         return [
             "id" => $this->id,
+            "scheduledAt" => $this->scheduled_at,
             "name" => $this->name,
             "createdAt" => $this->created_at,
             "updatedAt" => $this->updated_at,
