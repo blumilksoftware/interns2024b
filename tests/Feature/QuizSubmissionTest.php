@@ -41,7 +41,7 @@ class QuizSubmissionTest extends TestCase
         $this->assertDatabaseCount("answer_records", 2);
 
         $this->actingAs($this->user)
-            ->get(route("submissions.show", $submission->id))
+            ->get("/submissions/{$submission->id}")
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Submission/Show")
@@ -57,7 +57,7 @@ class QuizSubmissionTest extends TestCase
         $submission = QuizSubmission::factory()->create();
 
         $this->actingAs($this->user)
-            ->get(route("submissions.show", $submission->id))
+            ->get("/submissions/{$submission->id}")
             ->assertStatus(403);
     }
 }
