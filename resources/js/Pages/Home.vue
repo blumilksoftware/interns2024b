@@ -23,7 +23,6 @@ provide('isLoginRef', isLogin)
     <AuthBanner :is-login="isLogin" />
     <div class="flex flex-col lg:flex-row lg:justify-evenly lg:gap-x-[5vw] lg:px-[5vw]">
       <GeneralSection />
-      test
       <AuthSection ref="isLogin" :errors="errors" :schools="schools" />
     </div>
     <Footer />
