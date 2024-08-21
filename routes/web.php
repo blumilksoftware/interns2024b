@@ -11,6 +11,7 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\QuizSubmissionController;
 use App\Http\Controllers\RegisterUserController;
+use App\Http\Controllers\SchoolsController;
 use App\Http\Middleware\EnsureQuizIsNotAlreadyStarted;
 use App\Models\Answer;
 use App\Models\Question;
@@ -56,6 +57,10 @@ Route::group(["prefix" => "admin"], function (): void {
     Route::post("/answers/{answer}/correct", [QuestionAnswerController::class, "markAsCorrect"])->can("update,answer")->name("admin.answers.correct");
     Route::post("/answers/{answer}/invalid", [QuestionAnswerController::class, "markAsInvalid"])->can("update,answer")->name("admin.answers.invalid");
 });
+
+Route::get("/schools", [SchoolsController::class, "index"])->name("admin.schools.index");
+Route::get("/schools/fetch", [SchoolsController::class, "fetch"])->name("admin.schools.fetch");
+Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");
 
 Route::post("/quizzes/{quiz}/start", [QuizController::class, "createSubmission"])->middleware(EnsureQuizIsNotAlreadyStarted::class)->can("submit,quiz")->name("quizzes.start");
 Route::get("/submissions/{quizSubmission}/", [QuizSubmissionController::class, "show"])->can("view,quizSubmission")->name("submissions.show");
