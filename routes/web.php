@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
 use App\Http\Controllers\EmailVerifyController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\QuizSubmissionController;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Middleware\EnsureQuizIsNotAlreadyStarted;
+use App\Http\Middleware\IsAdminMiddleware;
 use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Support\Facades\Route;
@@ -30,9 +32,13 @@ Route::middleware(["guest"])->group(function (): void {
     Route::get("/auth/password/reset/{token}", [PasswordResetLinkController::class, "resetCreate"])->name("password.reset");
 });
 
+Route::middleware("auth")->group(function (): void {
+    Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
+});
+
 Route::post("/auth/password/reset", [PasswordResetLinkController::class, "resetStore"])->name("password.update");
 
-Route::group(["prefix" => "admin"], function (): void {
+Route::group(["prefix" => "admin", "middleware" => ["auth", IsAdminMiddleware::class]], function (): void {
     Route::get("/quizzes", [QuizController::class, "index"])->name("admin.quizzes.index");
     Route::post("/quizzes", [QuizController::class, "store"])->name("admin.quizzes.store");
     Route::get("/quizzes/{quiz}", [QuizController::class, "show"])->name("admin.quizzes.show");
@@ -55,6 +61,8 @@ Route::group(["prefix" => "admin"], function (): void {
     Route::post("/answers/{answer}/clone/{question}", [QuestionAnswerController::class, "clone"])->can("clone,answer,question")->name("admin.answers.clone");
     Route::post("/answers/{answer}/correct", [QuestionAnswerController::class, "markAsCorrect"])->can("update,answer")->name("admin.answers.correct");
     Route::post("/answers/{answer}/invalid", [QuestionAnswerController::class, "markAsInvalid"])->can("update,answer")->name("admin.answers.invalid");
+
+    Route::get("/dashboard", [AdminDashboardController::class, "index"])->name("admin.dashboard");
 });
 
 Route::post("/quizzes/{quiz}/start", [QuizController::class, "createSubmission"])->middleware(EnsureQuizIsNotAlreadyStarted::class)->can("submit,quiz")->name("quizzes.start");

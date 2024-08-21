@@ -45,7 +45,7 @@ class ResetPasswordTest extends TestCase
             "password" => "newPassword",
         ]);
 
-        $loginResponse->assertRedirect("/");
+        $loginResponse->assertRedirect("/dashboard");
         $this->assertAuthenticated();
         Event::assertDispatched(PasswordReset::class);
     }

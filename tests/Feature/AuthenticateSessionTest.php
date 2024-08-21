@@ -19,7 +19,7 @@ class AuthenticateSessionTest extends TestCase
         $this->post("/auth/login", [
             "email" => "test@example.com",
             "password" => "goodPassword",
-        ])->assertRedirect("/");
+        ])->assertRedirect("/dashboard");
     }
 
     public function testUserCanNotLoginWithWrongPassword(): void

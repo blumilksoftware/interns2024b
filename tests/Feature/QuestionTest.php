@@ -22,10 +22,10 @@ class QuestionTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
+        $this->user = User::factory()->admin()->create();
     }
 
-    public function testUserCanViewQuizQuestions(): void
+    public function testAdminCanViewQuizQuestions(): void
     {
         $quiz = Quiz::factory()->create();
         $question = Question::factory()->create(["quiz_id" => $quiz->id]);
@@ -45,13 +45,13 @@ class QuestionTest extends TestCase
             );
     }
 
-    public function testUserCannotViewQuestionsOfQuizThatNotExisted(): void
+    public function testAdminCannotViewQuestionsOfQuizThatNotExisted(): void
     {
         $this->actingAs($this->user)->get(route("admin.questions.index", 1))
             ->assertStatus(404);
     }
 
-    public function testUserCanViewSingleQuestion(): void
+    public function testAdminCanViewSingleQuestion(): void
     {
         $question = Question::factory()->create();
 
@@ -66,7 +66,7 @@ class QuestionTest extends TestCase
             );
     }
 
-    public function testUserCanViewLockedQuestion(): void
+    public function testAdminCanViewLockedQuestion(): void
     {
         $question = Question::factory()->locked()->create();
 
@@ -82,13 +82,13 @@ class QuestionTest extends TestCase
             );
     }
 
-    public function testUserCannotViewQuestionThatNotExisted(): void
+    public function testAdminCannotViewQuestionThatNotExisted(): void
     {
         $this->actingAs($this->user)->get(route("admin.questions.show", 1))
             ->assertStatus(404);
     }
 
-    public function testUserCanCreateQuestion(): void
+    public function testAdminCanCreateQuestion(): void
     {
         $quiz = Quiz::factory()->create();
 
@@ -103,7 +103,7 @@ class QuestionTest extends TestCase
         ]);
     }
 
-    public function testUserCanCreateMultipleQuestions(): void
+    public function testAdminCanCreateMultipleQuestions(): void
     {
         $quiz = Quiz::factory()->create();
 
@@ -125,7 +125,7 @@ class QuestionTest extends TestCase
         $this->assertDatabaseHas("questions", ["text" => "Example question 2"]);
     }
 
-    public function testUserCannotCreateQuestionToQuizThatNotExisted(): void
+    public function testAdminCannotCreateQuestionToQuizThatNotExisted(): void
     {
         $this->actingAs($this->user)
             ->from("/")
@@ -137,7 +137,7 @@ class QuestionTest extends TestCase
         ]);
     }
 
-    public function testUserCannotCreateQuestionToQuizThatIsLocked(): void
+    public function testAdminCannotCreateQuestionToQuizThatIsLocked(): void
     {
         $quiz = Quiz::factory()->locked()->create();
 
@@ -151,7 +151,7 @@ class QuestionTest extends TestCase
         ]);
     }
 
-    public function testUserCannotCreateInvalidQuestion(): void
+    public function testAdminCannotCreateInvalidQuestion(): void
     {
         $quiz = Quiz::factory()->create();
 
@@ -167,7 +167,7 @@ class QuestionTest extends TestCase
         $this->assertDatabaseCount("questions", 0);
     }
 
-    public function testUserCanEditQuestion(): void
+    public function testAdminCanEditQuestion(): void
     {
         $question = Question::factory()->create(["text" => "Old questions"]);
 
@@ -179,7 +179,7 @@ class QuestionTest extends TestCase
         $this->assertDatabaseHas("questions", ["text" => "New question"]);
     }
 
-    public function testUserCannotEditQuestionThatNotExisted(): void
+    public function testAdminCannotEditQuestionThatNotExisted(): void
     {
         $this->actingAs($this->user)
             ->from("/")
@@ -187,7 +187,7 @@ class QuestionTest extends TestCase
             ->assertStatus(404);
     }
 
-    public function testUserCannotMakeInvalidEdit(): void
+    public function testAdminCannotMakeInvalidEdit(): void
     {
         $question = Question::factory()->create(["text" => "Old questions"]);
 
@@ -203,7 +203,7 @@ class QuestionTest extends TestCase
         $this->assertDatabaseHas("questions", ["text" => "Old questions"]);
     }
 
-    public function testUserCannotEditLockedQuestion(): void
+    public function testAdminCannotEditLockedQuestion(): void
     {
         $question = Question::factory()->locked()->create(["text" => "Old question"]);
 
@@ -215,7 +215,7 @@ class QuestionTest extends TestCase
         $this->assertDatabaseHas("questions", ["text" => "Old question"]);
     }
 
-    public function testUserCanDeleteQuestion(): void
+    public function testAdminCanDeleteQuestion(): void
     {
         $question = Question::factory()->create(["text" => "question"]);
         Answer::factory()->create(["question_id" => $question->id]);
@@ -235,7 +235,7 @@ class QuestionTest extends TestCase
         $this->assertDatabaseCount("answers", 0);
     }
 
-    public function testUserCannotDeleteLockedQuestion(): void
+    public function testAdminCannotDeleteLockedQuestion(): void
     {
         $question = Question::factory()->locked()->create(["text" => "question"]);
 
@@ -247,7 +247,7 @@ class QuestionTest extends TestCase
         $this->assertDatabaseHas("questions", ["text" => "question"]);
     }
 
-    public function testUserCannotDeleteQuestionThatNotExisted(): void
+    public function testAdminCannotDeleteQuestionThatNotExisted(): void
     {
         $this->actingAs($this->user)
             ->from("/")
@@ -255,7 +255,7 @@ class QuestionTest extends TestCase
             ->assertStatus(404);
     }
 
-    public function testUserCanCopyQuestion(): void
+    public function testAdminCanCopyQuestion(): void
     {
         $quizA = Quiz::factory()->create();
         $quizB = Quiz::factory()->create();
@@ -274,7 +274,7 @@ class QuestionTest extends TestCase
         $this->assertDatabaseCount("answers", 20);
     }
 
-    public function testUserCanCopyLockedQuestion(): void
+    public function testAdminCanCopyLockedQuestion(): void
     {
         $quizA = Quiz::factory()->locked()->create();
         $quizB = Quiz::factory()->create();
@@ -290,7 +290,7 @@ class QuestionTest extends TestCase
         $this->assertDatabaseHas("questions", ["quiz_id" => $quizB->id]);
     }
 
-    public function testUserCannotCopyAnswerToLockedQuestion(): void
+    public function testAdminCannotCopyAnswerToLockedQuestion(): void
     {
         $quizA = Quiz::factory()->create();
         $quizB = Quiz::factory()->locked()->create();
@@ -306,7 +306,7 @@ class QuestionTest extends TestCase
         $this->assertDatabaseHas("questions", ["quiz_id" => $quizA->id]);
     }
 
-    public function testUserCanCopyQuestionWithCorrectAnswer(): void
+    public function testAdminCanCopyQuestionWithCorrectAnswer(): void
     {
         $quizA = Quiz::factory()->create();
         $quizB = Quiz::factory()->create();
@@ -326,7 +326,7 @@ class QuestionTest extends TestCase
         $this->assertNotEquals($quizA->questions[0]->correctAnswer->id, $quizB->questions[0]->correctAnswer->id);
     }
 
-    public function testUserCannotCopyQuestionThatNotExisted(): void
+    public function testAdminCannotCopyQuestionThatNotExisted(): void
     {
         $quiz = Question::factory()->create();
 
@@ -336,7 +336,7 @@ class QuestionTest extends TestCase
             ->assertStatus(404);
     }
 
-    public function testUserCannotCopyAnswerToQuestionThatNotExisted(): void
+    public function testAdminCannotCopyAnswerToQuestionThatNotExisted(): void
     {
         $question = Question::factory()->create();
 
@@ -344,5 +344,42 @@ class QuestionTest extends TestCase
             ->from("/quizzes")
             ->post(route("admin.questions.clone", ["question" => $question->id, "quiz" => 2]))
             ->assertStatus(404);
+    }
+
+    public function testUserCannotAccessToCrud(): void
+    {
+        $user = User::factory()->create();
+        $quiz = Quiz::factory()->create();
+        $question = Question::factory()->create(["quiz_id" => $quiz->id]);
+
+        $this->actingAs($user)
+            ->from("/")
+            ->get(route("admin.questions.index", $quiz->id))
+            ->assertStatus(403);
+
+        $this->actingAs($user)
+            ->from("/")
+            ->post(route("admin.questions.store", $quiz->id), ["text" => "New question"])
+            ->assertStatus(403);
+
+        $this->actingAs($user)
+            ->from("/")
+            ->get(route("admin.questions.show", $question->id))
+            ->assertStatus(403);
+
+        $this->actingAs($user)
+            ->from("/")
+            ->patch(route("admin.questions.update", $question->id), ["text" => "Updated question"])
+            ->assertStatus(403);
+
+        $this->actingAs($user)
+            ->from("/")
+            ->post(route("admin.questions.clone", ["question" => $question->id, "quiz" => $quiz->id]))
+            ->assertStatus(403);
+
+        $this->actingAs($user)
+            ->from("/")
+            ->delete(route("admin.questions.destroy", $question->id))
+            ->assertStatus(403);
     }
 }
