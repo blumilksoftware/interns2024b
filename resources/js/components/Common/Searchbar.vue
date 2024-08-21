@@ -1,20 +1,22 @@
 <script lang="ts" setup>
 import {computed, ref, defineProps} from 'vue'
+import {type School} from '@/Types/School'
 const isSearchFocused = ref(false)
 const searchQuery = ref('')
-const props = defineProps({options: {type: Object, default:()=>{}}})
-const filteredSchools: any = computed(
-  () => {
-    return props.options.filter(
-      (obj:any) => obj.option.toString().includes(searchQuery.value),
-    )
-  },
-)
-const selectedOption = ref('')
+const props = defineProps<{
+  schools: School[]
+}>()
 
-const onOptionClick = (obj:any)=>{
-  selectedOption.value = obj.option
+const filteredSchools = computed(() =>  props.schools.filter(({ name }) => name.includes(searchQuery.value)))
+const selected = ref<School>()
+
+const emit = defineEmits(['change'])
+
+const onOptionClick = (school:School)=>{
+  selected.value = school
   isSearchFocused.value = false
+
+  emit('change', school.id)
 }
 </script>
 
@@ -28,12 +30,12 @@ const onOptionClick = (obj:any)=>{
       </div>
 
       <input
-        :value="isSearchFocused ? searchQuery : selectedOption"
+        :value="isSearchFocused ? searchQuery : selected?.name"
         class="outline-none py-3 bg-transparent w-full text-gray-900"
-        required name="search-schools" :class="{'cursor-pointer' : !isSearchFocused}"
+        required name="school_id" :class="{'cursor-pointer' : !isSearchFocused}"
         type="text"
-        :placeholder="selectedOption"
-        @input="(e:any)=>searchQuery=e.target.value"
+        :placeholder="selected?.name"
+        @input="(e:any)=>searchQuery=e.currentTarget.value"
         @focus="isSearchFocused=true"
         @blur="isSearchFocused=false"
       >
@@ -46,7 +48,7 @@ const onOptionClick = (obj:any)=>{
                 :key="obj.id"
                 class="cursor-pointer block px-4 py-2 hover:bg-primary/10 text-[0.9rem]"
                 @mousedown="onOptionClick(obj)"
-          >{{ obj.option }}</span>
+          >{{ obj.name }}</span>
         </div>
         <span v-else class="block px-4 py-2 text-sm">
           Nie znaleziono szkoły
