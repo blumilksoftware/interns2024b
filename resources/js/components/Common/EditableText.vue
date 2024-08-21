@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref} from 'vue'
+import { ref } from 'vue'
 const isFocused = ref<boolean>(false)
 const props = defineProps<{text?:string, bold?:boolean}>()
 
@@ -15,6 +15,7 @@ const props = defineProps<{text?:string, bold?:boolean}>()
       :class="{'font-bold':bold ? bold !== undefined : true, 'cursor-pointer' : !isFocused}"
       class="outline-none flex bg-transparent px-2 min-h-8 rounded-lg h-full focus:ring-2 focus:ring-primary/50"
       autocomplete="off"
+      @click.stop
       @focus="isFocused=true"
       @blur="isFocused=false"
     >
