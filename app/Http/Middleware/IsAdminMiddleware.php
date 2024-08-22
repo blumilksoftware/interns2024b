@@ -13,7 +13,10 @@ class IsAdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        abort_if($request->user()->role === Role::USER, Response::HTTP_FORBIDDEN);
+        if($request->user()->role === Role::USER)
+        {
+             abort(403);
+        }
 
         return $next($request);
     }
