@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const isFocused = ref<boolean>(false)
-const props = defineProps<{text?:string, bold?:boolean}>()
+const props = defineProps<{
+  bold? :boolean
+  type  :string
+  icon? :boolean
+  value?:string
+}>()
 
 </script>
 
@@ -11,15 +16,16 @@ const props = defineProps<{text?:string, bold?:boolean}>()
   >
     <input
       ref="input"
-      type="text" :value="props.text ?? ''"
+      :type="type"
+      :value="value ?? ''"
       :class="{'font-bold':bold ? bold !== undefined : true, 'cursor-pointer' : !isFocused}"
-      class="outline-none flex bg-transparent px-2 min-h-8 rounded-lg h-full focus:ring-2 focus:ring-primary/50"
+      class="outline-none flex px-2 min-h-8 rounded-lg h-full focus:ring-2 focus:ring-primary/50 bg-white/50"
       autocomplete="off"
       @click.stop
       @focus="isFocused=true"
       @blur="isFocused=false"
     >
-    <div v-if="!isFocused" class="absolute px-1 ">
+    <div v-if="!isFocused && icon" class="absolute px-1 ">
       <svg 
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
