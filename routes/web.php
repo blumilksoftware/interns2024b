@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::get("/", [ContestController::class, "index"])->name("home");
 Route::post("/auth/register", [RegisterUserController::class, "store"])->name("register");
 Route::get("/auth/login", fn() => redirect("/"))->name("login");
-Route::post("/auth/login", [AuthenticateSessionController::class, "authenticate"])->name("login");
+Route::post("/auth/login", [AuthenticateSessionController::class, "authenticate"])->name("authenticate");
 Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
 Route::get("/email/verify", [EmailVerifyController::class, "create"])->middleware("auth")->name("verification.notice");
 Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["signed", "throttle:6,1"])->name("verification.verify");
@@ -36,7 +36,6 @@ Route::middleware("auth")->group(function (): void {
     Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
     Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
     Route::get("/profile/password-edit", [ProfileUserController::class, "edit"])->name("profile.password.edit");
-    Route::post("/profile/forgot-password", [ProfileUserController::class, "forgot"])->name("profile.password.forgot");
     Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update");
 });
 
