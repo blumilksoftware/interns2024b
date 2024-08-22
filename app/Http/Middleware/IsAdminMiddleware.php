@@ -13,9 +13,8 @@ class IsAdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->user()->role === Role::USER)
-        {
-             abort(403);
+        if ($request->user()->role === Role::USER) {
+            abort(403);
         }
 
         return $next($request);
