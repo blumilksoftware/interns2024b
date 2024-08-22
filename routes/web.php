@@ -62,7 +62,7 @@ Route::group(["prefix" => "admin"], function (): void {
     Route::patch("/schools/{school}", [SchoolsController::class, "update"])->name("admin.schools.update");
     Route::delete("/schools/{school}", [SchoolsController::class, "destroy"])->name("admin.schools.destroy");
 
-    Route::get("/schools/fetch", [SchoolsController::class, "fetch"])->name("admin.schools.fetch");
+    Route::post("/schools/fetch", [SchoolsController::class, "fetch"])->name("admin.schools.fetch");
     Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");
 });
 

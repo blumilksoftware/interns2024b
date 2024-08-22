@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Jobs\FetchSchoolsJob;
 use App\Models\School;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Queue;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -117,5 +119,72 @@ class SchoolTest extends TestCase
             ->from("/")
             ->delete("/admin/schools/1")
             ->assertStatus(404);
+    }
+
+    public function testAdminCanFetchSchools(): void
+    {
+        Queue::fake([
+            FetchSchoolsJob::class,
+        ]);
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->post("/admin/schools/fetch")
+            ->assertJson([
+                "message" => "fetching started",
+            ]);
+
+        Queue::assertPushed(FetchSchoolsJob::class, 1);
+    }
+
+    public function testAdminCannotFetchSchoolsIfFetchingIsAlreadyStared(): void
+    {
+        Queue::fake([
+            FetchSchoolsJob::class,
+        ]);
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->post("/admin/schools/fetch")
+            ->assertJson([
+                "message" => "fetching started",
+            ]);
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->post("/admin/schools/fetch")
+            ->assertJson([
+                "message" => "please wait",
+            ]);
+
+        Queue::assertPushed(FetchSchoolsJob::class, 1);
+    }
+
+    public function testAdminCanCheckFetchingProgress(): void
+    {
+        Queue::fake([
+            FetchSchoolsJob::class,
+        ]);
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->get("/admin/schools/status")
+            ->assertJson([
+                "done" => true,
+            ]);
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->post("/admin/schools/fetch")
+            ->assertJson([
+                "message" => "fetching started",
+            ]);
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->get("/admin/schools/status")
+            ->assertJson([
+                "done" => false,
+            ]);
     }
 }
