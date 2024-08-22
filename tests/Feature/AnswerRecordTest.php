@@ -95,7 +95,7 @@ class AnswerRecordTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/ansers/{$submission->id}/4}")
+            ->patch("/answers/{$submission->id}/4")
             ->assertStatus(404);
 
         $this->assertDatabaseMissing("answer_records", [
