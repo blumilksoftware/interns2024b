@@ -22,7 +22,8 @@ class AnswerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->admin()->create();
+        $this->admin = User::factory()->admin()->create();
+        $this->user = User::factory()->create();
     }
 
     public function testAdminCanViewQuestionAnswers(): void
@@ -32,7 +33,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseCount("answers", 10);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get(route("admin.answers.index", $question->id))
             ->assertInertia(
                 fn(Assert $page) => $page
@@ -43,7 +44,7 @@ class AnswerTest extends TestCase
 
     public function testAdminCannotViewAnswersOfQuestionThatNotExisted(): void
     {
-        $this->actingAs($this->user)->get(route("admin.answers.index", 1))
+        $this->actingAs($this->admin)->get(route("admin.answers.index", 1))
             ->assertStatus(404);
     }
 
@@ -53,7 +54,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseCount("answers", 1);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get(route("admin.answers.show", $answer->id))
             ->assertInertia(
                 fn(Assert $page) => $page
@@ -68,7 +69,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseCount("answers", 1);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get(route("admin.answers.show", $answer->id))
             ->assertInertia(
                 fn(Assert $page) => $page
@@ -80,7 +81,7 @@ class AnswerTest extends TestCase
 
     public function testAdminCannotViewAnswerThatNotExisted(): void
     {
-        $this->actingAs($this->user)->get(route("admin.answers.show", 1))
+        $this->actingAs($this->admin)->get(route("admin.answers.show", 1))
             ->assertStatus(404);
     }
 
@@ -88,7 +89,7 @@ class AnswerTest extends TestCase
     {
         $question = Question::factory()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.store", $question->id), ["text" => "Example answer"])
             ->assertRedirect("/quizzes");
@@ -103,7 +104,7 @@ class AnswerTest extends TestCase
     {
         $question = Question::factory()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.store", $question->id), ["text" => "Example answer 1"])
             ->assertRedirect("/quizzes");
@@ -123,7 +124,7 @@ class AnswerTest extends TestCase
 
     public function testAdminCannotCreateAnswerToQuestionThatNotExisted(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.store", 1), ["text" => "Example answer"])
             ->assertStatus(404);
@@ -137,7 +138,7 @@ class AnswerTest extends TestCase
     {
         $question = Question::factory()->locked()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.store", $question->id), ["text" => "Example answer 1"])
             ->assertStatus(403);
@@ -151,7 +152,7 @@ class AnswerTest extends TestCase
     {
         $question = Question::factory()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.store", $question->id), [])
             ->assertRedirect("/quizzes")->assertSessionHasErrors(["text"]);
@@ -167,7 +168,7 @@ class AnswerTest extends TestCase
     {
         $answer = Answer::factory()->create(["text" => "Old answer"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->patch(route("admin.answers.update", $answer->id), ["text" => "New answer"])
             ->assertRedirect("/quizzes");
@@ -177,7 +178,7 @@ class AnswerTest extends TestCase
 
     public function testAdminCannotEditAnswerThatNotExisted(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->patch(route("admin.answers.update", 1), ["text" => "New answer"])
             ->assertStatus(404);
@@ -187,7 +188,7 @@ class AnswerTest extends TestCase
     {
         $answer = Answer::factory()->create(["text" => "Old answer"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->patch(route("admin.answers.update", $answer->id), [])
             ->assertRedirect("/quizzes")->assertSessionHasErrors(["text"]);
@@ -203,7 +204,7 @@ class AnswerTest extends TestCase
     {
         $answer = Answer::factory()->locked()->create(["text" => "Old answer"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->patch(route("admin.answers.update", $answer->id), ["text" => "New answer"])
             ->assertStatus(403);
@@ -215,7 +216,7 @@ class AnswerTest extends TestCase
     {
         $answer = Answer::factory()->create(["text" => "answer"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->delete(route("admin.answers.destroy", $answer->id))
             ->assertRedirect("/quizzes");
@@ -227,7 +228,7 @@ class AnswerTest extends TestCase
     {
         $answer = Answer::factory()->locked()->create(["text" => "answer"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->delete(route("admin.answers.destroy", $answer->id))
             ->assertStatus(403);
@@ -237,7 +238,7 @@ class AnswerTest extends TestCase
 
     public function testAdminCannotDeleteAnswerThatNotExisted(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->delete(route("admin.answers.destroy", 1))
             ->assertStatus(404);
@@ -247,7 +248,7 @@ class AnswerTest extends TestCase
     {
         $answer = Answer::factory()->create(["text" => "answer"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.correct", $answer->id))
             ->assertRedirect("/quizzes");
@@ -266,7 +267,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answerA->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.correct", $answerB->id))
             ->assertRedirect("/quizzes");
@@ -284,7 +285,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->delete(route("admin.answers.destroy", $answer->id))
             ->assertRedirect("/quizzes");
@@ -303,7 +304,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answerA->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.correct", $answerA->id))
             ->assertStatus(403);
@@ -321,7 +322,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.invalid", $answer->id))
             ->assertRedirect("/quizzes");
@@ -339,7 +340,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.invalid", $answer->id))
             ->assertStatus(403);
@@ -355,7 +356,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.clone", ["answer" => $answer->id, "question" => $questionB->id]))
             ->assertRedirect("/quizzes");
@@ -371,7 +372,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.clone", ["answer" => $answer->id, "question" => $questionB->id]))
             ->assertRedirect("/quizzes");
@@ -387,7 +388,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.clone", ["answer" => $answer->id, "question" => $questionB->id]))
             ->assertStatus(403);
@@ -407,7 +408,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
         $this->assertDatabaseHas("questions", ["id" => $questionA->id, "correct_answer_id" => $answer->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.clone", ["answer" => $answer->id, "question" => $questionB->id]))
             ->assertRedirect("/quizzes");
@@ -421,7 +422,7 @@ class AnswerTest extends TestCase
     {
         $question = Question::factory()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.clone", ["answer" => 2, "question" => $question->id]))
             ->assertStatus(404);
@@ -431,7 +432,7 @@ class AnswerTest extends TestCase
     {
         $answer = Answer::factory()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post(route("admin.answers.clone", ["answer" => $answer->id, "question" => 2]))
             ->assertStatus(404);
@@ -439,47 +440,46 @@ class AnswerTest extends TestCase
 
     public function testUserCannotAccessToCrud(): void
     {
-        $user = User::factory()->create();
         $quiz = Quiz::factory()->create();
         $question = Question::factory()->create(["quiz_id" => $quiz->id]);
         $answer = Answer::factory()->create(["question_id" => $question->id]);
 
-        $this->actingAs($user)
+        $this->actingAs($this->user)
             ->from("/")
             ->get(route("admin.answers.index", $question->id))
             ->assertStatus(403);
 
-        $this->actingAs($user)
+        $this->actingAs($this->user)
             ->from("/")
             ->post(route("admin.answers.store", $question->id), ["text" => "New answer"])
             ->assertStatus(403);
 
-        $this->actingAs($user)
+        $this->actingAs($this->user)
             ->from("/")
             ->get(route("admin.answers.show", $answer->id))
             ->assertStatus(403);
 
-        $this->actingAs($user)
+        $this->actingAs($this->user)
             ->from("/")
             ->patch(route("admin.answers.update", $answer->id), ["text" => "Updated question"])
             ->assertStatus(403);
 
-        $this->actingAs($user)
+        $this->actingAs($this->user)
             ->from("/")
             ->post(route("admin.answers.clone", ["answer" => $answer->id, "question" => $question->id]))
             ->assertStatus(403);
 
-        $this->actingAs($user)
+        $this->actingAs($this->user)
             ->from("/")
             ->delete(route("admin.answers.destroy", $answer->id))
             ->assertStatus(403);
 
-        $this->actingAs($user)
+        $this->actingAs($this->user)
             ->from("/")
             ->post(route("admin.answers.correct", $answer->id))
             ->assertStatus(403);
 
-        $this->actingAs($user)
+        $this->actingAs($this->user)
             ->from("/")
             ->post(route("admin.answers.invalid", $answer->id))
             ->assertStatus(403);
