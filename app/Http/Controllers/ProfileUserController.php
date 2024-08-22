@@ -33,16 +33,6 @@ class ProfileUserController extends Controller
         return Inertia::render("Auth/PasswordUpdate");
     }
 
-    public function forgot(Request $request): RedirectResponse
-    {
-        $userEmail = $request->user()->email;
-        $request = ForgotPasswordRequest::create("/forgot-password", "POST", ["email" => $userEmail]);
-        $passwordResetLinkController = new PasswordResetLinkController();
-        $passwordResetLinkController->store($request);
-
-        return redirect()->route("profile")->with("status", session("status"));
-    }
-
     public function update(Request $request, Hasher $hasher): RedirectResponse
     {
         $validated = $request->validate([
