@@ -34,7 +34,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseCount("answers", 10);
 
         $this->actingAs($this->admin)
-            ->get(route("admin.answers.index", $question->id))
+            ->get("/admin/questions/{$question->id}/answers")
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Answer/Index")
@@ -44,7 +44,7 @@ class AnswerTest extends TestCase
 
     public function testAdminCannotViewAnswersOfQuestionThatNotExisted(): void
     {
-        $this->actingAs($this->admin)->get(route("admin.answers.index", 1))
+        $this->actingAs($this->admin)->get("/admin/questions/1/answers")
             ->assertStatus(404);
     }
 
@@ -55,7 +55,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseCount("answers", 1);
 
         $this->actingAs($this->admin)
-            ->get(route("admin.answers.show", $answer->id))
+            ->get("/admin/answers/{$answer->id}")
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Answer/Show")
@@ -70,7 +70,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseCount("answers", 1);
 
         $this->actingAs($this->admin)
-            ->get(route("admin.answers.show", $answer->id))
+            ->get("/admin/answers/{$answer->id}")
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Answer/Show")
@@ -81,7 +81,7 @@ class AnswerTest extends TestCase
 
     public function testAdminCannotViewAnswerThatNotExisted(): void
     {
-        $this->actingAs($this->admin)->get(route("admin.answers.show", 1))
+        $this->actingAs($this->admin)->get("/admin/answers/1")
             ->assertStatus(404);
     }
 
@@ -91,7 +91,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.store", $question->id), ["text" => "Example answer"])
+            ->post("/admin/questions/{$question->id}/answers", ["text" => "Example answer"])
             ->assertRedirect("/quizzes");
 
         $this->assertDatabaseHas("answers", [
@@ -106,15 +106,15 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.store", $question->id), ["text" => "Example answer 1"])
+            ->post("/admin/questions/{$question->id}/answers", ["text" => "Example answer 1"])
             ->assertRedirect("/quizzes");
 
         $this->from("/quizzes")
-            ->post(route("admin.answers.store", $question->id), ["text" => "Example answer 2"])
+            ->post("/admin/questions/{$question->id}/answers", ["text" => "Example answer 2"])
             ->assertRedirect("/quizzes");
 
         $this->from("/quizzes")
-            ->post(route("admin.answers.store", $question->id), ["text" => "Example answer 3"])
+            ->post("/admin/questions/{$question->id}/answers", ["text" => "Example answer 3"])
             ->assertRedirect("/quizzes");
 
         $this->assertDatabaseHas("answers", ["text" => "Example answer 1"]);
@@ -126,7 +126,7 @@ class AnswerTest extends TestCase
     {
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.store", 1), ["text" => "Example answer"])
+            ->post("/admin/questions/1/answers", ["text" => "Example answer"])
             ->assertStatus(404);
 
         $this->assertDatabaseMissing("answers", [
@@ -140,7 +140,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.store", $question->id), ["text" => "Example answer 1"])
+            ->post("/admin/questions/{$question->id}/answers", ["text" => "Example answer 1"])
             ->assertStatus(403);
 
         $this->assertDatabaseMissing("answers", [
@@ -154,11 +154,11 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.store", $question->id), [])
+            ->post("/admin/questions/{$question->id}/answers", [])
             ->assertRedirect("/quizzes")->assertSessionHasErrors(["text"]);
 
         $this->from("/quizzes")
-            ->post(route("admin.answers.store", $question->id), ["text" => false])
+            ->post("/admin/questions/{$question->id}/answers", ["text" => false])
             ->assertRedirect("/quizzes")->assertSessionHasErrors(["text"]);
 
         $this->assertDatabaseCount("answers", 0);
@@ -170,7 +170,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->patch(route("admin.answers.update", $answer->id), ["text" => "New answer"])
+            ->patch("/admin/answers/{$answer->id}", ["text" => "New answer"])
             ->assertRedirect("/quizzes");
 
         $this->assertDatabaseHas("answers", ["text" => "New answer"]);
@@ -180,7 +180,7 @@ class AnswerTest extends TestCase
     {
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->patch(route("admin.answers.update", 1), ["text" => "New answer"])
+            ->patch("/admin/answers/1", ["text" => "New answer"])
             ->assertStatus(404);
     }
 
@@ -190,11 +190,11 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->patch(route("admin.answers.update", $answer->id), [])
+            ->patch("/admin/answers/{$answer->id}", [])
             ->assertRedirect("/quizzes")->assertSessionHasErrors(["text"]);
 
         $this->from("/quizzes")
-            ->patch(route("admin.answers.update", $answer->id), ["text" => true])
+            ->patch("/admin/answers/{$answer->id}", ["text" => true])
             ->assertRedirect("/quizzes")->assertSessionHasErrors(["text"]);
 
         $this->assertDatabaseHas("answers", ["text" => "Old answer"]);
@@ -206,7 +206,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->patch(route("admin.answers.update", $answer->id), ["text" => "New answer"])
+            ->patch("/admin/answers/{$answer->id}", ["text" => "New answer"])
             ->assertStatus(403);
 
         $this->assertDatabaseHas("answers", ["text" => "Old answer"]);
@@ -218,7 +218,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->delete(route("admin.answers.destroy", $answer->id))
+            ->delete("/admin/answers/{$answer->id}")
             ->assertRedirect("/quizzes");
 
         $this->assertDatabaseMissing("answers", ["text" => "answer"]);
@@ -230,7 +230,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->delete(route("admin.answers.destroy", $answer->id))
+            ->delete("/admin/answers/{$answer->id}")
             ->assertStatus(403);
 
         $this->assertDatabaseHas("answers", ["text" => "answer"]);
@@ -240,7 +240,7 @@ class AnswerTest extends TestCase
     {
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->delete(route("admin.answers.destroy", 1))
+            ->delete("/admin/answers/1")
             ->assertStatus(404);
     }
 
@@ -250,7 +250,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.correct", $answer->id))
+            ->post("/admin/answers/{$answer->id}/correct")
             ->assertRedirect("/quizzes");
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
@@ -269,7 +269,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.correct", $answerB->id))
+            ->post("/admin/answers/{$answerB->id}/correct")
             ->assertRedirect("/quizzes");
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answerB->id]);
@@ -287,7 +287,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->delete(route("admin.answers.destroy", $answer->id))
+            ->delete("/admin/answers/{$answer->id}")
             ->assertRedirect("/quizzes");
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => null]);
@@ -306,7 +306,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.correct", $answerA->id))
+            ->post("/admin/answers/{$answerB->id}/correct")
             ->assertStatus(403);
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answerA->id]);
@@ -324,7 +324,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.invalid", $answer->id))
+            ->post("/admin/answers/{$answer->id}/invalid")
             ->assertRedirect("/quizzes");
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
@@ -342,7 +342,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.invalid", $answer->id))
+            ->post("/admin/answers/{$answer->id}/invalid")
             ->assertStatus(403);
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
@@ -358,7 +358,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.clone", ["answer" => $answer->id, "question" => $questionB->id]))
+            ->post("/admin/answers/{$answer->id}/clone/{$questionB->id}")
             ->assertRedirect("/quizzes");
 
         $this->assertDatabaseHas("answers", ["question_id" => $questionB->id]);
@@ -374,7 +374,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.clone", ["answer" => $answer->id, "question" => $questionB->id]))
+            ->post("/admin/answers/{$answer->id}/clone/{$questionB->id}")
             ->assertRedirect("/quizzes");
 
         $this->assertDatabaseHas("answers", ["question_id" => $questionB->id]);
@@ -390,7 +390,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.clone", ["answer" => $answer->id, "question" => $questionB->id]))
+            ->post("/admin/answers/{$answer->id}/clone/{$questionB->id}")
             ->assertStatus(403);
 
         $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
@@ -410,7 +410,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.clone", ["answer" => $answer->id, "question" => $questionB->id]))
+            ->post("/admin/answers/{$answer->id}/clone/{$questionB->id}")
             ->assertRedirect("/quizzes");
 
         $this->assertDatabaseHas("answers", ["question_id" => $questionB->id]);
@@ -424,7 +424,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.clone", ["answer" => 2, "question" => $question->id]))
+            ->post("/admin/answers/2/clone/{$question->id}")
             ->assertStatus(404);
     }
 
@@ -434,7 +434,7 @@ class AnswerTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/quizzes")
-            ->post(route("admin.answers.clone", ["answer" => $answer->id, "question" => 2]))
+            ->post("/admin/answers/{$answer->id}/clone/2")
             ->assertStatus(404);
     }
 
