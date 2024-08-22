@@ -5,22 +5,52 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Helpers\VoivodeshipsHelper;
+use App\Http\Requests\SchoolRequest;
+use App\Http\Resources\SchoolResource;
 use App\Jobs\FetchSchoolsJob;
 use App\Models\School;
 use Illuminate\Bus\Batch;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
-use Symfony\Component\HttpFoundation\Response;
+use Inertia\Inertia;
+use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as Status;
 use Throwable;
 
 class SchoolsController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(): Response
     {
-        $data = School::all();
+        return Inertia::render("SchoolsPanel", ["schools" => SchoolResource::collection(School::all())]);
+    }
 
-        return response()->json($data);
+    public function store(SchoolRequest $request): RedirectResponse
+    {
+        School::query()->create($request->validated());
+
+        return redirect()
+            ->back()
+            ->with("success", "School added successfully");
+    }
+
+    public function update(SchoolRequest $request, School $school): RedirectResponse
+    {
+        $school->update($request->validated());
+
+        return redirect()
+            ->back()
+            ->with("success", "School updated");
+    }
+
+    public function destroy(School $school): RedirectResponse
+    {
+        $school->delete();
+
+        return redirect()
+            ->back()
+            ->with("success", "School deleted");
     }
 
     /**
@@ -29,14 +59,14 @@ class SchoolsController extends Controller
     public function fetch(): JsonResponse
     {
         if ($this->isFetching()) {
-            return response()->json(["message" => "please wait"], Response::HTTP_CONFLICT);
+            return response()->json(["message" => "please wait"], Status::HTTP_CONFLICT);
         }
 
         $jobs = [new FetchSchoolsJob(VoivodeshipsHelper::LOWER_SILESIA)];
         $batch = Bus::batch($jobs)->finally(fn(): bool => Cache::delete("fetch_schools"))->dispatch();
         Cache::set("fetch_schools", $batch->id);
 
-        return response()->json(["message" => "fetching started"], Response::HTTP_OK);
+        return response()->json(["message" => "fetching started"], Status::HTTP_OK);
     }
 
     public function status(): JsonResponse

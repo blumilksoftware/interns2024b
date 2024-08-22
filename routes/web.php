@@ -56,11 +56,15 @@ Route::group(["prefix" => "admin"], function (): void {
     Route::post("/answers/{answer}/clone/{question}", [QuestionAnswerController::class, "clone"])->can("clone,answer,question")->name("admin.answers.clone");
     Route::post("/answers/{answer}/correct", [QuestionAnswerController::class, "markAsCorrect"])->can("update,answer")->name("admin.answers.correct");
     Route::post("/answers/{answer}/invalid", [QuestionAnswerController::class, "markAsInvalid"])->can("update,answer")->name("admin.answers.invalid");
-});
 
-Route::get("/schools", [SchoolsController::class, "index"])->name("admin.schools.index");
-Route::get("/schools/fetch", [SchoolsController::class, "fetch"])->name("admin.schools.fetch");
-Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");
+    Route::get("/schools", [SchoolsController::class, "index"])->name("admin.schools.index");
+    Route::post("/schools", [SchoolsController::class, "store"])->name("admin.schools.store");
+    Route::patch("/schools/{school}", [SchoolsController::class, "update"])->name("admin.schools.update");
+    Route::delete("/schools/{school}", [SchoolsController::class, "destroy"])->name("admin.schools.destroy");
+
+    Route::get("/schools/fetch", [SchoolsController::class, "fetch"])->name("admin.schools.fetch");
+    Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");
+});
 
 Route::post("/quizzes/{quiz}/start", [QuizController::class, "createSubmission"])->middleware(EnsureQuizIsNotAlreadyStarted::class)->can("submit,quiz")->name("quizzes.start");
 Route::get("/submissions/{quizSubmission}/", [QuizSubmissionController::class, "show"])->can("view,quizSubmission")->name("submissions.show");
