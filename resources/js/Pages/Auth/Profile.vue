@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {defineProps} from 'vue'
-import { router } from '@inertiajs/vue3'
+import { defineProps } from 'vue'
+import { useForm } from '@inertiajs/vue3'
 
 const props = defineProps<{
   user: {
@@ -15,8 +15,10 @@ const props = defineProps<{
   status?: string
   }>()
 
+const form = useForm({})
+
 function submit() {
-  router.post('/profile/forgot-password')
+  form.get('/profile/password-edit')
 }
 </script>
 
@@ -24,15 +26,11 @@ function submit() {
   <div>
     <p>Imię: {{ props.user.name }}</p>
     <p>Nazwisko: {{ props.user.surname }}</p>
-    <p>Email: {{ props.user.email }}</p>
+    <p>E-mail: {{ props.user.email }}</p>
     <p>Szkoła: {{ props.user.school.name }}</p>
     <form @submit.prevent="submit">
-      <button type="submit">Zmiana hasła</button>
+      <button type="submit">Formularz zmiany hasła</button>
     </form>
     <div v-if="status" class="alert alert-success">{{ status }}</div>
   </div>
 </template>
-
-<style scoped>
-
-</style>

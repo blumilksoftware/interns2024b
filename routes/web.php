@@ -34,7 +34,9 @@ Route::middleware(["guest"])->group(function (): void {
 Route::middleware("auth")->group(function (): void {
     Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
     Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
-    Route::post("/profile/forgot-password", [ProfileUserController::class, "forgotPassword"])->name("profile.password.request");
+    Route::get("/profile/password-edit", [ProfileUserController::class, "edit"])->name("profile.password.edit");
+    Route::post("/profile/forgot-password", [ProfileUserController::class, "forgot"])->name("profile.password.forgot");
+    Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update");
 });
 
 Route::get("/auth/password/reset/{token}", [PasswordResetLinkController::class, "resetCreate"])->name("password.reset");

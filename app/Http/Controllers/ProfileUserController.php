@@ -5,32 +5,56 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Http\Resources\UserResource;
+use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ProfileUserController extends Controller
 {
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        $user = auth()->user()->load("school");
+        $user = $request->user()->load("school");
 
         return Inertia::render(
             "Auth/Profile",
             [
-                "user" => $user,
+                "user" => UserResource::make($user),
                 "status" => session("status"),
             ],
         );
     }
 
-    public function forgotPassword(): RedirectResponse
+    public function edit(Request $request): Response
     {
-        $userEmail = auth()->user()->email;
+        return Inertia::render("Auth/PasswordUpdate");
+    }
+
+    public function forgot(Request $request): RedirectResponse
+    {
+        $userEmail = $request->user()->email;
         $request = ForgotPasswordRequest::create("/forgot-password", "POST", ["email" => $userEmail]);
         $passwordResetLinkController = new PasswordResetLinkController();
         $passwordResetLinkController->store($request);
 
         return redirect()->route("profile")->with("status", session("status"));
+    }
+
+    public function update(Request $request, Hasher $hasher): RedirectResponse
+    {
+        $validated = $request->validate([
+            "current_password" => ["required", "current_password"],
+            "password" => ["required", Password::defaults(), "confirmed"],
+        ]);
+
+        $user = $request->user();
+        $user->password = $hasher->make($validated["password"]);
+        $user->save();
+
+        return redirect()->back()
+            ->with("success", "Zaktualizowano hasło");
     }
 }
