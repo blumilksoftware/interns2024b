@@ -116,7 +116,7 @@ class ResetPasswordTest extends TestCase
         $this->assertTrue(Hash::check("oldPassword", $user->fresh()->password));
     }
 
-    public function testAuthUserCanResetPasswordViaProfilePasswordReset(): void
+    public function testAuthUserCanResetPassword(): void
     {
         $user = User::factory()->create([
             "password" => Hash::make("current-password"),
@@ -134,7 +134,7 @@ class ResetPasswordTest extends TestCase
         $this->assertTrue(Hash::check("new-password", $user->fresh()->password));
     }
 
-    public function testAuthUserCanNotResetPasswordViaProfilePasswordResetWithWrongPassword(): void
+    public function testAuthUserCannotResetPasswordWithWrongPassword(): void
     {
         $user = User::factory()->create([
             "password" => Hash::make("current-password"),
@@ -152,7 +152,7 @@ class ResetPasswordTest extends TestCase
         $this->assertTrue(Hash::check("current-password", $user->fresh()->password));
     }
 
-    public function testAuthUserCanNotResetPasswordViaProfilePasswordResetWithNotMatchingNewPasswords(): void
+    public function testAuthUserCannotResetPasswordWithNotMatchingNewPasswords(): void
     {
         $user = User::factory()->create([
             "password" => Hash::make("current-password"),
@@ -170,7 +170,7 @@ class ResetPasswordTest extends TestCase
         $this->assertTrue(Hash::check("current-password", $user->fresh()->password));
     }
 
-    public function testUserCanNotAccessResetPasswordViaProfilePasswordReset(): void
+    public function testUserCannotAccessResetPassword(): void
     {
         $this->from("/")
             ->patch(route("profile.password.update"))
