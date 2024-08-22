@@ -26,6 +26,10 @@ class AnswerRecord extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        "text",
+    ];
+
     public function quizSubmission(): BelongsTo
     {
         return $this->belongsTo(QuizSubmission::class);
