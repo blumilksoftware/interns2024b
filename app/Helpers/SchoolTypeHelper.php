@@ -11,7 +11,6 @@ class SchoolTypeHelper
     public const int LICEUM_UZUPELNIAJACE = 17;
     public const int BEDNARSKA_SZKOLA_REALNA = 90;
     public const int SZKOLA_BRANZOWA_DRUGIEGO_STOPNIA = 94;
-    public const int ZESPOL_SZKOL_PLACOWEK_OSWIATOWYCH = 100;
 
     /**
      * @return array<int>
@@ -24,7 +23,6 @@ class SchoolTypeHelper
             self::LICEUM_UZUPELNIAJACE,
             self::BEDNARSKA_SZKOLA_REALNA,
             self::SZKOLA_BRANZOWA_DRUGIEGO_STOPNIA,
-            self::ZESPOL_SZKOL_PLACOWEK_OSWIATOWYCH,
         ];
     }
 }
