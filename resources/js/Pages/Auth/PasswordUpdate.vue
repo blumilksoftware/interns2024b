@@ -40,7 +40,3 @@ function updatePassword() {
     </form>
   </div>
 </template>
-
-<style scoped>
-
-</style>
