@@ -131,7 +131,7 @@ class SchoolTest extends TestCase
             ->from("/")
             ->post("/admin/schools/fetch")
             ->assertJson([
-                "message" => "fetching started",
+                "message" => "Pobieranie rozpoczęte",
             ]);
 
         Queue::assertPushed(FetchSchoolsJob::class, 1);
@@ -147,14 +147,14 @@ class SchoolTest extends TestCase
             ->from("/")
             ->post("/admin/schools/fetch")
             ->assertJson([
-                "message" => "fetching started",
+                "message" => "Pobieranie rozpoczęte",
             ]);
 
         $this->actingAs($this->admin)
             ->from("/")
             ->post("/admin/schools/fetch")
             ->assertJson([
-                "message" => "please wait",
+                "message" => "Pobieranie w toku, proszę czekać",
             ]);
 
         Queue::assertPushed(FetchSchoolsJob::class, 1);
@@ -177,7 +177,7 @@ class SchoolTest extends TestCase
             ->from("/")
             ->post("/admin/schools/fetch")
             ->assertJson([
-                "message" => "fetching started",
+                "message" => "Pobieranie rozpoczęte",
             ]);
 
         $this->actingAs($this->admin)
