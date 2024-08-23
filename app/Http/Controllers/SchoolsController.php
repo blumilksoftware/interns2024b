@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Helpers\VoivodeshipsHelper;
 use App\Http\Requests\SchoolRequest;
 use App\Http\Resources\SchoolResource;
 use App\Jobs\FetchSchoolsJob;
@@ -59,7 +58,8 @@ class SchoolsController extends Controller
             return response()->json(["message" => "Pobieranie w toku, proszę czekać"], Status::HTTP_CONFLICT);
         }
 
-        $jobs = [new FetchSchoolsJob(VoivodeshipsHelper::LOWER_SILESIA)];
+        $voivodeships = collect(config("schools.voivodeships"));
+        $jobs = $voivodeships->map(fn(string $voivodeships): FetchSchoolsJob => new FetchSchoolsJob($voivodeships));
         $batch = Bus::batch($jobs)->finally(fn(): bool => Cache::delete("fetch_schools"))->dispatch();
         Cache::set("fetch_schools", $batch->id);
 
