@@ -29,8 +29,4 @@ class RSPOConnector extends Connector implements HasPagination
         return ["Accept" => "application/ld+json"];
     }
 
-    protected function defaultConfig(): array
-    {
-        return [];
-    }
 }
