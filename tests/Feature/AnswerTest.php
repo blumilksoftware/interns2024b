@@ -22,8 +22,8 @@ class AnswerTest extends TestCase
     {
         parent::setUp();
 
-        $this->admin = User::factory()->create()->assignRole("admin");
-        $this->user = User::factory()->create()->assignRole("user");
+        $this->admin = User::factory()->admin()->create();
+        $this->user = User::factory()->create();
     }
 
     public function testAdminCanViewQuestionAnswers(): void

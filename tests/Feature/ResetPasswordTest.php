@@ -24,7 +24,7 @@ class ResetPasswordTest extends TestCase
         $user = User::factory()->create([
             "email" => "test@example.com",
             "password" => Hash::make("oldPassword"),
-        ])->assignRole("user");
+        ]);
 
         $token = Password::createToken($user);
 
@@ -55,7 +55,7 @@ class ResetPasswordTest extends TestCase
         $user = User::factory()->create([
             "email" => "test@example.com",
             "password" => Hash::make("oldPassword"),
-        ])->assignRole("user");
+        ]);
 
         $invalidToken = Str::random(60);
 
@@ -77,7 +77,7 @@ class ResetPasswordTest extends TestCase
         $user = User::factory()->create([
             "email" => "test@example.com",
             "password" => Hash::make("oldPassword"),
-        ])->assignRole("user");
+        ]);
 
         $token = Password::createToken($user);
 
@@ -99,7 +99,7 @@ class ResetPasswordTest extends TestCase
         $user = User::factory()->create([
             "email" => "test@example.com",
             "password" => Hash::make("oldPassword"),
-        ])->assignRole("user");
+        ]);
 
         $token = Password::createToken($user);
 

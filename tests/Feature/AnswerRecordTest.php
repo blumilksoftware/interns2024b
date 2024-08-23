@@ -20,7 +20,7 @@ class AnswerRecordTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create()->assignRole("user");
+        $this->user = User::factory()->create();
     }
 
     public function testUserCanAnswerQuestion(): void

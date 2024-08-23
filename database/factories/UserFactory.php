@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 /**
  * @extends Factory<User>
@@ -27,5 +28,28 @@ class UserFactory extends Factory
             "remember_token" => Str::random(10),
             "school_id" => School::factory(),
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            if (!$user->hasAnyRole(Role::all())) {
+                $user->assignRole("user");
+            }
+        });
+    }
+
+    public function admin(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole("admin");
+        });
+    }
+
+    public function superAdmin(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole("super-admin");
+        });
     }
 }

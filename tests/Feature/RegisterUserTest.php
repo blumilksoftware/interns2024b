@@ -43,7 +43,7 @@ class RegisterUserTest extends TestCase
         $school = School::factory()->create();
         User::factory()->create([
             "email" => "test@gmail.com",
-        ])->assignRole("user");
+        ]);
 
         $this->post("/auth/register", [
             "name" => "Test",

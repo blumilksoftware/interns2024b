@@ -25,8 +25,8 @@ class QuizTest extends TestCase
         parent::setUp();
         Carbon::setTestNow(Carbon::create(2024, 1, 1, 10));
 
-        $this->admin = User::factory()->create()->assignRole("admin");
-        $this->user = User::factory()->create()->assignRole("user");
+        $this->admin = User::factory()->admin()->create();
+        $this->user = User::factory()->create();
     }
 
     protected function tearDown(): void
@@ -322,7 +322,7 @@ class QuizTest extends TestCase
     public function testUserCanStartQuiz(): void
     {
         $quiz = Quiz::factory()->locked()->create();
-        $user = User::factory()->create()->assignRole("user");
+        $user = User::factory()->create();
 
         $response = $this->actingAs($user)
             ->from("/")
