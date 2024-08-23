@@ -9,7 +9,6 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use JsonException;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class ForgotPasswordTest extends TestCase
@@ -19,14 +18,6 @@ class ForgotPasswordTest extends TestCase
     /**
      * @throws JsonException
      */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Role::create(["name" => "admin", "guard_name" => "web"]);
-        Role::create(["name" => "user", "guard_name" => "web"]);
-    }
-
     public function testUserCanSendForgotPasswordRequest(): void
     {
         Notification::fake();

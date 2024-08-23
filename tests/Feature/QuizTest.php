@@ -12,7 +12,6 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class QuizTest extends TestCase
@@ -25,9 +24,6 @@ class QuizTest extends TestCase
     {
         parent::setUp();
         Carbon::setTestNow(Carbon::create(2024, 1, 1, 10));
-
-        Role::create(["name" => "admin", "guard_name" => "web"]);
-        Role::create(["name" => "user", "guard_name" => "web"]);
 
         $this->admin = User::factory()->create();
         $this->admin->assignRole("admin");

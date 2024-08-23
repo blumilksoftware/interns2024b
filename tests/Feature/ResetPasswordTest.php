@@ -11,19 +11,11 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class ResetPasswordTest extends TestCase
 {
     use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        Role::create(["name" => "admin", "guard_name" => "web"]);
-        Role::create(["name" => "user", "guard_name" => "web"]);
-    }
 
     public function testUserCanResetPasswordWithValidToken(): void
     {

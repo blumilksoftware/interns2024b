@@ -8,19 +8,11 @@ use App\Models\School;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class RegisterUserTest extends TestCase
 {
     use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        Role::create(["name" => "admin", "guard_name" => "web"]);
-        Role::create(["name" => "user", "guard_name" => "web"]);
-    }
 
     public function testUserCanRegister(): void
     {

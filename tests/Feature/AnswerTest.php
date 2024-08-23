@@ -10,7 +10,6 @@ use App\Models\Quiz;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AnswerTest extends TestCase
@@ -22,9 +21,6 @@ class AnswerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        Role::create(["name" => "admin", "guard_name" => "web"]);
-        Role::create(["name" => "user", "guard_name" => "web"]);
 
         $this->admin = User::factory()->create();
         $this->admin->assignRole("admin");

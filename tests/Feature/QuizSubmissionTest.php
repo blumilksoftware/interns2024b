@@ -11,7 +11,6 @@ use App\Models\QuizSubmission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
-use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class QuizSubmissionTest extends TestCase
@@ -23,9 +22,6 @@ class QuizSubmissionTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        Role::create(["name" => "admin", "guard_name" => "web"]);
-        Role::create(["name" => "user", "guard_name" => "web"]);
 
         $this->user = User::factory()->create();
         $this->user->assignRole("user");
