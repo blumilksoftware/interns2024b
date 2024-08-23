@@ -23,8 +23,7 @@ class QuizSubmissionTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
-        $this->user->assignRole("user");
+        $this->user = User::factory()->create()->assignRole("user");
     }
 
     public function testUserCanViewSingleSubmission(): void

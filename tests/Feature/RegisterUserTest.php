@@ -41,10 +41,9 @@ class RegisterUserTest extends TestCase
     public function testUserCanNotCheckIfEmailIsAlreadyTakenViaRegisterForm(): void
     {
         $school = School::factory()->create();
-        $user = User::factory()->create([
+        User::factory()->create([
             "email" => "test@gmail.com",
-        ]);
-        $user->assignRole("user");
+        ])->assignRole("user");
 
         $this->post("/auth/register", [
             "name" => "Test",

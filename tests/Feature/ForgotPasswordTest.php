@@ -21,8 +21,7 @@ class ForgotPasswordTest extends TestCase
     public function testUserCanSendForgotPasswordRequest(): void
     {
         Notification::fake();
-        $user = User::factory()->create(["email" => "test@gmail.com"]);
-        $user->assignRole("user");
+        $user = User::factory()->create(["email" => "test@gmail.com"])->assignRole("user");
 
         $this->post("/auth/forgot-password", [
             "email" => "test@gmail.com",
@@ -37,8 +36,7 @@ class ForgotPasswordTest extends TestCase
     public function testUserCanNotSendForgotPasswordRequestWithWrongEmail(): void
     {
         Notification::fake();
-        $user = User::factory()->create(["email" => "test@gmail.com"]);
-        $user->assignRole("user");
+        User::factory()->create(["email" => "test@gmail.com"])->assignRole("user");
 
         $this->post("/auth/forgot-password", [
             "email" => "wrongTest@gmail.com",

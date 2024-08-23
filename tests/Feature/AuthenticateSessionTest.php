@@ -14,8 +14,7 @@ class AuthenticateSessionTest extends TestCase
 
     public function testUserCanLogin(): void
     {
-        $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
-        $user->assignRole("user");
+        $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"])->assignRole("user");
 
         $this->post("/auth/login", [
             "email" => "test@example.com",
@@ -25,8 +24,7 @@ class AuthenticateSessionTest extends TestCase
 
     public function testUserCanNotLoginWithWrongPassword(): void
     {
-        $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
-        $user->assignRole("user");
+        User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"])->assignRole("user");
 
         $this->from("/test")->post("/auth/login", [
             "email" => "test@example.com",
@@ -36,8 +34,7 @@ class AuthenticateSessionTest extends TestCase
 
     public function testUserCanNotLoginWithWrongEmail(): void
     {
-        $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
-        $user->assignRole("user");
+        User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"])->assignRole("user");
 
         $this->from("/test")->post("/auth/login", [
             "email" => "test",
@@ -47,8 +44,7 @@ class AuthenticateSessionTest extends TestCase
 
     public function testUserCanNotLoginWithEmptyEmailAndPassword(): void
     {
-        $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
-        $user->assignRole("user");
+        User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"])->assignRole("user");
 
         $this->from("/test")->post("/auth/login", [
             "email" => null,
