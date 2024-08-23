@@ -26,7 +26,8 @@ class RSPOConnector extends Connector implements HasPagination
 
     protected function defaultHeaders(): array
     {
-        return ["Accept" => "application/ld+json"];
+        return [
+            "Accept" => "application/ld+json",
+        ];
     }
-
 }
