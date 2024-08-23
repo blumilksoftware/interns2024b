@@ -8,7 +8,6 @@ use App\Http\Requests\QuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -20,7 +19,7 @@ class QuizController extends Controller
     {
         $user = User::query()->firstOrFail();
         auth()->login($user);
-        
+
         $quizzes = Quiz::query()
             ->with("questions.answers")
             ->get();

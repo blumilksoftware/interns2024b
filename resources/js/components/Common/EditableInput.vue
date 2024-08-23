@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 const isFocused = ref<boolean>(false)
-const props = defineProps<{
+defineProps<{
   bold? :boolean
   type  :string
   icon? :boolean
@@ -25,7 +25,7 @@ const props = defineProps<{
       @focus="isFocused=true"
       @blur="isFocused=false"
     >
-    <div v-if="!isFocused && icon" class="absolute px-1 ">
+    <div v-if="!isFocused && icon" class="px-1 ">
       <svg 
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

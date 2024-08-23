@@ -1,27 +1,24 @@
 <script setup lang="ts">
-// import { ref } from 'vue'
-
+import BackgroundEffect from '@/components/Home/BackgroundEffect.vue'
 </script>
 
 <template>
-  <div class="h-screen w-screen !bg-cyan-500 -z-10 absolute top-0 left-0" />
-  <!-- TODO: add that beutiful background once my pull reqest gets merged -->
-  <header class="p-4 flex gap-4">
-    <a href="#">Uczniowie</a>
-    <a href="#">Lista&nbsp;szkół</a>
-    <a href="/admin/quizzes">Testy</a>
-    <div class="w-full" />
-    <a>Wyloguj&nbsp;się</a>
-  </header>
-  <header class="p-4 flex gap-4">
-    <slot name="subheader" />
-  </header>
-  <main class="flex gap-4 p-4 min-h-full">
-    <div class="items flex flex-col">
-      <slot name="items" />
-    </div>
-    <div class="size-full">
-      <slot name="selectedItemContent" />
-    </div>
-  </main>
+  <div class="absolute opacity-50 -z-50">
+    <BackgroundEffect />
+  </div>
+  <div class="bg-primary-600/10 size-full fixed top-0 left-0 -z-40" />
+  <!-- <div class="">
+    <header class="top-0 w-full py-3 px-6 gap-y-4 gap-x-6 flex justify-evenly items-center bg-white/30 backdrop-blur-md z-10 duration-200">
+      <a class="font-bold" href="#">Uczniowie</a>
+      <span class="text-gray-300">|</span>
+      <a class="font-bold" href="#">Lista&nbsp;szkół</a>
+      <span class="text-gray-300">|</span>
+      <a class="font-bold" href="/quizzes">Testy</a>
+      <div class="w-full" />
+      <a class="font-bold" href="#">Wyloguj&nbsp;się</a>
+    </header>
+    <header class="top-0 w-full py-2.5 px-6 gap-y-4 gap-x-6 flex justify-evenly items-center bg-white/30 backdrop-blur-md shadow z-10 duration-200">
+      <slot name="subheader" />
+    </header> 
+  </div> -->
 </template>
