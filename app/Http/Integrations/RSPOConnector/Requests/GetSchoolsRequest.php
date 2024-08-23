@@ -17,7 +17,7 @@ class GetSchoolsRequest extends Request implements Paginatable
 
     public function __construct(
         protected string $voivodeship,
-        protected int $school_type,
+        protected int $schoolType,
     ) {}
 
     public function defaultQuery(): array
