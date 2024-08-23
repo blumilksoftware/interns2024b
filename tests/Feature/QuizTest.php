@@ -46,7 +46,7 @@ class QuizTest extends TestCase
             ->get("/admin/quizzes")
             ->assertInertia(
                 fn(Assert $page) => $page
-                    ->component("Quiz/Index")
+                    ->component("QuizzesPanel")
                     ->has("quizzes", 2)
                     ->has("quizzes.0.questions", 5)
                     ->has("quizzes.1.questions", 5),
