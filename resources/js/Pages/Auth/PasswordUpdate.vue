@@ -36,7 +36,7 @@ function updatePassword() {
       <label for="password_confirmation">Potwierdzenie nowego hasła:</label>
       <input v-model="form.password_confirmation" name="password_confirmation" type="password"><br>
       <div v-if="errors.password_confirmation">{{ props.errors.password_confirmation }}</div>
-        <button type="submit">Zmień hasło</button>
+      <button type="submit">Zmień hasło</button>
     </form>
   </div>
 </template>
