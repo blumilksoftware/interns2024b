@@ -16,7 +16,7 @@ class QuizPolicy
 
     public function delete(User $user, Quiz $quiz): bool
     {
-        if ($user->isSuperAdmin()) {
+        if ($user->hasRole("super-admin")) {
             return true;
         }
 

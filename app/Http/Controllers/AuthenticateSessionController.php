@@ -21,7 +21,7 @@ class AuthenticateSessionController extends Controller
         if (auth()->attempt($credentials)) {
             $request->session()->regenerate();
 
-            if ($request->user()->isAdmin()) {
+            if ($request->user()->hasRole("admin")) {
                 return Redirect::route("admin.dashboard")->with("success", "Welcome to the Admin Dashboard");
             }
 
