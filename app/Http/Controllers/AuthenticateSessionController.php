@@ -21,7 +21,7 @@ class AuthenticateSessionController extends Controller
         if (auth()->attempt($credentials)) {
             $request->session()->regenerate();
 
-            if ($request->user()->hasRole("admin")) {
+            if ($request->user()->hasRole(["admin", "super-admin"])) {
                 return Redirect::route("admin.dashboard")->with("success", "Welcome to the Admin Dashboard");
             }
 
@@ -29,7 +29,7 @@ class AuthenticateSessionController extends Controller
         }
 
         throw ValidationException::withMessages([
-            "email" => "Wrong email or password",
+            "email" => "Nieprawidłowy e-mail lub hasło.",
         ]);
     }
 
