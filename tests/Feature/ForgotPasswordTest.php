@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Feature;
+namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use JsonException;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class ForgotPasswordTest extends TestCase
@@ -18,10 +19,19 @@ class ForgotPasswordTest extends TestCase
     /**
      * @throws JsonException
      */
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Role::create(["name" => "admin", "guard_name" => "web"]);
+        Role::create(["name" => "user", "guard_name" => "web"]);
+    }
+
     public function testUserCanSendForgotPasswordRequest(): void
     {
         Notification::fake();
         $user = User::factory()->create(["email" => "test@gmail.com"]);
+        $user->assignRole("user");
 
         $this->post("/auth/forgot-password", [
             "email" => "test@gmail.com",
@@ -36,7 +46,8 @@ class ForgotPasswordTest extends TestCase
     public function testUserCanNotSendForgotPasswordRequestWithWrongEmail(): void
     {
         Notification::fake();
-        User::factory()->create(["email" => "test@gmail.com"]);
+        $user = User::factory()->create(["email" => "test@gmail.com"]);
+        $user->assignRole("user");
 
         $this->post("/auth/forgot-password", [
             "email" => "wrongTest@gmail.com",

@@ -8,6 +8,7 @@ use App\Models\Answer;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AnswerRecordTest extends TestCase
@@ -20,7 +21,11 @@ class AnswerRecordTest extends TestCase
     {
         parent::setUp();
 
+        Role::create(["name" => "admin", "guard_name" => "web"]);
+        Role::create(["name" => "user", "guard_name" => "web"]);
+
         $this->user = User::factory()->create();
+        $this->user->assignRole("user");
     }
 
     public function testUserCanAnswerQuestion(): void

@@ -6,7 +6,6 @@ namespace Database\Factories;
 
 use App\Models\School;
 use App\Models\User;
-use App\Role;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -27,21 +26,6 @@ class UserFactory extends Factory
             "password" => Hash::make("password"),
             "remember_token" => Str::random(10),
             "school_id" => School::factory(),
-            "role" => Role::USER->value,
         ];
-    }
-
-    public function admin(): static
-    {
-        return $this->state(fn(array $attributes): array => [
-            "role" => Role::ADMIN->value,
-        ]);
-    }
-
-    public function superAdmin(): static
-    {
-        return $this->state(fn(array $attributes): array => [
-            "role" => Role::SUPER_ADMIN->value,
-        ]);
     }
 }

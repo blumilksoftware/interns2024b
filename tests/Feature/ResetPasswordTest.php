@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Feature;
+namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
@@ -11,11 +11,19 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class ResetPasswordTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Role::create(["name" => "admin", "guard_name" => "web"]);
+        Role::create(["name" => "user", "guard_name" => "web"]);
+    }
 
     public function testUserCanResetPasswordWithValidToken(): void
     {
@@ -25,6 +33,7 @@ class ResetPasswordTest extends TestCase
             "email" => "test@example.com",
             "password" => Hash::make("oldPassword"),
         ]);
+        $user->assignRole("user");
 
         $token = Password::createToken($user);
 
@@ -56,6 +65,7 @@ class ResetPasswordTest extends TestCase
             "email" => "test@example.com",
             "password" => Hash::make("oldPassword"),
         ]);
+        $user->assignRole("user");
 
         $invalidToken = Str::random(60);
 
@@ -78,6 +88,7 @@ class ResetPasswordTest extends TestCase
             "email" => "test@example.com",
             "password" => Hash::make("oldPassword"),
         ]);
+        $user->assignRole("user");
 
         $token = Password::createToken($user);
 
@@ -100,6 +111,7 @@ class ResetPasswordTest extends TestCase
             "email" => "test@example.com",
             "password" => Hash::make("oldPassword"),
         ]);
+        $user->assignRole("user");
 
         $token = Password::createToken($user);
 

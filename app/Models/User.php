@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Role;
+use App\Enums\RolesEnum;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property int $id
@@ -21,7 +22,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string $password
  * @property Carbon $email_verified_at
  * @property int $school_id
- * @property Role $role
+ * @property RolesEnum role
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property School $school
@@ -30,6 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
     use HasFactory;
     use Notifiable;
+    use HasRoles;
 
     protected $fillable = [
         "name",
@@ -48,12 +50,12 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 
     public function isAdmin(): bool
     {
-        return $this->role === Role::ADMIN || $this->role === Role::SUPER_ADMIN;
+        return $this->hasRole(RolesEnum::ADMIN) || $this->hasRole(RolesEnum::SUPERADMIN);
     }
 
     public function isSuperAdmin(): bool
     {
-        return $this->role === Role::SUPER_ADMIN;
+        return $this->hasRole(RolesEnum::SUPERADMIN);
     }
 
     protected function casts(): array
@@ -61,7 +63,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         return [
             "email_verified_at" => "datetime",
             "password" => "hashed",
-            "role" => Role::class,
+            "role" => RolesEnum::class,
         ];
     }
 }

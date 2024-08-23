@@ -14,7 +14,6 @@ use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\QuizSubmissionController;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Middleware\EnsureQuizIsNotAlreadyStarted;
-use App\Http\Middleware\IsAdminMiddleware;
 use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Support\Facades\Route;
@@ -39,7 +38,7 @@ Route::middleware("auth")->group(function (): void {
 
 Route::post("/auth/password/reset", [PasswordResetLinkController::class, "resetStore"])->name("password.update");
 
-Route::group(["prefix" => "admin", "middleware" => ["auth", IsAdminMiddleware::class]], function (): void {
+Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin"]], function (): void {
     Route::get("/quizzes", [QuizController::class, "index"])->name("admin.quizzes.index");
     Route::post("/quizzes", [QuizController::class, "store"])->name("admin.quizzes.store");
     Route::get("/quizzes/{quiz}", [QuizController::class, "show"])->name("admin.quizzes.show");

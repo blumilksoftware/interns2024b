@@ -6,15 +6,25 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AuthenticateSessionTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Role::create(["name" => "admin", "guard_name" => "web"]);
+        Role::create(["name" => "user", "guard_name" => "web"]);
+    }
+
     public function testUserCanLogin(): void
     {
-        User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
+        $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
+        $user->assignRole("user");
 
         $this->post("/auth/login", [
             "email" => "test@example.com",
@@ -24,7 +34,8 @@ class AuthenticateSessionTest extends TestCase
 
     public function testUserCanNotLoginWithWrongPassword(): void
     {
-        User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
+        $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
+        $user->assignRole("user");
 
         $this->from("/test")->post("/auth/login", [
             "email" => "test@example.com",
@@ -34,7 +45,8 @@ class AuthenticateSessionTest extends TestCase
 
     public function testUserCanNotLoginWithWrongEmail(): void
     {
-        User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
+        $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
+        $user->assignRole("user");
 
         $this->from("/test")->post("/auth/login", [
             "email" => "test",
@@ -44,7 +56,8 @@ class AuthenticateSessionTest extends TestCase
 
     public function testUserCanNotLoginWithEmptyEmailAndPassword(): void
     {
-        User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
+        $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
+        $user->assignRole("user");
 
         $this->from("/test")->post("/auth/login", [
             "email" => null,
