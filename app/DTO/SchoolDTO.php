@@ -10,9 +10,9 @@ class SchoolDTO
         public string $name,
         public string $city,
         public string $street,
-        public string $building_number,
-        public string $apartment_number,
-        public string $zip_code,
+        public string $buildingNumber,
+        public string $apartmentNumber,
+        public string $zipCode,
     ) {}
 
     public static function createFromArray(array $data): self

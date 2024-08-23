@@ -47,9 +47,9 @@ class GetSchoolDataService
                 "name" => $school->name,
                 "city" => $school->city,
                 "street" => $school->street,
-                "building_number" => $school->building_number,
-                "apartment_number" => $school->apartment_number,
-                "zip_code" => $school->zip_code,
+                "building_number" => $school->buildingNumber,
+                "apartment_number" => $school->apartmentNumber,
+                "zip_code" => $school->zipCode,
             ]);
         }
     }
