@@ -31,7 +31,7 @@ class AuthenticateSessionTest extends TestCase
         $this->from("/test")->post("/auth/login", [
             "email" => "test@example.com",
             "password" => "wrongPasswordExample",
-        ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "Wrong email or password"]);
+        ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "Nieprawidłowy e-mail lub hasło."]);
     }
 
     public function testUserCanNotLoginWithWrongEmail(): void
