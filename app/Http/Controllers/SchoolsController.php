@@ -31,8 +31,7 @@ class SchoolsController extends Controller
         School::query()->create($request->validated());
 
         return redirect()
-            ->back()
-            ->with("success", "School added successfully");
+            ->back();
     }
 
     public function update(SchoolRequest $request, School $school): RedirectResponse
@@ -40,8 +39,7 @@ class SchoolsController extends Controller
         $school->update($request->validated());
 
         return redirect()
-            ->back()
-            ->with("success", "School updated");
+            ->back();
     }
 
     public function destroy(School $school): RedirectResponse
@@ -49,8 +47,7 @@ class SchoolsController extends Controller
         $school->delete();
 
         return redirect()
-            ->back()
-            ->with("success", "School deleted");
+            ->back();
     }
 
     /**
@@ -59,14 +56,14 @@ class SchoolsController extends Controller
     public function fetch(): JsonResponse
     {
         if ($this->isFetching()) {
-            return response()->json(["message" => "please wait"], Status::HTTP_CONFLICT);
+            return response()->json(["message" => "Pobieranie w toku, proszę czekać"], Status::HTTP_CONFLICT);
         }
 
         $jobs = [new FetchSchoolsJob(VoivodeshipsHelper::LOWER_SILESIA)];
         $batch = Bus::batch($jobs)->finally(fn(): bool => Cache::delete("fetch_schools"))->dispatch();
         Cache::set("fetch_schools", $batch->id);
 
-        return response()->json(["message" => "fetching started"], Status::HTTP_OK);
+        return response()->json(["message" => "Pobieranie rozpoczęte"], Status::HTTP_OK);
     }
 
     public function status(): JsonResponse

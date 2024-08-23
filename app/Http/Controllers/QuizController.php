@@ -27,9 +27,7 @@ class QuizController extends Controller
     {
         Quiz::query()->create($request->validated());
 
-        return redirect()
-            ->back()
-            ->with("success", "Quiz added successfully");
+        return redirect()->back();
     }
 
     public function show(int $quiz): Response
@@ -45,18 +43,14 @@ class QuizController extends Controller
     {
         $quiz->update($request->validated());
 
-        return redirect()
-            ->back()
-            ->with("success", "Quiz updated");
+        return redirect()->back();
     }
 
     public function destroy(Quiz $quiz): RedirectResponse
     {
         $quiz->delete();
 
-        return redirect()
-            ->back()
-            ->with("success", "Quiz deleted");
+        return redirect()->back();
     }
 
     public function clone(Quiz $quiz): RedirectResponse
@@ -65,7 +59,7 @@ class QuizController extends Controller
 
         return redirect()
             ->back()
-            ->with("success", "Quiz cloned");
+            ->with("success", "Test został skopiowany");
     }
 
     public function createSubmission(Request $request, Quiz $quiz): RedirectResponse
