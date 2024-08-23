@@ -11,15 +11,8 @@ class RoleSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->createRoleIfNotExists("super-admin");
-        $this->createRoleIfNotExists("admin");
-        $this->createRoleIfNotExists("user");
-    }
-
-    private function createRoleIfNotExists(string $roleName): void
-    {
-        if (!Role::where("name", $roleName)->exists()) {
-            Role::create(["name" => $roleName, "guard_name" => "web"]);
-        }
+        Role::firstOrCreate(["name" => "super-admin", "guard_name" => "web"]);
+        Role::firstOrCreate(["name" => "admin", "guard_name" => "web"]);
+        Role::firstOrCreate(["name" => "user", "guard_name" => "web"]);
     }
 }
