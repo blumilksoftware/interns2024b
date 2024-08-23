@@ -22,7 +22,7 @@ class AuthenticateSessionController extends Controller
             $request->session()->regenerate();
 
             return $request->user()->hasRole(["admin", "super-admin"])
-                ? Redirect::route("admin.dashboard")->with("success", "Welcome to the Admin Dashboard")
+                ? Redirect::route("admin.dashboard")->with("success", "Witaj na Panelu Administratora")
                 : Redirect::route("dashboard")->with("success");
         }
 
