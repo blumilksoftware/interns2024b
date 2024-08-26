@@ -19,32 +19,31 @@ use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Support\Facades\Route;
 
-Route::get("/", [ContestController::class, "index"])->name("home");
-Route::post("/auth/register", [RegisterUserController::class, "store"])->name("register");
-Route::get("/auth/login", fn() => redirect("/"))->name("login");
-Route::post("/auth/login", [AuthenticateSessionController::class, "authenticate"])->name("authenticate");
-Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
 Route::get("/email/verify", [EmailVerifyController::class, "create"])->middleware("auth")->name("verification.notice");
 Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["signed", "throttle:6,1"])->name("verification.verify");
 Route::post("email/verification-notification", [EmailVerifyController::class, "send"])->middleware("auth", "throttle:6,1")->name("verification.send");
 
 Route::middleware(["guest"])->group(function (): void {
+    Route::get("/", [ContestController::class, "index"])->name("home");
+    Route::post("/auth/register", [RegisterUserController::class, "store"])->name("register");
+    Route::get("/auth/login", fn() => redirect("/"))->name("login");
+    Route::post("/auth/login", [AuthenticateSessionController::class, "authenticate"])->name("authenticate");
     Route::get("/auth/forgot-password", [PasswordResetLinkController::class, "create"])->name("password.request");
     Route::post("/auth/forgot-password", [PasswordResetLinkController::class, "store"])->name("password.email");
 });
 
 Route::middleware("auth")->group(function (): void {
+    Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
     Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
     Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
     Route::get("/profile/password-edit", [ProfileUserController::class, "edit"])->name("profile.password.edit");
     Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update");
-    Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
 });
 
 Route::get("/auth/password/reset/{token}", [PasswordResetLinkController::class, "resetCreate"])->name("password.reset");
 Route::post("/auth/password/reset", [PasswordResetLinkController::class, "resetStore"])->name("password.update");
 
-Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin"]], function (): void {
+Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super-admin"]], function (): void {
     Route::get("/quizzes", [QuizController::class, "index"])->name("admin.quizzes.index");
     Route::post("/quizzes", [QuizController::class, "store"])->name("admin.quizzes.store");
     Route::get("/quizzes/{quiz}", [QuizController::class, "show"])->name("admin.quizzes.show");
