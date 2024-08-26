@@ -20,7 +20,7 @@ class QuizController extends Controller
             ->with("questions.answers")
             ->get();
 
-        return Inertia::render("Quiz/Index", ["quizzes" => QuizResource::collection($quizzes)]);
+        return Inertia::render("Admin/QuizzesPanel", ["quizzes" => QuizResource::collection($quizzes)]);
     }
 
     public function store(QuizRequest $request): RedirectResponse
@@ -30,15 +30,6 @@ class QuizController extends Controller
         return redirect()
             ->back()
             ->with("success", "Quiz added successfully");
-    }
-
-    public function show(int $quiz): Response
-    {
-        $quiz = Quiz::query()
-            ->with("questions.answers")
-            ->findOrFail($quiz);
-
-        return Inertia::render("Quiz/Show", ["quiz" => new QuizResource($quiz)]);
     }
 
     public function update(QuizRequest $request, Quiz $quiz): RedirectResponse

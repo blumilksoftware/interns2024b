@@ -46,47 +46,10 @@ class QuizTest extends TestCase
             ->get("/admin/quizzes")
             ->assertInertia(
                 fn(Assert $page) => $page
-                    ->component("Quiz/Index")
+                    ->component("Admin/QuizzesPanel")
                     ->has("quizzes", 2)
                     ->has("quizzes.0.questions", 5)
                     ->has("quizzes.1.questions", 5),
-            );
-    }
-
-    public function testUserCannotViewQuizThatNotExisted(): void
-    {
-        $this->actingAs($this->user)->get("/admin/quizzes/1")
-            ->assertStatus(404);
-    }
-
-    public function testUserCanViewSingleQuiz(): void
-    {
-        $quiz = Quiz::factory()->create();
-
-        $this->assertDatabaseCount("quizzes", 1);
-
-        $this->actingAs($this->user)
-            ->get("/admin/quizzes/{$quiz->id}")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Quiz/Show")
-                    ->where("quiz.id", $quiz->id),
-            );
-    }
-
-    public function testUserCanViewLockedQuiz(): void
-    {
-        $quiz = Quiz::factory()->locked()->create();
-
-        $this->assertDatabaseCount("quizzes", 1);
-
-        $this->actingAs($this->user)
-            ->get("/admin/quizzes/{$quiz->id}")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Quiz/Show")
-                    ->where("quiz.id", $quiz->id)
-                    ->where("quiz.locked", true),
             );
     }
 
