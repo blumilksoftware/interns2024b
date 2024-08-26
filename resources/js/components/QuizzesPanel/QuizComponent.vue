@@ -42,7 +42,6 @@ function modifyQuiz(quiz: Quiz) {
     tabindex="0"
     class="mt-4 p-5 bg-white/70 rounded-lg items-center"
     data-name="wrapped-list-element"
-    @keydown="({key})=>{if(key==='Enter')toggleQuizView(quiz)}"
   >
     <!-- header -->
     <div :class="isSelected ? 'flex justify-between' : 'grid grid-cols-[1fr,1fr,1fr,auto] gap-3'">
@@ -68,15 +67,9 @@ function modifyQuiz(quiz: Quiz) {
         >
           Publish
         </button>
-        <div class="flex items-center h-full">
-          <CopyIcon />
-        </div>
-        <div v-if="quiz.locked" class="flex items-center h-full">
-          <LockIcon />
-        </div>
-        <div v-else class="flex items-center h-full" @click="removeQuiz(quiz)">
-          <TrashIcon />
-        </div>
+        <div class="flex items-center h-full"> <CopyIcon /> </div>
+        <div v-if="quiz.locked" class="flex items-center h-full"> <LockIcon /> </div>
+        <div v-else class="flex items-center h-full" @click="removeQuiz(quiz)"> <TrashIcon /> </div>
       </div>
     </div>
     <!-- header/ -->
@@ -88,8 +81,6 @@ function modifyQuiz(quiz: Quiz) {
         <EditableInput type="datetime-local" :value="formatDateHTML(quiz.scheduledAt)" />
         <span>Zakończenie testu:</span>
         <EditableInput type="datetime-local" :value="formatDateHTML(quiz.scheduledUntil)" />
-        <span>Czas trwania testu:</span>
-        <b>{{ }} minut</b>
       </div>
           
       <!-- question -->
