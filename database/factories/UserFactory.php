@@ -30,12 +30,10 @@ class UserFactory extends Factory
         ];
     }
 
-    public function configure(): static
+    public function user(): static
     {
         return $this->afterCreating(function (User $user): void {
-            if (!$user->hasAnyRole(Role::all())) {
-                $user->assignRole("user");
-            }
+            $user->assignRole("user");
         });
     }
 
