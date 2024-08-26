@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\DTO\SchoolDTO;
-use App\Helpers\SchoolTypeHelper;
+use App\Enums\SchoolType;
+use App\Enums\Voivodeship;
 use App\Http\Integrations\RSPOConnector\Requests\GetSchoolsRequest;
 use App\Http\Integrations\RSPOConnector\RSPOConnector;
 use App\Models\School;
@@ -17,20 +18,24 @@ class GetSchoolDataService
         protected RSPOConnector $connector,
     ) {}
 
-    public function getSchools(string $voivodeship): void
+    /**
+     * @param array<SchoolType> $schoolTypes
+     */
+    public function getSchools(Voivodeship $voivodeship, array $schoolTypes): void
     {
-        $this->store($this->fetchSchools($voivodeship));
+        $this->store($this->fetchSchools($voivodeship, $schoolTypes));
     }
 
     /**
+     * @param array<SchoolType> $schoolTypes
      * @return Collection<SchoolDTO> $schools
      */
-    protected function fetchSchools(string $voivodeship): Collection
+    protected function fetchSchools(Voivodeship $voivodeship, array $schoolTypes): Collection
     {
         $schools = collect();
 
-        foreach (SchoolTypeHelper::all() as $schoolType) {
-            $request = new GetSchoolsRequest($voivodeship, $schoolType);
+        foreach ($schoolTypes as $type) {
+            $request = new GetSchoolsRequest($voivodeship, $type);
             $schools->push(...$this->connector->paginate($request)->collect()->collect());
         }
 

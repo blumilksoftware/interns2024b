@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\Voivodeship;
 use App\Http\Requests\SchoolRequest;
 use App\Http\Resources\SchoolResource;
 use App\Jobs\FetchSchoolsJob;
@@ -17,6 +18,9 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\Response as Status;
 use Throwable;
+
+use function collect;
+use function config;
 
 class SchoolsController extends Controller
 {
@@ -59,7 +63,8 @@ class SchoolsController extends Controller
         }
 
         $voivodeships = collect(config("schools.voivodeships"));
-        $jobs = $voivodeships->map(fn(string $voivodeships): FetchSchoolsJob => new FetchSchoolsJob($voivodeships));
+        $schoolTypes = config("schools.types");
+        $jobs = $voivodeships->map(fn(Voivodeship $voivodeships): FetchSchoolsJob => new FetchSchoolsJob($voivodeships, $schoolTypes));
         $batch = Bus::batch($jobs)->finally(fn(): bool => Cache::delete("fetch_schools"))->dispatch();
         Cache::set("fetch_schools", $batch->id);
 
