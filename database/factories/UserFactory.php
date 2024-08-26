@@ -10,7 +10,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
 
 /**
  * @extends Factory<User>
@@ -33,7 +32,7 @@ class UserFactory extends Factory
     public function user(): static
     {
         return $this->afterCreating(function (User $user): void {
-                $user->assignRole("user");
+            $user->assignRole("user");
         });
     }
 
