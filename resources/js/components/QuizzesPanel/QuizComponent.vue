@@ -66,7 +66,7 @@ function modifyQuiz(quiz: Quiz) {
           class="bg-primary rounded-lg py-2 px-4 text-white font-bold"
           @click="modifyQuiz(quiz)"
         >
-          Zapisz zmiany
+          Publish
         </button>
         <div class="flex items-center h-full">
           <CopyIcon />
