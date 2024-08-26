@@ -12,8 +12,6 @@ const props = defineProps<{question:Question}>()
 const isAnswerExpanded = ref<boolean>(false)
 const hasAnswers = computed(()=>props.question.answers.length > 0)
 
-console.log(props)
-
 </script>
 
 <template>
