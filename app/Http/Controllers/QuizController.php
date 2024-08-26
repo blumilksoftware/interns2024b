@@ -20,7 +20,7 @@ class QuizController extends Controller
             ->with("questions.answers")
             ->get();
 
-        return Inertia::render("Admin/QuizzesPanel", ["quizzes" => QuizResource::collection($quizzes)]);
+        return Inertia::render("Admin/Quizzes", ["quizzes" => QuizResource::collection($quizzes)]);
     }
 
     public function store(QuizRequest $request): RedirectResponse
