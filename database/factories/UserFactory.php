@@ -29,7 +29,7 @@ class UserFactory extends Factory
         ];
     }
 
-    public function user(): static
+    public function configure(): static
     {
         return $this->afterCreating(function (User $user): void {
             $user->assignRole("user");
