@@ -5,22 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AnswerRequest;
-use App\Http\Resources\AnswerResource;
 use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Http\RedirectResponse;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class QuestionAnswerController extends Controller
 {
-    public function index(Question $question): Response
-    {
-        return Inertia::render("Answer/Index", [
-            "answers" => AnswerResource::collection($question->answers),
-        ]);
-    }
-
     public function store(Question $question, AnswerRequest $request): RedirectResponse
     {
         Answer::query()
@@ -31,11 +21,6 @@ class QuestionAnswerController extends Controller
         return redirect()
             ->back()
             ->with("success", "Answer added successfully");
-    }
-
-    public function show(Answer $answer): Response
-    {
-        return Inertia::render("Answer/Show", ["answer" => new AnswerResource($answer)]);
     }
 
     public function markAsCorrect(Answer $answer): RedirectResponse

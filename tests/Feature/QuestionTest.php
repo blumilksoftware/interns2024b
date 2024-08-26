@@ -9,7 +9,6 @@ use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class QuestionTest extends TestCase
@@ -23,69 +22,6 @@ class QuestionTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-    }
-
-    public function testUserCanViewQuizQuestions(): void
-    {
-        $quiz = Quiz::factory()->create();
-        $question = Question::factory()->create(["quiz_id" => $quiz->id]);
-        Answer::factory()->count(10)->create(["question_id" => $question->id]);
-
-        $this->assertDatabaseCount("quizzes", 1);
-        $this->assertDatabaseCount("questions", 1);
-        $this->assertDatabaseCount("answers", 10);
-
-        $this->actingAs($this->user)
-            ->get("/admin/quizzes/{$quiz->id}/questions")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Question/Index")
-                    ->has("questions", 1)
-                    ->has("questions.0.answers", 10),
-            );
-    }
-
-    public function testUserCannotViewQuestionsOfQuizThatNotExisted(): void
-    {
-        $this->actingAs($this->user)->get("/admin/quizzes/1/questions")
-            ->assertStatus(404);
-    }
-
-    public function testUserCanViewSingleQuestion(): void
-    {
-        $question = Question::factory()->create();
-
-        $this->assertDatabaseCount("questions", 1);
-
-        $this->actingAs($this->user)
-            ->get("/admin/questions/{$question->id}")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Question/Show")
-                    ->where("question.id", $question->id),
-            );
-    }
-
-    public function testUserCanViewLockedQuestion(): void
-    {
-        $question = Question::factory()->locked()->create();
-
-        $this->assertDatabaseCount("questions", 1);
-
-        $this->actingAs($this->user)
-            ->get("/admin/questions/{$question->id}")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Question/Show")
-                    ->where("question.id", $question->id)
-                    ->where("question.locked", true),
-            );
-    }
-
-    public function testUserCannotViewQuestionThatNotExisted(): void
-    {
-        $this->actingAs($this->user)->get("/admin/questions/1")
-            ->assertStatus(404);
     }
 
     public function testUserCanCreateQuestion(): void

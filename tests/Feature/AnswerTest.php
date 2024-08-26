@@ -8,7 +8,6 @@ use App\Models\Answer;
 use App\Models\Question;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class AnswerTest extends TestCase
@@ -22,65 +21,6 @@ class AnswerTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-    }
-
-    public function testUserCanViewQuestionAnswers(): void
-    {
-        $question = Question::factory()->create();
-        Answer::factory()->count(10)->create(["question_id" => $question->id]);
-
-        $this->assertDatabaseCount("answers", 10);
-
-        $this->actingAs($this->user)
-            ->get("/admin/questions/{$question->id}/answers")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Answer/Index")
-                    ->has("answers", 10),
-            );
-    }
-
-    public function testUserCannotViewAnswersOfQuestionThatNotExisted(): void
-    {
-        $this->actingAs($this->user)->get("/admin/questions/1/answers")
-            ->assertStatus(404);
-    }
-
-    public function testUserCanViewSingleAnswer(): void
-    {
-        $answer = Answer::factory()->create();
-
-        $this->assertDatabaseCount("answers", 1);
-
-        $this->actingAs($this->user)
-            ->get("/admin/answers/{$answer->id}")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Answer/Show")
-                    ->where("answer.id", $answer->id),
-            );
-    }
-
-    public function testUserCanViewLockedAnswer(): void
-    {
-        $answer = Answer::factory()->locked()->create();
-
-        $this->assertDatabaseCount("answers", 1);
-
-        $this->actingAs($this->user)
-            ->get("/admin/answers/{$answer->id}")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Answer/Show")
-                    ->where("answer.id", $answer->id)
-                    ->where("answer.locked", true),
-            );
-    }
-
-    public function testUserCannotViewAnswerThatNotExisted(): void
-    {
-        $this->actingAs($this->user)->get("/admin/answers/1")
-            ->assertStatus(404);
     }
 
     public function testUserCanCreateAnswer(): void
