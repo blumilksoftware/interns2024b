@@ -65,7 +65,7 @@ class AnswerTest extends TestCase
     {
         $answer = Answer::factory()->locked()->create();
 
-        $this->assertDatabaseCount("answers", 1);
+        $this->assertDatabaseCount("answers", 2);
 
         $this->actingAs($this->user)
             ->get("/admin/answers/{$answer->id}")

@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property bool $isLocked
+ * @property bool $hasCorrectAnswer
  * @property ?Answer $correctAnswer
  * @property Collection<Answer> $answers
  * @property Quiz $quiz
@@ -50,6 +51,11 @@ class Question extends Model
     public function isLocked(): Attribute
     {
         return Attribute::get(fn(): bool => $this->quiz->isLocked);
+    }
+
+    public function hasCorrectAnswer(): Attribute
+    {
+        return Attribute::get(fn(): bool => $this->correct_answer_id === null);
     }
 
     public function cloneTo(Quiz $quiz): self

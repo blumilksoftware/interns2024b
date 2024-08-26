@@ -86,7 +86,12 @@ class Quiz extends Model
 
     protected function isReadyToBePublished(): bool
     {
-        return $this->scheduled_at !== null && $this->duration !== null;
+        return $this->scheduled_at !== null && $this->duration !== null && $this->allQuestionsHaveCorrectAnswer();
+    }
+
+    protected function allQuestionsHaveCorrectAnswer(): Attribute
+    {
+        return Attribute::get(fn(): bool => $this->questions->every(fn(Question $question): bool => $question->hasCorrectAnswer));
     }
 
     protected function casts(): array

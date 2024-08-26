@@ -347,11 +347,11 @@ class QuizTest extends TestCase
 
     public function testUserCannotStartUnlockedQuiz(): void
     {
-        $quiz = Quiz::factory()->create();
+        $answer = Answer::factory()->create();
 
         $this->actingAs($this->user)
             ->from("/")
-            ->post("/quizzes/{$quiz->id}/start")
+            ->post("/quizzes/{$answer->question->quiz->id}/start")
             ->assertStatus(403);
 
         $this->assertDatabaseCount("quiz_submissions", 0);
