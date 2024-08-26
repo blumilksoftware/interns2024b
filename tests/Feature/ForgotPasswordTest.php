@@ -40,7 +40,7 @@ class ForgotPasswordTest extends TestCase
 
         $this->post("/auth/forgot-password", [
             "email" => "wrongTest@gmail.com",
-        ])->assertSessionHas(["status" => "Przypomnienie hasła zostało wysłane!"]);
+        ])->assertSessionHas(["status" => "Link do zresetowania hasła został wysłany na e-mail."]);
         Notification::assertNothingSent();
 
         $this->post("/auth/forgot-password", [
