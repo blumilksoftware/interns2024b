@@ -20,12 +20,12 @@ class SchoolFactory extends Factory
     public function definition(): array
     {
         return [
-            "name" => fake()->name(),
-            "city" => fake()->name(),
-            "street" => fake()->name(),
-            "building_number" => fake()->name(),
-            "apartment_number" => fake()->name(),
-            "zip_code" => fake()->name(),
+            "name" => fake()->company(),
+            "city" => fake()->city(),
+            "street" => fake()->streetName(),
+            "building_number" => fake()->buildingNumber(),
+            "apartment_number" => fake()->buildingNumber(),
+            "zip_code" => fake()->postcode(),
         ];
     }
 
