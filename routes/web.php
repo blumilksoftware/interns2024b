@@ -43,7 +43,7 @@ Route::middleware("auth")->group(function (): void {
 Route::get("/auth/password/reset/{token}", [PasswordResetLinkController::class, "resetCreate"])->name("password.reset");
 Route::post("/auth/password/reset", [PasswordResetLinkController::class, "resetStore"])->name("password.update");
 
-Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super-admin"]], function (): void {
+Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_admin"]], function (): void {
     Route::get("/quizzes", [QuizController::class, "index"])->name("admin.quizzes.index");
     Route::post("/quizzes", [QuizController::class, "store"])->name("admin.quizzes.store");
     Route::get("/quizzes/{quiz}", [QuizController::class, "show"])->name("admin.quizzes.show");
