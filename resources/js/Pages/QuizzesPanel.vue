@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AdminPanelLayout from '@/Layouts/AdminPanelLayout.vue'
 import { ref } from 'vue'
 import SortIcon from '@/components/Icons/SortIcon.vue'
 import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
@@ -20,20 +19,9 @@ function addQuiz() {
 function toggleQuizView(quiz: Quiz) {
   selectedQuiz.value = selectedQuiz.value === quiz.id ? undefined : quiz.id
 }
-
 </script>
 
 <template>
-  <AdminPanelLayout>
-    <template #subheader>
-      <button>Filtruj</button>
-      <button>Sortuj</button>
-      <div class="w-full" />
-    </template>
-    <template #items />
-    <template #selectedItemContent />
-  </AdminPanelLayout>
-
   <div class="flex flex-col w-full">
     <div data-name="toolbar" class="flex gap-5 bg-white/70 px-4 py-2 backdrop-blur-md">
       <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg">
