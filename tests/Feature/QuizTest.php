@@ -319,4 +319,18 @@ class QuizTest extends TestCase
 
         $this->assertDatabaseCount("quiz_submissions", 0);
     }
+
+    public function testUserCannotStartQuizThatHasQuestionsWithoutCorrectAnswer(): void
+    {
+        $answer = Answer::factory()->locked()->create();
+        $answer->question->correct_answer_id = null;
+        $answer->question->save();
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->post("/quizzes/{$answer->question->quiz->id}/start")
+            ->assertStatus(403);
+
+        $this->assertDatabaseCount("quiz_submissions", 0);
+    }
 }

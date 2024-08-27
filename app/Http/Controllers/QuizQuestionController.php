@@ -18,27 +18,21 @@ class QuizQuestionController extends Controller
             ->quiz()->associate($quiz)
             ->save();
 
-        return redirect()
-            ->back()
-            ->with("success", "Question added successfully");
+        return redirect()->back();
     }
 
     public function update(QuestionRequest $request, Question $question): RedirectResponse
     {
         $question->update($request->validated());
 
-        return redirect()
-            ->back()
-            ->with("success", "Question updated");
+        return redirect()->back();
     }
 
     public function destroy(Question $question): RedirectResponse
     {
         $question->delete();
 
-        return redirect()
-            ->back()
-            ->with("success", "Question deleted");
+        return redirect()->back();
     }
 
     public function clone(Question $question, Quiz $quiz): RedirectResponse
@@ -47,6 +41,6 @@ class QuizQuestionController extends Controller
 
         return redirect()
             ->back()
-            ->with("success", "Question cloned");
+            ->with("success", "Pytanie zostało skopiowane");
     }
 }

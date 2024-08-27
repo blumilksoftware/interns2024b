@@ -18,18 +18,14 @@ class QuestionAnswerController extends Controller
             ->question()->associate($question)
             ->save();
 
-        return redirect()
-            ->back()
-            ->with("success", "Answer added successfully");
+        return redirect()->back();
     }
 
     public function markAsCorrect(Answer $answer): RedirectResponse
     {
         $answer->question->correctAnswer()->associate($answer)->save();
 
-        return redirect()
-            ->back()
-            ->with("success", "Answer marked as correct");
+        return redirect()->back();
     }
 
     public function markAsInvalid(Answer $answer): RedirectResponse
@@ -39,27 +35,21 @@ class QuestionAnswerController extends Controller
             $answer->save();
         }
 
-        return redirect()
-            ->back()
-            ->with("success", "Answer marked as incorrect");
+        return redirect()->back();
     }
 
     public function update(AnswerRequest $request, Answer $answer): RedirectResponse
     {
         $answer->update($request->validated());
 
-        return redirect()
-            ->back()
-            ->with("success", "Answer updated");
+        return redirect()->back();
     }
 
     public function destroy(Answer $answer): RedirectResponse
     {
         $answer->delete();
 
-        return redirect()
-            ->back()
-            ->with("success", "Answer deleted");
+        return redirect()->back();
     }
 
     public function clone(Answer $answer, Question $question): RedirectResponse
@@ -68,6 +58,6 @@ class QuestionAnswerController extends Controller
 
         return redirect()
             ->back()
-            ->with("success", "Answer cloned");
+            ->with("success", "Odpowiedź została skopiowana");
     }
 }
