@@ -23,5 +23,4 @@ onUnmounted(() => window.removeEventListener('scroll', setBannerVisibility))
       );"
     />
   </div>
-  <div class="inset-0 top-16  h-[22rem] lg:h-screen lg:top-0 bg-white/30 absolute -z-10" />
 </template>
