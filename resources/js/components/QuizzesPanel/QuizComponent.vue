@@ -7,12 +7,39 @@ import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynami
 import EditableInput from '@/components/Common/EditableInput.vue'
 import dayjs from 'dayjs'
 import {type Quiz} from '@/Types/Quiz'
-import { router } from '@inertiajs/vue3'
+import { router, useForm } from '@inertiajs/vue3'
 import QuestionComponent from './QuestionComponent.vue'
 import axios from 'axios'
+import { ref } from 'vue'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])
+const title = ref<string>(props.quiz.name)
+const isRequestOngoing = ref<boolean>(false)
+
+async function _patch(url:string, payload:object){
+  isRequestOngoing.value = true
+  await axios.post(url, {...payload, _method:'PATCH'})
+  isRequestOngoing.value = false
+
+}
+async function _post(url:string, payload:object){
+  isRequestOngoing.value = true
+  const result = await axios.post(url, payload)
+  isRequestOngoing.value = false
+  return result
+}
+
+async function _delete(url:string, payload:object){
+  isRequestOngoing.value = true
+  const result = await axios.delete(url, payload)
+  isRequestOngoing.value = false
+  return result
+}
+
+async function updateQuiz(payload : object) {
+  await _patch(`/admin/quizzes/${props.quiz.id}`, payload)
+}
 
 function formatDatePretty(date?:number):string|undefined{
   return date ? dayjs(date).format('MMM D, YYYY - h:mm').toString() : undefined
@@ -24,33 +51,25 @@ function formatDateHTML(date?:number):string|undefined{
 function toggleQuizView(quiz:Quiz) {
   emit('displayToggle', quiz)
 }
-function objectToForm(data: any) {
-  const form = new FormData()
-  Object.keys(data).forEach(key => form.append(key, data[key] ))
-  return form
+
+async function addQuestion(quizId:number){
+  useForm({ text: 'Nowy test' }).post(`/admin/quizzes/${quizId}/questions`)
 }
-function addQuestion(quizId:number){
-  router.post(`/admin/quizzes/${quizId}/questions`,  {
-    text: 'Nowy test',
-  })
-}
-function deleteQuiz(quizId: number) {
+async function deleteQuiz(quizId: number) {
   router.delete(`/admin/quizzes/${quizId}`)
 }
 function copyQuiz(quizId: number) {
   router.post(`/admin/quizzes/${quizId}/clone`)
 }
-async function updateQuiz(payload : any) {
-  const str = `/admin/quizzes/${props.quiz.id}`
-  await axios.post(str,{method:'patch', data:objectToForm(payload)})
-}
 
 function updateTitle(value:string) {
+  title.value = value
   updateQuiz({...props.quiz, name:value})
 }
 </script>
 
 <template>
+  <div v-show="isRequestOngoing" class="fixed inset-0 bg-white/50" />
   <div
     v-if="!(quiz.locked && showLockedQuizzes)"
     tabindex="0"
@@ -64,7 +83,7 @@ function updateTitle(value:string) {
           <ExapnsionToggleDynamicIcon :is-expanded="isSelected" />
         </button>
         <b v-if="!isSelected">{{ quiz.name }}</b>
-        <EditableInput v-else :icon="true" type="text" :bold="true" :value="quiz.name" @update-value="updateTitle" />
+        <EditableInput v-else :icon="true" type="text" :bold="true" :value="title" @update-value="updateTitle" />
       </div>
       <span v-if="!isSelected">Czas rozpoczęcia:
         <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) ? formatDatePretty(quiz.scheduledAt) : 'brak' }}</b>

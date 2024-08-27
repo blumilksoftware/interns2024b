@@ -33,7 +33,6 @@ function blur() {
       class="outline-none flex px-2 min-h-8 rounded-lg h-full focus:ring-2 focus:ring-primary/50 bg-white/50"
       autocomplete="off"
       @input="e=>content=(e.currentTarget as HTMLInputElement).value"
-      @click.stop
       @focus="isFocused=true"
       @blur="blur"
     >
