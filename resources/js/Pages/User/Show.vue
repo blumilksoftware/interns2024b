@@ -1,20 +1,28 @@
 <script setup lang="ts">
 import {type User} from '@/Types/User'
+import {useForm} from '@inertiajs/vue3'
 
-
+const form = useForm({})
 const props = defineProps<{
   user: User
 }>()
+
+function edit() {
+  form.get(`/admin/users/${props.user.id}`)
+}
 
 </script>
 
 <template>
   <div class="ml-8 border-2">
-    <div>id: {{ props.user.id }}</div>
-    <div>Name: {{ props.user.name }}</div>
-    <div>Surname: {{ props.user.surname }}</div>
-    <div>Email: {{ props.user.email }}</div>
-    <div>School: {{ props.user.school.name }}</div>
+    <div>ID: {{ props.user.id }}</div>
+    <div>Imię: {{ props.user.name }}</div>
+    <div>Nazwisko: {{ props.user.surname }}</div>
+    <div>E-mail: {{ props.user.email }}</div>
+    <div>Szkoła: {{ props.user.school.name }}</div>
+    <form @submit.prevent="edit">
+      <button type="submit">Edit</button>
+    </form>
   </div>
 </template>
 

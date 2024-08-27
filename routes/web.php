@@ -69,6 +69,8 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/answers/{answer}/invalid", [QuestionAnswerController::class, "markAsInvalid"])->can("update,answer")->name("admin.answers.invalid");
 
     Route::get("/users", [UserController::class, "index"])->name("admin.users.index");
+    Route::get("/users/{user}", [UserController::class, "edit"])->name("admin.users.edit");
+    Route::patch("users/{user}", [UserController::class, "update"])->name("admin.users.update");
 
     Route::get("/dashboard", [AdminDashboardController::class, "index"])->name("admin.dashboard");
 });
