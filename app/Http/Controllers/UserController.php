@@ -25,6 +25,8 @@ class UserController extends Controller
 
     public function edit(User $user): Response
     {
+        $this->authorize("update", $user);
+
         return Inertia::render("User/Edit", [
             "user" => new UserResource($user),
             "schools" => School::all(),
@@ -33,6 +35,7 @@ class UserController extends Controller
 
     public function update(UserRequest $request, User $user): RedirectResponse
     {
+        $this->authorize("update", $user);
         $data = $request->validated();
         $user->update($data);
 
