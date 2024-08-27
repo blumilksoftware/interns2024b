@@ -12,55 +12,37 @@ import QuestionComponent from './QuestionComponent.vue'
 import axios from 'axios'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
+const emit = defineEmits(['displayToggle'])
 
 function formatDatePretty(date?:number):string|undefined{
   return date ? dayjs(date).format('MMM D, YYYY - h:mm').toString() : undefined
 }
-
 function formatDateHTML(date?:number):string|undefined{
   return date ? dayjs(date).format('YYYY-MM-DDTHH:mm').toString() : undefined
 }
 
-const emit = defineEmits(['displayToggle'])
-
 function toggleQuizView(quiz:Quiz) {
   emit('displayToggle', quiz)
 }
-
 function objectToForm(data: any) {
   const form = new FormData()
   Object.keys(data).forEach(key => form.append(key, data[key] ))
   return form
 }
-
 function addQuestion(quizId:number){
   router.post(`/admin/quizzes/${quizId}/questions`,  {
     text: 'Nowy test',
   })
-  // axios.post('/admin/questions', )
-  // co robię zle
 }
-
 function deleteQuiz(quizId: number) {
   router.delete(`/admin/quizzes/${quizId}`)
 }
-
 function copyQuiz(quizId: number) {
   router.post(`/admin/quizzes/${quizId}/clone`)
 }
-
-// const formData = new FormData()
-// formData.append('name', 'xd')
-// formData.append('_method', 'patch')
-
-
-
 async function updateQuiz(payload : any) {
   const str = `/admin/quizzes/${props.quiz.id}`
-  // console.log(payload)
-  console.log(str)
   await axios.post(str,{method:'patch', data:objectToForm(payload)})
-  // router.post(str,{...payload, _method:'patch'})
 }
 
 function updateTitle(value:string) {
