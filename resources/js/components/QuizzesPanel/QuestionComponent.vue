@@ -3,15 +3,30 @@ import ExapnsionToggleDynamicIcon from '../Icons/ExapnsionToggleDynamicIcon.vue'
 import PencilIcon from '@/components/Icons/PencilIcon.vue'
 import TrashIcon from '@/components/Icons/TrashIcon.vue'
 import CopyIcon from '@/components/Icons/CopyIcon.vue'
-import CrossIcon from '@/components/Icons/CrossIcon.vue'
-import CheckIcon from '@/components/Icons/CheckIcon.vue'
+import CheckDynamicIcon from '@/components/Icons/CheckDynamicIcon.vue'
 
 import { type Question } from '@/Types/Question'
 import { computed, ref } from 'vue'
-const props = defineProps<{question:Question}>()
+import EditQuestionModal from './EditQuestionModal.vue'
+import { router } from '@inertiajs/vue3'
+
+const props = defineProps<{quizId:number, question:Question}>()
 const isAnswerExpanded = ref<boolean>(false)
 const hasAnswers = computed(()=>props.question.answers.length > 0)
 
+const isEditingQuestion = ref<boolean>(false)
+
+function deleteQuestion() {
+  router.delete(`/admin/questions/${props.question.id}`)
+}
+
+function copyQuestion() {
+  router.post(`/admin/questions/${props.question.id}/clone/${props.quizId}`)
+}
+
+function addAnswer(){
+  router.post(`/admin/questions/${props.question.id}/answers`)
+}
 </script>
 
 <template>
@@ -22,7 +37,7 @@ const hasAnswers = computed(()=>props.question.answers.length > 0)
         <p>{{ question.text }}</p>
       </div>
       <div class="flex gap-4">
-        <button class="w-fit border border-primary/30 rounded-lg py-2 px-3 gap-2 flex bg-white/50" @click="isAnswerExpanded=!isAnswerExpanded">
+        <button class="w-fit border border-primary/30 rounded-lg py-2 px-3 gap-2 flex bg-white/50" @click="addAnswer">
           <b>+ Dodaj odpowiedź</b>
         </button>
         <button v-if="hasAnswers" class="w-fit border border-primary/30 rounded-lg py-2 px-3 gap-2 flex bg-white/50" @click="isAnswerExpanded=!isAnswerExpanded">
@@ -32,17 +47,16 @@ const hasAnswers = computed(()=>props.question.answers.length > 0)
       </div>
       <ol v-if="isAnswerExpanded && hasAnswers" class="flex flex-col gap-4">
         <li v-for="answer in question.answers" :key="answer.id" class="border border-primary/30 rounded-lg p-4 bg-white/50 flex items-center gap-4">
-          <div v-if="question.correct==answer.id"><CheckIcon /></div>
-          <div v-else><CrossIcon /></div>
-          
+          <CheckDynamicIcon class="size-6" :is-correct="question.correct==answer.id" />
           {{ answer.text }}
         </li>
       </ol>
     </div>
     <div class="px-3 border-l border-primary/30 flex flex-col justify-evenly">
-      <button><PencilIcon /></button>
-      <button><CopyIcon /></button>
-      <button><TrashIcon /></button>
+      <button data-name="edit" @click="isEditingQuestion=true"><PencilIcon /></button>
+      <EditQuestionModal v-model:is-visible="isEditingQuestion" :question="question" />
+      <button data-name="copy" @click="copyQuestion"><CopyIcon /></button>
+      <button data-name="delete" @click="deleteQuestion"><TrashIcon /></button>
     </div>
   </div>
 </template>

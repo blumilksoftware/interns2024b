@@ -9,9 +9,9 @@ import dayjs from 'dayjs'
 import {type Quiz} from '@/Types/Quiz'
 import { router } from '@inertiajs/vue3'
 import QuestionComponent from './QuestionComponent.vue'
+import axios from 'axios'
 
-
-defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
+const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 
 function formatDatePretty(date?:number):string|undefined{
   return date ? dayjs(date).format('MMM D, YYYY - h:mm').toString() : undefined
@@ -27,12 +27,44 @@ function toggleQuizView(quiz:Quiz) {
   emit('displayToggle', quiz)
 }
 
-function removeQuiz(quiz: Quiz) {
-  router.delete(`/quizzes/${quiz.id}`)
+function objectToForm(data: any) {
+  const form = new FormData()
+  Object.keys(data).forEach(key => form.append(key, data[key] ))
+  return form
 }
 
-function modifyQuiz(quiz: Quiz) {
-  router.patch(`/quizzes/${quiz.id}`)
+function addQuestion(quizId:number){
+  router.post(`/admin/quizzes/${quizId}/questions`,  {
+    text: 'Nowy test',
+  })
+  // axios.post('/admin/questions', )
+  // co robię zle
+}
+
+function deleteQuiz(quizId: number) {
+  router.delete(`/admin/quizzes/${quizId}`)
+}
+
+function copyQuiz(quizId: number) {
+  router.post(`/admin/quizzes/${quizId}/clone`)
+}
+
+// const formData = new FormData()
+// formData.append('name', 'xd')
+// formData.append('_method', 'patch')
+
+
+
+async function updateQuiz(payload : any) {
+  const str = `/admin/quizzes/${props.quiz.id}`
+  // console.log(payload)
+  console.log(str)
+  await axios.post(str,{method:'patch', data:objectToForm(payload)})
+  // router.post(str,{...payload, _method:'patch'})
+}
+
+function updateTitle(value:string) {
+  updateQuiz({...props.quiz, name:value})
 }
 </script>
 
@@ -50,7 +82,7 @@ function modifyQuiz(quiz: Quiz) {
           <ExapnsionToggleDynamicIcon :is-expanded="isSelected" />
         </button>
         <b v-if="!isSelected">{{ quiz.name }}</b>
-        <EditableInput v-else :icon="true" type="text" :bold="true" :value="quiz.name" />
+        <EditableInput v-else :icon="true" type="text" :bold="true" :value="quiz.name" @update-value="updateTitle" />
       </div>
       <span v-if="!isSelected">Czas rozpoczęcia:
         <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) ? formatDatePretty(quiz.scheduledAt) : 'brak' }}</b>
@@ -63,13 +95,12 @@ function modifyQuiz(quiz: Quiz) {
         <button
           v-if="isSelected"
           class="bg-primary rounded-lg py-2 px-4 text-white font-bold"
-          @click="modifyQuiz(quiz)"
         >
           Publish
         </button>
-        <div class="flex items-center h-full"> <CopyIcon /> </div>
+        <button class="flex items-center h-full" @click="copyQuiz(quiz.id)"> <CopyIcon /> </button>
         <div v-if="quiz.locked" class="flex items-center h-full"> <LockIcon /> </div>
-        <div v-else class="flex items-center h-full" @click="removeQuiz(quiz)"> <TrashIcon /> </div>
+        <button v-else class="flex items-center h-full" @click="deleteQuiz(quiz.id)"> <TrashIcon /> </button>
       </div>
     </div>
     <!-- header/ -->
@@ -86,12 +117,12 @@ function modifyQuiz(quiz: Quiz) {
       <!-- question -->
       <div class="flex flex-col gap-4">
         <div class="flex justify-between">
-          <button class="py-2 px-3 rounded-lg border border-primary/30 font-bold bg-white/50">+ Dodaj pytanie</button>
+          <button class="py-2 px-3 rounded-lg border border-primary/30 font-bold bg-white/50" @click="addQuestion(quiz.id)">+ Dodaj pytanie</button>
         </div>
 
         <data v-if="isSelected" class="flex flex-col gap-4">
           <div v-for="question of quiz.questions" :key="question.id">
-            <QuestionComponent :question="question" />
+            <QuestionComponent :quiz-id="quiz.id" :question="question" />
           </div>
         </data>
       </div>

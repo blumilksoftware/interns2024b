@@ -6,30 +6,21 @@ import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
 import FilterIcon from '@/components/Icons/FilterIcon.vue'
 import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
 import { type Quiz } from '@/Types/Quiz'
+import { router } from '@inertiajs/vue3'
 const props = defineProps<{ quizzes: Quiz[] }>()
 const selectedQuiz = ref<number>()
 const showLockedQuizzes = ref<boolean>(true)
 
 function addQuiz() {
-  // router.post(`/quizzes/${quiz.id}`)
+  router.post('/admin/quizzes', {
+    name: 'Nowy test',
+  })
 }
 
 function toggleQuizView(quiz: Quiz) {
   selectedQuiz.value = selectedQuiz.value === quiz.id ? undefined : quiz.id
 }
 
-// public function testUserCanCreateQuiz(): void
-// {
-//     $this->actingAs($this->user)
-//         ->from("/")
-//         input "name" field in form
-//         ->post("/quizzes", ["name" => "Example quiz"])
-//         ->assertRedirect("/");
-
-//     $this->assertDatabaseHas("quizzes", [
-//         "name" => "Example quiz",
-//     ]);
-// }
 </script>
 
 <template>
@@ -38,7 +29,6 @@ function toggleQuizView(quiz: Quiz) {
       <button>Filtruj</button>
       <button>Sortuj</button>
       <div class="w-full" />
-      <button @click="addQuiz">+&nbsp;Dodaj&nbsp;test</button>
     </template>
     <template #items />
     <template #selectedItemContent />
@@ -58,6 +48,8 @@ function toggleQuizView(quiz: Quiz) {
         <EyeDynamicIcon :is-opened="showLockedQuizzes" />
         {{ showLockedQuizzes ? 'Pokaż' : 'Schowaj' }} zablokowane
       </button>
+      <div class="flex-1" />
+      <button class="font-bold" @click="addQuiz">+&nbsp;Dodaj&nbsp;test</button>
     </div>
     <div v-for="quiz in props.quizzes" :key="quiz.id" class="px-4">
       <QuizComponent
