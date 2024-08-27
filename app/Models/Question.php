@@ -55,7 +55,7 @@ class Question extends Model
 
     public function hasCorrectAnswer(): Attribute
     {
-        return Attribute::get(fn(): bool => $this->correct_answer_id === null);
+        return Attribute::get(fn(): bool => $this->correct_answer_id !== null);
     }
 
     public function cloneTo(Quiz $quiz): self
