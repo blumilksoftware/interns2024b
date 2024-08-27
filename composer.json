@@ -11,7 +11,8 @@
         "inertiajs/inertia-laravel": "^1.0",
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "saloonphp/pagination-plugin": "^2.0"
     },
     "require-dev": {
         "blumilksoftware/codestyle": "^v3.0.0",
