@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AnswerRecordController;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
@@ -13,8 +14,8 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\QuizSubmissionController;
 use App\Http\Controllers\RegisterUserController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\SchoolsController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\EnsureQuizIsNotAlreadyStarted;
 use App\Models\Answer;
 use App\Models\Question;
