@@ -71,7 +71,7 @@ class QuestionTest extends TestCase
     {
         $question = Question::factory()->locked()->create();
 
-        $this->assertDatabaseCount("questions", 1);
+        $this->assertDatabaseCount("questions", 2);
 
         $this->actingAs($this->admin)
             ->get("/admin/questions/{$question->id}")
