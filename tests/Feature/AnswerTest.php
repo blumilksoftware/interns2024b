@@ -14,20 +14,20 @@ class AnswerTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected User $user;
+    protected User $admin;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
+        $this->admin = User::factory()->admin()->create();
     }
 
-    public function testUserCanCreateAnswer(): void
+    public function testAdminCanCreateAnswer(): void
     {
         $question = Question::factory()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/questions/{$question->id}/answers", ["text" => "Example answer"])
             ->assertRedirect("/quizzes");
@@ -38,11 +38,11 @@ class AnswerTest extends TestCase
         ]);
     }
 
-    public function testUserCanCreateMultipleAnswers(): void
+    public function testAdminCanCreateMultipleAnswers(): void
     {
         $question = Question::factory()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/questions/{$question->id}/answers", ["text" => "Example answer 1"])
             ->assertRedirect("/quizzes");
@@ -60,9 +60,9 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("answers", ["text" => "Example answer 2"]);
     }
 
-    public function testUserCannotCreateAnswerToQuestionThatNotExisted(): void
+    public function testAdminCannotCreateAnswerToQuestionThatNotExisted(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/questions/1/answers", ["text" => "Example answer"])
             ->assertStatus(404);
@@ -72,11 +72,11 @@ class AnswerTest extends TestCase
         ]);
     }
 
-    public function testUserCannotCreateAnswerToQuestionThatIsLocked(): void
+    public function testAdminCannotCreateAnswerToQuestionThatIsLocked(): void
     {
         $question = Question::factory()->locked()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/questions/{$question->id}/answers", ["text" => "Example answer 1"])
             ->assertStatus(403);
@@ -86,11 +86,11 @@ class AnswerTest extends TestCase
         ]);
     }
 
-    public function testUserCannotCreateInvalidAnswer(): void
+    public function testAdminCannotCreateInvalidAnswer(): void
     {
         $question = Question::factory()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/questions/{$question->id}/answers", [])
             ->assertRedirect("/quizzes")->assertSessionHasErrors(["text"]);
@@ -102,11 +102,11 @@ class AnswerTest extends TestCase
         $this->assertDatabaseCount("answers", 0);
     }
 
-    public function testUserCanEditAnswer(): void
+    public function testAdminCanEditAnswer(): void
     {
         $answer = Answer::factory()->create(["text" => "Old answer"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->patch("/admin/answers/{$answer->id}", ["text" => "New answer"])
             ->assertRedirect("/quizzes");
@@ -114,19 +114,19 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("answers", ["text" => "New answer"]);
     }
 
-    public function testUserCannotEditAnswerThatNotExisted(): void
+    public function testAdminCannotEditAnswerThatNotExisted(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->patch("/admin/answers/1", ["text" => "New answer"])
             ->assertStatus(404);
     }
 
-    public function testUserCannotMakeInvalidEdit(): void
+    public function testAdminCannotMakeInvalidEdit(): void
     {
         $answer = Answer::factory()->create(["text" => "Old answer"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->patch("/admin/answers/{$answer->id}", [])
             ->assertRedirect("/quizzes")->assertSessionHasErrors(["text"]);
@@ -138,11 +138,11 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("answers", ["text" => "Old answer"]);
     }
 
-    public function testUserCannotEditLockedAnswer(): void
+    public function testAdminCannotEditLockedAnswer(): void
     {
         $answer = Answer::factory()->locked()->create(["text" => "Old answer"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->patch("/admin/answers/{$answer->id}", ["text" => "New answer"])
             ->assertStatus(403);
@@ -150,11 +150,11 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("answers", ["text" => "Old answer"]);
     }
 
-    public function testUserCanDeleteAnswer(): void
+    public function testAdminCanDeleteAnswer(): void
     {
         $answer = Answer::factory()->create(["text" => "answer"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->delete("/admin/answers/{$answer->id}")
             ->assertRedirect("/quizzes");
@@ -162,11 +162,11 @@ class AnswerTest extends TestCase
         $this->assertDatabaseMissing("answers", ["text" => "answer"]);
     }
 
-    public function testUserCannotDeleteLockedAnswer(): void
+    public function testAdminCannotDeleteLockedAnswer(): void
     {
         $answer = Answer::factory()->locked()->create(["text" => "answer"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->delete("/admin/answers/{$answer->id}")
             ->assertStatus(403);
@@ -174,19 +174,19 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("answers", ["text" => "answer"]);
     }
 
-    public function testUserCannotDeleteAnswerThatNotExisted(): void
+    public function testAdminCannotDeleteAnswerThatNotExisted(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->delete("/admin/answers/1")
             ->assertStatus(404);
     }
 
-    public function testUserCanMarkAnswerAsCorrect(): void
+    public function testAdminCanMarkAnswerAsCorrect(): void
     {
         $answer = Answer::factory()->create(["text" => "answer"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/answers/{$answer->id}/correct")
             ->assertRedirect("/quizzes");
@@ -194,7 +194,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
     }
 
-    public function testUserCanChangeCorrectAnswer(): void
+    public function testAdminCanChangeCorrectAnswer(): void
     {
         $question = Question::factory()->create();
         $answerA = Answer::factory()->create(["text" => "answer A", "question_id" => $question->id]);
@@ -205,7 +205,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answerA->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/answers/{$answerB->id}/correct")
             ->assertRedirect("/quizzes");
@@ -213,7 +213,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answerB->id]);
     }
 
-    public function testUserCanDeleteCorrectAnswer(): void
+    public function testAdminCanDeleteCorrectAnswer(): void
     {
         $question = Question::factory()->create();
         $answer = Answer::factory()->create(["text" => "answer", "question_id" => $question->id]);
@@ -223,7 +223,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->delete("/admin/answers/{$answer->id}")
             ->assertRedirect("/quizzes");
@@ -231,7 +231,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("questions", ["correct_answer_id" => null]);
     }
 
-    public function testUserCannotChangeCorrectAnswerInLockedQuestion(): void
+    public function testAdminCannotChangeCorrectAnswerInLockedQuestion(): void
     {
         $question = Question::factory()->locked()->create();
         $answerA = Answer::factory()->create(["text" => "answer A", "question_id" => $question->id]);
@@ -242,7 +242,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answerA->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/answers/{$answerB->id}/correct")
             ->assertStatus(403);
@@ -250,7 +250,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answerA->id]);
     }
 
-    public function testUserCanChangeCorrectAnswerToInvalid(): void
+    public function testAdminCanChangeCorrectAnswerToInvalid(): void
     {
         $question = Question::factory()->create();
         $answer = Answer::factory()->create(["text" => "answer", "question_id" => $question->id]);
@@ -260,7 +260,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/answers/{$answer->id}/invalid")
             ->assertRedirect("/quizzes");
@@ -268,7 +268,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
     }
 
-    public function testUserCannotChangeCorrectAnswerToInvalidInLockedQuestion(): void
+    public function testAdminCannotChangeCorrectAnswerToInvalidInLockedQuestion(): void
     {
         $question = Question::factory()->locked()->create();
         $answer = Answer::factory()->create(["text" => "answer", "question_id" => $question->id]);
@@ -278,7 +278,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/answers/{$answer->id}/invalid")
             ->assertStatus(403);
@@ -286,7 +286,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("questions", ["correct_answer_id" => $answer->id]);
     }
 
-    public function testUserCanCopyAnswer(): void
+    public function testAdminCanCopyAnswer(): void
     {
         $questionA = Question::factory()->create();
         $questionB = Question::factory()->create();
@@ -294,7 +294,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/answers/{$answer->id}/clone/{$questionB->id}")
             ->assertRedirect("/quizzes");
@@ -302,7 +302,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("answers", ["question_id" => $questionB->id]);
     }
 
-    public function testUserCanCopyLockedAnswer(): void
+    public function testAdminCanCopyLockedAnswer(): void
     {
         $questionA = Question::factory()->locked()->create();
         $questionB = Question::factory()->create();
@@ -310,7 +310,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/answers/{$answer->id}/clone/{$questionB->id}")
             ->assertRedirect("/quizzes");
@@ -318,7 +318,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("answers", ["question_id" => $questionB->id]);
     }
 
-    public function testUserCannotCopyAnswerToLockedQuestion(): void
+    public function testAdminCannotCopyAnswerToLockedQuestion(): void
     {
         $questionA = Question::factory()->create();
         $questionB = Question::factory()->locked()->create();
@@ -326,7 +326,7 @@ class AnswerTest extends TestCase
 
         $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/answers/{$answer->id}/clone/{$questionB->id}")
             ->assertStatus(403);
@@ -334,7 +334,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
     }
 
-    public function testUserCanCopyCorrectAnswer(): void
+    public function testAdminCanCopyCorrectAnswer(): void
     {
         $questionA = Question::factory()->create();
         $questionB = Question::factory()->create();
@@ -346,7 +346,7 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("answers", ["question_id" => $questionA->id]);
         $this->assertDatabaseHas("questions", ["id" => $questionA->id, "correct_answer_id" => $answer->id]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/answers/{$answer->id}/clone/{$questionB->id}")
             ->assertRedirect("/quizzes");
@@ -356,21 +356,21 @@ class AnswerTest extends TestCase
         $this->assertDatabaseHas("questions", ["id" => $questionB->id, "correct_answer_id" => null]);
     }
 
-    public function testUserCannotCopyAnswerThatNotExisted(): void
+    public function testAdminCannotCopyAnswerThatNotExisted(): void
     {
         $question = Question::factory()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/answers/2/clone/{$question->id}")
             ->assertStatus(404);
     }
 
-    public function testUserCannotCopyAnswerToQuestionThatNotExisted(): void
+    public function testAdminCannotCopyAnswerToQuestionThatNotExisted(): void
     {
         $answer = Answer::factory()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/quizzes")
             ->post("/admin/answers/{$answer->id}/clone/2")
             ->assertStatus(404);

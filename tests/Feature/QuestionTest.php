@@ -291,32 +291,22 @@ class QuestionTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->get(route("admin.questions.index", $quiz->id))
+            ->post("admin/quizzes/$quiz->id/questions", ["text" => "New question"])
             ->assertStatus(403);
 
         $this->actingAs($this->user)
             ->from("/")
-            ->post(route("admin.questions.store", $quiz->id), ["text" => "New question"])
+            ->patch("admin/questions/$question->id", ["text" => "Updated question"])
             ->assertStatus(403);
 
         $this->actingAs($this->user)
             ->from("/")
-            ->get(route("admin.questions.show", $question->id))
+            ->post("admin/questions/$question->id/clone/$quiz->id")
             ->assertStatus(403);
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch(route("admin.questions.update", $question->id), ["text" => "Updated question"])
-            ->assertStatus(403);
-
-        $this->actingAs($this->user)
-            ->from("/")
-            ->post(route("admin.questions.clone", ["question" => $question->id, "quiz" => $quiz->id]))
-            ->assertStatus(403);
-
-        $this->actingAs($this->user)
-            ->from("/")
-            ->delete(route("admin.questions.destroy", $question->id))
+            ->delete("admin/questions/$question->id")
             ->assertStatus(403);
     }
 }

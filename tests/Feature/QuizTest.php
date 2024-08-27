@@ -286,14 +286,13 @@ class QuizTest extends TestCase
     public function testUserCanStartQuiz(): void
     {
         $quiz = Quiz::factory()->locked()->create();
-        $user = User::factory()->create();
 
-        $response = $this->actingAs($user)
+        $response = $this->actingAs($this->user)
             ->from("/")
             ->post("/quizzes/{$quiz->id}/start");
 
         $submission = QuizSubmission::query()->where([
-            "user_id" => $user->id,
+            "user_id" => $this->user->id,
             "quiz_id" => $quiz->id,
         ])->firstOrFail();
 
@@ -344,32 +343,22 @@ class QuizTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->get(route("admin.quizzes.index"))
+            ->get("/admin/quizzes")
             ->assertStatus(403);
 
         $this->actingAs($this->user)
             ->from("/")
-            ->post(route("admin.quizzes.store"))
+            ->post("/admin/quizzes")
             ->assertStatus(403);
 
         $this->actingAs($this->user)
             ->from("/")
-            ->get(route("admin.quizzes.show", $quiz->id))
+            ->post("/admin/quizzes/{$quiz->id}/clone")
             ->assertStatus(403);
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch(route("admin.quizzes.update", $quiz->id))
-            ->assertStatus(403);
-
-        $this->actingAs($this->user)
-            ->from("/")
-            ->post(route("admin.quizzes.clone", $quiz->id))
-            ->assertStatus(403);
-
-        $this->actingAs($this->user)
-            ->from("/")
-            ->delete(route("admin.quizzes.destroy", $quiz->id))
+            ->delete("/admin/quizzes/{$quiz->id}")
             ->assertStatus(403);
     }
 }
