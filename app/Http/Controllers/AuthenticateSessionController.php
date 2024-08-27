@@ -25,7 +25,7 @@ class AuthenticateSessionController extends Controller
         }
 
         throw ValidationException::withMessages([
-            "email" => "Wrong email or password",
+            "email" => "Błędny email lub hasło",
         ]);
     }
 

@@ -13,6 +13,7 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\QuizSubmissionController;
 use App\Http\Controllers\RegisterUserController;
+use App\Http\Controllers\SchoolsController;
 use App\Http\Middleware\EnsureQuizIsNotAlreadyStarted;
 use App\Models\Answer;
 use App\Models\Question;
@@ -60,6 +61,14 @@ Route::group(["prefix" => "admin"], function (): void {
     Route::post("/answers/{answer}/clone/{question}", [QuestionAnswerController::class, "clone"])->can("clone,answer,question")->name("admin.answers.clone");
     Route::post("/answers/{answer}/correct", [QuestionAnswerController::class, "markAsCorrect"])->can("update,answer")->name("admin.answers.correct");
     Route::post("/answers/{answer}/invalid", [QuestionAnswerController::class, "markAsInvalid"])->can("update,answer")->name("admin.answers.invalid");
+
+    Route::get("/schools", [SchoolsController::class, "index"])->name("admin.schools.index");
+    Route::post("/schools", [SchoolsController::class, "store"])->name("admin.schools.store");
+    Route::patch("/schools/{school}", [SchoolsController::class, "update"])->name("admin.schools.update");
+    Route::delete("/schools/{school}", [SchoolsController::class, "destroy"])->name("admin.schools.destroy");
+
+    Route::post("/schools/fetch", [SchoolsController::class, "fetch"])->name("admin.schools.fetch");
+    Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");
 })->middleware(["auth"]);
 
 Route::middleware(["auth"])->group(function (): void {
