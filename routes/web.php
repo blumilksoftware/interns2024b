@@ -14,6 +14,7 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\QuizSubmissionController;
 use App\Http\Controllers\RegisterUserController;
+use App\Http\Controllers\SchoolsController;
 use App\Http\Middleware\EnsureQuizIsNotAlreadyStarted;
 use App\Models\Answer;
 use App\Models\Question;
@@ -68,6 +69,14 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/answers/{answer}/invalid", [QuestionAnswerController::class, "markAsInvalid"])->can("update,answer")->name("admin.answers.invalid");
 
     Route::get("/dashboard", [AdminDashboardController::class, "index"])->name("admin.dashboard");
+
+    Route::get("/schools", [SchoolsController::class, "index"])->name("admin.schools.index");
+    Route::post("/schools", [SchoolsController::class, "store"])->name("admin.schools.store");
+    Route::patch("/schools/{school}", [SchoolsController::class, "update"])->name("admin.schools.update");
+    Route::delete("/schools/{school}", [SchoolsController::class, "destroy"])->name("admin.schools.destroy");
+
+    Route::post("/schools/fetch", [SchoolsController::class, "fetch"])->name("admin.schools.fetch");
+    Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");
 });
 
 Route::middleware(["auth"])->group(function (): void {

@@ -14,7 +14,7 @@ class AuthenticateSessionTest extends TestCase
 
     public function testUserCanLogin(): void
     {
-        $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
+        User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
 
         $this->post("/auth/login", [
             "email" => "test@example.com",
