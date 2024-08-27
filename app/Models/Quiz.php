@@ -89,9 +89,9 @@ class Quiz extends Model
         return $this->scheduled_at !== null && $this->duration !== null && $this->allQuestionsHaveCorrectAnswer();
     }
 
-    protected function allQuestionsHaveCorrectAnswer(): Attribute
+    protected function allQuestionsHaveCorrectAnswer(): bool
     {
-        return Attribute::get(fn(): bool => $this->questions->every(fn(Question $question): bool => $question->hasCorrectAnswer));
+        return $this->questions->every(fn(Question $question): bool => $question->hasCorrectAnswer);
     }
 
     protected function casts(): array
