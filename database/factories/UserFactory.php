@@ -19,8 +19,8 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            "name" => fake()->name(),
-            "surname" => fake()->name(),
+            "name" => fake()->firstName(),
+            "surname" => fake()->lastName(),
             "email" => fake()->unique()->safeEmail(),
             "email_verified_at" => Carbon::now(),
             "password" => Hash::make("password"),
@@ -29,10 +29,24 @@ class UserFactory extends Factory
         ];
     }
 
-    public function unverified(): static
+    public function configure(): static
     {
-        return $this->state(fn(array $attributes): array => [
-            "email_verified_at" => null,
-        ]);
+        return $this->afterCreating(function (User $user): void {
+            $user->assignRole("user");
+        });
+    }
+
+    public function admin(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->syncRoles("admin");
+        });
+    }
+
+    public function superAdmin(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            $user->syncRoles("super_admin");
+        });
     }
 }

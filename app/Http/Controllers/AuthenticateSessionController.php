@@ -21,11 +21,13 @@ class AuthenticateSessionController extends Controller
         if (auth()->attempt($credentials)) {
             $request->session()->regenerate();
 
-            return Redirect::route("home")->with("success");
+            return $request->user()->hasRole(["admin", "super_admin"])
+                ? Redirect::route("admin.dashboard")->with("success", "Witaj na Panelu Administratora")
+                : Redirect::route("dashboard")->with("success");
         }
 
         throw ValidationException::withMessages([
-            "email" => "Błędny email lub hasło",
+            "email" => "Nieprawidłowy e-mail lub hasło.",
         ]);
     }
 

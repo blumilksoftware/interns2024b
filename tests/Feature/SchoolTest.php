@@ -22,7 +22,7 @@ class SchoolTest extends TestCase
     {
         parent::setUp();
 
-        $this->admin = User::factory()->create();
+        $this->admin = User::factory()->admin()->create();
     }
 
     public function testAdminCanViewSchools(): void

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property int $id
@@ -22,13 +23,13 @@ use Illuminate\Notifications\Notifiable;
  * @property int $school_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
- *
  * @property School $school
  */
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
     use HasFactory;
     use Notifiable;
+    use HasRoles;
 
     protected $fillable = [
         "name",
