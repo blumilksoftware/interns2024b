@@ -16,8 +16,6 @@ class AnswerRecordController extends Controller
     {
         $answerRecord->answer()->associate($answer)->save();
 
-        return redirect()
-            ->back()
-            ->with("success", "Answer updated");
+        return redirect()->back();
     }
 }
