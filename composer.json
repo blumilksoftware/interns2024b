@@ -12,7 +12,8 @@
         "laravel/framework": "^11.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "saloonphp/pagination-plugin": "^2.0"
+        "saloonphp/pagination-plugin": "^2.0",
+        "spatie/laravel-permission": "^6.9"
     },
     "require-dev": {
         "blumilksoftware/codestyle": "^v3.0.0",

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Feature;
+namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
@@ -45,7 +45,7 @@ class ResetPasswordTest extends TestCase
             "password" => "newPassword",
         ]);
 
-        $loginResponse->assertRedirect("/");
+        $loginResponse->assertRedirect("/dashboard");
         $this->assertAuthenticated();
         Event::assertDispatched(PasswordReset::class);
     }

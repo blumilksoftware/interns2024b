@@ -24,6 +24,8 @@ class QuizTest extends TestCase
     {
         parent::setUp();
         Carbon::setTestNow(Carbon::create(2024, 1, 1, 10));
+
+        $this->admin = User::factory()->admin()->create();
         $this->user = User::factory()->create();
     }
 
@@ -33,7 +35,7 @@ class QuizTest extends TestCase
         Carbon::setTestNow();
     }
 
-    public function testUserCanViewQuizzes(): void
+    public function testAdminCanViewQuizzes(): void
     {
         $quizzes = Quiz::factory()->count(2)->create();
         Question::factory()->count(5)->create(["quiz_id" => $quizzes[0]->id]);
@@ -42,7 +44,7 @@ class QuizTest extends TestCase
         $this->assertDatabaseCount("quizzes", 2);
         $this->assertDatabaseCount("questions", 10);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get("/admin/quizzes")
             ->assertInertia(
                 fn(Assert $page) => $page
@@ -53,19 +55,19 @@ class QuizTest extends TestCase
             );
     }
 
-    public function testUserCannotViewQuizThatNotExisted(): void
+    public function testAdminCannotViewQuizThatNotExisted(): void
     {
-        $this->actingAs($this->user)->get("/admin/quizzes/1")
+        $this->actingAs($this->admin)->get("/admin/quizzes/1")
             ->assertStatus(404);
     }
 
-    public function testUserCanViewSingleQuiz(): void
+    public function testAdminCanViewSingleQuiz(): void
     {
         $quiz = Quiz::factory()->create();
 
         $this->assertDatabaseCount("quizzes", 1);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get("/admin/quizzes/{$quiz->id}")
             ->assertInertia(
                 fn(Assert $page) => $page
@@ -74,13 +76,13 @@ class QuizTest extends TestCase
             );
     }
 
-    public function testUserCanViewLockedQuiz(): void
+    public function testAdminCanViewLockedQuiz(): void
     {
         $quiz = Quiz::factory()->locked()->create();
 
         $this->assertDatabaseCount("quizzes", 1);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get("/admin/quizzes/{$quiz->id}")
             ->assertInertia(
                 fn(Assert $page) => $page
@@ -90,9 +92,9 @@ class QuizTest extends TestCase
             );
     }
 
-    public function testUserCanCreateQuiz(): void
+    public function testAdminCanCreateQuiz(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->post("/admin/quizzes", ["name" => "Example quiz", "scheduled_at" => "2024-02-10 11:40:00"])
             ->assertRedirect("/");
@@ -103,11 +105,11 @@ class QuizTest extends TestCase
         ]);
     }
 
-    public function testUserCanCreateQuizWithoutDate(): void
+    public function testAdminCanCreateQuizWithoutDate(): void
     {
         Carbon::setTestNow(Carbon::create(2024, 1, 1, 10));
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->post("/admin/quizzes", ["name" => "Example quiz"])
             ->assertRedirect("/");
@@ -118,9 +120,9 @@ class QuizTest extends TestCase
         ]);
     }
 
-    public function testUserCanCreateMultipleQuizzes(): void
+    public function testAdminCanCreateMultipleQuizzes(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->post("/admin/quizzes", ["name" => "Example quiz 1"])
             ->assertRedirect("/");
@@ -138,9 +140,9 @@ class QuizTest extends TestCase
         $this->assertDatabaseHas("quizzes", ["name" => "Example quiz 2"]);
     }
 
-    public function testUserCannotCreateInvalidQuiz(): void
+    public function testAdminCannotCreateInvalidQuiz(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->post("/admin/quizzes", [])
             ->assertRedirect("/")->assertSessionHasErrors(["name"]);
@@ -168,11 +170,11 @@ class QuizTest extends TestCase
         $this->assertDatabaseCount("quizzes", 0);
     }
 
-    public function testUserCanEditQuiz(): void
+    public function testAdminCanEditQuiz(): void
     {
         $quiz = Quiz::factory()->create(["name" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->patch("/admin/quizzes/{$quiz->id}", ["name" => "New quiz", "scheduled_at" => "2024-03-10 12:15:00", "duration" => 7200])
             ->assertRedirect("/");
@@ -180,19 +182,19 @@ class QuizTest extends TestCase
         $this->assertDatabaseHas("quizzes", ["name" => "New quiz", "scheduled_at" => "2024-03-10 12:15:00", "duration" => 7200]);
     }
 
-    public function testUserCannotEditQuizThatNotExisted(): void
+    public function testAdminCannotEditQuizThatNotExisted(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->patch("/admin/quizzes/1", ["name" => "New quiz"])
             ->assertStatus(404);
     }
 
-    public function testUserCannotMakeInvalidEdit(): void
+    public function testAdminCannotMakeInvalidEdit(): void
     {
         $quiz = Quiz::factory()->create(["name" => "Old quiz"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->patch("/admin/quizzes/{$quiz->id}", [])
             ->assertRedirect("/")->assertSessionHasErrors(["name"]);
@@ -220,11 +222,11 @@ class QuizTest extends TestCase
         $this->assertDatabaseHas("quizzes", ["name" => "Old quiz"]);
     }
 
-    public function testUserCannotEditLockedQuiz(): void
+    public function testAdminCannotEditLockedQuiz(): void
     {
         $quiz = Quiz::factory()->locked()->create(["name" => "Old quiz"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->patch("/admin/quizzes/{$quiz->id}", ["name" => "New quiz"])
             ->assertStatus(403);
@@ -232,7 +234,7 @@ class QuizTest extends TestCase
         $this->assertDatabaseHas("quizzes", ["name" => "Old quiz"]);
     }
 
-    public function testUserCanDeleteQuiz(): void
+    public function testAdminCanDeleteQuiz(): void
     {
         $quiz = Quiz::factory()->create(["name" => "quiz"]);
         $question = Question::factory()->create(["quiz_id" => $quiz->id]);
@@ -242,7 +244,7 @@ class QuizTest extends TestCase
         $this->assertDatabaseCount("questions", 1);
         $this->assertDatabaseCount("answers", 1);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->delete("/admin/quizzes/{$quiz->id}")
             ->assertRedirect("/");
@@ -253,11 +255,11 @@ class QuizTest extends TestCase
         $this->assertDatabaseCount("answers", 0);
     }
 
-    public function testUserCannotDeleteLockedQuiz(): void
+    public function testAdminCannotDeleteLockedQuiz(): void
     {
         $quiz = Quiz::factory()->locked()->create(["name" => "quiz"]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->delete("/admin/quizzes/{$quiz->id}")
             ->assertStatus(403);
@@ -265,15 +267,15 @@ class QuizTest extends TestCase
         $this->assertDatabaseHas("quizzes", ["name" => "quiz"]);
     }
 
-    public function testUserCannotDeleteQuestionThatNotExisted(): void
+    public function testAdminCannotDeleteQuestionThatNotExisted(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->delete("/admin/quizzes/1")
             ->assertStatus(404);
     }
 
-    public function testUserCanCopyQuiz(): void
+    public function testAdminCanCopyQuiz(): void
     {
         $quiz = Quiz::factory()->create();
         $questions = Question::factory()->count(2)->create(["quiz_id" => $quiz->id]);
@@ -285,7 +287,7 @@ class QuizTest extends TestCase
         $this->assertDatabaseCount("questions", 2);
         $this->assertDatabaseCount("answers", 20);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->post("/admin/quizzes/{$quiz->id}/clone")
             ->assertRedirect("/");
@@ -295,13 +297,13 @@ class QuizTest extends TestCase
         $this->assertDatabaseCount("answers", 40);
     }
 
-    public function testUserCanCopyLockedQuiz(): void
+    public function testAdminCanCopyLockedQuiz(): void
     {
         $quiz = Quiz::factory()->locked()->create();
 
         $this->assertDatabaseCount("quizzes", 1);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->post("/admin/quizzes/{$quiz->id}/clone")
             ->assertRedirect("/");
@@ -309,9 +311,9 @@ class QuizTest extends TestCase
         $this->assertDatabaseCount("quizzes", 2);
     }
 
-    public function testUserCannotCopyQuizThatNotExisted(): void
+    public function testAdminCannotCopyQuizThatNotExisted(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->post("/admin/quizzes/2/clone")
             ->assertStatus(404);
@@ -320,13 +322,14 @@ class QuizTest extends TestCase
     public function testUserCanStartQuiz(): void
     {
         $quiz = Quiz::factory()->locked()->create();
+        $user = User::factory()->create();
 
-        $response = $this->actingAs($this->user)
+        $response = $this->actingAs($user)
             ->from("/")
             ->post("/quizzes/{$quiz->id}/start");
 
         $submission = QuizSubmission::query()->where([
-            "user_id" => $this->user->id,
+            "user_id" => $user->id,
             "quiz_id" => $quiz->id,
         ])->firstOrFail();
 
@@ -369,5 +372,40 @@ class QuizTest extends TestCase
             ->assertStatus(403);
 
         $this->assertDatabaseCount("quiz_submissions", 0);
+    }
+
+    public function testUserCannotAccessToCrud(): void
+    {
+        $quiz = Quiz::factory()->create();
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->get(route("admin.quizzes.index"))
+            ->assertStatus(403);
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->post(route("admin.quizzes.store"))
+            ->assertStatus(403);
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->get(route("admin.quizzes.show", $quiz->id))
+            ->assertStatus(403);
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->patch(route("admin.quizzes.update", $quiz->id))
+            ->assertStatus(403);
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->post(route("admin.quizzes.clone", $quiz->id))
+            ->assertStatus(403);
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->delete(route("admin.quizzes.destroy", $quiz->id))
+            ->assertStatus(403);
     }
 }

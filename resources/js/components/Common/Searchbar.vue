@@ -36,6 +36,7 @@ const onOptionClick = (school:School)=>{
       </div>
 
       <input
+        autocomplete="off"
         :value="isSearchFocused ? searchQuery : selected?.name"
         class="outline-none py-3 bg-transparent w-full text-gray-900"
         required name="school_id" :class="{'cursor-pointer' : !isSearchFocused}"

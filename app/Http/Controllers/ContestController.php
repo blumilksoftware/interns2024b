@@ -17,4 +17,9 @@ class ContestController extends Controller
 
         return Inertia::render("Home", ["schools" => SchoolResource::collection($schools)]);
     }
+
+    public function create(): Response
+    {
+        return Inertia::render("Dashboard");
+    }
 }

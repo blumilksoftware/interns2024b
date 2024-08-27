@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AnswerRecordController;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
@@ -19,21 +20,21 @@ use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Support\Facades\Route;
 
-Route::get("/", [ContestController::class, "index"])->name("home");
-Route::post("/auth/register", [RegisterUserController::class, "store"])->name("register");
-Route::get("/auth/login", fn() => redirect("/"))->name("login");
-Route::post("/auth/login", [AuthenticateSessionController::class, "authenticate"])->name("authenticate");
-Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
 Route::get("/email/verify", [EmailVerifyController::class, "create"])->middleware("auth")->name("verification.notice");
 Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["signed", "throttle:6,1"])->name("verification.verify");
 Route::post("email/verification-notification", [EmailVerifyController::class, "send"])->middleware("auth", "throttle:6,1")->name("verification.send");
 
 Route::middleware(["guest"])->group(function (): void {
+    Route::get("/", [ContestController::class, "index"])->name("home");
+    Route::post("/auth/register", [RegisterUserController::class, "store"])->name("register");
+    Route::get("/auth/login", fn() => redirect("/"))->name("login");
+    Route::post("/auth/login", [AuthenticateSessionController::class, "authenticate"])->name("authenticate");
     Route::get("/auth/forgot-password", [PasswordResetLinkController::class, "create"])->name("password.request");
     Route::post("/auth/forgot-password", [PasswordResetLinkController::class, "store"])->name("password.email");
 });
 
 Route::middleware("auth")->group(function (): void {
+    Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
     Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
     Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
     Route::get("/profile/password-edit", [ProfileUserController::class, "edit"])->name("profile.password.edit");
@@ -43,7 +44,7 @@ Route::middleware("auth")->group(function (): void {
 Route::get("/auth/password/reset/{token}", [PasswordResetLinkController::class, "resetCreate"])->name("password.reset");
 Route::post("/auth/password/reset", [PasswordResetLinkController::class, "resetStore"])->name("password.update");
 
-Route::group(["prefix" => "admin"], function (): void {
+Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_admin"]], function (): void {
     Route::get("/quizzes", [QuizController::class, "index"])->name("admin.quizzes.index");
     Route::post("/quizzes", [QuizController::class, "store"])->name("admin.quizzes.store");
     Route::get("/quizzes/{quiz}", [QuizController::class, "show"])->name("admin.quizzes.show");
@@ -67,6 +68,8 @@ Route::group(["prefix" => "admin"], function (): void {
     Route::post("/answers/{answer}/correct", [QuestionAnswerController::class, "markAsCorrect"])->can("update,answer")->name("admin.answers.correct");
     Route::post("/answers/{answer}/invalid", [QuestionAnswerController::class, "markAsInvalid"])->can("update,answer")->name("admin.answers.invalid");
 
+    Route::get("/dashboard", [AdminDashboardController::class, "index"])->name("admin.dashboard");
+
     Route::get("/schools", [SchoolsController::class, "index"])->name("admin.schools.index");
     Route::post("/schools", [SchoolsController::class, "store"])->name("admin.schools.store");
     Route::patch("/schools/{school}", [SchoolsController::class, "update"])->name("admin.schools.update");
@@ -74,7 +77,7 @@ Route::group(["prefix" => "admin"], function (): void {
 
     Route::post("/schools/fetch", [SchoolsController::class, "fetch"])->name("admin.schools.fetch");
     Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");
-})->middleware(["auth"]);
+});
 
 Route::middleware(["auth"])->group(function (): void {
     Route::post("/quizzes/{quiz}/start", [QuizController::class, "createSubmission"])->middleware(EnsureQuizIsNotAlreadyStarted::class)->can("submit,quiz")->name("quizzes.start");
