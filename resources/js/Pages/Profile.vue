@@ -15,7 +15,7 @@ defineProps<{
       name: string
       }
     }
-  errors: Record<string, string[]>
+  errors: Record<string, string>
   }>()
 
 </script>
