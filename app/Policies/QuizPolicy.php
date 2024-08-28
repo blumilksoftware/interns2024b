@@ -27,4 +27,14 @@ class QuizPolicy
     {
         return $quiz->isLocked;
     }
+
+    public function lock(User $user, Quiz $quiz): bool
+    {
+        return $quiz->canBeLocked;
+    }
+
+    public function unlock(User $user, Quiz $quiz): bool
+    {
+        return $quiz->canBeUnlocked;
+    }
 }

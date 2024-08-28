@@ -7,10 +7,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\QuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+
+use function redirect;
 
 class QuizController extends Controller
 {
@@ -20,7 +23,7 @@ class QuizController extends Controller
             ->with("questions.answers")
             ->get();
 
-        return Inertia::render("Quiz/Index", ["quizzes" => QuizResource::collection($quizzes)]);
+        return Inertia::render("Admin/Quizzes", ["quizzes" => QuizResource::collection($quizzes)]);
     }
 
     public function store(QuizRequest $request): RedirectResponse
@@ -28,15 +31,6 @@ class QuizController extends Controller
         Quiz::query()->create($request->validated());
 
         return redirect()->back();
-    }
-
-    public function show(int $quiz): Response
-    {
-        $quiz = Quiz::query()
-            ->with("questions.answers")
-            ->findOrFail($quiz);
-
-        return Inertia::render("Quiz/Show", ["quiz" => new QuizResource($quiz)]);
     }
 
     public function update(QuizRequest $request, Quiz $quiz): RedirectResponse
@@ -59,7 +53,27 @@ class QuizController extends Controller
 
         return redirect()
             ->back()
-            ->with("success", "Test został skopiowany");
+            ->with("status", "Test został skopiowany");
+    }
+
+    public function lock(Quiz $quiz): RedirectResponse
+    {
+        $quiz->locked_at = Carbon::now();
+        $quiz->save();
+
+        return redirect()
+            ->back()
+            ->with("status", "Test oznaczony jako gotowy do publikacji");
+    }
+
+    public function unlock(Quiz $quiz): RedirectResponse
+    {
+        $quiz->locked_at = null;
+        $quiz->save();
+
+        return redirect()
+            ->back()
+            ->with("status", "Publikacja testu została wycofana");
     }
 
     public function createSubmission(Request $request, Quiz $quiz): RedirectResponse
