@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Helpers\VoivodeshipsHelper;
+use App\Enums\SchoolType;
+use App\Enums\Voivodeship;
 use App\Http\Integrations\RSPOConnector\Requests\GetSchoolsRequest;
 use App\Http\Integrations\RSPOConnector\RSPOConnector;
 use App\Services\GetSchoolDataService;
@@ -61,7 +62,7 @@ class TestGetSchoolDataService extends TestCase
         ]);
 
         $this->connector->withMockClient($mockClient);
-        $this->service->getSchools(VoivodeshipsHelper::LOWER_SILESIA);
+        $this->service->getSchools(Voivodeship::LOWER_SILESIA, [SchoolType::TECHNIKUM]);
 
         $this->assertDatabaseHas("schools", [
             "name" => "test school 1",
@@ -80,21 +81,6 @@ class TestGetSchoolDataService extends TestCase
             "apartment_number" => "2c",
             "zip_code" => "00-000",
         ]);
-    }
-
-    public function testFetchSchoolsWithWrongVoivodeship(): void
-    {
-        $mockClient = new MockClient([
-            GetSchoolsRequest::class => MockResponse::make([
-                "hydra:member" => [],
-                "hydra:view" => [],
-            ], 200),
-        ]);
-
-        $this->connector->withMockClient($mockClient);
-        $this->service->getSchools("wrong");
-
-        $this->assertDatabaseCount("schools", 0);
     }
 
     public function testFetchSchoolsWithAlreadyFetchedData(): void
@@ -126,8 +112,8 @@ class TestGetSchoolDataService extends TestCase
         ]);
 
         $this->connector->withMockClient($mockClient);
-        $this->service->getSchools(VoivodeshipsHelper::LOWER_SILESIA);
-        $this->service->getSchools(VoivodeshipsHelper::LOWER_SILESIA);
+        $this->service->getSchools(Voivodeship::LOWER_SILESIA, [SchoolType::TECHNIKUM]);
+        $this->service->getSchools(Voivodeship::LOWER_SILESIA, [SchoolType::TECHNIKUM]);
 
         $this->assertDatabaseCount("schools", 2);
     }
