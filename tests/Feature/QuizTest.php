@@ -327,6 +327,22 @@ class QuizTest extends TestCase
             ->assertStatus(403);
     }
 
+    public function testAdminCannotLockQuizThatHasQuestionsWithoutCorrectAnswer(): void
+    {
+        $answer = Answer::factory()->locked()->create();
+        $answer->question->correct_answer_id = null;
+        $answer->question->save();
+        
+        $quiz = $answer->question->quiz;
+        $quiz->locked_at = null;
+        $quiz->save();
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->post("admin/quizzes/{$quiz->id}/lock")
+            ->assertStatus(403);
+    }
+
     public function testAdminCanUnlockQuiz(): void
     {
         $quiz = Quiz::factory()->locked()->create();
