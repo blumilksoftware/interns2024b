@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AnswerRecordController;
 use App\Http\Controllers\AuthenticateSessionController;
@@ -81,7 +82,17 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
 
     Route::get("/users", [UserController::class, "index"])->name("admin.users.index");
     Route::get("/users/{user}", [UserController::class, "edit"])->name("admin.users.edit");
-    Route::patch("users/{user}", [UserController::class, "update"])->name("admin.users.update");
+    Route::patch("/users/{user}", [UserController::class, "update"])->name("admin.users.update");
+
+    Route::middleware(["role:super_admin"])->group(function (): void {
+        Route::get("/admins", [AdminController::class, "index"])->name("admin.admins.index");
+        Route::get("/admins/add", [AdminController::class, "addPanel"])->name("admin.admins.add");
+        Route::get("/admins/{user}", [AdminController::class, "edit"])->name("admin.admins.edit");
+        Route::post("/admins/add", [AdminController::class, "store"])->name("admin.admins.store");
+        Route::patch("/admins/{user}", [AdminController::class, "update"])->name("admin.admins.update");
+        Route::patch("/users/anonymize/{user}", [UserController::class, "anonymize"])->name("admin.users.anonymize");
+        Route::delete("/admins/{user}", [AdminController::class, "destroy"])->name("admin.admins.destroy");
+    });
 
     Route::get("/dashboard", [AdminDashboardController::class, "index"])->name("admin.dashboard");
 });

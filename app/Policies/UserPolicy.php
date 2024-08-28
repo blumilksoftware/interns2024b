@@ -11,11 +11,11 @@ class UserPolicy
 {
     public function update(User $currentUser, User $user): Response
     {
-        if ($currentUser->hasRole("admin") && !$user->hasRole("admin|super_admin")) {
+        if ($currentUser->hasRole("admin") && !$user->hasRole("admin|super_admin") && !$user->is_anonymized) {
             return Response::allow();
         }
 
-        if ($currentUser->hasRole("super_admin")) {
+        if ($currentUser->hasRole("super_admin") && !$user->is_anonymized) {
             return Response::allow();
         }
 

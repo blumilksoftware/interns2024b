@@ -4,6 +4,7 @@ import Show from './Show.vue'
 
 const props = defineProps<{
   users: User[]
+  isSuperAdmin: boolean
 }>()
 
 </script>
@@ -11,6 +12,6 @@ const props = defineProps<{
 <template>
   <h1 v-if="props.users.length > 0" class="text-xl">UŻYTKOWNICY</h1>
   <div v-for="item in props.users" :key="item.id">
-    <Show :user="item" />
+    <Show :user="item" :is-super-admin="props.isSuperAdmin" />
   </div>
 </template>

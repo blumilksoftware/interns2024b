@@ -22,7 +22,6 @@ class ProfileUserController extends Controller
             "Auth/Profile",
             [
                 "user" => UserResource::make($user),
-                "status" => session("status"),
             ],
         );
     }

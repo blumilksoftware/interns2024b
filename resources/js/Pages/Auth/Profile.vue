@@ -12,7 +12,6 @@ const props = defineProps<{
       }
     }
   errors: Record<string, string[]>
-  status?: string
   }>()
 
 const form = useForm({})
@@ -31,6 +30,5 @@ function submit() {
     <form @submit.prevent="submit">
       <button type="submit">Formularz zmiany hasła</button>
     </form>
-    <div v-if="status" class="alert alert-success">{{ status }}</div>
   </div>
 </template>

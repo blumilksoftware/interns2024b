@@ -3,18 +3,16 @@ import {type User} from '@/Types/User'
 import {useForm} from '@inertiajs/vue3'
 
 const form = useForm({})
-
 const props = defineProps<{
   user: User
-  isSuperAdmin: boolean
 }>()
 
 function edit() {
-  form.get(`/admin/users/${props.user.id}`)
+  form.get(`/admin/admins/${props.user.id}`)
 }
 
-function anonymize() {
-  form.patch(`/admin/users/anonymize/${props.user.id}`)
+function destroy() {
+  form.delete(`/admin/admins/${props.user.id}`)
 }
 
 </script>
@@ -26,14 +24,12 @@ function anonymize() {
     <div>Nazwisko: {{ props.user.surname }}</div>
     <div>E-mail: {{ props.user.email }}</div>
     <div>Szkoła: {{ props.user.school.name }}</div>
-    <div v-if="!props.user.is_anonymized">
-      <form @submit.prevent="edit">
-        <button type="submit">Edit</button>
-      </form>
-      <form v-if="props.isSuperAdmin" @submit.prevent="anonymize">
-        <button :disabled="form.processing" type="submit">Anonymize</button>
-      </form>
-    </div>
+    <form @submit.prevent="edit">
+      <button type="submit">Edit</button>
+    </form>
+    <form @submit.prevent="destroy">
+      <button :disabled="form.processing" type="submit">Delete</button>
+    </form>
   </div>
 </template>
 
