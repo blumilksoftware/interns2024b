@@ -2,10 +2,7 @@
 
 import {useForm} from '@inertiajs/vue3'
 
-const props = defineProps<
-  {
-    errors: Record<string, string[]>
-  }>()
+const props = defineProps< { errors: Record<string, string[]> }>()
 
 const form = useForm({
   current_password: '',
