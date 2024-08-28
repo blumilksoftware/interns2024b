@@ -332,7 +332,7 @@ class QuizTest extends TestCase
         $answer = Answer::factory()->locked()->create();
         $answer->question->correct_answer_id = null;
         $answer->question->save();
-        
+
         $quiz = $answer->question->quiz;
         $quiz->locked_at = null;
         $quiz->save();
