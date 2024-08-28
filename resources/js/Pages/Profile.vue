@@ -16,7 +16,6 @@ defineProps<{
       }
     }
   errors: Record<string, string[]>
-  status?: string
   }>()
 
 </script>
@@ -31,7 +30,6 @@ defineProps<{
       <UserData :user="user" />
       <hr class="border-primary/30 m-5">
       <PasswordUpdate :errors="errors" />
-      <div v-if="true" class="alert alert-success">{{ 'status' }}</div>
     </div>
     <Footer />
   </div>
