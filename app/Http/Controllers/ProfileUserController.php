@@ -27,11 +27,6 @@ class ProfileUserController extends Controller
         );
     }
 
-    public function edit(Request $request): Response
-    {
-        return Inertia::render("Auth/PasswordUpdate");
-    }
-
     public function update(ProfileUserPasswordResetRequest $request, Hasher $hasher): RedirectResponse
     {
         $validated = $request->validated();

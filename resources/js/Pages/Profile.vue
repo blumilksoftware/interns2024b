@@ -3,8 +3,8 @@ import { defineProps } from 'vue'
 import BackgroundEffect from '@/components/Home/BackgroundEffect.vue'
 import Footer from '@/components/Common/Footer.vue'
 import Header from '@/components/Common/Header.vue'
-import PasswordUpdate from '@/Pages/Auth/PasswordUpdate.vue'
-import UserData from '@/Pages/Auth/UserData.vue'
+import PasswordUpdate from '@/components/Profile/PasswordUpdateSection.vue'
+import UserData from '@/components/Profile/UserDataSection.vue'
 
 defineProps<{
   user: {
