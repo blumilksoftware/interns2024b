@@ -7,10 +7,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\QuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+
+use function redirect;
 
 class QuizController extends Controller
 {
@@ -50,7 +53,27 @@ class QuizController extends Controller
 
         return redirect()
             ->back()
-            ->with("success", "Test został skopiowany");
+            ->with("status", "Test został skopiowany");
+    }
+
+    public function lock(Quiz $quiz): RedirectResponse
+    {
+        $quiz->locked_at = Carbon::now();
+        $quiz->save();
+
+        return redirect()
+            ->back()
+            ->with("status", "Test oznaczony jako gotowy do publikacji");
+    }
+
+    public function unlock(Quiz $quiz): RedirectResponse
+    {
+        $quiz->locked_at = null;
+        $quiz->save();
+
+        return redirect()
+            ->back()
+            ->with("status", "Publikacja testu została wycofana");
     }
 
     public function createSubmission(Request $request, Quiz $quiz): RedirectResponse
