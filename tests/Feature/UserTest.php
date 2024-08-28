@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
-class UsersTest extends TestCase
+class UserTest extends TestCase
 {
     use RefreshDatabase;
 
