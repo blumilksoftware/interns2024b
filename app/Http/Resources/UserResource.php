@@ -20,6 +20,7 @@ class UserResource extends JsonResource
             "surname" => $this->surname,
             "email" => $this->email,
             "school" => SchoolResource::make($this->school),
-            "is_anonymized" => $this->is_anonymized,        ];
+            "is_anonymized" => $this->is_anonymized,
+        ];
     }
 }

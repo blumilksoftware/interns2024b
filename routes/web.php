@@ -86,7 +86,7 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
 
     Route::middleware(["role:super_admin"])->group(function (): void {
         Route::get("/admins", [AdminController::class, "index"])->name("admin.admins.index");
-        Route::get("/admins/add", [AdminController::class, "addPanel"])->name("admin.admins.add");
+        Route::get("/admins/add", [AdminController::class, "showAddAdmin"])->name("admin.admins.add");
         Route::get("/admins/{user}", [AdminController::class, "edit"])->name("admin.admins.edit");
         Route::post("/admins/add", [AdminController::class, "store"])->name("admin.admins.store");
         Route::patch("/admins/{user}", [AdminController::class, "update"])->name("admin.admins.update");

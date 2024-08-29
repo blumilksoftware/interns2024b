@@ -14,14 +14,14 @@ class AdminTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected User $super_admin;
+    protected User $superAdmin;
     protected User $admin;
     protected User $user;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->super_admin = User::factory()->superAdmin()->create();
+        $this->superAdmin = User::factory()->superAdmin()->create();
         $this->admin = User::factory()->admin()->create();
     }
 
@@ -30,7 +30,7 @@ class AdminTest extends TestCase
         User::factory()->count(10)->create();
         $this->assertDatabaseCount("users", 12);
 
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->get("/admin/admins")
             ->assertInertia(
                 fn(Assert $page) => $page
@@ -54,7 +54,7 @@ class AdminTest extends TestCase
         User::factory()->count(10)->create();
         $this->assertDatabaseCount("users", 12);
 
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->get("/admin/admins/add")
             ->assertInertia(
                 fn(Assert $page) => $page
@@ -75,14 +75,15 @@ class AdminTest extends TestCase
     public function testSuperAdminCanAddAdmin(): void
     {
         $school = School::factory()->create();
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->post("/admin/admins/add", [
                 "name" => "Admin Name",
                 "surname" => "Admin Surname",
                 "email" => "adminexample@admin.com",
                 "password" => "password",
                 "school_id" => $school->id,
-            ])->assertRedirect("/admin/admins");
+            ])
+            ->assertRedirect("/admin/admins");
 
         $this->assertDatabaseHas("users", [
             "name" => "Admin Name",
@@ -101,7 +102,8 @@ class AdminTest extends TestCase
                 "email" => "adminexample@admin.com",
                 "password" => "password",
                 "school_id" => $school->id,
-            ])->assertForbidden();
+            ])
+            ->assertForbidden();
 
         $this->assertDatabaseMissing("users", [
             "name" => "Admin Name",
@@ -114,7 +116,7 @@ class AdminTest extends TestCase
     {
         $admin = User::factory()->admin()->create();
 
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->from("/admin/admins")
             ->get("/admin/admins/{$admin->id}")
             ->assertInertia(
@@ -139,7 +141,7 @@ class AdminTest extends TestCase
         $school = School::factory()->create();
         $admin = User::factory()->admin()->create(["school_id" => $school->id]);
 
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->from("/admin/admins/{$admin->id}")
             ->patch("/admin/admins/{$admin->id}", [
                 "name" => "New Name",
@@ -182,7 +184,7 @@ class AdminTest extends TestCase
         $school = School::factory()->create();
         $admin = User::factory()->create(["school_id" => $school->id]);
 
-        $response = $this->actingAs($this->super_admin)
+        $response = $this->actingAs($this->superAdmin)
             ->from("/admin/admins/{$admin->id}")
             ->patch("/admin/admins/{$admin->id}", [
                 "name" => "",
@@ -212,7 +214,7 @@ class AdminTest extends TestCase
     public function testSuperAdminCanDeleteAdmin(): void
     {
         $admin = User::factory()->admin()->create();
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->from("/admin/admins")
             ->delete("/admin/admins/{$admin->id}")
             ->assertRedirect("/admin/admins");

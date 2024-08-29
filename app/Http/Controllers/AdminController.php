@@ -26,7 +26,7 @@ class AdminController extends Controller
         ]);
     }
 
-    public function addPanel(): Response
+    public function showAddAdmin(): Response
     {
         return Inertia::render("Admin/AddAdmin");
     }
@@ -43,7 +43,9 @@ class AdminController extends Controller
             event(new Registered($user));
         }
 
-        return redirect()->route("admin.admins.index")->with("success", "Administrator został utworzony pomyślnie.");
+        return redirect()
+            ->route("admin.admins.index")
+            ->with("success", "Administrator został utworzony pomyślnie.");
     }
 
     public function edit(User $user): Response
@@ -62,12 +64,16 @@ class AdminController extends Controller
         $data = $request->validated();
         $user->update($data);
 
-        return redirect()->route("admin.admins.index")->with("success", "Administrator zaktualizowany pomyślnie.");
+        return redirect()
+            ->route("admin.admins.index")
+            ->with("success", "Administrator zaktualizowany pomyślnie.");
     }
 
     public function destroy(User $user): RedirectResponse
     {
-        $user->delete();
+        if ($user->hasRole("admin")) {
+            $user->delete();
+        }
 
         return redirect()->back();
     }

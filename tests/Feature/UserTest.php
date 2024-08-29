@@ -14,14 +14,14 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected User $super_admin;
+    protected User $superAdmin;
     protected User $admin;
     protected User $user;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->super_admin = User::factory()->superAdmin()->create();
+        $this->superAdmin = User::factory()->superAdmin()->create();
         $this->admin = User::factory()->admin()->create();
     }
 
@@ -44,7 +44,7 @@ class UserTest extends TestCase
         User::factory()->count(10)->create();
         $this->assertDatabaseCount("users", 12);
 
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->get("/admin/users")
             ->assertInertia(
                 fn(Assert $page) => $page
@@ -71,7 +71,7 @@ class UserTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->from("/admin/users")
             ->get("/admin/users/{$user->id}")
             ->assertInertia(
@@ -90,7 +90,7 @@ class UserTest extends TestCase
 
     public function testSuperAdminCannotViewEditUserThatDoesNotExist(): void
     {
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->get("/admin/users/999")
             ->assertStatus(404);
     }
@@ -124,7 +124,7 @@ class UserTest extends TestCase
         $school = School::factory()->create();
         $user = User::factory()->create(["school_id" => $school->id]);
 
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->from("/admin/users/{$user->id}")
             ->patch("/admin/users/{$user->id}", [
                 "name" => "New Name",
@@ -232,22 +232,24 @@ class UserTest extends TestCase
         $school = School::factory()->create();
         $anotherAdmin = User::factory()->admin()->create(["school_id" => $school->id]);
 
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->patch("/admin/users/{$anotherAdmin->id}", [
                 "name" => "New Name",
                 "surname" => "New Surname",
                 "email" => "new@email.com",
                 "school_id" => $anotherAdmin->school_id,
-            ])->assertRedirect("/admin/users");
+            ])
+            ->assertRedirect("/admin/users");
     }
 
     public function testSuperAdminCanAnonymizeUser(): void
     {
         $user = User::factory()->create();
 
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->patch("/admin/users/anonymize/{$user->id}")
-            ->assertRedirect()->assertSessionHas("success");
+            ->assertRedirect()
+            ->assertSessionHas("success");
 
         $this->assertDatabaseHas("users", [
             "id" => $user->id,
@@ -266,7 +268,7 @@ class UserTest extends TestCase
             ->get("/admin/users/{$user->id}")
             ->assertStatus(403);
 
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->get("/admin/users/{$user->id}")
             ->assertStatus(403);
     }
@@ -293,7 +295,7 @@ class UserTest extends TestCase
 
         $this->assertDatabaseHas("users", $anonymizeUserData);
 
-        $this->actingAs($this->super_admin)
+        $this->actingAs($this->superAdmin)
             ->from("/admin/users/{$user->id}")
             ->patch("/admin/users/{$user->id}", [
                 "name" => "New Name",
@@ -306,12 +308,42 @@ class UserTest extends TestCase
         $this->assertDatabaseHas("users", $anonymizeUserData);
     }
 
+    public function testSuperAdminCannotAnonymizeAdmin(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($this->admin)
+            ->patch("/admin/users/anonymize/{$admin->id}")
+            ->assertForbidden();
+    }
+
+    public function testSuperAdminCannotAnonymizeSuperAdmin(): void
+    {
+        $superAdmin = User::factory()->superAdmin()->create();
+
+        $this->actingAs($this->superAdmin)
+            ->patch("/admin/users/anonymize/{$superAdmin->id}")
+            ->assertRedirect()
+            ->assertSessionHas([
+                "error" => "Nie można zanonimizować tego użytkownika.",
+            ]);
+    }
+
     public function testAdminCannotAnonymizeUser(): void
     {
         $user = User::factory()->create();
 
         $this->actingAs($this->admin)
             ->patch("/admin/users/anonymize/{$user->id}")
+            ->assertForbidden();
+    }
+
+    public function testAdminCannotAnonymizeAdmin(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($this->admin)
+            ->patch("/admin/users/anonymize/{$admin->id}")
             ->assertForbidden();
     }
 
