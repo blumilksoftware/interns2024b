@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { router } from '@inertiajs/vue3'
+import { useForm } from '@inertiajs/vue3'
 import CustomInput from '@/components/Common/CustomInput.vue'
 import Header from '@/components/Common/Header.vue'
-import { ref } from 'vue'
 import Banner from '@/components/Common/Banner.vue'
 import Footer from '@/components/Common/Footer.vue'
 import BackgroundEffect2 from '@/components/Common/BackgroundEffect2.vue'
 import { Head } from '@inertiajs/vue3'
+import { ref } from 'vue'
 
 
 defineProps<{
@@ -14,18 +14,22 @@ defineProps<{
   status?: string
 }>()
 
-const email = ref<string>('')
+const form = useForm({ email: '' })
+
 const isVisible = ref<boolean>(false)
 
 function submit() {
-  router.post('/auth/forgot-password', {email:email.value})
-  isVisible.value = true
+  form.post('/auth/forgot-password', {
+    onSuccess: () => {
+      isVisible.value = true
+    },
+  })
 }
 </script>
 
 <template>
   <Head>
-    <title>Zmiana hasła"</title>
+    <title>Zmiana hasła</title>
     <meta name="Zmiana hasła" content="Zmiana hasła">
   </Head>
   <BackgroundEffect2 />
@@ -36,8 +40,8 @@ function submit() {
     </Transition>
     <div class="p-5 w-full flex justify-center">
       <form class="p-5 gap-5 flex flex-col w-full bg-white/50 rounded-lg max-w-lg" @submit.prevent="submit">
-        <CustomInput v-model="email" label="E-mail" :error="errors.email" name="email" type="email" />
-        <button type="submit" class="bg-primary text-white font-bold py-3 px-4 rounded-lg">
+        <CustomInput v-model="form.email" label="E-mail" :error="form.errors.email" name="email" type="email" />
+        <button :disabled="form.processing" type="submit" class="bg-primary text-white font-bold py-3 px-4 rounded-lg disabled:bg-primary/70">
           Zmień hasło
         </button>
       </form>
