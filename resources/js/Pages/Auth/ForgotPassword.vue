@@ -6,6 +6,8 @@ import { ref } from 'vue'
 import Banner from '@/components/Common/Banner.vue'
 import Footer from '@/components/Home/Footer.vue'
 import BackgroundEffect2 from '@/components/Common/BackgroundEffect2.vue'
+import { Head } from '@inertiajs/vue3'
+
 
 defineProps<{
   errors: Record<string, string>
@@ -20,6 +22,10 @@ function submit() {
 </script>
 
 <template>
+  <Head>
+    <title>Profile</title>
+    <meta name="Zmień hasło" content="User profile">
+  </Head>
   <BackgroundEffect2 />
   <div class="flex flex-col items-center h-screen w-full">
     <Header title="Zmień hasło" />
