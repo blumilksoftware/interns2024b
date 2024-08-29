@@ -34,7 +34,7 @@ class AdminSeeder extends Seeder
                 "name" => "Admin Name",
                 "surname" => "Admin Surname",
                 "email_verified_at" => Carbon::now(),
-                "password" => Hash::make("superadmin@example.com"),
+                "password" => Hash::make("admin@example.com"),
                 "remember_token" => Str::random(10),
                 "school_id" => School::factory()->create()->id,
             ],
