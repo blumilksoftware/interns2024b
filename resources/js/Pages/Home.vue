@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { ref, provide } from 'vue'
-import Footer from '@/components/Home/Footer.vue'
+import Footer from '@/components/Common/Footer.vue'
 import AuthBanner from '@/components/Home/AuthBanner.vue'
 import GeneralSection from '@/components/Home/GeneralSection.vue'
 import AuthSection from '@/components/Home/AuthSection.vue'
 import BackgroundEffect from '@/components/Home/BackgroundEffect.vue'
-import type {School} from '@/Types/School'
+import {type School} from '@/Types/School'
 
 const isLogin = ref(null)
 
