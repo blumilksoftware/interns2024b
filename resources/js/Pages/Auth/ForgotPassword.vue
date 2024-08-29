@@ -4,6 +4,7 @@ import CustomInput from '@/components/Common/CustomInput.vue'
 import { ref } from 'vue'
 import Banner from '@/components/Common/Banner.vue'
 import Footer from '@/components/Home/Footer.vue'
+import BackgroundEffect2 from '@/components/Common/BackgroundEffect2.vue'
 
 defineProps<{
   errors: Record<string, string>
@@ -18,14 +19,17 @@ function submit() {
 </script>
 
 <template>
+  <BackgroundEffect2 />
   <div class="flex flex-col items-center h-screen w-full">
     <Banner :content="status" />
-    <form class="mt-8 p-5 gap-5 flex flex-col w-full" @submit.prevent="submit">
-      <CustomInput v-model="email" label="E-mail" :error="errors.email" name="email" type="email" />
-      <button type="submit" class="bg-primary text-white font-bold py-3 px-4 rounded-lg">
-        Zmień hasło
-      </button>
-    </form>
+    <div class="p-5 w-full">
+      <form class="p-5 gap-5 flex flex-col w-full bg-white/70 rounded-lg " @submit.prevent="submit">
+        <CustomInput v-model="email" label="E-mail" :error="errors.email" name="email" type="email" />
+        <button type="submit" class="bg-primary text-white font-bold py-3 px-4 rounded-lg">
+          Zmień hasło
+        </button>
+      </form>
+    </div>
     <Footer />
   </div>
 </template>
