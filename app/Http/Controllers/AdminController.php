@@ -19,7 +19,7 @@ class AdminController extends Controller
 {
     public function index(): Response
     {
-        $users = User::query()->role("admin")->with(["school"])->orderBy("id")->get();
+        $users = User::query()->role("admin")->with("school")->orderBy("id")->get();
 
         return Inertia::render("Admin/Index", [
             "users" => UserResource::collection($users),
