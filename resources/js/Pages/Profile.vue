@@ -32,5 +32,3 @@ defineProps<{
     <Footer />
   </div>
 </template>
-
-
