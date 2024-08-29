@@ -14,14 +14,13 @@ use Inertia\Response;
 
 class UserController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $isSuperAdmin = auth()->user()->hasRole("super_admin");
-        $users = User::query()->role("user")->with(["school"])->orderBy("id")->get();
+        $users = User::query()->role("user")->with("school")->orderBy("id")->get();
 
         return Inertia::render("User/Index", [
             "users" => UserResource::collection($users),
-            "isSuperAdmin" => $isSuperAdmin,
+            "isSuperAdmin" => $request->user()->isSuperAdmin(),
         ]);
     }
 
