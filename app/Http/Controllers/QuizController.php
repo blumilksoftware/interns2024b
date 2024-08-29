@@ -8,6 +8,7 @@ use App\Http\Requests\QuizRequest;
 use App\Http\Requests\UpdateQuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
+use App\Services\QuizUpdateService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,9 +35,9 @@ class QuizController extends Controller
         return redirect()->back();
     }
 
-    public function update(UpdateQuizRequest $request, Quiz $quiz): RedirectResponse
+    public function update(QuizUpdateService $service, UpdateQuizRequest $request, Quiz $quiz): RedirectResponse
     {
-        $quiz->deepUpdate($request->validated());
+        $service->update($quiz, $request->validated());
 
         return redirect()->back();
     }
