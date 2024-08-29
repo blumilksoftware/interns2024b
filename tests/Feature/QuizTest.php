@@ -190,7 +190,7 @@ class QuizTest extends TestCase
             "id" => $question->id,
             "quiz_id" => $quiz->id,
             "text" => "Question's content 1",
-            "correct_answer_id" => 1,
+            "correct_answer_id" => $answer->id,
         ]);
 
         $this->assertDatabaseHas("questions", [
