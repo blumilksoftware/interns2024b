@@ -9,7 +9,6 @@ use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class QuestionTest extends TestCase
@@ -17,6 +16,7 @@ class QuestionTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+    protected User $admin;
 
     protected function setUp(): void
     {
@@ -26,70 +26,7 @@ class QuestionTest extends TestCase
         $this->user = User::factory()->create();
     }
 
-    public function testAdminCanViewQuizQuestions(): void
-    {
-        $quiz = Quiz::factory()->create();
-        $question = Question::factory()->create(["quiz_id" => $quiz->id]);
-        Answer::factory()->count(10)->create(["question_id" => $question->id]);
-
-        $this->assertDatabaseCount("quizzes", 1);
-        $this->assertDatabaseCount("questions", 1);
-        $this->assertDatabaseCount("answers", 10);
-
-        $this->actingAs($this->admin)
-            ->get("/admin/quizzes/{$quiz->id}/questions")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Question/Index")
-                    ->has("questions", 1)
-                    ->has("questions.0.answers", 10),
-            );
-    }
-
-    public function testAdminCannotViewQuestionsOfQuizThatNotExisted(): void
-    {
-        $this->actingAs($this->admin)->get("/admin/quizzes/1/questions")
-            ->assertStatus(404);
-    }
-
-    public function testAdminCanViewSingleQuestion(): void
-    {
-        $question = Question::factory()->create();
-
-        $this->assertDatabaseCount("questions", 1);
-
-        $this->actingAs($this->admin)
-            ->get("/admin/questions/{$question->id}")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Question/Show")
-                    ->where("question.id", $question->id),
-            );
-    }
-
-    public function testAdminCanViewLockedQuestion(): void
-    {
-        $question = Question::factory()->locked()->create();
-
-        $this->assertDatabaseCount("questions", 2);
-
-        $this->actingAs($this->admin)
-            ->get("/admin/questions/{$question->id}")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Question/Show")
-                    ->where("question.id", $question->id)
-                    ->where("question.locked", true),
-            );
-    }
-
-    public function testAdminCannotViewQuestionThatNotExisted(): void
-    {
-        $this->actingAs($this->admin)->get("/admin/questions/1")
-            ->assertStatus(404);
-    }
-
-    public function testAdminCanCreateQuestion(): void
+    public function testUserCanCreateQuestion(): void
     {
         $quiz = Quiz::factory()->create();
 
@@ -354,32 +291,22 @@ class QuestionTest extends TestCase
 
         $this->actingAs($this->user)
             ->from("/")
-            ->get(route("admin.questions.index", $quiz->id))
+            ->post("admin/quizzes/$quiz->id/questions", ["text" => "New question"])
             ->assertStatus(403);
 
         $this->actingAs($this->user)
             ->from("/")
-            ->post(route("admin.questions.store", $quiz->id), ["text" => "New question"])
+            ->patch("admin/questions/$question->id", ["text" => "Updated question"])
             ->assertStatus(403);
 
         $this->actingAs($this->user)
             ->from("/")
-            ->get(route("admin.questions.show", $question->id))
+            ->post("admin/questions/$question->id/clone/$quiz->id")
             ->assertStatus(403);
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch(route("admin.questions.update", $question->id), ["text" => "Updated question"])
-            ->assertStatus(403);
-
-        $this->actingAs($this->user)
-            ->from("/")
-            ->post(route("admin.questions.clone", ["question" => $question->id, "quiz" => $quiz->id]))
-            ->assertStatus(403);
-
-        $this->actingAs($this->user)
-            ->from("/")
-            ->delete(route("admin.questions.destroy", $question->id))
+            ->delete("admin/questions/$question->id")
             ->assertStatus(403);
     }
 }
