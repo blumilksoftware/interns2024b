@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { router } from '@inertiajs/vue3'
 import CustomInput from '@/components/Common/CustomInput.vue'
+import Header from '@/components/Common/Header.vue'
 import { ref } from 'vue'
 import Banner from '@/components/Common/Banner.vue'
 import Footer from '@/components/Home/Footer.vue'
@@ -21,6 +22,7 @@ function submit() {
 <template>
   <BackgroundEffect2 />
   <div class="flex flex-col items-center h-screen w-full">
+    <Header title="Zmień hasło" />
     <Banner :content="status" />
     <div class="p-5 w-full">
       <form class="p-5 gap-5 flex flex-col w-full bg-white/70 rounded-lg " @submit.prevent="submit">
