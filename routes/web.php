@@ -33,7 +33,7 @@ Route::middleware(["guest"])->group(function (): void {
     Route::post("/auth/forgot-password", [PasswordResetLinkController::class, "store"])->name("password.email");
 });
 
-Route::middleware("auth")->group(function (): void {
+Route::middleware(["auth", "verified"])->group(function (): void {
     Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
     Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
     Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
