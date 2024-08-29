@@ -18,7 +18,7 @@ defineProps<{
 
 <template>
   <Head>
-    <title>Profile</title>
+    <title>Profil</title>
     <meta name="Profile" content="User profile">
   </Head>
   <BackgroundEffect />
@@ -32,5 +32,3 @@ defineProps<{
     <Footer />
   </div>
 </template>
-
-
