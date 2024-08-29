@@ -4,7 +4,7 @@ import {Head} from "@inertiajs/vue3";
 
 <template>
   <Head>
-    <title>Testy</title>
+    <title>Szkoły</title>
   </Head>
 
   Quizzes - CRUD

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AnswerRecordController;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
@@ -35,7 +34,7 @@ Route::middleware(["guest"])->group(function (): void {
 
 Route::middleware("auth")->group(function (): void {
     Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
-    Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
+    Route::post("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
     Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
     Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update");
 });
@@ -63,8 +62,6 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/answers/{answer}/clone/{question}", [QuestionAnswerController::class, "clone"])->can("clone,answer,question")->name("admin.answers.clone");
     Route::post("/answers/{answer}/correct", [QuestionAnswerController::class, "markAsCorrect"])->can("update,answer")->name("admin.answers.correct");
     Route::post("/answers/{answer}/invalid", [QuestionAnswerController::class, "markAsInvalid"])->can("update,answer")->name("admin.answers.invalid");
-
-    Route::get("/dashboard", [AdminDashboardController::class, "index"])->name("admin.dashboard");
 
     Route::get("/schools", [SchoolsController::class, "index"])->name("admin.schools.index");
     Route::post("/schools", [SchoolsController::class, "store"])->name("admin.schools.store");
