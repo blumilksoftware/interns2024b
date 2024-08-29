@@ -24,7 +24,7 @@ function updatePassword() {
 
 <template>
   <div class="flex flex-col gap-4">
-    <b class="text-[1.2rem]">Reset Password</b>
+    <b class="text-[1.2rem]">Zmień hasło</b>
     <div class="flex lg:justify-center sm:min-w-80">
       <form class="flex flex-col gap-4 w-full sm:max-w-80" @submit.prevent="updatePassword">
         <CustomInput v-model="form.current_password" label="Aktualne hasło" type="password" name="password" :error="errors.current_password" />
