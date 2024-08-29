@@ -25,8 +25,8 @@ function submit() {
 
 <template>
   <Head>
-    <title>Profile</title>
-    <meta name="Zmień hasło" content="User profile">
+    <title>Zmiana hasła"</title>
+    <meta name="Zmiana hasła" content="Zmiana hasła">
   </Head>
   <BackgroundEffect2 />
   <div class="flex flex-col items-center h-screen w-full">
