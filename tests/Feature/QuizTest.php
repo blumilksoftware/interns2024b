@@ -137,13 +137,176 @@ class QuizTest extends TestCase
     public function testAdminCanEditQuiz(): void
     {
         $quiz = Quiz::factory()->create(["name" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
+        $question = Question::factory()->create(["quiz_id" => $quiz->id]);
+        $answer = Answer::factory()->create(["question_id" => $question->id]);
+
+        $data = [
+            "name" => "Quiz Name",
+            "scheduled_at" => "2024-08-28 15:00:00",
+            "duration" => 120,
+            "questions" => [
+                [
+                    "id" => $question->id,
+                    "text" => "Question's content 1",
+                    "answers" => [
+                        [
+                            "id" => $answer->id,
+                            "text" => "Answer's content 1",
+                            "correct" => true,
+                        ],
+                        [
+                            "text" => "Answer's content 2",
+                        ],
+                    ],
+                ],
+                [
+                    "text" => "Question's content 2",
+                    "answers" => [
+                        [
+                            "text" => "Answer's content 3",
+                        ],
+                        [
+                            "text" => "Answer's content 4",
+                            "correct" => true,
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         $this->actingAs($this->admin)
             ->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "New quiz", "scheduled_at" => "2024-03-10 12:15:00", "duration" => 7200])
+            ->patch("/admin/quizzes/{$quiz->id}", $data)
             ->assertRedirect("/");
 
-        $this->assertDatabaseHas("quizzes", ["name" => "New quiz", "scheduled_at" => "2024-03-10 12:15:00", "duration" => 7200]);
+        $this->assertDatabaseHas("quizzes", [
+            "id" => $quiz->id,
+            "name" => "Quiz Name",
+            "scheduled_at" => "2024-08-28 15:00:00",
+            "duration" => 120,
+        ]);
+
+        $this->assertDatabaseHas("questions", [
+            "id" => $question->id,
+            "quiz_id" => $quiz->id,
+            "text" => "Question's content 1",
+            "correct_answer_id" => 1,
+        ]);
+
+        $this->assertDatabaseHas("questions", [
+            "quiz_id" => $quiz->id,
+            "text" => "Question's content 2",
+        ]);
+
+        $this->assertDatabaseHas("answers", [
+            "question_id" => $question->id,
+            "text" => "Answer's content 1",
+        ]);
+
+        $this->assertDatabaseHas("answers", [
+            "question_id" => $question->id,
+            "text" => "Answer's content 2",
+        ]);
+
+        $this->assertDatabaseHas("answers", [
+            "question_id" => $question->id + 1,
+            "text" => "Answer's content 3",
+        ]);
+
+        $this->assertDatabaseHas("answers", [
+            "question_id" => $question->id + 1,
+            "text" => "Answer's content 4",
+        ]);
+    }
+
+    public function testAdminCannotEditQuizWithNonExistentAnswer(): void
+    {
+        $quiz = Quiz::factory()->create(["name" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
+        $question = Question::factory()->create(["quiz_id" => $quiz->id]);
+
+        $data = [
+            "name" => "Quiz Name",
+            "scheduled_at" => "2024-08-28 15:00:00",
+            "duration" => 120,
+            "questions" => [
+                [
+                    "id" => $question->id,
+                    "text" => "Question's content 1",
+                    "answers" => [
+                        [
+                            "id" => 0,
+                            "text" => "Answer's content 1",
+                            "correct" => true,
+                        ],
+                        [
+                            "text" => "Answer's content 2",
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->patch("/admin/quizzes/{$quiz->id}", $data)
+            ->assertStatus(404);
+    }
+
+    public function testAdminCannotEditQuizWithQuestionThatHasMoreThanOneCorrectAnswer(): void
+    {
+        $quiz = Quiz::factory()->create(["name" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
+
+        $data = [
+            "name" => "Quiz Name",
+            "scheduled_at" => "2024-08-28 15:00:00",
+            "duration" => 120,
+            "questions" => [
+                [
+                    "id" => 0,
+                    "text" => "Question's content 1",
+                    "answers" => [
+                        [
+                            "text" => "Answer's content 1",
+                            "correct" => true,
+                        ],
+                        [
+                            "text" => "Answer's content 2",
+                            "correct" => true,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->patch("/admin/quizzes/{$quiz->id}", $data)
+            ->assertRedirect("/")->assertSessionHasErrors(
+                [
+                    "questions" => "Każde pytanie może mieć maksymalnie jedną poprawną odpowiedź."],
+            );
+    }
+
+    public function testAdminCannotEditQuizWithNonExistentQuestion(): void
+    {
+        $quiz = Quiz::factory()->create(["name" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
+
+        $data = [
+            "name" => "Quiz Name",
+            "scheduled_at" => "2024-08-28 15:00:00",
+            "duration" => 120,
+            "questions" => [
+                [
+                    "id" => 0,
+                    "text" => "Question's content 1",
+                ],
+            ],
+        ];
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->patch("/admin/quizzes/{$quiz->id}", $data)
+            ->assertStatus(404);
     }
 
     public function testAdminCannotEditQuizThatNotExisted(): void

@@ -97,6 +97,29 @@ class Quiz extends Model
         return $submission;
     }
 
+    public function deepUpdate(array $data): void
+    {
+        $this->fill($data);
+
+        if (!array_key_exists("questions", $data)) {
+            return;
+        }
+
+        foreach ($data["questions"] as $questionData) {
+            $question = null;
+
+            if (array_key_exists("id", $questionData)) {
+                $question = $this->questions()->findOrFail($questionData["id"]);
+            } else {
+                $question = $this->questions()->create($questionData);
+            }
+
+            $question->deepUpdate($questionData);
+        }
+
+        $this->save();
+    }
+
     public function isReadyToBePublished(): bool
     {
         return $this->scheduled_at !== null && $this->duration !== null && $this->allQuestionsHaveCorrectAnswer();

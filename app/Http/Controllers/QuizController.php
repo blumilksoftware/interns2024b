@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\QuizRequest;
+use App\Http\Requests\UpdateQuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
 use Carbon\Carbon;
@@ -33,9 +34,9 @@ class QuizController extends Controller
         return redirect()->back();
     }
 
-    public function update(QuizRequest $request, Quiz $quiz): RedirectResponse
+    public function update(UpdateQuizRequest $request, Quiz $quiz): RedirectResponse
     {
-        $quiz->update($request->validated());
+        $quiz->deepUpdate($request->validated());
 
         return redirect()->back();
     }

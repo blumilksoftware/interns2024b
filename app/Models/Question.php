@@ -75,4 +75,31 @@ class Question extends Model
 
         return $questionCopy;
     }
+
+    public function deepUpdate(array $data): void
+    {
+        $this->fill($data);
+
+        if (!array_key_exists("answers", $data)) {
+            return;
+        }
+
+        foreach ($data["answers"] as $answerData) {
+            $answer = null;
+
+            if (array_key_exists("id", $answerData)) {
+                $answer = $this->answers()->findOrFail($answerData["id"]);
+            } else {
+                $answer = $this->answers()->create($answerData);
+            }
+
+            if (array_key_exists("correct", $answerData)) {
+                $this->correctAnswer()->associate($answer);
+            }
+
+            $answer->update($answerData);
+        }
+
+        $this->save();
+    }
 }
