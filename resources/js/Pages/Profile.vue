@@ -6,6 +6,8 @@ import Header from '@/components/Common/Header.vue'
 import PasswordUpdate from '@/components/Profile/PasswordUpdateSection.vue'
 import UserData from '@/components/Profile/UserDataSection.vue'
 import { type User } from '@/Types/User'
+import { Head } from '@inertiajs/vue3'
+
 
 defineProps<{
   user: User
@@ -15,6 +17,10 @@ defineProps<{
 </script>
 
 <template>
+  <Head>
+    <title>Profile</title>
+    <meta name="Profile" content="User profile">
+  </Head>
   <BackgroundEffect />
   <div class="inset-0 bg-white/60 fixed -z-10" />
   <div class="flex flex-col items-center h-screen">
