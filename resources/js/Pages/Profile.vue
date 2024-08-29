@@ -19,7 +19,7 @@ defineProps<{
 <template>
   <Head>
     <title>Profile</title>
-    <meta name="Profile" content="User profile">
+    <meta name="Profil" content="Profil użytkownika">
   </Head>
   <BackgroundEffect />
   <div class="inset-0 bg-white/60 fixed -z-10" />
