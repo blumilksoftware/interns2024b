@@ -37,7 +37,6 @@ Route::middleware("auth")->group(function (): void {
     Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
     Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
     Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
-    Route::get("/profile/password-edit", [ProfileUserController::class, "edit"])->name("profile.password.edit");
     Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update");
 });
 
