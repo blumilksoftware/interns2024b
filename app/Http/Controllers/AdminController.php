@@ -71,9 +71,8 @@ class AdminController extends Controller
 
     public function destroy(User $user): RedirectResponse
     {
-        if ($user->hasRole("admin")) {
-            $user->delete();
-        }
+        $this->authorize("delete", $user);
+        $user->delete();
 
         return redirect()->back();
     }

@@ -21,4 +21,22 @@ class UserPolicy
 
         return Response::deny("Nie masz uprawnień do edycji tego użytkownika.");
     }
+
+    public function delete(User $currentUser, User $user): Response
+    {
+        if ($user->hasRole("admin") && $currentUser->hasRole("super_admin")) {
+            return Response::allow();
+        }
+
+        return Response::deny("Nie można usunąć tego użytkownika.");
+    }
+
+    public function anonymize(User $currentUser, User $user): Response
+    {
+        if ($user->hasRole("user") && $currentUser->hasRole("super_admin")) {
+            return Response::allow();
+        }
+
+        return Response::deny("Nie można zanonimizować tego użytkownika.");
+    }
 }

@@ -323,10 +323,7 @@ class UserTest extends TestCase
 
         $this->actingAs($this->superAdmin)
             ->patch("/admin/users/anonymize/{$superAdmin->id}")
-            ->assertRedirect()
-            ->assertSessionHas([
-                "error" => "Nie można zanonimizować tego użytkownika.",
-            ]);
+            ->assertStatus(403);
     }
 
     public function testAdminCannotAnonymizeUser(): void

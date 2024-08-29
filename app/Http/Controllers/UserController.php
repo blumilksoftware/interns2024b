@@ -48,22 +48,16 @@ class UserController extends Controller
 
     public function anonymize(User $user): RedirectResponse
     {
-        if ($user->hasRole("user")) {
-            $this->authorize("update", $user);
-            $user->update([
-                "name" => "Anonymous",
-                "surname" => "User",
-                "email" => "anonymous" . $user->id . "@email",
-                "is_anonymized" => true,
-            ]);
-
-            return redirect()
-                ->back()
-                ->with("success", "Dane użytkownika zostały zanonimizowane.");
-        }
+        $this->authorize("anonymize", $user);
+        $user->update([
+            "name" => "Anonymous",
+            "surname" => "User",
+            "email" => "anonymous" . $user->id . "@email",
+            "is_anonymized" => true,
+        ]);
 
         return redirect()
             ->back()
-            ->with("error", "Nie można zanonimizować tego użytkownika.");
+            ->with("success", "Dane użytkownika zostały zanonimizowane.");
     }
 }
