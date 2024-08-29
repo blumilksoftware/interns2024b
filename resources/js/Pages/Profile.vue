@@ -5,16 +5,10 @@ import Footer from '@/components/Common/Footer.vue'
 import Header from '@/components/Common/Header.vue'
 import PasswordUpdate from '@/components/Profile/PasswordUpdateSection.vue'
 import UserData from '@/components/Profile/UserDataSection.vue'
+import { type User } from '@/Types/User'
 
 defineProps<{
-  user: {
-    name: string
-    surname: string
-    email: string
-    school: {
-      name: string
-      }
-    }
+  user: User
   errors: Record<string, string>
   }>()
 

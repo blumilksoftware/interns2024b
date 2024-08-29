@@ -1,14 +1,6 @@
 <script setup lang="ts">
-defineProps<{
-  user: {
-    name: string
-    surname: string
-    email: string
-    school: {
-      name: string
-    }
-  }
-}>()
+import { type User } from '@/Types/User'
+defineProps<{ user: User }>()
 </script>
 
 <template>
