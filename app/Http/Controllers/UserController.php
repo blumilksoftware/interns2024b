@@ -9,6 +9,7 @@ use App\Http\Resources\UserResource;
 use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -20,7 +21,7 @@ class UserController extends Controller
 
         return Inertia::render("User/Index", [
             "users" => UserResource::collection($users),
-            "isSuperAdmin" => $request->user()->isSuperAdmin(),
+            "isSuperAdmin" => $request->user()->hasRole("super_admin"),
         ]);
     }
 
