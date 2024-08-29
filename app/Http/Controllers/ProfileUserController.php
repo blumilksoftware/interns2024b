@@ -19,16 +19,11 @@ class ProfileUserController extends Controller
         $user = $request->user()->load("school");
 
         return Inertia::render(
-            "Auth/Profile",
+            "Profile",
             [
                 "user" => UserResource::make($user),
             ],
         );
-    }
-
-    public function edit(Request $request): Response
-    {
-        return Inertia::render("Auth/PasswordUpdate");
     }
 
     public function update(ProfileUserPasswordResetRequest $request, Hasher $hasher): RedirectResponse
