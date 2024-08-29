@@ -1,20 +1,19 @@
 <script setup lang="ts">
-  import { useForm } from "@inertiajs/vue3";
+import { useForm } from '@inertiajs/vue3'
 
-  const form = useForm({});
+const form = useForm({})
 
-  const props = withDefaults(defineProps<{
-    small?: boolean
-    class?: string
-    href: string,
-    method?: "post" | "get" | "put" | "patch" | "delete"
-    options?: object
-  }>(), { method: 'get' });
+const props = withDefaults(defineProps<{
+  small?: boolean
+  class?: string
+  href: string
+  method?: 'post' | 'get' | 'put' | 'patch' | 'delete'
+  options?: any
+}>(), { method: 'get', class: '', options: {} })
 
-
-  function handleSubmit() {
-    form[props.method](props.href, props.options);
-  }
+function handleSubmit() {
+  form[props.method](props.href, props.options)
+}
 </script>
 
 <template>
@@ -27,7 +26,6 @@
       <slot />
     </button>
   </form>
-
 </template>
 
 
