@@ -52,7 +52,7 @@ class AuthenticateSessionTest extends TestCase
         ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "Pole e-mail jest wymagane.", "password" => "Pole hasło jest wymagane."]);
     }
 
-    public function testUnveriedUserCanLogin(): void
+    public function testUnverifiedUserCanLogin(): void
     {
         User::factory()->unverifiedUser()->create(["email" => "test@example.com", "password" => "goodPassword"]);
         $this->from("/")->post("/auth/login", [
@@ -62,7 +62,7 @@ class AuthenticateSessionTest extends TestCase
             ->assertRedirect("/dashboard");
     }
 
-    public function testUnveriedUserIsRedirectedToVerifiedEmail(): void
+    public function testUnverifiedUserIsRedirectedToVerifyEmail(): void
     {
         $user = User::factory()->unverifiedUser()->create();
         $this->actingAs($user)
