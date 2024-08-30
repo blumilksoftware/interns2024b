@@ -29,3 +29,9 @@ provide('isLoginRef', isLogin)
     <Footer />
   </div>
 </template>
+
+<style scoped>
+html {
+  overflow-y: scroll;
+}
+</style>
