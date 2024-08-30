@@ -2,6 +2,9 @@
 
 import type {Page} from '@/Types/Page'
 import BaseLayout from '@/Layouts/BaseLayout.vue'
+import type {PageProps} from '@/Types/PageProps'
+
+defineProps<PageProps>()
 
 const pages: Page[] = [
   { title: 'Konkursy', href: '/dashboard' },
@@ -10,7 +13,7 @@ const pages: Page[] = [
 </script>
 
 <template>
-  <BaseLayout :pages>
+  <BaseLayout :pages :app-name :user :flash>
     <slot />
   </BaseLayout>
 </template>

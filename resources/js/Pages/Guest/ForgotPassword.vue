@@ -5,7 +5,6 @@ import { Head } from '@inertiajs/vue3'
 
 defineProps<{
   errors: Record<string, string>
-  status?: string
 }>()
 
 const form = useForm({ email: '' })

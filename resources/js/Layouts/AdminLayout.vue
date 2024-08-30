@@ -2,10 +2,10 @@
 
 import type {Page} from '@/Types/Page'
 import BaseLayout from '@/Layouts/BaseLayout.vue'
-import {usePage} from '@inertiajs/vue3'
 import {type PageProps} from '@/Types/PageProps'
 
-const props = usePage().props as PageProps
+defineProps<PageProps>()
+
 const pages: Page[] = [
   { title: 'Testy', href: '/admin/quizzes' },
   { title: 'Szkoły', href: '/admin/schools' },
@@ -18,7 +18,7 @@ if (props.user?.isSuperAdmin) {
 </script>
 
 <template>
-  <BaseLayout :pages>
+  <BaseLayout :pages :app-name :user :flash>
     <slot />
   </BaseLayout>
 </template>

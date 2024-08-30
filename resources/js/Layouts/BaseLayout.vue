@@ -5,14 +5,15 @@ import Header from '@/components/Common/Header.vue'
 import Footer from '@/components/Common/Footer.vue'
 import BackgroundEffect from '@/components/Common/BackgroundEffect.vue'
 import Banner from '@/components/Common/Banner.vue'
-import { usePage } from '@inertiajs/vue3'
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
 import {type PageProps} from '@/Types/PageProps'
 
-const { pages } = defineProps<{ pages: Page[] }>()
+const props = defineProps<{ pages: Page[] } & PageProps>()
+const status = ref<string>(props.flash.status)
 
-const props = usePage().props as PageProps
-const status = ref<string>(props.status ?? '')
+watch(() => props.flash, flash => {
+  status.value = flash.status
+}, { immediate: true })
 
 </script>
 
@@ -23,7 +24,6 @@ const status = ref<string>(props.status ?? '')
     <Transition>
       <Banner v-if="status" :text="status" @click="status = ''" />
     </Transition>
-
     <Header :pages :user="props.user" :app-name="props.appName" />
     <slot />
     <Footer />

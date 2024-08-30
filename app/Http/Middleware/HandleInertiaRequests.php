@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Middleware;
 
 use App\Http\Resources\UserResource;
+use Closure;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -24,9 +25,17 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request): array
     {
         return array_merge(parent::share($request), [
-            "appName" => config("app.name"),
+            "appName" => fn() => config("app.name"),
             "user" => fn() => $request->user() ? UserResource::make($request->user()) : null,
-            "status" => fn() => $request->session()->get("message"),
+            "flash" => $this->getFlashData($request),
         ]);
+    }
+
+    protected function getFlashData(Request $request): Closure
+    {
+        return fn(): array => [
+            "errors" => $request->session()->get("errors"),
+            "status" => $request->session()->get("status"),
+        ];
     }
 }
