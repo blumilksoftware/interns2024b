@@ -7,7 +7,7 @@ import {ref} from 'vue'
 
 defineProps<{ pages: Page[] }>()
 
-const open = ref<boolean>(true)
+const open = ref<boolean>(false)
 const isSelected = (page: Page) => page.href === window.location.pathname
 </script>
 
