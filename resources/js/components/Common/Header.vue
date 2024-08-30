@@ -80,8 +80,8 @@ const isSelected = (page: Page) => page.href === window.location.pathname
                       </a>
                     </div>
 
-                    <div class="flex flex-1 items-end justify-end px-6 py-2">
-                      <FormButton method="post" class="w-full" href="/auth/logout" text>Wyloguj</FormButton>
+                    <div class="flex flex-1 items-end justify-center px-6 py-2">
+                      <FormButton method="post" class="" href="/auth/logout" text>Wyloguj</FormButton>
                     </div>
                   </div>
                 </DialogPanel>

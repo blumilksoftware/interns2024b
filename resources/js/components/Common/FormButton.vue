@@ -21,8 +21,8 @@ function handleSubmit() {
   <form :class="props.class" @submit.prevent="handleSubmit">
     <button
       type="submit"
-      class="px-3 font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
-      :class="`${text ? 'text-black hover:text-primary-800' : 'bg-primary text-white hover:bg-primary-600  shadow-sm '} ${small ? 'rounded-md text-sm py-2' : 'rounded-lg py-3'} ${props.class}`"
+      class="font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+      :class="`${small ? 'rounded-md text-sm py-2' : 'rounded-lg py-3'} ${text ? 'text-black hover:text-primary-800 px-0 py-0' : 'px-3 bg-primary text-white hover:bg-primary-600 shadow-sm'} ${props.class}`"
     >
       <slot />
     </button>
