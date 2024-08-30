@@ -8,7 +8,6 @@ import BackgroundEffect2 from '@/components/Common/BackgroundEffect2.vue'
 import { Head } from '@inertiajs/vue3'
 import { ref } from 'vue'
 
-
 defineProps<{
   errors: Record<string, string>
   status?: string

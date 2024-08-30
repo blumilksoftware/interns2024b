@@ -6,7 +6,6 @@ import Footer from '@/components/Common/Footer.vue'
 import CustomInput from '@/components/Common/CustomInput.vue'
 import BackgroundEffect2 from '@/components/Common/BackgroundEffect2.vue'
 
-
 const props = defineProps<{
   token: string
   errors: Record<string, string>
