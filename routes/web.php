@@ -23,7 +23,7 @@ use App\Models\Question;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/email/verify", [EmailVerifyController::class, "create"])->middleware("auth")->name("verification.notice");
-Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["signed", "throttle:6,1"])->name("verification.verify");
+Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["auth", "throttle:6,1"])->name("verification.verify");
 Route::post("/email/verification-notification", [EmailVerifyController::class, "send"])->middleware("auth", "throttle:3,60")->name("verification.send");
 Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->middleware("auth")->name("logout");
 
