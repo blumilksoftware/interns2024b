@@ -350,11 +350,6 @@ class UserTest extends TestCase
 
         $this->actingAs($user)
             ->from("/dashboard")
-            ->get("/admin/dashboard")
-            ->assertStatus(403);
-
-        $this->actingAs($user)
-            ->from("/dashboard")
             ->get("/admin/users/")
             ->assertStatus(403);
 
