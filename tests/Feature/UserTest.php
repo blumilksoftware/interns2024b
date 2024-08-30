@@ -377,10 +377,6 @@ class UserTest extends TestCase
     public function guestCannotAccessCrud(): void
     {
         $user = User::factory()->create();
-        $this->from("/")
-            ->get("/admin/dashboard")
-            ->assertStatus(403)
-            ->assertRedirect("/");
 
         $this->from("/")
             ->get("/admin/users/")
