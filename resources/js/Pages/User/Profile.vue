@@ -14,7 +14,7 @@ defineProps<{
 
 <template>
   <Head>
-    <title>Profile</title>
+    <title>Profil</title>
     <meta name="Profil" content="Profil użytkownika">
   </Head>
 
