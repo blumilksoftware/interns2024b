@@ -17,7 +17,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit">
+  <form :class="props.class" @submit.prevent="handleSubmit">
     <button
       type="submit"
       class="bg-primary px-3 semibold text-white  font-semibold shadow-sm hover:bg-primary-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"

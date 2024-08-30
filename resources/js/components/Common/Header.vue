@@ -1,15 +1,19 @@
 <script setup lang="ts">
 import {type Page} from '@/Types/Page'
 import FormButton from '@/components/Common/FormButton.vue'
+import { TransitionRoot, Dialog, TransitionChild, DialogPanel, DialogTitle } from '@headlessui/vue'
+import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
+import {ref} from 'vue'
 
 defineProps<{ pages: Page[] }>()
 
+const open = ref<boolean>(true)
 const isSelected = (page: Page) => page.href === window.location.pathname
 </script>
 
 <template>
   <header class="w-full">
-    <nav class="mx-auto flex items-center justify-between gap-x-6 p-6 px-[8vw]" aria-label="Global">
+    <nav class="flex w-full mx-auto items-center justify-between gap-x-6 p-6 px-[8vw]">
       <div class="flex gap-x-12 items-center">
         <a href="/">
           <svg class="size-10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -22,15 +26,70 @@ const isSelected = (page: Page) => page.href === window.location.pathname
           v-for="item in pages"
           :key="item.title"
           :href="item.href"
-          class="font-semibold leading-6 text-gray-900"
+          class="hidden md:block font-semibold leading-6 text-gray-900"
           :class="{'text-primary': isSelected(item) }"
         >
           {{ item.title }}
         </a>
       </div>
-      <div class="flex flex-1 items-center justify-end gap-x-6">
-        <FormButton method="post" href="/auth/logout" small>Log out</FormButton>
+
+      <div class="hidden md:flex flex-1 items-center justify-end gap-x-6">
+        <FormButton method="post" href="/auth/logout" small>Wyloguj</FormButton>
+      </div>
+
+      <div class="flex md:hidden items-center">
+        <div class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" @click="open = true">
+          <span class="absolute -inset-0.5" />
+          <span class="sr-only">Otwórz menu główne</span>
+          <Bars3Icon class="block size-6" />
+        </div>
       </div>
     </nav>
+
+    <TransitionRoot as="template" :show="open">
+      <Dialog class="relative z-10" @close="open = false">
+        <div class="fixed inset-0" />
+
+        <div class="fixed inset-0 overflow-hidden">
+          <div class="absolute inset-0 overflow-hidden">
+            <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
+              <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="translate-x-full">
+                <DialogPanel class="pointer-events-auto w-screen max-w-80">
+                  <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+                    <div class="px-4 sm:px-6">
+                      <div class="flex items-start justify-between">
+                        <DialogTitle class="text-base font-semibold leading-6 text-gray-900">Menu Główne</DialogTitle>
+                        <div class="ml-3 flex h-7 items-center">
+                          <button type="button" class="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" @click="open = false">
+                            <span class="absolute -inset-2.5" />
+                            <span class="sr-only">Zamknij Menu</span>
+                            <XMarkIcon class="size-6" aria-hidden="true" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="relative flex flex-col gap-4 mt-2 flex-1 px-6 py-2">
+                      <a
+                        v-for="item in pages"
+                        :key="item.title"
+                        :href="item.href"
+                        class="block font-semibold leading-6 text-gray-900 mr-10"
+                        :class="{'text-primary': isSelected(item) }"
+                      >
+                        {{ item.title }}
+                      </a>
+                    </div>
+
+                    <div class="flex flex-1 items-end justify-end px-6 py-2">
+                      <FormButton method="post" class="w-full" href="/auth/logout" small>Wyloguj</FormButton>
+                    </div>
+                  </div>
+                </DialogPanel>
+              </TransitionChild>
+            </div>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </header>
 </template>

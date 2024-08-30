@@ -21,8 +21,6 @@ createInertiaApp({
       page.default.layout ??= UserLayout
     }
 
-    console.log(name)
-
     return page
   },
   setup({ el, App, props, plugin }) {
