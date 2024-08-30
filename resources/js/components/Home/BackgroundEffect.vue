@@ -10,7 +10,7 @@ onUnmounted(() => window.removeEventListener('scroll', setBannerVisibility))
 </script>
 
 <template>
-  <div :style="{marginTop: `${margin}rem`}" class="fixed blur-2xl size-7/12 -z-50">
+  <div :style="{marginTop: `${margin}rem`}" class="fixed blur-2xl size-7/12 -z-10">
     <div class="
       size-full
       bg-gradient-to-r
