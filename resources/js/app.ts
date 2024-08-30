@@ -4,6 +4,7 @@ import { createInertiaApp } from '@inertiajs/vue3'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 import UserLayout from '@/Layouts/UserLayout.vue'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
+import GuestLayout from '@/Layouts/GuestLayout.vue'
 
 createInertiaApp({
   title: (title) => `${title}`,
@@ -19,6 +20,10 @@ createInertiaApp({
 
     if (name.startsWith('User/')) {
       page.default.layout ??= UserLayout
+    }
+
+    if (name.startsWith('Guest/')) {
+      page.default.layout ??= GuestLayout
     }
 
     return page

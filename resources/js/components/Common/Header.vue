@@ -5,8 +5,9 @@ import FormButton from '@/components/Common/FormButton.vue'
 import { TransitionRoot, Dialog, TransitionChild, DialogPanel, DialogTitle } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
 import {ref} from 'vue'
+import {type User} from '@/Types/User'
 
-defineProps<{ pages: Page[] }>()
+defineProps<{ pages: Page[], user?: User, appName: string }>()
 
 const open = ref<boolean>(false)
 const isSelected = (page: Page) => page.href === window.location.pathname
@@ -34,11 +35,11 @@ const isSelected = (page: Page) => page.href === window.location.pathname
         </a>
       </div>
 
-      <div class="hidden md:flex flex-1 items-center justify-end gap-x-6">
+      <div v-if="user" class="hidden md:flex flex-1 items-center justify-end gap-x-6">
         <FormButton method="post" href="/auth/logout" text>Wyloguj</FormButton>
       </div>
 
-      <div class="flex md:hidden items-center">
+      <div v-if="pages.length > 0" class="flex md:hidden items-center">
         <div class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" @click="open = true">
           <span class="absolute -inset-0.5" />
           <span class="sr-only">Otwórz menu główne</span>
@@ -59,7 +60,7 @@ const isSelected = (page: Page) => page.href === window.location.pathname
                   <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                     <div class="px-4 sm:px-6">
                       <div class="flex items-start justify-between">
-                        <DialogTitle class="text-base font-semibold leading-6 text-gray-900">Interns 2024</DialogTitle>
+                        <DialogTitle class="text-base font-semibold leading-6 text-gray-900">{{ appName }}</DialogTitle>
                         <div class="ml-3 flex h-7 items-center">
                           <button type="button" class="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" @click="open = false">
                             <span class="absolute -inset-2.5" />
@@ -81,7 +82,7 @@ const isSelected = (page: Page) => page.href === window.location.pathname
                       </a>
                     </div>
 
-                    <div class="flex flex-1 items-end justify-center px-6 py-2">
+                    <div v-if="user" class="flex flex-1 items-end justify-center px-6 py-2">
                       <FormButton method="post" class="" href="/auth/logout" text>Wyloguj</FormButton>
                     </div>
                   </div>
