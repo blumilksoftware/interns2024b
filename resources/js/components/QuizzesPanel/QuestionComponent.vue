@@ -1,20 +1,16 @@
 <script setup lang="ts">
 import ExapnsionToggleDynamicIcon from '../Icons/ExapnsionToggleDynamicIcon.vue'
-import PencilIcon from '@/components/Icons/PencilIcon.vue'
 import TrashIcon from '@/components/Icons/TrashIcon.vue'
 import CopyIcon from '@/components/Icons/CopyIcon.vue'
 import CheckDynamicIcon from '@/components/Icons/CheckDynamicIcon.vue'
 
-import { type Question } from '@/Types/Question'
 import { computed, ref } from 'vue'
-import EditQuestionModal from './EditQuestionModal.vue'
 import { router } from '@inertiajs/vue3'
+import { type Question } from '@/Types/Question'
 
 const props = defineProps<{quizId:number, question:Question}>()
 const isAnswerExpanded = ref<boolean>(false)
 const hasAnswers = computed(()=>props.question.answers.length > 0)
-
-const isEditingQuestion = ref<boolean>(false)
 
 function deleteQuestion() {
   router.delete(`/admin/questions/${props.question.id}`)
@@ -53,8 +49,6 @@ function addAnswer(){
       </ol>
     </div>
     <div class="px-3 border-l border-primary/30 flex flex-col justify-evenly">
-      <button data-name="edit" @click="isEditingQuestion=true"><PencilIcon /></button>
-      <EditQuestionModal v-model:is-visible="isEditingQuestion" :question="question" />
       <button data-name="copy" @click="copyQuestion"><CopyIcon /></button>
       <button data-name="delete" @click="deleteQuestion"><TrashIcon /></button>
     </div>
