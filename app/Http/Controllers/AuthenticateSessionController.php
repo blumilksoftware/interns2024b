@@ -38,6 +38,7 @@ class AuthenticateSessionController extends Controller
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 
-        return Redirect::route("home")->with("success");
+        return Redirect::route("home")
+            ->with("success");
     }
 }

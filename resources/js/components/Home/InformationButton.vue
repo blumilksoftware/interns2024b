@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import InformationModalWindow from '@/components/Home/InformationModalWindow.vue'
 import { ref } from 'vue'
 

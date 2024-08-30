@@ -12,10 +12,11 @@ abstract class TestCase extends BaseTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $roles = config("roles.roles");
 
-        Role::create(["name" => "admin", "guard_name" => "web"]);
-        Role::create(["name" => "user", "guard_name" => "web"]);
-
+        foreach ($roles as $role) {
+            Role::firstOrCreate(["name" => $role]);
+        }
         $this->withoutVite();
     }
 }

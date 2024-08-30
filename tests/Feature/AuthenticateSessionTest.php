@@ -14,12 +14,13 @@ class AuthenticateSessionTest extends TestCase
 
     public function testUserCanLogin(): void
     {
-        User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
+        $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
 
         $this->post("/auth/login", [
             "email" => "test@example.com",
             "password" => "goodPassword",
-        ])->assertRedirect("/dashboard");
+        ])
+            ->assertRedirect("/dashboard");
     }
 
     public function testUserCanNotLoginWithWrongPassword(): void
@@ -29,7 +30,9 @@ class AuthenticateSessionTest extends TestCase
         $this->from("/test")->post("/auth/login", [
             "email" => "test@example.com",
             "password" => "wrongPasswordExample",
-        ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "Nieprawidłowy e-mail lub hasło."]);
+        ])
+            ->assertRedirect("/test")
+            ->assertSessionHasErrors(["email" => "Nieprawidłowy e-mail lub hasło."]);
     }
 
     public function testUserCanNotLoginWithWrongEmail(): void
@@ -39,7 +42,9 @@ class AuthenticateSessionTest extends TestCase
         $this->from("/test")->post("/auth/login", [
             "email" => "test",
             "password" => "wrongPasswordExample",
-        ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "Pole e-mail nie jest poprawnym adresem e-mail."]);
+        ])
+            ->assertRedirect("/test")
+            ->assertSessionHasErrors(["email" => "Pole e-mail nie jest poprawnym adresem e-mail."]);
     }
 
     public function testUserCanNotLoginWithEmptyEmailAndPassword(): void
@@ -49,6 +54,8 @@ class AuthenticateSessionTest extends TestCase
         $this->from("/test")->post("/auth/login", [
             "email" => null,
             "password" => null,
-        ])->assertRedirect("/test")->assertSessionHasErrors(["email" => "Pole e-mail jest wymagane.", "password" => "Pole hasło jest wymagane."]);
+        ])
+            ->assertRedirect("/test")
+            ->assertSessionHasErrors(["email" => "Pole e-mail jest wymagane.", "password" => "Pole hasło jest wymagane."]);
     }
 }
