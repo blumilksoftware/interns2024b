@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import {useForm} from '@inertiajs/vue3'
 const form = useForm({})
 
@@ -22,6 +23,3 @@ function sent() {
   </form>
 </template>
 
-<style scoped>
-
-</style>
