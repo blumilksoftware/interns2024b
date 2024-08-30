@@ -26,7 +26,7 @@ const isSelected = (page: Page) => page.href === window.location.pathname
           v-for="item in pages"
           :key="item.title"
           :href="item.href"
-          class="hidden md:block font-semibold leading-6 text-gray-900"
+          class="hidden md:block font-semibold leading-6 text-gray-900 transition-colors duration-200 hover:text-primary-800"
           :class="{'text-primary': isSelected(item) }"
         >
           {{ item.title }}
@@ -34,7 +34,7 @@ const isSelected = (page: Page) => page.href === window.location.pathname
       </div>
 
       <div class="hidden md:flex flex-1 items-center justify-end gap-x-6">
-        <FormButton method="post" href="/auth/logout" small>Wyloguj</FormButton>
+        <FormButton method="post" href="/auth/logout" text>Wyloguj</FormButton>
       </div>
 
       <div class="flex md:hidden items-center">
@@ -58,7 +58,7 @@ const isSelected = (page: Page) => page.href === window.location.pathname
                   <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                     <div class="px-4 sm:px-6">
                       <div class="flex items-start justify-between">
-                        <DialogTitle class="text-base font-semibold leading-6 text-gray-900">Menu Główne</DialogTitle>
+                        <DialogTitle class="text-base font-semibold leading-6 text-gray-900">Interns 2024</DialogTitle>
                         <div class="ml-3 flex h-7 items-center">
                           <button type="button" class="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" @click="open = false">
                             <span class="absolute -inset-2.5" />
@@ -81,7 +81,7 @@ const isSelected = (page: Page) => page.href === window.location.pathname
                     </div>
 
                     <div class="flex flex-1 items-end justify-end px-6 py-2">
-                      <FormButton method="post" class="w-full" href="/auth/logout" small>Wyloguj</FormButton>
+                      <FormButton method="post" class="w-full" href="/auth/logout" text>Wyloguj</FormButton>
                     </div>
                   </div>
                 </DialogPanel>
