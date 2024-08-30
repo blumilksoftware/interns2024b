@@ -4,7 +4,7 @@ import BaseLayout from '@/Layouts/BaseLayout.vue'
 
 const pages: Page[] = [
   { title: 'Konkursy', href: '/dashboard' },
-  { title: 'Mój Profil', href: '/profile' },
+  { title: 'Profil', href: '/profile' },
 ]
 </script>
 
