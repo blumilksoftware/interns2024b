@@ -29,8 +29,8 @@ function submit() {
 
 <template>
   <Head>
-    <title>Zmiana hasła</title>
-    <meta name="Zmiana hasła" content="Zmiana hasła">
+    <title>Przypomnij hasło</title>
+    <meta name="Przypomnij hasło" content="Przypomnij hasło">
   </Head>
   <BackgroundEffect2 />
   <div class="flex flex-col items-center h-screen w-full">
@@ -38,11 +38,11 @@ function submit() {
     <Transition>
       <Banner v-if="status && isVisible" :text="status" @click="isVisible = false" />
     </Transition>
-    <div class="p-5 pt-12 w-full flex justify-center">
-      <form class="p-6 gap-4 flex flex-col w-full bg-white/50 rounded-lg max-w-lg" @submit.prevent="submit">
+    <div class="sm:p-6 sm:pt-12 size-full flex justify-center sm:h-fit">
+      <form class="p-6 gap-4 flex flex-col size-full bg-white/50 sm:rounded-lg sm:max-w-lg sm:h-fit" @submit.prevent="submit">
         <CustomInput v-model="form.email" label="E-mail" :error="form.errors.email" name="email" type="email" />
         <button :disabled="form.processing" type="submit" class="bg-primary text-white font-bold py-3 px-4 rounded-lg disabled:bg-primary/70">
-          Zmień hasło
+          Przypomnij hasło
         </button>
       </form>
     </div>

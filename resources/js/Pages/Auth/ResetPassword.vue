@@ -32,8 +32,8 @@ function submit() {
   <BackgroundEffect2 />
   <div class="flex flex-col items-center h-screen w-full">
     <Header title="Zmień hasło" />
-    <div class="p-5 pt-12 w-full flex justify-center">
-      <form class="p-6 gap-4 flex flex-col w-full bg-white/50 rounded-lg max-w-lg" @submit.prevent="submit">
+    <div class="sm:p-6 sm:pt-12 size-full flex justify-center sm:h-fit">
+      <form class="p-6 gap-4 flex flex-col size-full bg-white/50 sm:rounded-lg sm:max-w-lg sm:h-fit" @submit.prevent="submit">
         <CustomInput v-model="form.email" label="E-mail" :error="errors.email" name="email" type="email" />
         <CustomInput v-model="form.password" label="Nowe hasło" :error="errors.password" name="password" type="password" />
         <CustomInput v-model="form.password_confirmation" label="Powtórz hasło" :error="errors.password_confirmation" name="password_confirmation" type="password" />
