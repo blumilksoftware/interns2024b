@@ -20,10 +20,10 @@ const model = defineModel<string>()
     ring-1 ring-primary/30 rounded-lg cursor-pointer w-fit"
   >
     <input
-      :v-model="model"
+      v-model="model"
       :type="type"
       :class="{'font-bold':bold ? bold !== undefined : true}"
-      class="outline-none flex px-2 min-h-8 rounded-lg h-full focus:ring-2 focus:ring-primary/50 bg-white/50"
+      class="outline-none flex px-3 min-h-8 rounded-lg h-full focus:ring-2 focus:ring-primary/50 bg-white/50"
       autocomplete="off"
     >
   </label>
