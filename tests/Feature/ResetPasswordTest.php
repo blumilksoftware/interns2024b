@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Feature;
+namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
@@ -45,7 +45,7 @@ class ResetPasswordTest extends TestCase
             "password" => "newPassword",
         ]);
 
-        $loginResponse->assertRedirect("/");
+        $loginResponse->assertRedirect("/dashboard");
         $this->assertAuthenticated();
         Event::assertDispatched(PasswordReset::class);
     }
@@ -114,5 +114,66 @@ class ResetPasswordTest extends TestCase
         $response->assertSessionHasErrors(["password" => trans("validation.confirmed", ["attribute" => "hasło"])]);
 
         $this->assertTrue(Hash::check("oldPassword", $user->fresh()->password));
+    }
+
+    public function testAuthUserCanResetPassword(): void
+    {
+        $user = User::factory()->create([
+            "password" => Hash::make("current-password"),
+        ]);
+
+        $this->actingAs($user)
+            ->from("/profile")
+            ->patch(route("profile.password.update"), [
+                "current_password" => "current-password",
+                "password" => "new-password",
+                "password_confirmation" => "new-password",
+            ])
+            ->assertRedirect("/profile")
+            ->assertSessionHas("success", "Zaktualizowano hasło");
+        $this->assertTrue(Hash::check("new-password", $user->fresh()->password));
+    }
+
+    public function testAuthUserCannotResetPasswordWithWrongPassword(): void
+    {
+        $user = User::factory()->create([
+            "password" => Hash::make("current-password"),
+        ]);
+
+        $this->actingAs($user)
+            ->from("/profile")
+            ->patch(route("profile.password.update"), [
+                "current_password" => "wrong-current-password",
+                "password" => "new-password",
+                "password_confirmation" => "new-password",
+            ])
+            ->assertRedirect("/profile")
+            ->assertSessionHasErrors(["current_password" => trans("validation.current_password", ["attribute" => "current password"])]);
+        $this->assertTrue(Hash::check("current-password", $user->fresh()->password));
+    }
+
+    public function testAuthUserCannotResetPasswordWithNotMatchingNewPasswords(): void
+    {
+        $user = User::factory()->create([
+            "password" => Hash::make("current-password"),
+        ]);
+
+        $this->actingAs($user)
+            ->from("/profile")
+            ->patch(route("profile.password.update"), [
+                "current_password" => "current-password",
+                "password" => "new-password",
+                "password_confirmation" => "different-password",
+            ])
+            ->assertRedirect("/profile")
+            ->assertSessionHasErrors(["password" => trans("validation.confirmed", ["attribute" => "hasło"])]);
+        $this->assertTrue(Hash::check("current-password", $user->fresh()->password));
+    }
+
+    public function testUserCannotAccessResetPassword(): void
+    {
+        $this->from("/")
+            ->patch(route("profile.password.update"))
+            ->assertRedirect("/auth/login");
     }
 }

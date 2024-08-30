@@ -1,5 +1,7 @@
 <script lang="ts" setup>
+
 import InformationButton from '@/components/Home/InformationButton.vue'
+
 </script>
 
 <template>
@@ -9,7 +11,7 @@ import InformationButton from '@/components/Home/InformationButton.vue'
       <img class="h-40 object-contain" src="@/../assets/header-logo.png" alt="logo nagłówka">
       <InformationButton />
     </div>
-    
+
     <div data-name="right" class="p-16 flex flex-col size-full">
       <h1 class="text-center text-[1.5rem] font-bold">SPONSORZY</h1>
       <div class="mx-auto mt-10 grid max-w-lg grid-cols-4 items-center gap-x-8 gap-y-10 sm:grid-cols-6">

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import { reactive } from 'vue'
 import { router } from '@inertiajs/vue3'
 
@@ -28,9 +29,9 @@ function submit() {
       <div v-if="errors.email">{{ errors.email }}</div>
     </div>
     <div>
-      <label for="email">Password:</label>
+      <label for="password">Password:</label>
       <input v-model="form.password" name="password" type="password" required><br>
-      <label for="email">Password Confirmation:</label>
+      <label for="password_confirmation">Password Confirmation:</label>
       <input v-model="form.password_confirmation" name="password_confirmation" type="password"><br>
       <div v-if="errors.password">{{ errors.password }}</div>
     </div>

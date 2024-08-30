@@ -18,8 +18,11 @@ use Illuminate\Support\Collection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $scheduled_at
+ * @property ?Carbon $locked_at
  * @property ?int $duration
  * @property bool $isLocked
+ * @property bool $canBeLocked
+ * @property bool $canBeUnlocked
  * @property ?Carbon $closeAt
  * @property Collection<Question> $questions
  * @property Collection<Answer> $answers
@@ -46,7 +49,17 @@ class Quiz extends Model
 
     public function isLocked(): Attribute
     {
-        return Attribute::get(fn(): bool => $this->isReadyToBePublished() && $this->scheduled_at <= Carbon::now());
+        return Attribute::get(fn(): bool => $this->locked_at !== null);
+    }
+
+    public function canBeUnlocked(): Attribute
+    {
+        return Attribute::get(fn(): bool => $this->isLocked && $this->scheduled_at > Carbon::now());
+    }
+
+    public function canBeLocked(): Attribute
+    {
+        return Attribute::get(fn(): bool => !$this->isLocked && $this->isReadyToBePublished() && $this->scheduled_at > Carbon::now());
     }
 
     public function closeAt(): Attribute
@@ -84,9 +97,14 @@ class Quiz extends Model
         return $submission;
     }
 
-    protected function isReadyToBePublished(): bool
+    public function isReadyToBePublished(): bool
     {
-        return $this->scheduled_at !== null && $this->duration !== null;
+        return $this->scheduled_at !== null && $this->duration !== null && $this->allQuestionsHaveCorrectAnswer();
+    }
+
+    protected function allQuestionsHaveCorrectAnswer(): bool
+    {
+        return $this->questions->every(fn(Question $question): bool => $question->hasCorrectAnswer);
     }
 
     protected function casts(): array

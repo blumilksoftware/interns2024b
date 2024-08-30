@@ -1,5 +1,7 @@
 <script setup lang="ts">
+
 import { ref, onMounted, onUnmounted } from 'vue'
+
 const margin = ref(0)
 function setBannerVisibility() {
   const scrollHeight = window.document.documentElement.scrollHeight / 2

@@ -24,7 +24,8 @@ class RegisterUserTest extends TestCase
             "email" => "test@gmail.com",
             "password" => "123456890",
             "school_id" => $school->id,
-        ])->assertRedirect("/");
+        ])
+            ->assertRedirect("/");
 
         $this->assertDatabaseHas("users", [
             "name" => "Test",
@@ -51,7 +52,8 @@ class RegisterUserTest extends TestCase
             "email" => "test@gmail.com",
             "password" => "123456890",
             "school_id" => $school->id,
-        ])->assertRedirect("/");
+        ])
+            ->assertRedirect("/");
     }
 
     public function testUserCanNotRegisterWithWrongSchoolIndex(): void
@@ -64,7 +66,8 @@ class RegisterUserTest extends TestCase
             "email" => "test@gmail.com",
             "password" => "123456890",
             "school_id" => $school->id + 99999,
-        ])->assertRedirect("/")
+        ])
+            ->assertRedirect("/")
             ->assertSessionHasErrors(["school_id" => "Szkoła nie istnieje. Sprawdź ponownie."]);
     }
 
@@ -79,7 +82,9 @@ class RegisterUserTest extends TestCase
             "email" => $longMail . "@gmail.com",
             "password" => "123456890",
             "school_id" => $school->id,
-        ])->assertRedirect("/")->assertSessionHasErrors(["email" => "Pole e-mail nie może być dłuższe niż 255 znaków."]);
+        ])
+            ->assertRedirect("/")
+            ->assertSessionHasErrors(["email" => "Pole e-mail nie może być dłuższe niż 255 znaków."]);
     }
 
     public function testUserCanNotRegisterWithWrongEmailDomain(): void
@@ -92,7 +97,9 @@ class RegisterUserTest extends TestCase
             "email" => "test@gmail.pl",
             "password" => "123456890",
             "school_id" => $school->id,
-        ])->assertRedirect("/")->assertSessionHasErrors(["email" => "Pole e-mail nie jest poprawnym adresem e-mail."]);
+        ])
+            ->assertRedirect("/")
+            ->assertSessionHasErrors(["email" => "Pole e-mail nie jest poprawnym adresem e-mail."]);
     }
 
     public function testUserCanNotRegisterWithTooLongName(): void
@@ -106,7 +113,9 @@ class RegisterUserTest extends TestCase
             "email" => "test@gmail.com",
             "password" => "123456890",
             "school_id" => $school->id,
-        ])->assertRedirect("/")->assertSessionHasErrors(["name" => "Pole imię nie może być dłuższe niż 255 znaków."]);
+        ])
+            ->assertRedirect("/")
+            ->assertSessionHasErrors(["name" => "Pole imię nie może być dłuższe niż 255 znaków."]);
     }
 
     public function testUserCanNotRegisterWithTooLongSurname(): void
@@ -120,7 +129,9 @@ class RegisterUserTest extends TestCase
             "email" => "test@gmail.com",
             "password" => "123456890",
             "school_id" => $school->id,
-        ])->assertRedirect("/")->assertSessionHasErrors(["surname" => "Pole nazwisko nie może być dłuższe niż 255 znaków."]);
+        ])
+            ->assertRedirect("/")
+            ->assertSessionHasErrors(["surname" => "Pole nazwisko nie może być dłuższe niż 255 znaków."]);
     }
 
     public function testUserCanNotRegisterWithTooShortPassword(): void
@@ -133,6 +144,8 @@ class RegisterUserTest extends TestCase
             "email" => "test@gmail.com",
             "password" => "123",
             "school_id" => $school->id,
-        ])->assertRedirect("/")->assertSessionHasErrors(["password" => "Pole hasło musi mieć przynajmniej 8 znaków."]);
+        ])
+            ->assertRedirect("/")
+            ->assertSessionHasErrors(["password" => "Pole hasło musi mieć przynajmniej 8 znaków."]);
     }
 }

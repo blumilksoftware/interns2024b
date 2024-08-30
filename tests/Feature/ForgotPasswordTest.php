@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Feature;
+namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
@@ -25,7 +25,8 @@ class ForgotPasswordTest extends TestCase
 
         $this->post("/auth/forgot-password", [
             "email" => "test@gmail.com",
-        ])->assertSessionHasNoErrors();
+        ])
+            ->assertSessionHasNoErrors();
 
         Notification::assertSentTo(
             [$user],
@@ -40,17 +41,20 @@ class ForgotPasswordTest extends TestCase
 
         $this->post("/auth/forgot-password", [
             "email" => "wrongTest@gmail.com",
-        ])->assertSessionHas(["status" => "Przypomnienie hasła zostało wysłane!"]);
+        ])
+            ->assertSessionHas(["status" => "Link do zresetowania hasła został wysłany na e-mail."]);
         Notification::assertNothingSent();
 
         $this->post("/auth/forgot-password", [
             "email" => "wrongTest",
-        ])->assertSessionHasErrors(["email" => "Pole e-mail nie jest poprawnym adresem e-mail."]);
+        ])
+            ->assertSessionHasErrors(["email" => "Pole e-mail nie jest poprawnym adresem e-mail."]);
         Notification::assertNothingSent();
 
         $this->post("/auth/forgot-password", [
             "email" => null,
-        ])->assertSessionHasErrors(["email" => "Pole e-mail jest wymagane."]);
+        ])
+            ->assertSessionHasErrors(["email" => "Pole e-mail jest wymagane."]);
         Notification::assertNothingSent();
     }
 }

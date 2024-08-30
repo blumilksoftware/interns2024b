@@ -24,7 +24,8 @@ class QuizFactory extends Factory
     public function locked(): static
     {
         return $this->state(fn(array $attributes): array => [
-            "scheduled_at" => Carbon::now(),
+            "scheduled_at" => Carbon::now()->addMinutes(30),
+            "locked_at" => Carbon::now(),
         ]);
     }
 }
