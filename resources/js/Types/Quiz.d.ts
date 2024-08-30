@@ -6,7 +6,7 @@ export interface Quiz {
   name: string
   createdAt: number
   updatedAt: number
-  scheduledUntil?: number
+  duration?: number
   locked: boolean
   questions: Question[]
 }
