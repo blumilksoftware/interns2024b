@@ -19,7 +19,7 @@ class UserController extends Controller
     {
         $users = User::query()->role("user")->with("school")->orderBy("id")->get();
 
-        return Inertia::render("User/Index", [
+        return Inertia::render("Admin/User/Index", [
             "users" => UserResource::collection($users),
             "isSuperAdmin" => $request->user()->hasRole("super_admin"),
         ]);
@@ -29,7 +29,7 @@ class UserController extends Controller
     {
         $this->authorize("update", $user);
 
-        return Inertia::render("User/Edit", [
+        return Inertia::render("Admin/User/Edit", [
             "user" => new UserResource($user),
             "schools" => School::all(),
         ]);
