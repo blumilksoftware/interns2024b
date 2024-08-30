@@ -1,6 +1,8 @@
 <script setup lang="ts">
+
 const props = defineProps<{ isVisible: boolean }>()
 const emit = defineEmits<(e: 'update:isVisible', value: boolean) => void>()
+
 function setHidden() {
   emit('update:isVisible', false)
 }

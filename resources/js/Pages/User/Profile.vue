@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import { defineProps } from 'vue'
 import PasswordUpdate from '@/components/Profile/PasswordUpdateSection.vue'
 import UserData from '@/components/Profile/UserDataSection.vue'

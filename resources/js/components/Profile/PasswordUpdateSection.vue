@@ -10,7 +10,7 @@ const form = useForm({
   password: '',
   password_confirmation: '',
 })
-
+console.log()
 function updatePassword() {
   form.patch('/profile/password', {
     preserveScroll: true,
@@ -29,7 +29,7 @@ function updatePassword() {
       <form class="flex flex-col gap-4 w-full sm:max-w-80" @submit.prevent="updatePassword">
         <CustomInput v-model="form.current_password" label="Aktualne hasło" type="password" name="password" :error="errors.current_password" />
         <CustomInput v-model="form.password" label="Nowe hasło" type="password" name="password" :error="errors.password" />
-        <CustomInput v-model="form.password_confirmation" label="Potwierdź nowe hasło" type="password" name="password" :error="errors.password_confirmation" />
+        <CustomInput v-model="form.password_confirmation" label="Potwierdź nowe hasło" type="password" name="password_confirmation" :error="errors.password_confirmation" />
         <button type="submit" class="bg-primary text-white font-bold py-3 rounded-lg">Zmień hasło</button>
       </form>
     </div>

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+
 import { ref, provide } from 'vue'
 import Footer from '@/components/Common/Footer.vue'
 import AuthBanner from '@/components/Home/AuthBanner.vue'

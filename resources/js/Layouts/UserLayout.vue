@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import type {Page} from '@/Types/Page'
 import BaseLayout from '@/Layouts/BaseLayout.vue'
 

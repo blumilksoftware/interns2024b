@@ -1,8 +1,8 @@
 <script setup lang="ts">
+
 import { useForm } from '@inertiajs/vue3'
 
 const form = useForm({})
-
 const props = withDefaults(defineProps<{
   small?: boolean
   text?: boolean

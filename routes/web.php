@@ -14,6 +14,7 @@ use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\QuizSubmissionController;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\SchoolsController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\EnsureQuizIsNotAlreadyStarted;
 use App\Models\Answer;
 use App\Models\Question;
@@ -70,6 +71,22 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
 
     Route::post("/schools/fetch", [SchoolsController::class, "fetch"])->name("admin.schools.fetch");
     Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");
+
+    Route::get("/users", [UserController::class, "index"])->name("admin.users.index");
+    Route::get("/users/{user}", [UserController::class, "edit"])->name("admin.users.edit");
+    Route::patch("/users/{user}", [UserController::class, "update"])->name("admin.users.update");
+
+    Route::middleware(["role:super_admin"])->group(function (): void {
+        Route::get("/admins", [AdminController::class, "index"])->name("admin.admins.index");
+        Route::get("/admins/add", [AdminController::class, "showAddAdmin"])->name("admin.admins.add");
+        Route::get("/admins/{user}", [AdminController::class, "edit"])->name("admin.admins.edit");
+        Route::post("/admins/add", [AdminController::class, "store"])->name("admin.admins.store");
+        Route::patch("/admins/{user}", [AdminController::class, "update"])->name("admin.admins.update");
+        Route::patch("/users/anonymize/{user}", [UserController::class, "anonymize"])->name("admin.users.anonymize");
+        Route::delete("/admins/{user}", [AdminController::class, "destroy"])->name("admin.admins.destroy");
+    });
+
+    Route::get("/dashboard", [AdminDashboardController::class, "index"])->name("admin.dashboard");
 });
 
 Route::middleware(["auth"])->group(function (): void {
