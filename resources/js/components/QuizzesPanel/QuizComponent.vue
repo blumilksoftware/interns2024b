@@ -77,7 +77,7 @@ function updateTitle(value:string) {
     data-name="wrapped-list-element"
   >
     <!-- header -->
-    <div :class="isSelected ? 'flex justify-between' : 'grid grid-cols-[1fr,1fr,1fr,auto] gap-3'">
+    <div :class="isSelected ? 'flex justify-between' : 'grid grid-cols-[1fr,1fr,1fr,auto] gap-3 items-center'">
       <div class="flex gap-3">
         <button @click="toggleQuizView(quiz)">
           <ExapnsionToggleDynamicIcon :is-expanded="isSelected" />
