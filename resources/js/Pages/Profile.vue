@@ -8,7 +8,6 @@ import UserData from '@/components/Profile/UserDataSection.vue'
 import { type User } from '@/Types/User'
 import { Head } from '@inertiajs/vue3'
 
-
 defineProps<{
   user: User
   errors: Record<string, string>
