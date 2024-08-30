@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AnswerRecordController;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
@@ -85,8 +86,6 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
         Route::patch("/users/anonymize/{user}", [UserController::class, "anonymize"])->name("admin.users.anonymize");
         Route::delete("/admins/{user}", [AdminController::class, "destroy"])->name("admin.admins.destroy");
     });
-
-    Route::get("/dashboard", [AdminDashboardController::class, "index"])->name("admin.dashboard");
 });
 
 Route::middleware(["auth"])->group(function (): void {
