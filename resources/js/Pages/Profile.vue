@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import { defineProps } from 'vue'
 import BackgroundEffect from '@/components/Home/BackgroundEffect.vue'
 import Footer from '@/components/Common/Footer.vue'
@@ -7,7 +8,6 @@ import PasswordUpdate from '@/components/Profile/PasswordUpdateSection.vue'
 import UserData from '@/components/Profile/UserDataSection.vue'
 import { type User } from '@/Types/User'
 import { Head } from '@inertiajs/vue3'
-
 
 defineProps<{
   user: User

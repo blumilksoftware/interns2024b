@@ -24,6 +24,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property School $school
+ * @property boolean $is_anonymized
  */
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
@@ -36,6 +37,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         "surname",
         "email",
         "school_id",
+        "is_anonymized",
     ];
     protected $hidden = [
         "remember_token",
@@ -44,6 +46,11 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     public function school(): BelongsTo
     {
         return $this->belongsTo(School::class);
+    }
+
+    public function isAnonymized(): bool
+    {
+        return $this->is_anonymized;
     }
 
     protected function casts(): array
