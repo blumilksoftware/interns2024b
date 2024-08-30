@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import { reactive } from 'vue'
 import { router } from '@inertiajs/vue3'
 

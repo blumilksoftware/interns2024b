@@ -1,9 +1,11 @@
 <script setup lang="ts">
+
 import { ref, defineExpose } from 'vue'
 import AuthButton from '@/components/Common/AuthButton.vue'
 import RegisterForm from '@/components/Home/RegisterForm.vue'
 import LoginForm from '@/components/Home/LoginForm.vue'
 import type {School} from '@/Types/School'
+
 const isLogin = ref(false)
 defineExpose({ isLogin })
 
