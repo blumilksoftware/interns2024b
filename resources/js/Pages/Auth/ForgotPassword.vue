@@ -39,7 +39,7 @@ function submit() {
       <Banner v-if="status && isVisible" :text="status" @click="isVisible = false" />
     </Transition>
     <div class="p-5 pt-12 w-full flex justify-center">
-      <form class="p-5 gap-5 flex flex-col w-full bg-white/50 rounded-lg max-w-lg" @submit.prevent="submit">
+      <form class="p-6 gap-4 flex flex-col w-full bg-white/50 rounded-lg max-w-lg" @submit.prevent="submit">
         <CustomInput v-model="form.email" label="E-mail" :error="form.errors.email" name="email" type="email" />
         <button :disabled="form.processing" type="submit" class="bg-primary text-white font-bold py-3 px-4 rounded-lg disabled:bg-primary/70">
           Zmień hasło
