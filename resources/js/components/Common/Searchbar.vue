@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+
 import {computed, ref, defineProps} from 'vue'
 import {type School} from '@/Types/School'
+
 const isSearchFocused = ref(false)
 const searchQuery = ref('')
 const props = defineProps<{

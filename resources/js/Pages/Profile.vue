@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import { defineProps } from 'vue'
 import BackgroundEffect from '@/components/Home/BackgroundEffect.vue'
 import Footer from '@/components/Common/Footer.vue'
