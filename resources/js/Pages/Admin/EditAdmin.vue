@@ -1,0 +1,3 @@
+<template>
+  Edit Admin
+</template>

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\SchoolResource;
 use App\Http\Resources\UserResource;
 use App\Models\School;
 use App\Models\User;
@@ -19,9 +20,8 @@ class UserController extends Controller
     {
         $users = User::query()->role("user")->with("school")->orderBy("id")->get();
 
-        return Inertia::render("Admin/User/Index", [
+        return Inertia::render("Admin/UsersPanel", [
             "users" => UserResource::collection($users),
-            "isSuperAdmin" => $request->user()->hasRole("super_admin"),
         ]);
     }
 
@@ -29,9 +29,9 @@ class UserController extends Controller
     {
         $this->authorize("update", $user);
 
-        return Inertia::render("Admin/User/Edit", [
-            "user" => new UserResource($user),
-            "schools" => School::all(),
+        return Inertia::render("Admin/EditUser", [
+            "user" => UserResource::make($user),
+            "schools" => SchoolResource::collection(School::all()),
         ]);
     }
 

@@ -74,17 +74,17 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");
 
     Route::get("/users", [UserController::class, "index"])->name("admin.users.index");
-    Route::get("/users/{user}", [UserController::class, "edit"])->name("admin.users.edit");
+    Route::get("/users/{user}/edit", [UserController::class, "edit"])->name("admin.users.edit");
     Route::patch("/users/{user}", [UserController::class, "update"])->name("admin.users.update");
 
     Route::middleware(["role:super_admin"])->group(function (): void {
         Route::get("/admins", [AdminController::class, "index"])->name("admin.admins.index");
-        Route::get("/admins/add", [AdminController::class, "showAddAdmin"])->name("admin.admins.add");
-        Route::get("/admins/{user}", [AdminController::class, "edit"])->name("admin.admins.edit");
-        Route::post("/admins/add", [AdminController::class, "store"])->name("admin.admins.store");
+        Route::get("/admins/create", [AdminController::class, "create"])->name("admin.admins.create");
+        Route::get("/admins/{user}/edit", [AdminController::class, "edit"])->name("admin.admins.edit");
+        Route::post("/admins", [AdminController::class, "store"])->name("admin.admins.store");
         Route::patch("/admins/{user}", [AdminController::class, "update"])->name("admin.admins.update");
-        Route::patch("/users/anonymize/{user}", [UserController::class, "anonymize"])->name("admin.users.anonymize");
         Route::delete("/admins/{user}", [AdminController::class, "destroy"])->name("admin.admins.destroy");
+        Route::patch("/users/{user}/anonymize", [UserController::class, "anonymize"])->name("admin.users.anonymize");
     });
 });
 

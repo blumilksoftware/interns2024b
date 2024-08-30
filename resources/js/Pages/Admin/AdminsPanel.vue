@@ -1,0 +1,3 @@
+<template>
+  Admins Panel
+</template>
