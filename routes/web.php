@@ -23,8 +23,9 @@ use App\Models\Question;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/email/verify", [EmailVerifyController::class, "create"])->middleware("auth")->name("verification.notice");
-Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["signed", "throttle:6,1"])->name("verification.verify");
-Route::post("email/verification-notification", [EmailVerifyController::class, "send"])->middleware("auth", "throttle:6,1")->name("verification.send");
+Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["auth", "throttle:6,1"])->name("verification.verify");
+Route::post("/email/verification-notification", [EmailVerifyController::class, "send"])->middleware("auth", "throttle:3,60")->name("verification.send");
+Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->middleware("auth")->name("logout");
 
 Route::middleware(["guest"])->group(function (): void {
     Route::get("/", [ContestController::class, "index"])->name("home");
@@ -35,9 +36,8 @@ Route::middleware(["guest"])->group(function (): void {
     Route::post("/auth/forgot-password", [PasswordResetLinkController::class, "store"])->name("password.email");
 });
 
-Route::middleware("auth")->group(function (): void {
+Route::middleware(["auth", "verified"])->group(function (): void {
     Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
-    Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
     Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
     Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update");
 });
