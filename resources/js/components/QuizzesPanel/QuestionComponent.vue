@@ -8,20 +8,21 @@ import { computed, ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { type Question } from '@/Types/Question'
 
-const props = defineProps<{quizId:number, question:Question}>()
+const props = defineProps<{ quizId:number }>()
+const question = defineModel<Question>({required: true})
 const isAnswerExpanded = ref<boolean>(false)
-const hasAnswers = computed(()=>props.question.answers.length > 0)
+const hasAnswers = computed(()=>question.value.answers.length > 0)
 
 function deleteQuestion() {
-  router.delete(`/admin/questions/${props.question.id}`)
+  router.delete(`/admin/questions/${question.value.id}`)
 }
 
 function copyQuestion() {
-  router.post(`/admin/questions/${props.question.id}/clone/${props.quizId}`)
+  router.post(`/admin/questions/${question.value.id}/clone/${props.quizId}`)
 }
 
 function addAnswer(){
-  router.post(`/admin/questions/${props.question.id}/answers`)
+  router.post(`/admin/questions/${question.value.id}/answers`)
 }
 </script>
 
