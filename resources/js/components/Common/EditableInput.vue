@@ -17,16 +17,13 @@ const model = defineModel<string>()
   >
     {{ model ?? 'brak' }}
   </span>
-  <label v-else class="flex items-center justify-end bg-white/15backdrop-blur-md
-    ring-1 ring-primary/30 rounded-lg cursor-pointer w-fit"
+  <input
+    v-else
+    v-model="model"
+    :min="min"
+    :type="type"
+    :class="{'font-bold':bold ? bold !== undefined : true}"
+    class="outline-none flex px-3 min-h-8 rounded-lg h-full ring-1 ring-primary/30 focus:ring-2 focus:ring-primary/50 bg-white/50"
+    autocomplete="off"
   >
-    <input
-      v-model="model"
-      :min="min"
-      :type="type"
-      :class="{'font-bold':bold ? bold !== undefined : true}"
-      class="outline-none flex px-3 min-h-8 rounded-lg h-full focus:ring-2 focus:ring-primary/50 bg-white/50"
-      autocomplete="off"
-    >
-  </label>
 </template>
