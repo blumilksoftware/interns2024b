@@ -86,7 +86,7 @@ function toggleQuizView() {
     data-name="wrapped-list-element"
   >
     <!-- header -->
-    <div :class="isSelected ? 'flex justify-between items-center' : 'grid grid-cols-[1fr,1fr,1fr,.8fr] gap-3 items-center'">
+    <div class="min-h-12" :class="isSelected ? 'flex justify-between items-center' : 'grid grid-cols-[1fr,1fr,1fr,.8fr] gap-3 items-center'">
       <div class="flex gap-3">
         <button @click="toggleQuizView()"><ExapnsionToggleDynamicIcon :is-expanded="isSelected" /></button>
         <EditableInput v-model="quizRef.name" :is-editing="isEditing && isSelected" type="text" />
