@@ -46,24 +46,19 @@ function publish(){
 
 }
 
-async function request(url : string, method: 'POST' | 'PATCH' | 'DELETE', payload? : object) {
+async function request(url : string, method: 'POST' | 'PATCH' | 'DELETE', payload? : Record<string,any>) {
   isRequestOngoing.value = true
-  const axiosRequest = {
-    'POST':async () => await axios.post(url, payload),
-    'PATCH':async () => await axios.post(url, {...payload, _method:'PATCH'}),
-    'DELETE':async () => await axios.delete(url, payload),
-  }
-  payload = payload ?? {}
-  payload = {...payload,
+  payload = {
+    ...payload,
     preserveScroll: true,
-    onSuccess: () => isRequestOngoing.value = false,
+    onFinish: () => isRequestOngoing.value = false,
   }
-  const inertiaFormRequest = {
-    'POST': () => useForm(payload).post(url),
-    'PATCH': () => useForm(payload).delete(url),
-    'DELETE': () => useForm({...payload, _method:'PATCH'}).post(url),
+  const inertiaRouterRequest = {
+    'POST': () => router.post(url, payload),
+    'PATCH': () => router.delete(url, payload),
+    'DELETE': () => router.post(url, {...payload, _method:'PATCH'}),
   }
-  const result = inertiaFormRequest[method]()
+  const result = inertiaRouterRequest[method]()
   return result
 }
 
