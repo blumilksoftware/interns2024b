@@ -3,6 +3,7 @@ defineProps<{
   bold? :boolean
   type  :string
   isEditing : boolean
+  min?: string
 }>()
 const model = defineModel<string>()
 
@@ -21,6 +22,7 @@ const model = defineModel<string>()
   >
     <input
       v-model="model"
+      :min="min"
       :type="type"
       :class="{'font-bold':bold ? bold !== undefined : true}"
       class="outline-none flex px-3 min-h-8 rounded-lg h-full focus:ring-2 focus:ring-primary/50 bg-white/50"
