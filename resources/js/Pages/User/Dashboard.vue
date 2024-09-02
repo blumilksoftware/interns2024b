@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {type QuizSubmission} from '@/Types/QuizSubmission'
 import {type Quiz} from '@/Types/Quiz'
+import {Head} from '@inertiajs/vue3';
 import {computed} from 'vue'
 import dayjs from 'dayjs'
 import FormButton from '@/components/Common/FormButton.vue'
@@ -17,6 +18,10 @@ const history = computed(() => props.submissions.filter(submission => submission
 </script>
 
 <template>
+  <Head>
+    <title>Testy</title>
+  </Head>
+
   <div class="w-full p-2 md:w-4/5">
     <Divider v-if="started.length > 0">
       <h1 class="font-bold text-xl text-primary text-center p-4 whitespace-nowrap">Trwające konkursy</h1>
@@ -29,7 +34,7 @@ const history = computed(() => props.submissions.filter(submission => submission
       <FormButton class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/start`">Weź udział</FormButton>
     </div>
 
-    <Divider v-if="scheduled.length > 0">
+    <Divider v-if="scheduled.length > 0 || started.length == 0">
       <h1 class="font-bold text-xl text-primary text-center p-4 whitespace-nowrap">Nadchodzące konkursy</h1>
     </Divider>
     <div v-for="quiz in scheduled" :key="quiz.id" class="rounded-lg bg-white shadow border px-4 py-2 flex items-center justify-between mb-2">
@@ -39,6 +44,10 @@ const history = computed(() => props.submissions.filter(submission => submission
       </div>
       <FormButton v-if="!quiz.isUserAssigned" class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/assign`">Zapisz się</FormButton>
       <FormButton v-else class="min-w-24 text-center" disabled small method="post" :href="`/quizzes/${quiz.id}/assign`">Zapisano</FormButton>
+    </div>
+
+    <div v-if="scheduled.length == 0 && started.length == 0">
+      <p>Obecnie nie mamy zaplanowanych konkursów.</p>
     </div>
 
     <Divider v-if="history.length > 0">
