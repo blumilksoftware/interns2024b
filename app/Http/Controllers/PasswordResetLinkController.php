@@ -37,7 +37,12 @@ class PasswordResetLinkController extends Controller
 
     public function resetCreate(string $token): Response
     {
-        return Inertia::render("Auth/ResetPassword", ["token" => $token]);
+        $email = request("email");
+
+        return Inertia::render("Auth/ResetPassword", [
+            "token" => $token,
+            "email" => $email,
+        ]);
     }
 
     public function resetStore(ResetPasswordRequest $request): RedirectResponse
