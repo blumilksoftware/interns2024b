@@ -5,6 +5,7 @@ import { useForm } from '@inertiajs/vue3'
 const form = useForm({})
 const props = withDefaults(defineProps<{
   small?: boolean
+  disabled?: boolean
   text?: boolean
   class?: string
   href: string
@@ -20,9 +21,20 @@ function handleSubmit() {
 <template>
   <form :class="props.class" @submit.prevent="handleSubmit">
     <button
+      v-if="!disabled"
       type="submit"
       class="font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
       :class="`${small ? 'rounded-md text-sm py-2' : 'rounded-lg py-3'} ${text ? 'text-black hover:text-primary-800 px-0 py-0' : 'px-3 bg-primary text-white hover:bg-primary-600 shadow-sm'} ${props.class}`"
+    >
+      <slot />
+    </button>
+
+    <button
+      v-else
+      disabled
+      type="submit"
+      class="cursor-not-allowed font-semibold bg-primary-100 border px-3"
+      :class="`${small ? 'rounded-md text-sm py-2' : 'rounded-lg py-3'} ${props.class}`"
     >
       <slot />
     </button>

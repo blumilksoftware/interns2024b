@@ -7,5 +7,6 @@ export interface QuizSubmission {
   updatedAt: string
   closedAt?: string
   closed: boolean
+  quiz: number
   answers: AnswerRecord[]
 }

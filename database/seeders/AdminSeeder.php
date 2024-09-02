@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Quiz;
+use App\Models\QuizSubmission;
 use App\Models\School;
 use App\Models\User;
 use Carbon\Carbon;
@@ -53,5 +55,9 @@ class AdminSeeder extends Seeder
             ],
         );
         $user->syncRoles("user");
+
+        Quiz::factory()->count(3)->locked()->create();
+        Quiz::factory()->count(2)->locked()->create(["scheduled_at" => Carbon::now()->subMinutes(30)->timestamp]);
+        QuizSubmission::factory()->count(2)->create(["user_id" => $user->id]);
     }
 }

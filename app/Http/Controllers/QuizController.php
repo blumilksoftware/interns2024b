@@ -85,4 +85,15 @@ class QuizController extends Controller
 
         return redirect("/submissions/{$submission->id}/");
     }
+
+    public function assign(Request $request, Quiz $quiz)
+    {
+        $user = $request->user();
+        $quiz->assignedUsers()->attach($user);
+        $quiz->save();
+
+        return redirect()
+            ->back()
+            ->with("status", "Zostałeś przypisany do testu");
+    }
 }

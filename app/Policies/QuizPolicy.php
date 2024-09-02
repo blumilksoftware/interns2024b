@@ -37,4 +37,9 @@ class QuizPolicy
     {
         return $quiz->canBeUnlocked;
     }
+
+    public function assign(User $user, Quiz $quiz): bool
+    {
+        return $quiz->isLocked && !$quiz->isPublished;
+    }
 }

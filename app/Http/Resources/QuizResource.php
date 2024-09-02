@@ -15,9 +15,13 @@ class QuizResource extends JsonResource
             "name" => $this->name,
             "createdAt" => $this->created_at,
             "updatedAt" => $this->updated_at,
+            "scheduledAt" => $this->scheduled_at,
             "duration" => $this->duration,
-            "locked" => $this->isLocked,
+            "state" => $this->state,
+            "canBeLocked" => $this->canBeLocked,
+            "canBeUnlocked" => $this->canBeUnlocked,
             "questions" => QuestionResource::collection($this->questions),
+            "isUserAssigned" => $this->isUserAssigned($request->user()),
         ];
     }
 }
