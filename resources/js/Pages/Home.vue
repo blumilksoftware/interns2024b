@@ -5,7 +5,7 @@ import Footer from '@/components/Common/Footer.vue'
 import AuthBanner from '@/components/Home/AuthBanner.vue'
 import GeneralSection from '@/components/Home/GeneralSection.vue'
 import AuthSection from '@/components/Home/AuthSection.vue'
-import BackgroundEffect from '@/components/Home/BackgroundEffect.vue'
+import BackgroundEffect from '@/components/Common/BackgroundEffect.vue'
 import {type School} from '@/Types/School'
 
 const isLogin = ref(null)
