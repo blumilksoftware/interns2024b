@@ -40,6 +40,6 @@ class QuizPolicy
 
     public function assign(User $user, Quiz $quiz): bool
     {
-        return $quiz->isLocked && !$quiz->isPublished && $quiz->quizSubmissions->where("user_id", $user->id)->isEmpty();
+        return $quiz->isLocked && !$quiz->isPublished && !$quiz->hasSubmissionsFrom($user);
     }
 }

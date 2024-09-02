@@ -138,6 +138,11 @@ class Quiz extends Model
         return $this->scheduled_at !== null && $this->duration !== null && $this->allQuestionsHaveCorrectAnswer();
     }
 
+    public function hasSubmissionsFrom(User $user): bool
+    {
+        return !$this->quizSubmissions->where("user_id", $user->id)->isEmpty();
+    }
+
     protected function allQuestionsHaveCorrectAnswer(): bool
     {
         return $this->questions->every(fn(Question $question): bool => $question->hasCorrectAnswer);
