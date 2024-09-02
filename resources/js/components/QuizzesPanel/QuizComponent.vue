@@ -87,12 +87,22 @@ function publish(){
 function toggleQuizView() {
   emit('displayToggle', props.quiz)
 }
+
+function isPublished() {
+  return quizRef.value.state === 'published'
+}
+function isDraft() {
+  return quizRef.value.state === 'unlocked'
+}
+function isScheduled() {
+  return quizRef.value.state === 'locked'
+}
 </script>
 
 <template>
   <div v-show="isRequestOngoing" class="fixed inset-0 bg-white/50" />
   <div
-    v-if="!(quiz.locked && showLockedQuizzes)"
+    v-if="!(isPublished() && showLockedQuizzes)"
     tabindex="0"
     class="mt-4 p-5 bg-white/70 rounded-lg items-center"
     data-name="wrapped-list-element"
@@ -106,13 +116,13 @@ function toggleQuizView() {
       <span v-if="!isSelected">Czas rozpoczęcia: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) ? formatDatePretty(quiz.scheduledAt) : 'brak' }}</b> </span>
       <span v-if="!isSelected">Czas trwania: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' minut': "brak" }}</b> </span>
       <div class="flex gap-5 justify-end">
-        <button v-if="!quiz.locked && !isEditing" title="Edytuj test" @click="startEditing"><PencilIcon /></button>
-        <button v-if="!quiz.locked && isEditing" title="Anuluj edytowanie testu" @click="dismissEditing"><DismissIcon /></button>
-        <button v-if="!quiz.locked && isEditing" title="Zapisz edytowany test" @click="saveEditing"><CheckIcon /></button>
+        <button v-if="isDraft() && !isEditing" title="Edytuj test" @click="startEditing"><PencilIcon /></button>
+        <button v-if="isEditing" title="Anuluj edytowanie testu" @click="dismissEditing"><DismissIcon /></button>
+        <button v-if="isEditing" title="Zapisz edytowany test" @click="saveEditing"><CheckIcon /></button>
         <button v-if="!isEditing" title="Skopiuj test" @click="copyQuiz()"><CopyIcon /></button>
-        <div v-if="quiz.locked" title="Ten test jest zablokowany. Nie można go modyfikować ani usunąć"><LockIcon /></div>
+        <div v-if="isPublished()" title="Ten test jest zablokowany. Nie można go modyfikować ani usunąć"><LockIcon /></div>
         <button v-else title="Usuń test" @click="deleteQuiz()"><TrashIcon /></button>
-        <button v-if="!isEditing && !quiz.locked" class="bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="publish">Opublikuj</button>
+        <button v-if="!isEditing && isDraft()" class="bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="publish">Opublikuj</button>
       </div>
     </div>
     <!-- header/ -->
