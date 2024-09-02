@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AnswerRecordController;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
@@ -23,8 +22,9 @@ use App\Models\Question;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/email/verify", [EmailVerifyController::class, "create"])->middleware("auth")->name("verification.notice");
-Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["signed", "throttle:6,1"])->name("verification.verify");
-Route::post("email/verification-notification", [EmailVerifyController::class, "send"])->middleware("auth", "throttle:6,1")->name("verification.send");
+Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["auth", "throttle:6,1"])->name("verification.verify");
+Route::post("/email/verification-notification", [EmailVerifyController::class, "send"])->middleware("auth", "throttle:3,60")->name("verification.send");
+Route::post("/auth/logout", [AuthenticateSessionController::class, "logout"])->middleware("auth")->name("logout");
 
 Route::middleware(["guest"])->group(function (): void {
     Route::get("/", [ContestController::class, "index"])->name("home");
@@ -35,9 +35,8 @@ Route::middleware(["guest"])->group(function (): void {
     Route::post("/auth/forgot-password", [PasswordResetLinkController::class, "store"])->name("password.email");
 });
 
-Route::middleware("auth")->group(function (): void {
+Route::middleware(["auth", "verified"])->group(function (): void {
     Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
-    Route::get("/auth/logout", [AuthenticateSessionController::class, "logout"])->name("logout");
     Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
     Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update");
 });
@@ -66,8 +65,6 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/answers/{answer}/correct", [QuestionAnswerController::class, "markAsCorrect"])->can("update,answer")->name("admin.answers.correct");
     Route::post("/answers/{answer}/invalid", [QuestionAnswerController::class, "markAsInvalid"])->can("update,answer")->name("admin.answers.invalid");
 
-    Route::get("/dashboard", [AdminDashboardController::class, "index"])->name("admin.dashboard");
-
     Route::get("/schools", [SchoolsController::class, "index"])->name("admin.schools.index");
     Route::post("/schools", [SchoolsController::class, "store"])->name("admin.schools.store");
     Route::patch("/schools/{school}", [SchoolsController::class, "update"])->name("admin.schools.update");
@@ -77,20 +74,18 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");
 
     Route::get("/users", [UserController::class, "index"])->name("admin.users.index");
-    Route::get("/users/{user}", [UserController::class, "edit"])->name("admin.users.edit");
+    Route::get("/users/{user}/edit", [UserController::class, "edit"])->name("admin.users.edit");
     Route::patch("/users/{user}", [UserController::class, "update"])->name("admin.users.update");
 
     Route::middleware(["role:super_admin"])->group(function (): void {
         Route::get("/admins", [AdminController::class, "index"])->name("admin.admins.index");
-        Route::get("/admins/add", [AdminController::class, "showAddAdmin"])->name("admin.admins.add");
-        Route::get("/admins/{user}", [AdminController::class, "edit"])->name("admin.admins.edit");
-        Route::post("/admins/add", [AdminController::class, "store"])->name("admin.admins.store");
+        Route::get("/admins/create", [AdminController::class, "create"])->name("admin.admins.create");
+        Route::get("/admins/{user}/edit", [AdminController::class, "edit"])->name("admin.admins.edit");
+        Route::post("/admins", [AdminController::class, "store"])->name("admin.admins.store");
         Route::patch("/admins/{user}", [AdminController::class, "update"])->name("admin.admins.update");
-        Route::patch("/users/anonymize/{user}", [UserController::class, "anonymize"])->name("admin.users.anonymize");
         Route::delete("/admins/{user}", [AdminController::class, "destroy"])->name("admin.admins.destroy");
+        Route::patch("/users/{user}/anonymize", [UserController::class, "anonymize"])->name("admin.users.anonymize");
     });
-
-    Route::get("/dashboard", [AdminDashboardController::class, "index"])->name("admin.dashboard");
 });
 
 Route::middleware(["auth"])->group(function (): void {

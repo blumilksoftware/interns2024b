@@ -1,3 +1,3 @@
 <template>
-  Quiz
+  Admins Panel
 </template>

@@ -9,6 +9,7 @@ use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -17,9 +18,9 @@ use Inertia\Response;
 
 class PasswordResetLinkController extends Controller
 {
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render("Auth/ForgotPassword", ["status" => session()->get("status")]);
+        return Inertia::render("Guest/ForgotPassword");
     }
 
     public function store(ForgotPasswordRequest $request): RedirectResponse
@@ -37,7 +38,7 @@ class PasswordResetLinkController extends Controller
 
     public function resetCreate(string $token): Response
     {
-        return Inertia::render("Auth/ResetPassword", ["token" => $token]);
+        return Inertia::render("User/ResetPassword", ["token" => $token]);
     }
 
     public function resetStore(ResetPasswordRequest $request): RedirectResponse

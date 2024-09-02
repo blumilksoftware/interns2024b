@@ -2,6 +2,8 @@
 
 import { ref, onMounted, onUnmounted } from 'vue'
 
+defineProps<{white?: boolean}>()
+
 const margin = ref(0)
 function setBannerVisibility() {
   const scrollHeight = window.document.documentElement.scrollHeight / 2
@@ -12,6 +14,7 @@ onUnmounted(() => window.removeEventListener('scroll', setBannerVisibility))
 </script>
 
 <template>
+  <div v-if="white" class="inset-0 bg-white/60 fixed -z-10" />
   <div :style="{marginTop: `${margin}rem`}" class="fixed blur-2xl size-7/12 -z-10">
     <div class="
       size-full

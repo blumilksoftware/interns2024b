@@ -1,3 +1,3 @@
 <template>
-  Quiz
+  Create Admin
 </template>
