@@ -7,6 +7,6 @@ export interface Quiz {
   updatedAt: number
   scheduledAt?: number
   duration?: number
-  state: 'draft' | 'scheduled' | 'published'
+  state: 'unlocked' | 'locked' | 'published'
   questions: Question[]
 }
