@@ -48,11 +48,6 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         return $this->belongsTo(School::class);
     }
 
-    public function isAnonymized(): bool
-    {
-        return $this->is_anonymized;
-    }
-
     protected function casts(): array
     {
         return [

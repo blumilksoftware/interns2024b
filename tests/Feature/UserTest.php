@@ -34,7 +34,7 @@ class UserTest extends TestCase
             ->get("/admin/users")
             ->assertInertia(
                 fn(Assert $page) => $page
-                    ->component("User/Index")
+                    ->component("Admin/UsersPanel")
                     ->has("users", 10),
             );
     }
@@ -48,7 +48,7 @@ class UserTest extends TestCase
             ->get("/admin/users")
             ->assertInertia(
                 fn(Assert $page) => $page
-                    ->component("User/Index")
+                    ->component("Admin/UsersPanel")
                     ->has("users", 10),
             );
     }
@@ -59,10 +59,10 @@ class UserTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/admin/users")
-            ->get("/admin/users/{$user->id}")
+            ->get("/admin/users/{$user->id}/edit")
             ->assertInertia(
                 fn(Assert $page) => $page
-                    ->component("User/Edit")
+                    ->component("Admin/EditUser")
                     ->where("user.id", $user->id),
             );
     }
@@ -73,10 +73,10 @@ class UserTest extends TestCase
 
         $this->actingAs($this->superAdmin)
             ->from("/admin/users")
-            ->get("/admin/users/{$user->id}")
+            ->get("/admin/users/{$user->id}/edit")
             ->assertInertia(
                 fn(Assert $page) => $page
-                    ->component("User/Edit")
+                    ->component("Admin/EditUser")
                     ->where("user.id", $user->id),
             );
     }
@@ -84,14 +84,14 @@ class UserTest extends TestCase
     public function testAdminCannotViewEditUserThatDoesNotExist(): void
     {
         $this->actingAs($this->admin)
-            ->get("/admin/users/999")
+            ->get("/admin/users/999/edit")
             ->assertStatus(404);
     }
 
     public function testSuperAdminCannotViewEditUserThatDoesNotExist(): void
     {
         $this->actingAs($this->superAdmin)
-            ->get("/admin/users/999")
+            ->get("/admin/users/999/edit")
             ->assertStatus(404);
     }
 
@@ -247,7 +247,7 @@ class UserTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($this->superAdmin)
-            ->patch("/admin/users/anonymize/{$user->id}")
+            ->patch("/admin/users/{$user->id}/anonymize")
             ->assertRedirect()
             ->assertSessionHas("success");
 
@@ -265,11 +265,11 @@ class UserTest extends TestCase
         $user = User::factory()->create(["is_anonymized" => true]);
 
         $this->actingAs($this->admin)
-            ->get("/admin/users/{$user->id}")
+            ->get("/admin/users/{$user->id}/edit")
             ->assertStatus(403);
 
         $this->actingAs($this->superAdmin)
-            ->get("/admin/users/{$user->id}")
+            ->get("/admin/users/{$user->id}/edit")
             ->assertStatus(403);
     }
 
@@ -313,7 +313,7 @@ class UserTest extends TestCase
         $admin = User::factory()->admin()->create();
 
         $this->actingAs($this->admin)
-            ->patch("/admin/users/anonymize/{$admin->id}")
+            ->patch("/admin/users/{$admin->id}/anonymize")
             ->assertForbidden();
     }
 
@@ -322,7 +322,7 @@ class UserTest extends TestCase
         $superAdmin = User::factory()->superAdmin()->create();
 
         $this->actingAs($this->superAdmin)
-            ->patch("/admin/users/anonymize/{$superAdmin->id}")
+            ->patch("/admin/users/{$superAdmin->id}/anonymize")
             ->assertStatus(403);
     }
 
@@ -331,7 +331,7 @@ class UserTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($this->admin)
-            ->patch("/admin/users/anonymize/{$user->id}")
+            ->patch("/admin/users/{$user->id}/anonymize")
             ->assertForbidden();
     }
 
@@ -340,7 +340,7 @@ class UserTest extends TestCase
         $admin = User::factory()->admin()->create();
 
         $this->actingAs($this->admin)
-            ->patch("/admin/users/anonymize/{$admin->id}")
+            ->patch("/admin/users/{$admin->id}/anonymize")
             ->assertForbidden();
     }
 
@@ -350,17 +350,12 @@ class UserTest extends TestCase
 
         $this->actingAs($user)
             ->from("/dashboard")
-            ->get("/admin/dashboard")
-            ->assertStatus(403);
-
-        $this->actingAs($user)
-            ->from("/dashboard")
             ->get("/admin/users/")
             ->assertStatus(403);
 
         $this->actingAs($user)
             ->from("/dashboard")
-            ->get("/admin/users/{$user->id}")
+            ->get("/admin/users/{$user->id}/edit")
             ->assertStatus(403);
 
         $this->actingAs($user)
@@ -377,10 +372,6 @@ class UserTest extends TestCase
     public function guestCannotAccessCrud(): void
     {
         $user = User::factory()->create();
-        $this->from("/")
-            ->get("/admin/dashboard")
-            ->assertStatus(403)
-            ->assertRedirect("/");
 
         $this->from("/")
             ->get("/admin/users/")
@@ -389,6 +380,11 @@ class UserTest extends TestCase
 
         $this->from("/")
             ->get("/admin/users/{$user->id}")
+            ->assertStatus(403)
+            ->assertRedirect("/");
+
+        $this->from("/")
+            ->get("/admin/users/{$user->id}/edit")
             ->assertStatus(403)
             ->assertRedirect("/");
 
