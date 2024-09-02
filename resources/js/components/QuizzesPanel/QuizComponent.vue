@@ -1,7 +1,6 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import axios from 'axios'
 import { router, useForm } from '@inertiajs/vue3'
 import dayjs from 'dayjs'
 import {type Quiz} from '@/Types/Quiz'
@@ -26,27 +25,23 @@ watch(
   (updatedQuiz : Quiz) => quizRef.value = updatedQuiz,
 )
 
+// editing
 function startEditing(){
   isEditing.value=true
   if (!props.isSelected)
     toggleQuizView()
 }
-
 function dismissEditing(){
   isEditing.value=false
   quizRef.value = props.quiz
 }
-
 function saveEditing(){
   isEditing.value=false
-
+  updateQuiz()
 }
 
-function publish(){
-
-}
-
-async function request(url : string, method: 'POST' | 'PATCH' | 'DELETE', payload? : Record<string,any>) {
+// defined the behaviour of request
+function request(url : string, method: 'POST' | 'PATCH' | 'DELETE', payload? : Record<string,any>) {
   isRequestOngoing.value = true
   payload = {
     ...payload,
@@ -62,30 +57,33 @@ async function request(url : string, method: 'POST' | 'PATCH' | 'DELETE', payloa
   return result
 }
 
-async function updateQuiz(payload : object) {
-  await request(`/admin/quizzes/${props.quiz.id}`, 'PATCH', payload)
-}
 
+// date formatter
 function formatDatePretty(date?:number):string|undefined{
   return date ? dayjs(date).format('MMM D, YYYY - h:mm').toString() : undefined
 }
-
-function formatDateHTML(date?:number):string|undefined{
-  return date ? dayjs(date).format('YYYY-MM-DDTHH:mm').toString() : undefined
+function formatDateStandard(date?:number):string|undefined{
+  return date ? dayjs(date).format('Y-m-d H:i:s').toString() : undefined
 }
 
-async function addQuestion(quizId:number){
-  useForm({ text: 'Nowy test' }).post(`/admin/quizzes/${quizId}/questions`)
+// quiz CRUD operations
+function addQuestion(){
+  request(`/admin/quizzes/${props.quiz.id}/questions`, 'POST', { text: 'Nowy test' })
+}
+function deleteQuiz() {
+  request(`/admin/quizzes/${props.quiz.id}`, 'DELETE')
+}
+function copyQuiz() {
+  request(`/admin/quizzes/${props.quiz.id}/clone`, 'POST')
+}
+function updateQuiz() {
+  request(`/admin/quizzes/${props.quiz.id}`, 'PATCH', quizRef.value)
+}
+function publish(){
+  request(`/admin/quizzes/${props.quiz.id}/publish`, 'POST', quizRef.value)
 }
 
-async function deleteQuiz(quizId: number) {
-  request(`/admin/quizzes/${quizId}`, 'DELETE')
-}
-
-function copyQuiz(quizId: number) {
-  router.post(`/admin/quizzes/${quizId}/clone`)
-}
-
+// emits
 function toggleQuizView() {
   emit('displayToggle', props.quiz)
 }
@@ -111,9 +109,9 @@ function toggleQuizView() {
         <button v-if="!quiz.locked && !isEditing" title="Edytuj test" @click="startEditing"><PencilIcon /></button>
         <button v-if="!quiz.locked && isEditing" title="Anuluj edytowanie testu" @click="dismissEditing"><DismissIcon /></button>
         <button v-if="!quiz.locked && isEditing" title="Zapisz edytowany test" @click="saveEditing"><CheckIcon /></button>
-        <button v-if="!isEditing" title="Skopiuj test" @click="copyQuiz(quiz.id)"><CopyIcon /></button>
+        <button v-if="!isEditing" title="Skopiuj test" @click="copyQuiz()"><CopyIcon /></button>
         <div v-if="quiz.locked" title="Ten test jest zablokowany. Nie można go modyfikować ani usunąć"><LockIcon /></div>
-        <button v-else title="Usuń test" @click="deleteQuiz(quiz.id)"><TrashIcon /></button>
+        <button v-else title="Usuń test" @click="deleteQuiz()"><TrashIcon /></button>
         <button v-if="!isEditing && !quiz.locked" class="bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="publish">Opublikuj</button>
       </div>
     </div>
@@ -123,7 +121,7 @@ function toggleQuizView() {
     <div v-if="isSelected" class="flex mt-8 px-2 gap-8 flex-col">
       <div class="grid grid-cols-[auto,auto] gap-2 w-fit rounded-lg items-center">
         <span>Rozpoczęcie testu:</span>
-        <EditableInput type="datetime-local" :is-editing="isEditing" :v-model:value="formatDateHTML(quiz.scheduledAt)" />
+        <EditableInput type="datetime-local" :is-editing="isEditing" :v-model:value="formatDateStandard(quiz.scheduledAt)" />
         <span>Czas trwania testu:</span>
         <EditableInput placeholder="Podaj czas w minutach" type="number" min="0" :is-editing="isEditing" :v-model="quiz.duration" />
       </div>
@@ -131,7 +129,7 @@ function toggleQuizView() {
       <!-- question -->
       <div class="flex flex-col gap-4">
         <div class="flex justify-between">
-          <button class="py-2 px-3 rounded-lg border border-primary/30 font-bold bg-white/50" @click="addQuestion(quiz.id)">+ Dodaj pytanie</button>
+          <button class="py-2 px-3 rounded-lg border border-primary/30 font-bold bg-white/50" @click="addQuestion()">+ Dodaj pytanie</button>
         </div>
 
         <data v-if="isSelected" class="flex flex-col gap-4">
