@@ -1,8 +1,7 @@
 import {type Answer} from '@/Types/Answer'
 
-export interface Question {
+export interface Question extends CleanQuestion{
   id: number
-  text: string
   createdAt: number
   updatedAt: number
   locked: boolean

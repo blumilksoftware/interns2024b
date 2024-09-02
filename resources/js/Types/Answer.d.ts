@@ -1,8 +1,8 @@
-export interface Answer {
+import { type CleanAnswer } from '@/Types/CleanAnswer'
+
+export interface Answer extends CleanAnswer{
   id: number
-  text: string
   createdAt: number
   updatedAt: number
   locked: boolean
-  correct: boolean
 }
