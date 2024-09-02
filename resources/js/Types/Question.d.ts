@@ -1,4 +1,4 @@
-import {type Answer} from '@/Types/Answer'
+import {type CleanQuestion} from '@/Types/CleanQuestion'
 
 export interface Question extends CleanQuestion{
   id: number
