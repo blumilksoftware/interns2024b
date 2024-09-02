@@ -30,6 +30,7 @@ use Illuminate\Support\Collection;
  * @property Collection<Question> $questions
  * @property Collection<Answer> $answers
  * @property Collection<User> $assignedUsers
+ * @property Collection<QuizSubmission> $quizSubmissions
  */
 class Quiz extends Model
 {
@@ -54,6 +55,11 @@ class Quiz extends Model
     public function assignedUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, "quiz_assignments");
+    }
+
+    public function quizSubmissions(): HasMany
+    {
+        return $this->hasMany(QuizSubmission::class);
     }
 
     public function isLocked(): Attribute
