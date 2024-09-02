@@ -17,10 +17,9 @@ class UserQuizSeeder extends Seeder
     public User $user1;
     public User $user2;
     public Quiz $quiz;
+
     public function run(): void
     {
-
-
         $this->user1 = User::factory()->create();
         $this->user2 = User::factory()->create();
 
@@ -58,7 +57,6 @@ class UserQuizSeeder extends Seeder
         $questions = $this->quiz->questions;
 
         if ($correctAnswersCount === null) {
-
             $correctAnswersCount = rand(0, $questions->count());
         }
 
@@ -71,8 +69,8 @@ class UserQuizSeeder extends Seeder
             $isCorrect = $correctQuestions->contains($question);
 
             $selectedAnswer = $isCorrect
-                ? $answers->where('id', $question->correct_answer_id)->first()
-                : $answers->where('id', '!=', $question->correct_answer_id)->random();
+                ? $answers->where("id", $question->correct_answer_id)->first()
+                : $answers->where("id", "!=", $question->correct_answer_id)->random();
 
             AnswerRecord::factory()
                 ->for($quizSubmission)
