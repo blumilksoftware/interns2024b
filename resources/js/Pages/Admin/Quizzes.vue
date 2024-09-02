@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, provide, watch } from 'vue'
 import SortIcon from '@/components/Icons/SortIcon.vue'
 import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
 import FilterIcon from '@/components/Icons/FilterIcon.vue'
@@ -10,6 +10,13 @@ import BackgroundEffect2 from '@/components/Common/BackgroundEffect2.vue'
 const props = defineProps<{ quizzes: Quiz[] }>()
 const selectedQuiz = ref<number>()
 const showLockedQuizzes = ref<boolean>(true)
+const quizzesRef = ref<Quiz[]>(props.quizzes)
+watch(
+  () => props.quizzes,
+  (updatedQuizzes : Quiz[]) => quizzesRef.value = updatedQuizzes,
+)
+
+provide('quizzes', quizzesRef)
 
 function addQuiz() {
   router.post('/admin/quizzes', {
@@ -32,7 +39,7 @@ function toggleQuizView(quiz: Quiz) {
       <div class="flex-1" />
       <button class="font-bold" @click="addQuiz">+&nbsp;Dodaj&nbsp;test</button>
     </div>
-    <div v-for="quiz in props.quizzes" :key="quiz.id" class="px-4">
+    <div v-for="quiz of quizzesRef" :key="quiz.id" class="px-4">
       <QuizComponent
         :quiz="quiz"
         :is-selected="selectedQuiz===quiz.id"
