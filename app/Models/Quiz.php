@@ -21,8 +21,10 @@ use Illuminate\Support\Collection;
  * @property ?Carbon $locked_at
  * @property ?int $duration
  * @property bool $isLocked
+ * @property bool $isPublished
  * @property bool $canBeLocked
  * @property bool $canBeUnlocked
+ * @property string $state
  * @property ?Carbon $closeAt
  * @property Collection<Question> $questions
  * @property Collection<Answer> $answers
@@ -50,6 +52,22 @@ class Quiz extends Model
     public function isLocked(): Attribute
     {
         return Attribute::get(fn(): bool => $this->locked_at !== null);
+    }
+
+    public function isPublished(): Attribute
+    {
+        return Attribute::get(fn(): bool => $this->isLocked && !$this->canBeUnlocked);
+    }
+
+    public function state(): Attribute
+    {
+        return Attribute::get(function (): string {
+            if ($this->isPublished) {
+                return "published";
+            }
+
+            return $this->isLocked ? "locked" : "unlocked";
+        });
     }
 
     public function canBeUnlocked(): Attribute

@@ -12,12 +12,11 @@ class QuizResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "scheduledAt" => $this->scheduled_at,
             "name" => $this->name,
             "createdAt" => $this->created_at,
             "updatedAt" => $this->updated_at,
-            "scheduledUntil" => $this->scheduled_until,
-            "locked" => $this->isLocked,
+            "duration" => $this->duration,
+            "state" => $this->state,
             "questions" => QuestionResource::collection($this->questions),
         ];
     }
