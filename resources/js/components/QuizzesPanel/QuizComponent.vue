@@ -1,7 +1,7 @@
 <!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { router, useForm } from '@inertiajs/vue3'
+import { router } from '@inertiajs/vue3'
 import dayjs from 'dayjs'
 import {type Quiz} from '@/Types/Quiz'
 import QuestionComponent from './QuestionComponent.vue'
