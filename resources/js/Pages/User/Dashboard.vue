@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {type QuizSubmission} from '@/Types/QuizSubmission'
 import {type Quiz} from '@/Types/Quiz'
-import {Head} from '@inertiajs/vue3';
+import {Head} from '@inertiajs/vue3'
 import {computed} from 'vue'
 import dayjs from 'dayjs'
 import FormButton from '@/components/Common/FormButton.vue'
