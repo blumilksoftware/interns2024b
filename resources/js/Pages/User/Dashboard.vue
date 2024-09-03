@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import {type QuizSubmission} from '@/Types/QuizSubmission'
 import {type Quiz} from '@/Types/Quiz'
 import {Head} from '@inertiajs/vue3'
@@ -12,7 +13,9 @@ const props = defineProps<{
   quizzes: Quiz[]
 }>()
 
-const started = computed(() => props.quizzes.filter(quiz => quiz.state == 'published'))
+const isClosed = (quiz: Quiz) => dayjs(quiz.scheduledAt).add(quiz.duration ?? 0, 'm').isBefore(Date.now())
+
+const started = computed(() => props.quizzes.filter(quiz => quiz.state == 'published' && !isClosed(quiz)))
 const scheduled = computed(() => props.quizzes.filter(quiz => quiz.state == 'locked'))
 const history = computed(() => props.submissions.filter(submission => submission.closed))
 </script>
@@ -31,7 +34,9 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.name }}</p>
         <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
       </div>
-      <FormButton class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/start`">Weź udział</FormButton>
+      <FormButton class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/start`" :options="{ preserveScroll: true }">
+        Weź udział
+      </FormButton>
     </div>
 
     <Divider v-if="scheduled.length > 0 || started.length == 0">
@@ -42,8 +47,12 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.name }}</p>
         <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
       </div>
-      <FormButton v-if="!quiz.isUserAssigned" class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/assign`">Zapisz się</FormButton>
-      <FormButton v-else class="min-w-24 text-center" disabled small method="post" :href="`/quizzes/${quiz.id}/assign`">Zapisano</FormButton>
+      <FormButton v-if="!quiz.isUserAssigned" class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/assign`" :options="{ preserveScroll: true }">
+        Zapisz się
+      </FormButton>
+      <FormButton v-else class="min-w-24 text-center" disabled small method="post" :href="`/quizzes/${quiz.id}/assign`">
+        Zapisano
+      </FormButton>
     </div>
 
     <div v-if="scheduled.length == 0 && started.length == 0">
@@ -58,7 +67,9 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ submission.name }}</p>
         <p class="text-xs py-1">{{ dayjs(submission.closedAt).fromNow() }}</p>
       </div>
-      <FormButton class="min-w-24 text-center" small method="post" :href="`/submissions/${submission.id}/results`">Wyniki</FormButton>
+      <FormButton class="min-w-24 text-center" small method="post" :href="`/submissions/${submission.id}/results`" :options="{ preserveScroll: true }">
+        Wyniki
+      </FormButton>
     </div>
   </div>
 </template>

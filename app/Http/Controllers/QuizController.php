@@ -86,7 +86,7 @@ class QuizController extends Controller
         return redirect("/submissions/{$submission->id}/");
     }
 
-    public function assign(Request $request, Quiz $quiz)
+    public function assign(Request $request, Quiz $quiz): RedirectResponse
     {
         $user = $request->user();
         $quiz->assignedUsers()->attach($user);
