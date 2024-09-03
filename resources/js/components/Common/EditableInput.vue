@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps<{
-  bold? :boolean
+  fontNormal? :boolean
   type  :string
   isEditing : boolean
   min?: string
@@ -12,8 +12,8 @@ const model = defineModel<string>()
 <template>
   <span
     v-if="!isEditing"
-    :class="{'font-bold':bold ? bold !== undefined : true}"
-    class="py-1"
+    :class="{'font-normal':fontNormal }"
+    class="py-1 font-bold"
   >
     {{ model ?? 'brak' }}
   </span>
@@ -22,8 +22,8 @@ const model = defineModel<string>()
     v-model="model"
     :min="min"
     :type="type"
-    :class="{'font-bold':bold ? bold !== undefined : true}"
-    class="outline-none flex px-3 min-h-8 rounded-lg h-full ring-1 ring-primary/30 focus:ring-2 focus:ring-primary/50 bg-white/50"
+    :class="{'font-normal':fontNormal }"
+    class="outline-none font-bold flex px-3 min-h-8 rounded-lg size-full ring-1 ring-primary/30 focus:ring-2 focus:ring-primary/50 bg-white/50"
     autocomplete="off"
   >
 </template>
