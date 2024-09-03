@@ -20,11 +20,6 @@ const isRequestOngoing = ref<boolean>(false)
 const isEditing = ref<boolean>(false)
 const quizRef = ref<Quiz>(props.quiz)
 
-watch(
-  () => props.quiz,
-  (updatedQuiz : Quiz) => quizRef.value = updatedQuiz,
-)
-
 // editing
 function startEditing(){
   isEditing.value=true
