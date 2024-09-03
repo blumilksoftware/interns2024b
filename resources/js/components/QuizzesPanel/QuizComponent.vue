@@ -47,7 +47,7 @@ function addQuestion(){
       newId = q.id
   const newQuestion: CleanQuestion = { 
     id: newId+1,
-    text: 'New question',
+    text: 'Nowe pytanie',
     answers: [],
   }
   quizRef.value.questions.push(newQuestion)
@@ -141,13 +141,16 @@ function isScheduled() {
           
       <!-- question -->
       <div class="flex flex-col gap-4">
-        <div class="flex justify-between">
+        <div v-if="isEditing" class="flex justify-between">
           <button class="py-2 px-3 rounded-lg border border-primary/30 font-bold bg-white/50" @click="addQuestion()">+ Dodaj pytanie</button>
         </div>
 
         <data v-if="isSelected" class="flex flex-col gap-4">
           <div v-for="(question, idx) of quizRef.questions" :key="question.id">
-            <QuestionComponent v-model="quizRef.questions[idx]" :is-editing="isEditing" :quiz-id="quiz.id" />
+            <QuestionComponent 
+              v-model="quizRef.questions[idx]" :is-editing="isEditing" :quiz-id="quiz.id"
+              :index="idx" :questions-length="quizRef.questions.length"
+            />
           </div>
         </data>
       </div>

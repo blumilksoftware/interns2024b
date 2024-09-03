@@ -11,8 +11,9 @@ import { type CleanAnswer } from '@/Types/CleanAnswer'
 import { type CleanQuestion } from '@/Types/CleanQuestion'
 import { type CleanQuiz } from '@/Types/CleanQuiz'
 import Dropdown from '../Common/Dropdown.vue'
+import EditableInput from '../Common/EditableInput.vue'
 
-defineProps<{ quizId: number }>()
+defineProps<{ quizId: number, isEditing: boolean, index:number, questionsLength:number}>()
 const emit = defineEmits<{ delete: [question: CleanQuestion] }>()
 const question = defineModel<CleanQuestion>({ required: true })
 const isAnswerExpanded = ref<boolean>(false)
@@ -66,12 +67,13 @@ function setCorrectAnswer(answer: CleanAnswer) {
 <template>
   <div class="rounded-lg border border-primary/30 flex justify-between">
     <div class="flex flex-col gap-4 p-4 w-full">
-      <div class="flex flex-col gap-1">
-        <b class="text-[1.1rem]">Pytanie {{ question.id }}</b>
-        <p>{{ question.text }}</p>
+      <div class="flex flex-col gap-1.5">
+        <b class="text-[1.1rem]">Pytanie {{ `${index+1}/${questionsLength}` }}</b>
+        <span v-if="!isEditing">{{ question.text }}</span>
+        <textarea v-else v-model="question.text" class="w-full p-2 border border-primary/30 rounded-md bg-white/50" />
       </div>
-      <div class="flex gap-4 ">
-        <button class="w-fit border border-primary/30 rounded-lg py-2 px-3 gap-2 flex bg-white/50" @click="addAnswer">
+      <div v-if="isEditing || hasAnswers" class="flex gap-4 ">
+        <button v-if="isEditing" class="w-fit border border-primary/30 rounded-lg py-2 px-3 gap-2 flex bg-white/50" @click="addAnswer">
           <b>+ Dodaj odpowiedź</b>
         </button>
         <button v-if="hasAnswers" class="w-fit border border-primary/30 rounded-lg py-2 px-3 gap-2 flex bg-white/50"
@@ -83,13 +85,17 @@ function setCorrectAnswer(answer: CleanAnswer) {
       </div>
       <ol v-if="isAnswerExpanded && hasAnswers" class="flex flex-col gap-4 w-full">
         <li v-for="answer of question.answers" :key="answer.id"
-            class="w-full flex border border-primary/30 rounded-lg bg-white/50"
+            class="w-full flex gap-4 p-4 border border-primary/30 rounded-lg bg-white/50"
         >
-          <button class="p-4 flex items-center gap-4 w-full" @click="setCorrectAnswer(answer)">
+          <button :disabled="!isEditing" @click="setCorrectAnswer(answer)">
             <CheckDynamicIcon class="size-6" :is-correct="answer.correct" />
-            {{ answer.text }}
           </button>
-          <div class="px-3 border-l border-primary/30 flex flex-col justify-evenly">
+          <div class="flex items-center w-full">
+            <!-- <EditableInput v-model="answer.text" :is-editing="isEditing" type="text" :bold="false" /> -->
+            <span v-if="!isEditing">{{ answer.text }}</span>
+            <textarea v-else v-model="answer.text" class="w-full p-2 bg-transparent border border-primary/30 rounded-md" />
+          </div>
+          <div class="flex flex-col justify-evenly">
             <button data-name="delete" @click="deleteAnswer(answer)">
               <TrashIcon />
             </button>
@@ -98,9 +104,11 @@ function setCorrectAnswer(answer: CleanAnswer) {
       </ol>
     </div>
     <div class="px-3 border-l border-primary/30 flex flex-col justify-evenly">
-      <Dropdown :options="copyingOptions" @option-click="copyQuestion">
+      <!-- copying is temporarily disabled -->
+       
+      <!-- <Dropdown :options="copyingOptions" @option-click="copyQuestion">
         <CopyIcon />
-      </Dropdown>
+      </Dropdown> -->
       <button @click="deleteQuestion"><TrashIcon /></button>
     </div>
   </div>
