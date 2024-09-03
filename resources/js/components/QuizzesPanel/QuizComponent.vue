@@ -14,6 +14,7 @@ import PencilIcon from '../Icons/PencilIcon.vue'
 import CheckIcon from '../Icons/CheckIcon.vue'
 import DismissIcon from '../Icons/DismissIcon.vue'
 import { Request } from '@/scripts/request'
+import Banner from '../Common/Banner.vue'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])
@@ -21,7 +22,7 @@ const isEditing = ref<boolean>(false)
 const quizRef = ref<CleanQuiz>({...props.quiz})
 
 // editing
-function startEditing(){
+function edit(){
   isEditing.value=true
   if (!props.isSelected)
     toggleQuizView()
@@ -100,6 +101,8 @@ function isScheduled() {
     tabindex="0"
     class="mt-4 p-5 bg-white/70 rounded-lg items-center overflow-hidden relative"
   >
+    <div v-if="request.error.value" class="h-10" />
+    <Banner v-if="request.error.value" :text="request.error.value" banner-class="-mx-5 bg-red/80" @click="request.error.value=''" />
     <div v-if="request.isRequestOngoing.value" class="absolute bg-white/50 backdrop-blur-md z-10 size-full left-0 flex items-center justify-center -mt-5">
       <div
         class="inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
@@ -116,7 +119,7 @@ function isScheduled() {
       <span v-if="!isSelected">Czas rozpoczęcia: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) ? formatDatePretty(quiz.scheduledAt) : 'brak' }}</b> </span>
       <span v-if="!isSelected">Czas trwania: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' minut': "brak" }}</b> </span>
       <div class="flex gap-5 justify-end">
-        <button v-if="isDraft() && !isEditing" title="Edytuj test" @click="startEditing"><PencilIcon /></button>
+        <button v-if="isDraft() && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
         <button v-if="isEditing" title="Anuluj edytowanie testu" @click="dismissEditing"><DismissIcon /></button>
         <button v-if="isEditing" title="Zapisz edytowany test" @click="saveEditing"><CheckIcon /></button>
         <button v-if="!isEditing" title="Skopiuj test" @click="copyQuiz()"><CopyIcon /></button>
