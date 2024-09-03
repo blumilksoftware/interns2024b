@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import {type QuizSubmission} from '@/Types/QuizSubmission'
 import {type Quiz} from '@/Types/Quiz'
 import {Head} from '@inertiajs/vue3'
@@ -8,9 +9,9 @@ import FormButton from '@/components/Common/FormButton.vue'
 import Divider from '@/components/Common/Divider.vue'
 
 const props = defineProps<{
-    submissions: QuizSubmission[]
-    quizzes: Quiz[]
-  }>()
+  submissions: QuizSubmission[]
+  quizzes: Quiz[]
+}>()
 
 const started = computed(() => props.quizzes.filter(quiz => quiz.state == 'published'))
 const scheduled = computed(() => props.quizzes.filter(quiz => quiz.state == 'locked'))
