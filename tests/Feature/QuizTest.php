@@ -518,7 +518,7 @@ class QuizTest extends TestCase
             ->from("/")
             ->post("/quizzes/{$quiz->id}/assign")
             ->assertRedirect("/")
-            ->assertSessionHas(["status" => "Zostałeś przypisany do testu"]);
+            ->assertSessionHas(["status" => "Przypisano do testu"]);
     }
 
     public function testUserCannotAssignThemselvesToUnlockedQuiz(): void
