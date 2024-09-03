@@ -13,7 +13,7 @@ const props = defineProps<{
   quizzes: Quiz[]
 }>()
 
-const isClosed = (quiz: Quiz) => dayjs(quiz.scheduledAt).add(quiz.duration ?? 0, 'm').isBefore(Date.now());
+const isClosed = (quiz: Quiz) => dayjs(quiz.scheduledAt).add(quiz.duration ?? 0, 'm').isBefore(Date.now())
 
 const started = computed(() => props.quizzes.filter(quiz => quiz.state == 'published' && !isClosed(quiz)))
 const scheduled = computed(() => props.quizzes.filter(quiz => quiz.state == 'locked'))
