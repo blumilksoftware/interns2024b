@@ -1,6 +1,7 @@
 <script setup lang="ts">
 
 import { useForm } from '@inertiajs/vue3'
+import Button from "@/components/Common/Button.vue";
 
 const form = useForm({})
 const props = withDefaults(defineProps<{
@@ -20,23 +21,8 @@ function handleSubmit() {
 
 <template>
   <form :class="props.class" @submit.prevent="handleSubmit">
-    <button
-      v-if="!disabled && !form.processing"
-      type="submit"
-      class="font-semibold transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
-      :class="`${small ? 'rounded-md text-xs 2xs:text-sm py-2' : 'rounded-lg py-3'} ${text ? 'text-black hover:text-primary-800 px-0 py-0' : 'px-2 2xs:px-3 bg-primary text-white hover:bg-primary-600 shadow-sm'} ${props.class}`"
-    >
+    <Button :disabled="disabled || form.processing" type="submit" :class :small :text>
       <slot />
-    </button>
-
-    <button
-      v-else
-      disabled
-      type="submit"
-      class="font-semibold text-gray-500 cursor-not-allowed"
-      :class="`${small ? 'rounded-md text-xs 2xs:text-sm py-2' : 'rounded-lg py-3'} ${text ? 'px-0 py-0' : 'border border-gray-500 font-semibold px-2 2xs:px-3 '} ${props.class}`"
-    >
-      <slot />
-    </button>
+    </Button>
   </form>
 </template>

@@ -8,9 +8,9 @@ import FormButton from '@/components/Common/FormButton.vue'
 import Divider from '@/components/Common/Divider.vue'
 
 const props = defineProps<{
-    submissions: QuizSubmission[]
-    quizzes: Quiz[]
-  }>()
+  submissions: QuizSubmission[]
+  quizzes: Quiz[]
+}>()
 
 const started = computed(() => props.quizzes.filter(quiz => quiz.state == 'published'))
 const scheduled = computed(() => props.quizzes.filter(quiz => quiz.state == 'locked'))

@@ -6,7 +6,9 @@ namespace Database\Seeders;
 
 use App\Models\Answer;
 use App\Models\AnswerRecord;
+use App\Models\Question;
 use App\Models\Quiz;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -18,8 +20,12 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             UserSeeder::class,
         ]);
-        Quiz::factory()->create();
-        Answer::factory()->create();
-        AnswerRecord::factory()->create();
+
+        $quiz = Quiz::factory()->locked()->create(["name" => "Test Quiz", "scheduled_at" => Carbon::now()]);
+        $questions = Question::factory()->count(10)->create(["quiz_id" => $quiz->id]);
+
+        foreach ($questions as $question) {
+            Answer::factory()->count(4)->create(["question_id" => $question->id]);
+        }
     }
 }

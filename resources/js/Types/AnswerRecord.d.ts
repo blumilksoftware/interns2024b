@@ -1,4 +1,4 @@
-export interface AnswerRecordQuestion {
+export interface AnswerRecordAnswer {
   id: number
   text: string
 }
@@ -10,5 +10,5 @@ export interface AnswerRecord {
   updatedAt: string
   closed: boolean
   selected?: number
-  answers: AnswerRecordQuestion[]
+  answers: AnswerRecordAnswer[]
 }
