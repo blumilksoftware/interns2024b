@@ -31,7 +31,7 @@ function toggleQuizView(quiz: Quiz) {
 
 <template>
   <BackgroundEffect2 />
-  <div class="flex flex-col w-full">
+  <div class="flex flex-col w-full pb-3">
     <div data-name="toolbar" class="flex gap-5 bg-white/70 px-4 py-2 backdrop-blur-md">
       <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <FilterIcon /> Filtruj </button>
       <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <SortIcon /> Sortuj </button>
