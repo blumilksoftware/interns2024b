@@ -14,14 +14,12 @@ use Illuminate\Database\Seeder;
 
 class UserQuizSeeder extends Seeder
 {
-    public User $user1;
-    public User $user2;
     public Quiz $quiz;
 
     public function run(): void
     {
-        $this->user1 = User::factory()->create();
-        $this->user2 = User::factory()->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
 
         $this->quiz = Quiz::factory()
             ->has(
@@ -43,11 +41,11 @@ class UserQuizSeeder extends Seeder
             }
         }
 
-        $this->createSubmissionForUser($this->user1, 2);
-        $this->createSubmissionForUser($this->user2, 3);
+        $this->createSubmissionForUser($user1, null);
+        $this->createSubmissionForUser($user2, null);
     }
 
-    private function createSubmissionForUser(User $user, ?int $correctAnswersCount): void
+    public function createSubmissionForUser(User $user, ?int $correctAnswersCount): void
     {
         $quizSubmission = QuizSubmission::factory()
             ->for($this->quiz)

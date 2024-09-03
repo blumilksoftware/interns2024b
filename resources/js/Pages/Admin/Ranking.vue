@@ -28,11 +28,11 @@ const sortedRankings = computed(() => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(ranking) in sortedRankings" :key="ranking.user_id">
-          <td>{{ ranking.user_id }}</td>
-          <td>{{ ranking.user_name }}</td>
-          <td>{{ ranking.user_surname }}</td>
-          <td>{{ ranking.school }}</td>
+        <tr v-for="(ranking) in sortedRankings" :key="ranking.user.id">
+          <td>{{ ranking.user.id }}</td>
+          <td>{{ ranking.user.name }}</td>
+          <td>{{ ranking.user.surname }}</td>
+          <td>{{ ranking.user.school.name }}</td>
           <td>{{ ranking.points }}</td>
         </tr>
       </tbody>

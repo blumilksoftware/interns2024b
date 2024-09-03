@@ -14,7 +14,8 @@ class RankingTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected User $user;
+    protected User $user1;
+    protected User $user2;
 
     protected function setUp(): void
     {
@@ -23,9 +24,11 @@ class RankingTest extends TestCase
         $seeder = new UserQuizSeeder();
         $seeder->run();
 
-        $this->user1 = $seeder->user1;
-        $this->user2 = $seeder->user2;
+        $this->user1 = User::factory()->create();
+        $this->user2 = User::factory()->create();
         $this->quiz = $seeder->quiz;
+        $seeder->createSubmissionForUser($this->user1, 2);
+        $seeder->createSubmissionForUser($this->user2, 3);
     }
 
     public function testUserHasPointsInAnsweredQuiz(): void

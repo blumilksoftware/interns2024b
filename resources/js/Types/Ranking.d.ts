@@ -1,11 +1,8 @@
 import { type Quiz } from './Quiz'
-import {type School} from '@/Types/School'
+import { type User } from '@/Types/User'
 
 export interface Ranking {
-  user_id: number
-  user_name: string
-  user_surname: string
-  school: School
+  user: User
   points: number
 }
 
