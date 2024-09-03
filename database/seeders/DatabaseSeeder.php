@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Answer;
-use App\Models\AnswerRecord;
 use App\Models\Question;
 use App\Models\Quiz;
 use Carbon\Carbon;
@@ -26,7 +25,7 @@ class DatabaseSeeder extends Seeder
 
         foreach ($questions as $question) {
             $answers = Answer::factory()->count(4)->create(["question_id" => $question->id]);
-            $question->correct_answer_id = ($answers[0]->id);
+            $question->correct_answer_id = $answers[0]->id;
             $question->save();
         }
     }
