@@ -37,7 +37,7 @@ function toggleQuizView(quiz: Quiz) {
       <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <SortIcon /> Sortuj </button>
       <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg" @click="showLockedQuizzes=!showLockedQuizzes"> <EyeDynamicIcon :is-opened="showLockedQuizzes" /> {{ showLockedQuizzes ? 'Pokaż' : 'Schowaj' }} zablokowane </button>
       <div class="flex-1" />
-      <button :disabled="request.isRequestOngoing.value" class="font-bold" @click="addQuiz">+&nbsp;Dodaj&nbsp;test</button>
+      <button :disabled="request.isRequestOngoing.value" :class="{'opacity-70':request.isRequestOngoing.value}" class="font-bold" @click="addQuiz">+&nbsp;Dodaj&nbsp;test</button>
     </div>
     <div v-for="quiz of quizzesRef" :key="quiz.id" class="px-4">
       <QuizComponent
