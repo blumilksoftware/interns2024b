@@ -20,8 +20,8 @@ function updateTimer() {
 
   left.value = {
     'h': Math.floor(seconds / 3600),
-    'm': Math.floor(seconds / 60),
-    's': seconds,
+    'm': Math.floor(seconds % 3600  / 60),
+    's': seconds % 60,
   }
 
   if (seconds <= 0)  {
