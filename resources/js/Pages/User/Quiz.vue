@@ -1,36 +1,25 @@
 <script setup lang="ts">
 
-  import {QuizSubmission} from "@/Types/QuizSubmission";
-  import Divider from "@/components/Common/Divider.vue";
-  import {computed, reactive, ref} from "vue";
-  import axios from "axios";
-  import FormButton from "@/components/Common/FormButton.vue";
-  import Button from "@/components/Common/Button.vue";
-  import {AnswerRecord} from "@/Types/AnswerRecord";
-  import {Dialog, DialogPanel} from "@headlessui/vue";
-  import dayjs from "dayjs";
-  import {polishPlurals} from "polish-plurals";
+import {type QuizSubmission} from '@/Types/QuizSubmission'
+import Divider from '@/components/Common/Divider.vue'
+import {computed, ref} from 'vue'
+import axios from 'axios'
+import FormButton from '@/components/Common/FormButton.vue'
+import Button from '@/components/Common/Button.vue'
+import {type AnswerRecord} from '@/Types/AnswerRecord'
+import {Dialog, DialogPanel} from '@headlessui/vue'
+import TimeLeft from '@/components/Common/TimeLeft.vue'
 
-  const props = defineProps<{ submission: QuizSubmission }>()
-  const answers = ref(props.submission.answers.sort((a, b) => a.id - b.id));
-  const allAnswered = computed((() => answers.value.every(answer => answer.selected != null)));
+const props = defineProps<{ submission: QuizSubmission }>()
+const answers = ref(props.submission.answers.toSorted((a, b) => a.id - b.id))
+const allAnswered = computed((() => answers.value.every(answer => answer.selected != null)))
 
-  const timeLeft = ref(0);
-  const openDialog = ref(false);
+const openDialog = ref(false)
 
-  const withLeft = polishPlurals.bind(null, 'Pozostała', 'Pozostały', 'Pozostało')
-  const withMinute = polishPlurals.bind(null, 'minuta', 'minuty', 'minut')
-
-  function updateTimer() {
-    timeLeft.value = dayjs(props.submission.closedAt).diff(dayjs(), 'm')
-    setTimeout(updateTimer, 60000)
-  }
-  updateTimer();
-
-  function handleAnswer(answers: AnswerRecord, selected: number) {
-    axios.post(`/answers/${answers.id}/${selected}`, { _method: 'patch' });
-    answers.selected = selected;
-  }
+function handleAnswer(answers: AnswerRecord, selected: number) {
+  axios.post(`/answers/${answers.id}/${selected}`, { _method: 'patch' })
+  answers.selected = selected
+}
 </script>
 
 <template>
@@ -41,24 +30,25 @@
       </h1>
     </Divider>
     <div class="w-full text-right text-sm font-semibold">
-      {{`${withLeft(timeLeft)} ${timeLeft} ${withMinute(timeLeft)}`}}
+      <TimeLeft :to="submission.closedAt" />
     </div>
 
     <div v-for="(record, index) in answers" :key="record.id" class="rounded-lg bg-white shadow border flex flex-col justify-between px-4 py-2 m-5">
       <div>
         <p class="pt-2 font-semibold text-primary">Pytanie: {{ index + 1 }}/{{ answers.length }}</p>
-        <p class="py-2 mt-2">{{record.question}}</p>
+        <p class="py-2 mt-2">{{ record.question }}</p>
       </div>
 
       <div class="mb-3 mt-2">
         <form class="flex flex-col gap-2">
           <label v-for="answer in record.answers" :key="answer.id" class="flex items-center text-sm text-black cursor-pointer">
             <input
-              type="radio"
               :id="answer.id.toString()"
+              type="radio"
               :checked="record.selected == answer.id"
-              class="mr-2 h-6 w-6 border-black text-primary accent-primary cursor-pointer"
-              @change.prevent="handleAnswer(record, answer.id)" />
+              class="mr-2 size-6 border-black text-primary accent-primary cursor-pointer"
+              @change.prevent="handleAnswer(record, answer.id)"
+            >
             {{ answer.text }}
           </label>
         </form>
@@ -72,7 +62,7 @@
     </div>
   </div>
 
-  <Dialog :open="openDialog" @close="openDialog = false" class="relative z-50">
+  <Dialog :open="openDialog" class="relative z-50" @close="openDialog = false">
     <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
 
     <div class="fixed inset-0 flex w-screen items-center justify-center p-4">
@@ -82,8 +72,8 @@
           <div class="mt-2 max-w-xl text-black">
             <p>Nie udzielono odpowiedzi na wszystkie pytania, czy na pewno chcesz oddać test?</p>
           </div>
-          <div class="mt-5 flex gap-4 justify-evenly">
-            <Button small  @click="openDialog = false">Wróć</Button>
+          <div class="mt-5 flex gap-4 justify-end">
+            <Button small @click="openDialog = false">Wróć</Button>
             <FormButton small href="/submissions/{quizSubmission}/close" method="post">Oddaj mimo to</FormButton>
           </div>
         </div>
