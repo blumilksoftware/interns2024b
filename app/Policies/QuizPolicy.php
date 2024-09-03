@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use App\Models\Quiz;
+use App\Models\QuizSubmission;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
@@ -46,6 +47,14 @@ class QuizPolicy
 
     public function viewUserRanking(User $user, Quiz $quiz): Response
     {
-        return $quiz->isRankingPublished ? Response::allow() : Response::deny("Nie masz uprawnień do zobaczenia rankingu.");
+        if (!$quiz->isRankingPublished) {
+            return Response::deny("Ranking nie jest opublikowany.");
+        }
+
+        $isUserInRanking = QuizSubmission::where("quiz_id", $quiz->id)
+            ->where("user_id", $user->id)
+            ->exists();
+
+        return ($isUserInRanking || $user->hasRole("admin|super_admin")) ? Response::allow() : Response::deny("Nie znajdujesz się w rankingu.");
     }
 }
