@@ -94,6 +94,6 @@ class QuizController extends Controller
 
         return redirect()
             ->back()
-            ->with("status", "Zostałeś przypisany do testu");
+            ->with("status", "Przypisano do testu");
     }
 }
