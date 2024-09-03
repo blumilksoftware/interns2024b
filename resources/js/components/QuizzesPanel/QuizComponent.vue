@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import dayjs from 'dayjs'
-import {type Quiz} from '@/Types/Quiz'
+import { type Quiz } from '@/Types/Quiz'
 import { type CleanQuestion } from '@/Types/CleanQuestion'
 import { type CleanQuiz } from '@/Types/CleanQuiz'
 import QuestionComponent from './QuestionComponent.vue'
@@ -28,12 +28,8 @@ function edit(){
     toggleQuizView()
 }
 function dismissEditing(){
-  isEditing.value=false
   quizRef.value = {...props.quiz}
-}
-function saveEditing(){
   isEditing.value=false
-  updateQuiz()
 }
 
 // date formatters
@@ -68,8 +64,11 @@ function copyQuiz() {
   request.sendRequest(`/admin/quizzes/${props.quiz.id}/clone`, 'POST')
 }
 function updateQuiz() {
-  // doesn't update data on server
-  request.sendRequest(`/admin/quizzes/${props.quiz.id}`, 'PATCH', quizRef.value)
+  const payload = {
+    ...quizRef.value,
+    onSuccess: ()=>isEditing.value = false,
+  }
+  request.sendRequest(`/admin/quizzes/${props.quiz.id}`, 'PATCH', payload)
 }
 function schedule(){
   // No backend implemenation
@@ -121,7 +120,7 @@ function isScheduled() {
       <div class="flex gap-5 justify-end">
         <button v-if="isDraft() && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
         <button v-if="isEditing" title="Anuluj edytowanie testu" @click="dismissEditing"><DismissIcon /></button>
-        <button v-if="isEditing" title="Zapisz edytowany test" @click="saveEditing"><CheckIcon /></button>
+        <button v-if="isEditing" title="Zapisz edytowany test" @click="updateQuiz"><CheckIcon /></button>
         <button v-if="!isEditing" title="Skopiuj test" @click="copyQuiz()"><CopyIcon /></button>
         <div v-if="isPublished()" title="Ten test jest zablokowany. Nie można go modyfikować ani usunąć"><LockIcon /></div>
         <button v-else title="Usuń test" @click="deleteQuiz()"><TrashIcon /></button>
