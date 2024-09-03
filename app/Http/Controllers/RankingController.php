@@ -48,6 +48,12 @@ class RankingController extends Controller
 
     public function publish(Quiz $quiz): RedirectResponse
     {
+        if (!$quiz->exists) {
+            abort(404);
+        }
+
+        $this->authorize("publish", $quiz);
+
         $quiz->ranking_published_at = Carbon::now();
         $quiz->save();
 
@@ -58,6 +64,12 @@ class RankingController extends Controller
 
     public function unpublish(Quiz $quiz): RedirectResponse
     {
+        if (!$quiz->exists) {
+            abort(404);
+        }
+
+        $this->authorize("publish", $quiz);
+
         $quiz->ranking_published_at = null;
         $quiz->save();
 

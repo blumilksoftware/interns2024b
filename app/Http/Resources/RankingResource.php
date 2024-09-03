@@ -14,8 +14,15 @@ class RankingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $isAdmin = $request->user()->hasRole("admin|super_admin");
+
         return [
-            "user" => new UserResource($this->user),
+            "user" => [
+                "id" => $this->user->id,
+                "name" => $isAdmin ? $this->user->name : null,
+                "surname" => $isAdmin ? $this->user->surname : null,
+                "school" => $this->user->school,
+            ],
             "points" => $this->points,
         ];
     }

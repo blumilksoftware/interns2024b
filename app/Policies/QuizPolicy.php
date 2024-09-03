@@ -57,4 +57,9 @@ class QuizPolicy
 
         return ($isUserInRanking || $user->hasRole("admin|super_admin")) ? Response::allow() : Response::deny("Nie znajdujesz się w rankingu.");
     }
+
+    public function publish(User $user, Quiz $quiz): bool
+    {
+        return $quiz->isLocked && $user->hasRole("admin|super_admin");
+    }
 }
