@@ -38,7 +38,5 @@ class ContestController extends Controller
             "submissions" => QuizSubmissionResource::collection($submissions),
             "quizzes" => QuizResource::collection($quizzes),
         ]);
-
-        return Inertia::render("User/Dashboard");
     }
 }
