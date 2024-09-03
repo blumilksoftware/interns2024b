@@ -32,7 +32,9 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.name }}</p>
         <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
       </div>
-      <FormButton class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/start`">Weź udział</FormButton>
+      <FormButton class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/start`" :options="{ preserveScroll: true }">
+        Weź udział
+      </FormButton>
     </div>
 
     <Divider v-if="scheduled.length > 0 || started.length == 0">
@@ -43,8 +45,12 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.name }}</p>
         <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
       </div>
-      <FormButton v-if="!quiz.isUserAssigned" class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/assign`">Zapisz się</FormButton>
-      <FormButton v-else class="min-w-24 text-center" disabled small method="post" :href="`/quizzes/${quiz.id}/assign`">Zapisano</FormButton>
+      <FormButton v-if="!quiz.isUserAssigned" class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/assign`" :options="{ preserveScroll: true }">
+        Zapisz się
+      </FormButton>
+      <FormButton v-else class="min-w-24 text-center" disabled small method="post" :href="`/quizzes/${quiz.id}/assign`">
+        Zapisano
+      </FormButton>
     </div>
 
     <div v-if="scheduled.length == 0 && started.length == 0">
@@ -59,7 +65,9 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ submission.name }}</p>
         <p class="text-xs py-1">{{ dayjs(submission.closedAt).fromNow() }}</p>
       </div>
-      <FormButton class="min-w-24 text-center" small method="post" :href="`/submissions/${submission.id}/results`">Wyniki</FormButton>
+      <FormButton class="min-w-24 text-center" small method="post" :href="`/submissions/${submission.id}/results`" :options="{ preserveScroll: true }">
+        Wyniki
+      </FormButton>
     </div>
   </div>
 </template>
