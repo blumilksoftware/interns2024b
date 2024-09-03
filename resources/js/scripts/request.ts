@@ -9,13 +9,8 @@ export class Request{
       preserveScroll: true,
       onStart: () => this.isRequestOngoing.value = true,
       onFinish: () =>  this.isRequestOngoing.value = false,
+      method: method,
     }
-    const inertiaRouterRequest = {
-      'POST': () => payload = {...payload, method:'post'},
-      'DELETE': () => payload = {...payload, method:'delete'},
-      'PATCH': () => payload = {...payload, method:'post', _method:'PATCH'},
-    }
-    inertiaRouterRequest[method]()
     router.visit(url, payload)
   }
 }
