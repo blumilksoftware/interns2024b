@@ -13,7 +13,7 @@ const pages: Page[] = [
 </script>
 
 <template>
-  <BaseLayout :pages :app-name :user :flash>
+  <BaseLayout :pages :appName :user :flash>
     <slot />
   </BaseLayout>
 </template>

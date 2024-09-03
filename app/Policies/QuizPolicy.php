@@ -6,6 +6,7 @@ namespace App\Policies;
 
 use App\Models\Quiz;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
 class QuizPolicy
 {
@@ -36,5 +37,15 @@ class QuizPolicy
     public function unlock(User $user, Quiz $quiz): bool
     {
         return $quiz->canBeUnlocked;
+    }
+
+    public function viewAdminRanking(User $user, Quiz $quiz): Response
+    {
+        return ($quiz->isLocked && $user->hasRole("admin|super_admin")) ? Response::allow() : Response::deny("Nie masz uprawnień do zobaczenia rankingu.");
+    }
+
+    public function viewUserRanking(User $user, Quiz $quiz): Response
+    {
+        return $quiz->isRankingPublished ? Response::allow() : Response::deny("Nie masz uprawnień do zobaczenia rankingu.");
     }
 }

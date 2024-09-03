@@ -1,4 +1,4 @@
-import { type Quiz } from './Quiz'
+import { type Quiz } from '@/Types/Quiz'
 import { type User } from '@/Types/User'
 
 export interface Ranking {
