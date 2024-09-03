@@ -56,7 +56,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     </div>
 
     <div class="h-80 flex flex-col items-center justify-center">
-      <p class="font-semibold text-primary text-xl p-5">To już wszystkie pytania. Czy chcesz oddać test?</p>
+      <p class="font-semibold text-primary text-xl p-5 text-center">To już wszystkie pytania. Czy chcesz oddać test?</p>
       <FormButton v-if="allAnswered" small href="/submissions/{quizSubmission}/close" method="post">Oddaj test</FormButton>
       <Button v-else small @click="openDialog = true">Oddaj test</Button>
     </div>
