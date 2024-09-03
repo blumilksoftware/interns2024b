@@ -45,7 +45,7 @@ class QuizSubmission extends Model
 
     public function isClosed(): Attribute
     {
-        return Attribute::get(fn(): bool => $this->closed_at !== null && $this->closed_at <= Carbon::now());
+        return Attribute::get(fn(): bool => $this->closed_at <= Carbon::now());
     }
 
     protected function casts(): array
