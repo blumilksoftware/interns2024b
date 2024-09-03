@@ -20,8 +20,8 @@ function handleSubmit() {
 </script>
 
 <template>
-  <form :class="props.class" @submit.prevent="handleSubmit">
-    <Button :disabled="disabled || form.processing" type="submit" :class :small :text>
+  <form :class="`${form.processing ? 'cursor-wait' : ''} ${props.class}`" @submit.prevent="handleSubmit">
+    <Button :disabled="disabled || form.processing" type="submit" :class="`${form.processing ? 'cursor-wait' : ''} ${props.class}`" :small="small" :text="text">
       <slot />
     </Button>
   </form>

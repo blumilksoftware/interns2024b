@@ -25,7 +25,9 @@ class DatabaseSeeder extends Seeder
         $questions = Question::factory()->count(10)->create(["quiz_id" => $quiz->id]);
 
         foreach ($questions as $question) {
-            Answer::factory()->count(4)->create(["question_id" => $question->id]);
+            $answers = Answer::factory()->count(4)->create(["question_id" => $question->id]);
+            $question->correct_answer_id = ($answers[0]->id);
+            $question->save();
         }
     }
 }

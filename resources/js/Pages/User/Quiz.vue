@@ -2,18 +2,30 @@
 
   import {QuizSubmission} from "@/Types/QuizSubmission";
   import Divider from "@/components/Common/Divider.vue";
-  import {computed, ref} from "vue";
+  import {computed, reactive, ref} from "vue";
   import axios from "axios";
   import FormButton from "@/components/Common/FormButton.vue";
   import Button from "@/components/Common/Button.vue";
   import {AnswerRecord} from "@/Types/AnswerRecord";
-  import {Dialog, DialogPanel, DialogTitle} from "@headlessui/vue";
+  import {Dialog, DialogPanel} from "@headlessui/vue";
+  import dayjs from "dayjs";
+  import {polishPlurals} from "polish-plurals";
 
   const props = defineProps<{ submission: QuizSubmission }>()
-  const answers = computed((() => props.submission.answers.sort((a, b) => a.id - b.id)));
+  const answers = ref(props.submission.answers.sort((a, b) => a.id - b.id));
   const allAnswered = computed((() => answers.value.every(answer => answer.selected != null)));
 
-  const openDialog = ref(true);
+  const timeLeft = ref(0);
+  const openDialog = ref(false);
+
+  const withLeft = polishPlurals.bind(null, 'Pozostała', 'Pozostały', 'Pozostało')
+  const withMinute = polishPlurals.bind(null, 'minuta', 'minuty', 'minut')
+
+  function updateTimer() {
+    timeLeft.value = dayjs(props.submission.closedAt).diff(dayjs(), 'm')
+    setTimeout(updateTimer, 60000)
+  }
+  updateTimer();
 
   function handleAnswer(answers: AnswerRecord, selected: number) {
     axios.post(`/answers/${answers.id}/${selected}`, { _method: 'patch' });
@@ -28,6 +40,9 @@
         {{ submission.name }}
       </h1>
     </Divider>
+    <div class="w-full text-right text-sm font-semibold">
+      {{`${withLeft(timeLeft)} ${timeLeft} ${withMinute(timeLeft)}`}}
+    </div>
 
     <div v-for="(record, index) in answers" :key="record.id" class="rounded-lg bg-white shadow border flex flex-col justify-between px-4 py-2 m-5">
       <div>
@@ -37,12 +52,12 @@
 
       <div class="mb-3 mt-2">
         <form class="flex flex-col gap-2">
-          <label v-for="answer in record.answers" :key="answer.id" class="flex items-center text-sm text-black">
+          <label v-for="answer in record.answers" :key="answer.id" class="flex items-center text-sm text-black cursor-pointer">
             <input
               type="radio"
-              :id="answer.id"
+              :id="answer.id.toString()"
               :checked="record.selected == answer.id"
-              class="mr-2 h-6 w-6 border-black text-primary accent-primary"
+              class="mr-2 h-6 w-6 border-black text-primary accent-primary cursor-pointer"
               @change.prevent="handleAnswer(record, answer.id)" />
             {{ answer.text }}
           </label>
@@ -53,7 +68,7 @@
     <div class="h-80 flex flex-col items-center justify-center">
       <p class="font-semibold text-primary text-xl p-5">To już wszystkie pytania. Czy chcesz oddać test?</p>
       <FormButton v-if="allAnswered" small href="/submissions/{quizSubmission}/close" method="post">Oddaj test</FormButton>
-      <Button v-else small>Oddaj test</Button>
+      <Button v-else small @click="openDialog = true">Oddaj test</Button>
     </div>
   </div>
 
@@ -63,11 +78,11 @@
     <div class="fixed inset-0 flex w-screen items-center justify-center p-4">
       <DialogPanel class="bg-white shadow rounded-lg">
         <div class="px-4 py-5 sm:p-6">
-          <h3 class="text-base font-semibold leading-6 text-xl text-primary">Uwaga</h3>
+          <h3 class="font-semibold leading-6 text-xl text-primary">Uwaga</h3>
           <div class="mt-2 max-w-xl text-black">
             <p>Nie udzielono odpowiedzi na wszystkie pytania, czy na pewno chcesz oddać test?</p>
           </div>
-          <div class="mt-5 flex gap-4">
+          <div class="mt-5 flex gap-4 justify-evenly">
             <Button small  @click="openDialog = false">Wróć</Button>
             <FormButton small href="/submissions/{quizSubmission}/close" method="post">Oddaj mimo to</FormButton>
           </div>

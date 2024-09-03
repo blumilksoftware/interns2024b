@@ -4,11 +4,11 @@ const props = defineProps<{
   small?: boolean
   disabled?: boolean
   text?: boolean
-  class?: string,
-  type?: string,
+  class?: string
+  type?: 'button' | 'submit' | 'reset' | undefined
 }>()
 
-const emit = defineEmits('click');
+const emit = defineEmits(['click']);
 </script>
 
 <template>
