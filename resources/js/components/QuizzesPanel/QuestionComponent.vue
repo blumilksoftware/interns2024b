@@ -6,19 +6,18 @@ import CopyIcon from '@/components/Icons/CopyIcon.vue'
 import CheckDynamicIcon from '@/components/Icons/CheckDynamicIcon.vue'
 
 import { computed, inject, ref, type Ref } from 'vue'
-import { type Question } from '@/Types/Question'
 import { type Option } from '@/Types/Option'
 import { type CleanAnswer } from '@/Types/CleanAnswer'
 import { type CleanQuestion } from '@/Types/CleanQuestion'
-import { type Quiz } from '@/Types/Quiz'
+import { type CleanQuiz } from '@/Types/CleanQuiz'
 import Dropdown from '../Common/Dropdown.vue'
 
 defineProps<{ quizId: number }>()
 const emit = defineEmits<{ delete: [question: CleanQuestion] }>()
-const question = defineModel<Question>({ required: true })
+const question = defineModel<CleanQuestion>({ required: true })
 const isAnswerExpanded = ref<boolean>(false)
 const hasAnswers = computed(() => question.value.answers.length > 0)
-const quizzesRef = inject<Ref<Quiz[]>>('quizzes', ref<any[]>([]))
+const quizzesRef = inject<Ref<CleanQuiz[]>>('quizzes', ref<any[]>([]))
 
 const copyingOptions = computed(
   ():Option[] => quizzesRef.value.map(quiz => ({ id: quiz.id, text: quiz.name }),
@@ -32,7 +31,7 @@ function deleteQuestion() {
 function copyQuestion(quizId:number) {
   for (const quiz of quizzesRef.value) {
     if (quiz.id === quizId) {
-      const newQuestion:Question = JSON.parse(JSON.stringify(question.value))
+      const newQuestion:CleanQuestion = JSON.parse(JSON.stringify(question.value))
       newQuestion.id++
       quiz.questions.push(newQuestion) 
       return
@@ -41,7 +40,13 @@ function copyQuestion(quizId:number) {
 }
 
 function addAnswer() {
+  let newId = 0 
+  for (const ans of question.value.answers) {
+    if (newId < ans.id)
+      newId = ans.id
+  }
   const answer: CleanAnswer = {
+    id: newId+1,
     text: 'Nowa odpowiedź',
     correct: false,
   }
