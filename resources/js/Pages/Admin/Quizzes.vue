@@ -5,7 +5,6 @@ import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
 import FilterIcon from '@/components/Icons/FilterIcon.vue'
 import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
 import { type Quiz } from '@/Types/Quiz'
-import BackgroundEffect2 from '@/components/Common/BackgroundEffect2.vue'
 import {Request} from '@/scripts/request'
 const props = defineProps<{ quizzes: Quiz[] }>()
 const selectedQuiz = ref<number>()
@@ -30,7 +29,6 @@ function toggleQuizView(quiz: Quiz) {
 </script>
 
 <template>
-  <BackgroundEffect2 />
   <div class="flex flex-col w-full pb-3">
     <div data-name="toolbar" class="flex gap-5 bg-white/70 px-4 py-2 backdrop-blur-md">
       <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <FilterIcon /> Filtruj </button>
