@@ -33,7 +33,7 @@ class SchoolTest extends TestCase
             ->get("/admin/schools")
             ->assertInertia(
                 fn(Assert $page) => $page
-                    ->component("SchoolsPanel")
+                    ->component("Admin/SchoolsPanel")
                     ->has("schools", 3),
             );
     }

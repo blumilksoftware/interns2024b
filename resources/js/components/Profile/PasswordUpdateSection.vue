@@ -10,7 +10,7 @@ const form = useForm({
   password: '',
   password_confirmation: '',
 })
-console.log()
+
 function updatePassword() {
   form.patch('/profile/password', {
     preserveScroll: true,

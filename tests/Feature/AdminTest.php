@@ -34,7 +34,7 @@ class AdminTest extends TestCase
             ->get("/admin/admins")
             ->assertInertia(
                 fn(Assert $page) => $page
-                    ->component("Admin/Index")
+                    ->component("Admin/AdminsPanel")
                     ->has("users", 1),
             );
     }
@@ -55,10 +55,10 @@ class AdminTest extends TestCase
         $this->assertDatabaseCount("users", 12);
 
         $this->actingAs($this->superAdmin)
-            ->get("/admin/admins/add")
+            ->get("/admin/admins/create")
             ->assertInertia(
                 fn(Assert $page) => $page
-                    ->component("Admin/AddAdmin"),
+                    ->component("Admin/CreateAdmin"),
             );
     }
 
@@ -68,7 +68,7 @@ class AdminTest extends TestCase
         $this->assertDatabaseCount("users", 12);
 
         $this->actingAs($this->admin)
-            ->get("/admin/admins/add")
+            ->get("/admin/admins/create")
             ->assertStatus(403);
     }
 
@@ -76,7 +76,7 @@ class AdminTest extends TestCase
     {
         $school = School::factory()->create();
         $this->actingAs($this->superAdmin)
-            ->post("/admin/admins/add", [
+            ->post("/admin/admins", [
                 "name" => "Admin Name",
                 "surname" => "Admin Surname",
                 "email" => "adminexample@admin.com",
@@ -96,7 +96,7 @@ class AdminTest extends TestCase
     {
         $school = School::factory()->create();
         $this->actingAs($this->admin)
-            ->post("/admin/admins/add", [
+            ->post("/admin/admins", [
                 "name" => "Admin Name",
                 "surname" => "Admin Surname",
                 "email" => "adminexample@admin.com",
@@ -118,10 +118,10 @@ class AdminTest extends TestCase
 
         $this->actingAs($this->superAdmin)
             ->from("/admin/admins")
-            ->get("/admin/admins/{$admin->id}")
+            ->get("/admin/admins/{$admin->id}/edit")
             ->assertInertia(
                 fn(Assert $page) => $page
-                    ->component("Admin/Edit")
+                    ->component("Admin/EditAdmin")
                     ->where("user.id", $admin->id),
             );
     }
@@ -132,7 +132,7 @@ class AdminTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/admin/admins")
-            ->get("/admin/admins/{$admin->id}")
+            ->get("/admin/admins/{$admin->id}/edit")
             ->assertStatus(403);
     }
 
@@ -142,7 +142,7 @@ class AdminTest extends TestCase
         $admin = User::factory()->admin()->create(["school_id" => $school->id]);
 
         $this->actingAs($this->superAdmin)
-            ->from("/admin/admins/{$admin->id}")
+            ->from("/admin/admins/{$admin->id}/edit")
             ->patch("/admin/admins/{$admin->id}", [
                 "name" => "New Name",
                 "surname" => "New Surname",
@@ -167,7 +167,7 @@ class AdminTest extends TestCase
         $adminData = $admin->toArray();
 
         $this->actingAs($this->admin)
-            ->from("/admin/admins/{$admin->id}")
+            ->from("/admin/admins/{$admin->id}/edit")
             ->patch("/admin/admins/{$admin->id}", [
                 "name" => "New Name",
                 "surname" => "New Surname",
@@ -185,7 +185,7 @@ class AdminTest extends TestCase
         $admin = User::factory()->create(["school_id" => $school->id]);
 
         $response = $this->actingAs($this->superAdmin)
-            ->from("/admin/admins/{$admin->id}")
+            ->from("/admin/admins/{$admin->id}/edit")
             ->patch("/admin/admins/{$admin->id}", [
                 "name" => "",
                 "surname" => "",
@@ -193,7 +193,7 @@ class AdminTest extends TestCase
                 "school_id" => 999,
             ]);
 
-        $response->assertRedirect("/admin/admins/{$admin->id}");
+        $response->assertRedirect("/admin/admins/{$admin->id}/edit");
 
         $this->assertDatabaseHas("users", [
             "id" => $admin->id,
@@ -248,17 +248,17 @@ class AdminTest extends TestCase
 
         $this->actingAs($user)
             ->from("/dashboard")
-            ->get("/admin/admins/add")
+            ->get("/admin/admins/create")
             ->assertStatus(403);
 
         $this->actingAs($user)
             ->from("/dashboard")
-            ->get("/admin/admins/{$this->admin->id}")
+            ->get("/admin/admins/{$this->admin->id}/edit")
             ->assertStatus(403);
 
         $this->actingAs($user)
             ->from("/dashboard")
-            ->post("/admin/admins/add", ["name" => "new Name"])
+            ->post("/admin/admins", ["name" => "new Name"])
             ->assertForbidden();
 
         $this->actingAs($user)
@@ -281,15 +281,15 @@ class AdminTest extends TestCase
             ->assertStatus(403);
 
         $this->from("/dashboard")
-            ->get("/admin/admins/add")
+            ->get("/admin/admins/create")
             ->assertStatus(403);
 
         $this->from("/dashboard")
-            ->get("/admin/admins/{$this->admin->id}")
+            ->get("/admin/admins/{$this->admin->id}/edit")
             ->assertStatus(403);
 
         $this->from("/dashboard")
-            ->post("/admin/admins/add", ["name" => "new Name"])
+            ->post("/admin/admins", ["name" => "new Name"])
             ->assertForbidden();
 
         $this->from("/dashboard")

@@ -21,14 +21,14 @@ class AdminController extends Controller
     {
         $users = User::query()->role("admin")->with("school")->orderBy("id")->get();
 
-        return Inertia::render("Admin/Index", [
+        return Inertia::render("Admin/AdminsPanel", [
             "users" => UserResource::collection($users),
         ]);
     }
 
-    public function showAddAdmin(): Response
+    public function create(): Response
     {
-        return Inertia::render("Admin/AddAdmin");
+        return Inertia::render("Admin/CreateAdmin");
     }
 
     public function store(RegisterUserRequest $request): RedirectResponse
@@ -52,7 +52,7 @@ class AdminController extends Controller
     {
         $this->authorize("update", $user);
 
-        return Inertia::render("Admin/Edit", [
+        return Inertia::render("Admin/EditAdmin", [
             "user" => new UserResource($user),
             "schools" => School::all(),
         ]);

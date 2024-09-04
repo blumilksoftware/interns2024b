@@ -19,7 +19,7 @@ class ProfileUserController extends Controller
         $user = $request->user()->load("school");
 
         return Inertia::render(
-            "Profile",
+            "User/Profile",
             [
                 "user" => UserResource::make($user),
             ],

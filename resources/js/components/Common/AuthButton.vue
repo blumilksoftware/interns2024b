@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 const props = defineProps<{isLogin: boolean}>()
-
 const emit = defineEmits<(e: 'update:isLogin', value: boolean) => void>()
 
 const handleCheckboxChange = () => {
