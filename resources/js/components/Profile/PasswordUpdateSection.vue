@@ -2,6 +2,7 @@
 
 import CustomInput from '@/components/Common/CustomInput.vue'
 import {useForm} from '@inertiajs/vue3'
+import { route } from "ziggy-js";
 
 defineProps< { errors: Record<string, string> }>()
 
@@ -12,7 +13,7 @@ const form = useForm({
 })
 
 function updatePassword() {
-  form.patch('/profile/password', {
+  form.patch(route('profile.password.update'), {
     preserveScroll: true,
     onSuccess: () => {
       form.reset()
