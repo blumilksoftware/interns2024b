@@ -17,7 +17,8 @@ class RankingController extends Controller
     {
         $this->authorize("viewAdminRanking", $quiz);
 
-        $submissions = QuizSubmission::where("quiz_id", $quiz->id)
+        $submissions = QuizSubmission::query()
+            ->where("quiz_id", $quiz->id)
             ->with("user.school")
             ->get();
 
@@ -33,7 +34,8 @@ class RankingController extends Controller
     {
         $this->authorize("viewUserRanking", $quiz);
 
-        $submissions = QuizSubmission::where("quiz_id", $quiz->id)
+        $submissions = QuizSubmission::query()
+            ->where("quiz_id", $quiz->id)
             ->with("user.school")
             ->get();
 
