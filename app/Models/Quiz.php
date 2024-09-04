@@ -110,18 +110,6 @@ class Quiz extends Model
         return $this->scheduled_at !== null && $this->duration !== null && $this->allQuestionsHaveCorrectAnswer();
     }
 
-    public function publishRanking(): void
-    {
-        $this->ranking_published_at = Carbon::now();
-        $this->save();
-    }
-
-    public function unpublishRanking(): void
-    {
-        $this->ranking_published_at = null;
-        $this->save();
-    }
-
     protected function allQuestionsHaveCorrectAnswer(): bool
     {
         return $this->questions->every(fn(Question $question): bool => $question->hasCorrectAnswer);
