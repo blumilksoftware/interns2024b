@@ -63,7 +63,7 @@ class QuizController extends Controller
     }
 
     public function lock(Quiz $quiz): RedirectResponse
-    {
+    {        
         $quiz->locked_at = Carbon::now();
         $quiz->save();
 

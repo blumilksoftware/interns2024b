@@ -5,7 +5,7 @@ defineProps<{
   isEditing : boolean
   min?: string
 }>()
-const model = defineModel<string>()
+const scheduledAt = defineModel<string>()
 
 </script>
 
@@ -15,11 +15,11 @@ const model = defineModel<string>()
     :class="{'font-normal':fontNormal }"
     class="py-1 font-bold"
   >
-    {{ model ?? 'brak' }}
+    {{ scheduledAt ?? 'brak' }}
   </span>
   <input
     v-else
-    v-model="model"
+    v-model="scheduledAt"
     :min="min"
     :type="type"
     :class="{'font-normal':fontNormal }"

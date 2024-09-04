@@ -15,6 +15,7 @@ class QuizResource extends JsonResource
             "name" => $this->name,
             "createdAt" => $this->created_at,
             "updatedAt" => $this->updated_at,
+            "scheduledAt" => $this->scheduled_at,
             "duration" => $this->duration,
             "state" => $this->state,
             "questions" => QuestionResource::collection($this->questions),

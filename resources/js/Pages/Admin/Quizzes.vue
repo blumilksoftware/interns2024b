@@ -15,6 +15,9 @@ watch(
   (updatedQuizzes : Quiz[]) => quizzesRef.value = updatedQuizzes,
 )
 
+console.log(props.quizzes)
+
+
 provide('quizzes', quizzesRef)
 
 const request = new Request()

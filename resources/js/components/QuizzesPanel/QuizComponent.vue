@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import dayjs from 'dayjs'
 import { type Quiz } from '@/Types/Quiz'
 import { type CleanQuestion } from '@/Types/CleanQuestion'
@@ -15,11 +15,19 @@ import CheckIcon from '../Icons/CheckIcon.vue'
 import DismissIcon from '../Icons/DismissIcon.vue'
 import { Request } from '@/scripts/request'
 import Banner from '../Common/Banner.vue'
+import { useForm } from '@inertiajs/vue3'
+import { nanoid } from 'nanoid'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])
 const isEditing = ref<boolean>(false)
-const quizRef = ref<CleanQuiz>({...props.quiz})
+const quizRef = useForm<CleanQuiz>({...props.quiz })
+
+watch(quizRef, ref => {
+  if (ref.wasSuccessful) {
+    isEditing.value = false
+  }
+})
 
 // editing
 function edit(){
@@ -27,32 +35,25 @@ function edit(){
   if (!props.isSelected)
     toggleQuizView()
 }
-function dismissEditing(){
-  quizRef.value = {...props.quiz}
-  isEditing.value=false
-}
+
+function dismissEditing() {}
 
 // date formatters
-function formatDatePretty(date?:number):string|undefined{
+function formatDatePretty(date?:string):string|undefined{
   return date ? dayjs(date).format('MMM D, YYYY - h:mm').toString() : undefined
 }
-function formatDateStandard(date?:number):string|undefined{
+function formatDateStandard(date?:string):string|undefined{
   return date ? dayjs(date).format('Y-m-d H:i:s').toString() : undefined
 }
 
-function addQuestion(){
-  let newId = 0 
-  for (const q of quizRef.value.questions)
-    if (newId < q.id)
-      newId = q.id
+function addQuestion(){   
   const newQuestion: CleanQuestion = { 
-    id: newId+1,
+    temporaryId: nanoid(),
     text: 'Nowe pytanie',
     answers: [],
   }
-  quizRef.value.questions.push(newQuestion)
+  quizRef.questions.push(newQuestion)
 }
-
 
 // quiz CRUD operations
 const request = new Request()
@@ -64,20 +65,19 @@ function copyQuiz() {
   request.sendRequest(`/admin/quizzes/${props.quiz.id}/clone`, 'POST')
 }
 function updateQuiz() {
-  const payload = {
-    ...quizRef.value,
-    onSuccess: ()=>isEditing.value = false,
-  }
-  request.sendRequest(`/admin/quizzes/${props.quiz.id}`, 'PATCH', payload)
+  //request.sendRequest(`/admin/quizzes/${props.quiz.id}`, 'PATCH', payload)
+  console.log(quizRef)
+  quizRef.scheduledAt = formatDateStandard(quizRef.scheduledAt)
+  quizRef.patch(`/admin/quizzes/${props.quiz.id}`)
 }
 function schedule(){
-  // No backend implemenation
+  request.sendRequest(`/admin/quizzes/${props.quiz.id}/lock`, 'POST')
 }
 function unSchedule(){
-  // No backend implemenation
+  request.sendRequest(`/admin/quizzes/${props.quiz.id}/unlock`, 'POST')
 }
 
-// emits
+// emitsRozpoczęcie testu:
 function toggleQuizView() {
   emit('displayToggle', props.quiz)
 }
@@ -95,6 +95,7 @@ function isScheduled() {
 </script>
 
 <template>
+  {{ quiz.state }}
   <div
     v-if="!(isPublished() && showLockedQuizzes)"
     tabindex="0"
@@ -134,7 +135,7 @@ function isScheduled() {
     <div v-if="isSelected" class="flex mt-8 px-2 gap-8 flex-col">
       <div class="grid grid-cols-[auto,auto] gap-2 w-fit rounded-lg items-center">
         <span>Rozpoczęcie testu:</span>
-        <EditableInput type="datetime-local" :is-editing="isEditing" :v-model:value="formatDateStandard(quiz.scheduledAt)" />
+        <EditableInput type="datetime-local" :is-editing="isEditing" :v-model="quiz.scheduledAt" />
         <span>Czas trwania testu:</span>
         <EditableInput placeholder="Podaj czas w minutach" type="number" min="0" :is-editing="isEditing" :v-model="quiz.duration" />
       </div>
@@ -146,7 +147,7 @@ function isScheduled() {
         </div>
 
         <data v-if="isSelected" class="flex flex-col gap-4">
-          <div v-for="(question, idx) of quizRef.questions" :key="question.id">
+          <div v-for="(question, idx) of quizRef.questions" :key="question.id ?? question.temporaryId">
             <QuestionComponent 
               v-model="quizRef.questions[idx]" :is-editing="isEditing" :quiz-id="quiz.id"
               :index="idx" :questions-length="quizRef.questions.length"
