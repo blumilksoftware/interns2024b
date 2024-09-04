@@ -13,6 +13,7 @@ use App\Http\Controllers\QuestionAnswerController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\QuizSubmissionController;
+use App\Http\Controllers\RankingController;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\SchoolsController;
 use App\Http\Controllers\UserController;
@@ -38,6 +39,7 @@ Route::middleware(["guest"])->group(function (): void {
 Route::middleware(["auth", "verified"])->group(function (): void {
     Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
     Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
+    Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "indexUser"])->name("quizzes.ranking");
     Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update");
 });
 
@@ -52,6 +54,10 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/quizzes/{quiz}/clone", [QuizController::class, "clone"])->name("admin.quizzes.clone");
     Route::post("/quizzes/{quiz}/lock", [QuizController::class, "lock"])->name("admin.quizzes.lock");
     Route::post("/quizzes/{quiz}/unlock", [QuizController::class, "unlock"])->can("unlock,quiz")->name("admin.quizzes.unlock");
+
+    Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "index"])->name("admin.quizzes.ranking");
+    Route::post("/quizzes/{quiz}/ranking/publish", [RankingController::class, "publish"])->name("admin.quizzes.ranking.publish");
+    Route::post("/quizzes/{quiz}/ranking/unpublish", [RankingController::class, "unpublish"])->name("admin.quizzes.ranking.unpublish");
 
     Route::post("/quizzes/{quiz}/questions", [QuizQuestionController::class, "store"])->can("create," . Question::class . ",quiz")->name("admin.questions.store");
     Route::patch("/questions/{question}", [QuizQuestionController::class, "update"])->can("update,question")->name("admin.questions.update");

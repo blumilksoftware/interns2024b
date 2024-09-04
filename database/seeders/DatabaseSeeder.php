@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             AdminSeeder::class,
             UserSeeder::class,
+            UserQuizSeeder::class,
         ]);
 
         $quiz = Quiz::factory()->locked()->create(["name" => "Test Quiz", "scheduled_at" => Carbon::now(), "duration" => 1]);
