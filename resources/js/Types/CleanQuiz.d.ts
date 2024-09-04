@@ -1,9 +1,9 @@
 import {type CleanQuestion} from '@/Types/CleanQuestion'
 
 export interface CleanQuiz {
-  id: number
+  key: number
   name: string
-  scheduledAt?: number
+  scheduledAt?: string
   duration?: number
   questions: CleanQuestion[]
 }

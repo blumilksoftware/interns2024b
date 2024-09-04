@@ -33,20 +33,20 @@ function dismissEditing(){
 }
 
 // date formatters
-function formatDatePretty(date?:number):string|undefined{
+function formatDatePretty(date?:string):string|undefined{
   return date ? dayjs(date).format('MMM D, YYYY - h:mm').toString() : undefined
 }
-function formatDateStandard(date?:number):string|undefined{
+function formatDateStandard(date?:string):string|undefined{
   return date ? dayjs(date).format('Y-m-d H:i:s').toString() : undefined
 }
 
 function addQuestion(){
-  let newId = 0 
+  let newkey = 0 
   for (const q of quizRef.value.questions)
-    if (newId < q.id)
-      newId = q.id
+    if (newkey < q.key)
+      newkey = q.key
   const newQuestion: CleanQuestion = { 
-    id: newId+1,
+    key: newkey+1,
     text: 'Nowe pytanie',
     answers: [],
   }
@@ -65,7 +65,7 @@ function copyQuiz() {
 }
 function updateQuiz() {
   const payload = {
-    ...quizRef.value,
+    data: {...quizRef.value},
     onSuccess: ()=>isEditing.value = false,
   }
   request.sendRequest(`/admin/quizzes/${props.quiz.id}`, 'PATCH', payload)
@@ -146,7 +146,7 @@ function isScheduled() {
         </div>
 
         <data v-if="isSelected" class="flex flex-col gap-4">
-          <div v-for="(question, idx) of quizRef.questions" :key="question.id">
+          <div v-for="(question, idx) of quizRef.questions" :key="question.key">
             <QuestionComponent 
               v-model="quizRef.questions[idx]" :is-editing="isEditing" :quiz-id="quiz.id"
               :index="idx" :questions-length="quizRef.questions.length"

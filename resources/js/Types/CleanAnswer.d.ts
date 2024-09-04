@@ -1,5 +1,5 @@
 export interface CleanAnswer {
-    id: number
+    key: number
     text: string
     correct: boolean
 }
