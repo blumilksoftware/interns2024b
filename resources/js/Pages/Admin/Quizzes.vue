@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import {Request} from '@/scripts/request'
+import { type CleanQuiz } from '@/Types/CleanQuiz'
 import { type Quiz } from '@/Types/Quiz'
 defineProps<{ quizzes: Quiz[] }>()
 const request = new Request()
 
+function addExampleQuiz() {
+  const data : CleanQuiz= { name: 'Nowy test', key:1, questions:[]}
+  request.sendRequest('/admin/quizzes',{data: data, method: 'post'})
+}
 </script>
 
 <template>
   <div class="flex flex-col gap-5">
     <header class="px-5 flex gap-5">
-      <button>Add quiz</button>
+      <button @click="addExampleQuiz">Add example quiz</button>
     </header>
     <div v-for="quiz of quizzes" :key="quiz.key ?? quiz.id" class="bg-white shadow grid grid-cols-2 gap-5 p-5 rounded-lg">
       <span>id:           </span> <b>{{ quiz.id }}          </b>
