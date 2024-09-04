@@ -4,7 +4,7 @@ import type {Page} from '@/Types/Page'
 import BaseLayout from '@/Layouts/BaseLayout.vue'
 import {type PageProps} from '@/Types/PageProps'
 
-defineProps<PageProps>()
+const props = defineProps<PageProps>()
 
 const pages: Page[] = [
   { title: 'Testy', href: '/admin/quizzes' },
