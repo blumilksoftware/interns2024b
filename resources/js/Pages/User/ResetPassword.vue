@@ -2,7 +2,7 @@
 import { useForm } from '@inertiajs/vue3'
 import { Head } from '@inertiajs/vue3'
 import CustomInput from '@/components/Common/CustomInput.vue'
-import { route } from "ziggy-js";
+import { route } from 'ziggy-js'
 
 const props = defineProps<{
   token: string

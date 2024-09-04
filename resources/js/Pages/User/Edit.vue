@@ -4,7 +4,7 @@ import { useForm } from '@inertiajs/vue3'
 import { defineProps } from 'vue'
 import { type User } from '@/Types/User'
 import { type School } from '@/Types/School'
-import { route } from "ziggy-js";
+import { route } from 'ziggy-js'
 
 const props = defineProps<{
   user: User

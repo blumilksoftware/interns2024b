@@ -7,7 +7,7 @@ import {computed} from 'vue'
 import dayjs from 'dayjs'
 import FormButton from '@/components/Common/FormButton.vue'
 import Divider from '@/components/Common/Divider.vue'
-import { route } from "ziggy-js";
+import { route } from 'ziggy-js'
 
 const props = defineProps<{
   submissions: QuizSubmission[]

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import {useForm} from '@inertiajs/vue3'
-import { route } from "ziggy-js";
+import { route } from 'ziggy-js'
 
 const form = useForm({})
 
