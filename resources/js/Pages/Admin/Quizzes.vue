@@ -20,7 +20,7 @@ provide('quizzes', quizzesRef)
 const request = new Request()
 
 function addQuiz() {
-  request.sendRequest('/admin/quizzes','POST',{ name: 'Nowy test' })
+  request.sendRequest('/admin/quizzes',{ method: 'post', data:{name: 'Nowy test'} })
 }
 
 function toggleQuizView(quiz: Quiz) {
