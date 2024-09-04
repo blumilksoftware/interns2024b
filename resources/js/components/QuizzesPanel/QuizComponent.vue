@@ -98,7 +98,7 @@ function isScheduled() {
   <div
     v-if="!(isPublished() && showLockedQuizzes)"
     tabindex="0"
-    class="mt-4 p-5 bg-white/70 rounded-lg items-center overflow-hidden relative"
+    class="mt-4 p-5 bg-white/70 rounded-lg items-center overflow-hidden relative shadow"
   >
     <div v-if="request.error.value" class="h-10" />
     <Banner v-if="request.error.value" :text="request.error.value" banner-class="-mx-5 bg-red/80" @click="request.error.value=''" />
