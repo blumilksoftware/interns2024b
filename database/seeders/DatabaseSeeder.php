@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
         ]);
 
-        $quiz = Quiz::factory()->locked()->create(["name" => "Test Quiz", "scheduled_at" => Carbon::now()]);
+        $quiz = Quiz::factory()->locked()->create(["name" => "Test Quiz", "scheduled_at" => Carbon::now(), "duration" => 1]);
         $questions = Question::factory()->count(10)->create(["quiz_id" => $quiz->id]);
 
         foreach ($questions as $question) {

@@ -9,14 +9,22 @@ import Button from '@/components/Common/Button.vue'
 import {type AnswerRecord} from '@/Types/AnswerRecord'
 import TimeLeft from '@/components/Common/TimeLeft.vue'
 import MessageBox, { useMessageBox } from '@/components/Common/MessageBox.vue'
+import {route} from 'ziggy-js'
 
 const props = defineProps<{ submission: QuizSubmission }>()
 const answers = ref(props.submission.answers.toSorted((a, b) => a.id - b.id))
 const allAnswered = computed((() => answers.value.every(answer => answer.selected != null)))
-const messageBox = useMessageBox()
+const timeout = ref(false)
+const emptyAnswerMessage = useMessageBox()
+const timeoutMessage = useMessageBox()
+
+function handleTimeout() {
+  timeout.value = true
+  timeoutMessage.show()
+}
 
 function handleAnswer(answers: AnswerRecord, selected: number) {
-  axios.post(`/answers/${answers.id}/${selected}`, { _method: 'patch' })
+  axios.post(route('answers.answer', { answerRecord: answers.id, answer: selected }), { _method: 'patch' })
   answers.selected = selected
 }
 </script>
@@ -29,7 +37,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
       </h1>
     </Divider>
     <div class="w-full text-right text-sm font-semibold">
-      <TimeLeft :to="submission.closedAt" />
+      <TimeLeft :to="submission.closedAt" @timeout="handleTimeout" />
     </div>
 
     <div v-for="(record, index) in answers" :key="record.id" class="rounded-lg bg-white shadow border flex flex-col justify-between px-4 py-2 m-5">
@@ -40,12 +48,20 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
 
       <div class="mb-3 mt-2">
         <form class="flex flex-col gap-2">
-          <label v-for="answer in record.answers" :key="answer.id" class="flex items-center text-sm text-black cursor-pointer">
+          <label
+            v-for="answer in record.answers"
+            :key="answer.id"
+            :class="`${timeout ? 'cursor-not-allowed' : 'cursor-pointer'}`"
+            class="flex items-center text-sm text-black"
+            :title="timeout ? 'Czas przewidziany na ten test dobiegł końca' : undefined"
+          >
             <input
               :id="answer.id.toString()"
               type="radio"
+              :disabled="timeout"
               :checked="record.selected == answer.id"
-              class="mr-2 size-6 border-black text-primary accent-primary cursor-pointer"
+              :class="`${timeout ? 'cursor-not-allowed' : 'cursor-pointer'}`"
+              class="mr-2 size-6 border-black text-primary accent-primary"
               @change.prevent="handleAnswer(record, answer.id)"
             >
             {{ answer.text }}
@@ -54,14 +70,19 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
       </div>
     </div>
 
-    <div class="h-80 flex flex-col items-center justify-center">
+    <div v-if="!timeout" class="h-80 flex flex-col items-center justify-center">
       <p class="font-semibold text-primary text-xl p-5 text-center">To już wszystkie pytania. Czy chcesz oddać test?</p>
-      <FormButton v-if="allAnswered" small href="/submissions/{quizSubmission}/close" method="post">Oddaj test</FormButton>
-      <Button v-else small @click="messageBox.show">Oddaj test</Button>
+      <FormButton v-if="allAnswered" small :href="route('submissions.close', submission.id)" method="post">Oddaj test</FormButton>
+      <Button v-else small @click="emptyAnswerMessage.show">Oddaj test</Button>
+    </div>
+
+    <div v-else class="h-80 flex flex-col items-center justify-center">
+      <p class="font-semibold text-primary text-xl p-5 text-center">Czas przewidziany na ten test dobiegł końca. <br> Twój test został przesłany do ocenienia</p>
+      <FormButton small :href="route('submissions.result', submission.id)" method="get">Podsumowanie</FormButton>
     </div>
   </div>
 
-  <MessageBox v-bind="messageBox">
+  <MessageBox v-bind="emptyAnswerMessage">
     <template #title>
       Uwaga
     </template>
@@ -71,8 +92,22 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     </template>
 
     <template #buttons>
-      <Button small @click="messageBox.close">Wróć</Button>
-      <FormButton small href="/submissions/{quizSubmission}/close" method="post">Oddaj mimo to</FormButton>
+      <Button small @click="emptyAnswerMessage.close">Wróć</Button>
+      <FormButton small :href="route('submissions.close', submission.id)" method="post">Oddaj mimo to</FormButton>
+    </template>
+  </MessageBox>
+
+  <MessageBox v-bind="timeoutMessage">
+    <template #title>
+      Koniec czasu
+    </template>
+
+    <template #message>
+      Czas przewidziany na ten test dobiegł końca. Możliwość udzielania dalszych odpowiedzi została zablokowana.
+    </template>
+
+    <template #buttons>
+      <Button small @click="timeoutMessage.close">Ok</Button>
     </template>
   </MessageBox>
 </template>
