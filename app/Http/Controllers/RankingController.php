@@ -7,7 +7,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\RankingResource;
 use App\Models\Quiz;
 use App\Models\QuizSubmission;
-use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -22,7 +21,7 @@ class RankingController extends Controller
             ->with("user.school")
             ->get();
 
-        $rankings = $submissions->map(fn($submission) => new RankingResource($submission));
+        $rankings = $submissions->map(fn($submission): RankingResource => new RankingResource($submission));
 
         return Inertia::render("Admin/Ranking", [
             "quiz" => $quiz,
@@ -38,7 +37,7 @@ class RankingController extends Controller
             ->with("user.school")
             ->get();
 
-        $rankings = $submissions->map(fn($submission) => new RankingResource($submission));
+        $rankings = $submissions->map(fn($submission): RankingResource => new RankingResource($submission));
 
         return Inertia::render("User/Ranking", [
             "quiz" => $quiz,

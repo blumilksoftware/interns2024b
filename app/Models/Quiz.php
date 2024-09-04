@@ -110,11 +110,6 @@ class Quiz extends Model
         return $this->scheduled_at !== null && $this->duration !== null && $this->allQuestionsHaveCorrectAnswer();
     }
 
-    protected function allQuestionsHaveCorrectAnswer(): bool
-    {
-        return $this->questions->every(fn(Question $question): bool => $question->hasCorrectAnswer);
-    }
-
     public function publishRanking(): void
     {
         $this->ranking_published_at = Carbon::now();
@@ -125,6 +120,11 @@ class Quiz extends Model
     {
         $this->ranking_published_at = null;
         $this->save();
+    }
+
+    protected function allQuestionsHaveCorrectAnswer(): bool
+    {
+        return $this->questions->every(fn(Question $question): bool => $question->hasCorrectAnswer);
     }
 
     protected function casts(): array
