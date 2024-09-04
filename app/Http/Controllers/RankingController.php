@@ -54,8 +54,7 @@ class RankingController extends Controller
 
         $this->authorize("publish", $quiz);
 
-        $quiz->ranking_published_at = Carbon::now();
-        $quiz->save();
+        $quiz->publishRanking();
 
         return redirect()
             ->back()
@@ -70,8 +69,7 @@ class RankingController extends Controller
 
         $this->authorize("publish", $quiz);
 
-        $quiz->ranking_published_at = null;
-        $quiz->save();
+        $quiz->unpublishRanking();
 
         return redirect()
             ->back()
