@@ -7,14 +7,13 @@ import axios from 'axios'
 import FormButton from '@/components/Common/FormButton.vue'
 import Button from '@/components/Common/Button.vue'
 import {type AnswerRecord} from '@/Types/AnswerRecord'
-import {Dialog, DialogPanel} from '@headlessui/vue'
 import TimeLeft from '@/components/Common/TimeLeft.vue'
+import MessageBox, { useMessageBox } from '@/components/Common/MessageBox.vue'
 
 const props = defineProps<{ submission: QuizSubmission }>()
 const answers = ref(props.submission.answers.toSorted((a, b) => a.id - b.id))
 const allAnswered = computed((() => answers.value.every(answer => answer.selected != null)))
-
-const openDialog = ref(false)
+const messageBox = useMessageBox()
 
 function handleAnswer(answers: AnswerRecord, selected: number) {
   axios.post(`/answers/${answers.id}/${selected}`, { _method: 'patch' })
@@ -58,26 +57,22 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     <div class="h-80 flex flex-col items-center justify-center">
       <p class="font-semibold text-primary text-xl p-5 text-center">To już wszystkie pytania. Czy chcesz oddać test?</p>
       <FormButton v-if="allAnswered" small href="/submissions/{quizSubmission}/close" method="post">Oddaj test</FormButton>
-      <Button v-else small @click="openDialog = true">Oddaj test</Button>
+      <Button v-else small @click="messageBox.show">Oddaj test</Button>
     </div>
   </div>
 
-  <Dialog :open="openDialog" class="relative z-50" @close="openDialog = false">
-    <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
+  <MessageBox v-bind="messageBox">
+    <template #title>
+      Uwaga
+    </template>
 
-    <div class="fixed inset-0 flex w-screen items-center justify-center p-4">
-      <DialogPanel class="bg-white shadow rounded-lg">
-        <div class="px-4 py-5 sm:p-6">
-          <h3 class="font-semibold leading-6 text-xl text-primary">Uwaga</h3>
-          <div class="mt-2 max-w-xl text-black">
-            <p>Nie udzielono odpowiedzi na wszystkie pytania, czy na pewno chcesz oddać test?</p>
-          </div>
-          <div class="mt-5 flex gap-4 justify-end">
-            <Button small @click="openDialog = false">Wróć</Button>
-            <FormButton small href="/submissions/{quizSubmission}/close" method="post">Oddaj mimo to</FormButton>
-          </div>
-        </div>
-      </DialogPanel>
-    </div>
-  </Dialog>
+    <template #message>
+      Nie udzielono odpowiedzi na wszystkie pytania, czy na pewno chcesz oddać test?
+    </template>
+
+    <template #buttons>
+      <Button small @click="messageBox.close">Wróć</Button>
+      <FormButton small href="/submissions/{quizSubmission}/close" method="post">Oddaj mimo to</FormButton>
+    </template>
+  </MessageBox>
 </template>
