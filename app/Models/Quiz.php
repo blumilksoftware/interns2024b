@@ -140,7 +140,7 @@ class Quiz extends Model
 
     public function hasSubmissionsFrom(User $user): bool
     {
-        return !$this->quizSubmissions->where("user_id", $user->id)->isEmpty();
+        return $this->quizSubmissions->where("user_id", $user->id)->isNotEmpty();
     }
 
     protected function allQuestionsHaveCorrectAnswer(): bool

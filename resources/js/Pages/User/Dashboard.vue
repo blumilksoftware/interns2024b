@@ -7,6 +7,7 @@ import {computed} from 'vue'
 import dayjs from 'dayjs'
 import FormButton from '@/components/Common/FormButton.vue'
 import Divider from '@/components/Common/Divider.vue'
+import { route } from 'ziggy-js'
 
 const props = defineProps<{
   submissions: QuizSubmission[]
@@ -22,7 +23,7 @@ const history = computed(() => props.submissions.filter(submission => submission
 
 <template>
   <Head>
-    <title>Testy</title>
+    <title>Konkursy</title>
   </Head>
 
   <div class="w-full p-2 md:w-4/5">
@@ -34,7 +35,7 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.name }}</p>
         <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
       </div>
-      <FormButton class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/start`" :options="{ preserveScroll: true }">
+      <FormButton class="min-w-24 text-center" small method="post" :href="route('quizzes.start', quiz.id)" :options="{ preserveScroll: true }">
         Weź udział
       </FormButton>
     </div>
@@ -47,10 +48,10 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.name }}</p>
         <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
       </div>
-      <FormButton v-if="!quiz.isUserAssigned" class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/assign`" :options="{ preserveScroll: true }">
+      <FormButton v-if="!quiz.isUserAssigned" class="min-w-24 text-center" small method="post" :href="route('quizzes.assign', quiz.id)" :options="{ preserveScroll: true }">
         Zapisz się
       </FormButton>
-      <FormButton v-else class="min-w-24 text-center" disabled small method="post" :href="`/quizzes/${quiz.id}/assign`">
+      <FormButton v-else class="min-w-24 text-center" disabled small method="post" :href="route('quizzes.assign')">
         Zapisano
       </FormButton>
     </div>
@@ -67,7 +68,7 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ submission.name }}</p>
         <p class="text-xs py-1">{{ dayjs(submission.closedAt).fromNow() }}</p>
       </div>
-      <FormButton class="min-w-24 text-center" small method="post" :href="`/submissions/${submission.id}/results`" :options="{ preserveScroll: true }">
+      <FormButton class="min-w-24 text-center" small method="get" :href="route('submissions.result', submission.id)" :options="{ preserveScroll: true }">
         Wyniki
       </FormButton>
     </div>

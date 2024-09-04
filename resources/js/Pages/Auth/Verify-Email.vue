@@ -1,15 +1,16 @@
 <script setup lang="ts">
 
 import {useForm} from '@inertiajs/vue3'
+import { route } from 'ziggy-js'
 
 const form = useForm({})
 
 function logout() {
-  form.get('/auth/logout')
+  form.post( route('logout'))
 }
 
 function sent() {
-  form.post('/email/verification-notification')
+  form.post(route('verification.send'))
 }
 
 </script>
