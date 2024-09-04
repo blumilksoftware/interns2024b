@@ -1,49 +1,40 @@
 <script setup lang="ts">
-import { ref, provide, watch } from 'vue'
-import SortIcon from '@/components/Icons/SortIcon.vue'
-import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
-import FilterIcon from '@/components/Icons/FilterIcon.vue'
-import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
-import { type Quiz } from '@/Types/Quiz'
 import {Request} from '@/scripts/request'
-const props = defineProps<{ quizzes: Quiz[] }>()
-const selectedQuiz = ref<number>()
-const showLockedQuizzes = ref<boolean>(true)
-const quizzesRef = ref<Quiz[]>(props.quizzes)
-watch(
-  () => props.quizzes,
-  (updatedQuizzes : Quiz[]) => quizzesRef.value = updatedQuizzes,
-)
-
-provide('quizzes', quizzesRef)
-
+import { type Quiz } from '@/Types/Quiz'
+defineProps<{ quizzes: Quiz[] }>()
 const request = new Request()
 
-function addQuiz() {
-  request.sendRequest('/admin/quizzes','POST',{ name: 'Nowy test' })
-}
-
-function toggleQuizView(quiz: Quiz) {
-  selectedQuiz.value = selectedQuiz.value === quiz.id ? undefined : quiz.id
-}
 </script>
 
 <template>
-  <div class="flex flex-col w-full pb-3">
-    <div data-name="toolbar" class="flex gap-5 bg-white/70 px-4 py-2 backdrop-blur-md shadow">
-      <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <FilterIcon /> Filtruj </button>
-      <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <SortIcon /> Sortuj </button>
-      <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg" @click="showLockedQuizzes=!showLockedQuizzes"> <EyeDynamicIcon :is-opened="showLockedQuizzes" /> {{ showLockedQuizzes ? 'Pokaż' : 'Schowaj' }} zablokowane </button>
-      <div class="flex-1" />
-      <button :disabled="request.isRequestOngoing.value" :class="{'opacity-70':request.isRequestOngoing.value}" class="font-bold" @click="addQuiz">+&nbsp;Dodaj&nbsp;test</button>
-    </div>
-    <div v-for="quiz of quizzesRef" :key="quiz.id" class="px-4">
-      <QuizComponent
-        :quiz="quiz"
-        :is-selected="selectedQuiz===quiz.id"
-        :show-locked-quizzes="showLockedQuizzes"
-        @display-toggle="toggleQuizView"
-      />
+  <div class="flex flex-col gap-5">
+    <header class="px-5 flex gap-5">
+      <button>Add quiz</button>
+    </header>
+    <div v-for="quiz of quizzes" :key="quiz.key ?? quiz.id" class="bg-white shadow grid grid-cols-2 gap-5 p-5 rounded-lg">
+      <span>id:           </span> <b>{{ quiz.id }}          </b>
+      <span>key:          </span> <b>{{ quiz.key }}         </b>
+      <span>name:         </span> <b>{{ quiz.name }}        </b>
+      <span>scheduledAt:  </span> <b>{{ quiz.scheduledAt }} </b>
+      <span>duration:     </span> <b>{{ quiz.duration }}    </b>
+      <span>questions:    </span> <b>{{ quiz.questions }}   </b>
+      <span>state:        </span> <b>{{ quiz.state }}       </b>
+      <span>createdAt:    </span> <b>{{ quiz.createdAt }}   </b>
+      <span>updatedAt:    </span> <b>{{ quiz.updatedAt }}   </b>
+      <hr><hr>
+      <button>Edit</button>
+      <button>Update</button>
+      <button>Lock</button>
+      <button class="text-red">Delete</button>
     </div>
   </div>
 </template>
+
+<style scoped>
+  button{
+    border: 2px solid black;
+    border-radius: .5rem;
+    padding: .8rem;
+    font-weight: bold;
+  }
+</style>
