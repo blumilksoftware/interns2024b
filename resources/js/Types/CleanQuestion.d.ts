@@ -1,7 +1,7 @@
 import {type CleanAnswer} from '@/Types/CleanAnswer'
 
 export interface CleanQuestion{
-  key: number
+  key?: number
   text: string
   answers: CleanAnswer[]
 }
