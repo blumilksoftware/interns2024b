@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import dayjs from 'dayjs'
 import { type Quiz } from '@/Types/Quiz'
 import { type CleanQuestion } from '@/Types/CleanQuestion'
-import { type CleanQuiz } from '@/Types/CleanQuiz'
 import QuestionComponent from './QuestionComponent.vue'
 import EditableInput from '@/components/Common/EditableInput.vue'
 import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynamicIcon.vue'
@@ -15,11 +14,13 @@ import CheckIcon from '../Icons/CheckIcon.vue'
 import DismissIcon from '../Icons/DismissIcon.vue'
 import { Request } from '@/scripts/request'
 import Banner from '../Common/Banner.vue'
+import { type VisitPayload } from '@/Types/VisitPayload'
+import { nanoid } from 'nanoid'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])
 const isEditing = ref<boolean>(false)
-const quizRef = ref<CleanQuiz>({...props.quiz})
+const quizRef = ref<Quiz>({...props.quiz})
 
 // editing
 function edit(){
@@ -41,12 +42,8 @@ function formatDateStandard(date?:string):string|undefined{
 }
 
 function addQuestion(){
-  let newkey = 0 
-  for (const q of quizRef.value.questions)
-    if (newkey < q.key)
-      newkey = q.key
   const newQuestion: CleanQuestion = { 
-    key: newkey+1,
+    key: nanoid(),
     text: 'Nowe pytanie',
     answers: [],
   }
@@ -58,17 +55,18 @@ function addQuestion(){
 const request = new Request()
 
 function deleteQuiz() {
-  request.sendRequest(`/admin/quizzes/${props.quiz.id}`, 'DELETE')
+  request.sendRequest(`/admin/quizzes/${props.quiz.id}`, {method: 'delete'})
 }
 function copyQuiz() {
-  request.sendRequest(`/admin/quizzes/${props.quiz.id}/clone`, 'POST')
+  request.sendRequest(`/admin/quizzes/${props.quiz.id}/clone`, {method: 'post'})
 }
 function updateQuiz() {
-  const payload = {
+  const payload : VisitPayload = {
+    method: 'patch',
     data: {...quizRef.value},
     onSuccess: ()=>isEditing.value = false,
   }
-  request.sendRequest(`/admin/quizzes/${props.quiz.id}`, 'PATCH', payload)
+  request.sendRequest(`/admin/quizzes/${props.quiz.id}`, payload)
 }
 function schedule(){
   // No backend implemenation
