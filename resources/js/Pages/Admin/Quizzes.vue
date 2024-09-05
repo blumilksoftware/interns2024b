@@ -13,7 +13,7 @@ function addExampleQuiz() {
 
 <template>
   <div class="flex flex-col gap-5">
-    <header class="px-5 flex gap-5">
+    <header class="flex gap-5">
       <button @click="addExampleQuiz">Add example quiz</button>
     </header>
     <div v-for="quiz of quizzes" :key="quiz.key ?? quiz.id" class="bg-white shadow grid grid-cols-2 gap-5 p-5 rounded-lg">
@@ -27,7 +27,7 @@ function addExampleQuiz() {
       <span>createdAt:    </span> <b>{{ quiz.createdAt }}   </b>
       <span>updatedAt:    </span> <b>{{ quiz.updatedAt }}   </b>
       <hr><hr>
-      <button>Edit</button>
+      <button>Unlock</button>
       <button>Update</button>
       <button>Lock</button>
       <button class="text-red">Delete</button>
