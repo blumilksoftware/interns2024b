@@ -66,11 +66,11 @@ function updateQuiz() {
   }
   request.sendRequest(`/admin/quizzes/${quiz.value.id}`, payload)
 }
-function schedule(){
-  // No backend implemenation
+function schedule() {
+  request.sendRequest(`/admin/quizzes/${quiz.value.id}/lock`,{method:'post'})
 }
-function unSchedule(){
-  // No backend implemenation
+function unSchedule() {
+  request.sendRequest(`/admin/quizzes/${quiz.value.id}/unlock`,{method:'post'})
 }
 function deleteQuestion(question:CleanQuestion){
   quiz.value.questions = quiz.value.questions.filter((q:CleanQuestion) => q !== question)
