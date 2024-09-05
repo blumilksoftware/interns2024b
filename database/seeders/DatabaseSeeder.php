@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             AdminSeeder::class,
             UserSeeder::class,
+            UserQuizSeeder::class,
         ]);
         Quiz::factory()->create([
             "name" => "quiz_name",
