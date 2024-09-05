@@ -59,7 +59,7 @@ function toggleQuizView(quiz: Quiz) {
     </div>
     <div v-for="(quiz, idx) of quizzes" :key="quiz.id" class="px-4">
       <QuizComponent
-        v-model="quizzes[idx]"
+        :quiz="quizzes[idx]"
         :is-selected="selectedQuiz===quiz.id"
         :show-locked-quizzes="showLockedQuizzes"
         @display-toggle="toggleQuizView"
