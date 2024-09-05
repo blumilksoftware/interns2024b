@@ -44,7 +44,7 @@ class QuizPolicy
     {
         return $quiz->isLocked && !$quiz->isPublished && !$quiz->hasSubmissionsFrom($user);
     }
-    
+
     public function viewAdminRanking(User $user, Quiz $quiz): Response
     {
         return ($quiz->isLocked && $user->hasRole("admin|super_admin")) ? Response::allow() : Response::deny("Nie masz uprawnień do zobaczenia rankingu.");

@@ -18,9 +18,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $question_id
  * @property int $answer_id
  * @property bool $isClosed
+ * @property bool $isCorrect
  * @property QuizSubmission $quizSubmission
  * @property Question $question
- * @property Answer $answer
+ * @property ?Answer $answer
  */
 class AnswerRecord extends Model
 {
@@ -48,5 +49,10 @@ class AnswerRecord extends Model
     public function isClosed(): Attribute
     {
         return Attribute::get(fn(): bool => $this->quizSubmission->isClosed);
+    }
+
+    public function isCorrect(): Attribute
+    {
+        return Attribute::get(fn(): bool => $this->answer?->isCorrect ?? false);
     }
 }

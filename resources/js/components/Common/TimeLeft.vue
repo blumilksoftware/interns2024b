@@ -1,30 +1,18 @@
 <script setup lang="ts">
 
 import {ref} from 'vue'
-import {polishPlurals} from 'polish-plurals'
-import dayjs from 'dayjs'
+import {calcSecondsLeftToDate, isTimeout, secondsToHour, timeToString} from '@/Helpers/Time'
 
-const left = ref({'s': 0, 'm': 0, 'h': 0})
+const text = ref('')
 const emit = defineEmits(['timeout'])
-const props = withDefaults(defineProps<{
-    to?: string | number
-  }>(), { to: 0 })
-
-const withLeft = polishPlurals.bind(null, 'Pozostała', 'Pozostały', 'Pozostało')
-const withSecond = polishPlurals.bind(null, 'sekunda', 'sekundy', 'sekund')
-const withMinute = polishPlurals.bind(null, 'minuta', 'minuty', 'minut')
-const withHour = polishPlurals.bind(null, 'godzina', 'godziny', 'godzin')
+const props = defineProps<{ to?: string | number }>()
 
 function updateTimer() {
-  const seconds = Math.max(dayjs(props.to).diff(dayjs(), 's'), 0)
+  const timeLeft = secondsToHour(calcSecondsLeftToDate(props.to))
 
-  left.value = {
-    'h': Math.floor(seconds / 3600),
-    'm': Math.floor(seconds % 3600  / 60),
-    's': seconds % 60,
-  }
+  text.value = timeToString(timeLeft, true)
 
-  if (seconds <= 0)  {
+  if (isTimeout(timeLeft))  {
     emit('timeout')
     return
   }
@@ -35,7 +23,5 @@ updateTimer()
 </script>
 
 <template>
-  <div v-if="!left.m">{{ `${withLeft(left.s)} ${left.s} ${withSecond(left.s)}` }}</div>
-  <div v-else-if="!left.h">{{ `${withLeft(left.m)} ${left.m} ${withMinute(left.m)}` }}</div>
-  <div v-else>{{ `${withLeft(left.h)} ${left.h} ${withHour(left.h)} i ${left.m} ${withMinute(left.m)}` }}</div>
+  {{ text }}
 </template>

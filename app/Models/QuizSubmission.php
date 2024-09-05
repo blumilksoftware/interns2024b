@@ -53,7 +53,7 @@ class QuizSubmission extends Model
     public function points(): Attribute
     {
         return Attribute::get(function (): int {
-            $correctAnswers = $this->answerRecords->filter(fn(AnswerRecord $record): bool => $record->answer->isCorrect);
+            $correctAnswers = $this->answerRecords->filter(fn(AnswerRecord $record): bool => $record->isCorrect);
 
             return $correctAnswers->count();
         });

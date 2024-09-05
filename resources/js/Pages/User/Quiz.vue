@@ -12,7 +12,7 @@ import MessageBox, { useMessageBox } from '@/components/Common/MessageBox.vue'
 import {route} from 'ziggy-js'
 
 const props = defineProps<{ submission: QuizSubmission }>()
-const answers = ref(props.submission.answers.toSorted((a, b) => a.id - b.id))
+const answers = ref(props.submission.answers)
 const allAnswered = computed((() => answers.value.every(answer => answer.selected != null)))
 const timeout = ref(false)
 const emptyAnswerMessage = useMessageBox()

@@ -90,7 +90,7 @@ class Quiz extends Model
     {
         return $this->assignedUsers->contains($user);
     }
-    
+
     public function isRankingPublished(): Attribute
     {
         return Attribute::get(fn(): bool => $this->ranking_published_at !== null);

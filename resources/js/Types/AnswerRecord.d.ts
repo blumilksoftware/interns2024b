@@ -1,6 +1,7 @@
 export interface AnswerRecordAnswer {
   id: number
   text: string
+  correct?: boolean
 }
 
 export interface AnswerRecord {
