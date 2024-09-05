@@ -19,6 +19,8 @@ use Illuminate\Support\Collection;
  * @property Carbon $closed_at
  * @property int $quiz_id
  * @property int $user_id
+ * @property int $points
+ * @property int $maxPoints
  * @property bool $isClosed
  * @property Quiz $quiz
  * @property User $user
@@ -46,6 +48,20 @@ class QuizSubmission extends Model
     public function isClosed(): Attribute
     {
         return Attribute::get(fn(): bool => $this->closed_at <= Carbon::now());
+    }
+
+    public function points(): Attribute
+    {
+        return Attribute::get(function (): int {
+            $correctAnswers = $this->answerRecords->filter(fn(AnswerRecord $record): bool => $record->isCorrect);
+
+            return $correctAnswers->count();
+        });
+    }
+
+    public function maxPoints(): Attribute
+    {
+        return Attribute::get(fn(): int => $this->quiz->questions()->count());
     }
 
     protected function casts(): array
