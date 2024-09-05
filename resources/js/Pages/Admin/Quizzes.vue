@@ -2,7 +2,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { type Quiz } from '@/Types/Quiz'
-import {Request} from '@/scripts/request'
+import { type Question } from '@/Types/Question'
+import { type Answer } from '@/Types/Answer'
 const props = defineProps<{ quizzes: Quiz[] }>()
 const quizzesRef = ref<Quiz[]>(addKeys(props.quizzes))
 import { type Question } from '@/Types/Question'

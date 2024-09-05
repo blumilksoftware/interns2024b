@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Answer;
-use App\Models\AnswerRecord;
-use App\Models\Question;
 use App\Models\Quiz;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;

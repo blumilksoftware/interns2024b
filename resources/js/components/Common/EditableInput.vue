@@ -1,12 +1,19 @@
 <script setup lang="ts">
-defineProps<{
+import dayjs from 'dayjs'
+
+const props = defineProps<{
   fontNormal? :boolean
   type  :string
   isEditing : boolean
   min?: string
 }>()
-const model = defineModel<string>()
+const model = defineModel<number | string>()
 
+function formatOutput(content: number | string | undefined) {
+  if (content === null || content === undefined) return 'brak'
+  if (props.type !== 'datetime-local') return content
+  return dayjs(content).format('DD.MM.YYYY HH:mm')
+}
 </script>
 
 <template>
@@ -15,7 +22,8 @@ const model = defineModel<string>()
     :class="{'font-normal':fontNormal }"
     class="py-1 font-bold"
   >
-    {{ model ?? 'brak' }}
+  
+    {{ formatOutput(model) }}
   </span>
   <input
     v-else
