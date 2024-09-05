@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\PublishQuizRanking;
-use App\Actions\UnpublishQuizRanking;
+use App\Actions\PublishQuizRankingAction;
+use App\Actions\UnpublishQuizRankingAction;
 use App\Http\Resources\RankingResource;
 use App\Models\Quiz;
 use App\Models\QuizSubmission;
@@ -49,7 +49,7 @@ class RankingController extends Controller
         ]);
     }
 
-    public function publish(Quiz $quiz, PublishQuizRanking $publishQuizRanking): RedirectResponse
+    public function publish(Quiz $quiz, PublishQuizRankingAction $publishQuizRankingAction): RedirectResponse
     {
         if (!$quiz->exists) {
             abort(404);
@@ -57,14 +57,14 @@ class RankingController extends Controller
 
         $this->authorize("publish", $quiz);
 
-        $publishQuizRanking->execute($quiz);
+        $publishQuizRankingAction->execute($quiz);
 
         return redirect()
             ->back()
             ->with("status", "Ranking został opublikowany.");
     }
 
-    public function unpublish(Quiz $quiz, UnpublishQuizRanking $unpublishQuizRanking): RedirectResponse
+    public function unpublish(Quiz $quiz, UnpublishQuizRankingAction $unpublishQuizRankingAction): RedirectResponse
     {
         if (!$quiz->exists) {
             abort(404);
@@ -72,7 +72,7 @@ class RankingController extends Controller
 
         $this->authorize("publish", $quiz);
 
-        $unpublishQuizRanking->execute($quiz);
+        $unpublishQuizRankingAction->execute($quiz);
 
         return redirect()
             ->back()

@@ -7,7 +7,7 @@ namespace App\Actions;
 use App\Models\Quiz;
 use Carbon\Carbon;
 
-class PublishQuizRanking
+class PublishQuizRankingAction
 {
     public function execute(Quiz $quiz): void
     {

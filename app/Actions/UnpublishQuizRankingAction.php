@@ -6,7 +6,7 @@ namespace App\Actions;
 
 use App\Models\Quiz;
 
-class UnpublishQuizRanking
+class UnpublishQuizRankingAction
 {
     public function execute(Quiz $quiz): void
     {
