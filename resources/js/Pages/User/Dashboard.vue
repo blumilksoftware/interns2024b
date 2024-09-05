@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import FormButton from '@/components/Common/FormButton.vue'
 import Divider from '@/components/Common/Divider.vue'
 import { route } from 'ziggy-js'
+import LinkButton from "@/components/Common/LinkButton.vue";
 
 const props = defineProps<{
   submissions: QuizSubmission[]
@@ -68,9 +69,9 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ submission.name }}</p>
         <p class="text-xs py-1">{{ dayjs(submission.closedAt).fromNow() }}</p>
       </div>
-      <FormButton class="min-w-24 text-center" small method="get" :href="route('submissions.result', submission.id)" :options="{ preserveScroll: true }">
+      <LinkButton class="min-w-24 text-center" small :href="route('submissions.result', submission.id)">
         Wyniki
-      </FormButton>
+      </LinkButton>
     </div>
   </div>
 </template>
