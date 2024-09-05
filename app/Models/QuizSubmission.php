@@ -64,6 +64,20 @@ class QuizSubmission extends Model
         return Attribute::get(fn(): int => $this->quiz->questions()->count());
     }
 
+    public function points(): Attribute
+    {
+        return Attribute::get(function (): int {
+            $correctAnswers = $this->answerRecords->filter(fn(AnswerRecord $record): bool => $record->isCorrect);
+
+            return $correctAnswers->count();
+        });
+    }
+
+    public function maxPoints(): Attribute
+    {
+        return Attribute::get(fn(): int => $this->quiz->questions()->count());
+    }
+
     protected function casts(): array
     {
         return [
