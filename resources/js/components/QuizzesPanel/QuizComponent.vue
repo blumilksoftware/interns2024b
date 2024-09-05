@@ -35,10 +35,7 @@ function dismissEditing(){
 
 // date formatters
 function formatDatePretty(date?:string):string|undefined{
-  return date ? dayjs(date).format('MMM D, YYYY - h:mm').toString() : undefined
-}
-function formatDateStandard(date?:string):string|undefined{
-  return date ? dayjs(date).format('Y-m-d H:i:s').toString() : undefined
+  return date ? dayjs(date).format('DD.MM.YYYY HH:mm').toString() : undefined
 }
 
 function addQuestion(){
