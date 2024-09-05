@@ -25,7 +25,7 @@ class QuizRequest extends FormRequest
     /**
      * @return array<string, ValidationRule|array|string>
      */
-    public function rules($req): array
+    public function rules(): array
     {
         return [
             "name" => ["required", "string"],
