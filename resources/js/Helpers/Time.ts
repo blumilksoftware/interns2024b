@@ -31,16 +31,20 @@ export function timeToString(time: TimeObject, withLeft = false): string {
   const { s, m, h } = time
 
   if (h <= 0 && m <= 0) {
-    return `${withLeft ? translateLeft(h) : ''} ${h} ${translateHoursLeft(h)} i ${m} ${translateMinutesLeft(m)}`.trimStart()
+    return `${withLeft ? translateLeft(s) : ''} ${s} ${translateSecondsLeft(s)}`.trimStart()
   }
 
-  if (h <= 0 && m > 5) {
-    return `${withLeft ? translateLeft(m) : ''} ${m} ${translateMinutesLeft(m)}`.trimStart()
-  }
-
-  if (m > 0) {
+  if (h <= 0 && m < 5 && s > 0 ) {
     return `${withLeft ? translateLeft(m) : ''} ${m} ${translateMinutesLeft(m)} i ${s} ${translateSecondsLeft(s)}`.trimStart()
   }
 
-  return `${withLeft ? translateLeft(s) : ''} ${s} ${translateSecondsLeft(s)}`.trimStart()
+  if (h <= 0) {
+    return `${withLeft ? translateLeft(m) : ''} ${m} ${translateMinutesLeft(m)}`.trimStart()
+  }
+
+  if (h <= 0 && m > 0) {
+    return `${withLeft ? translateLeft(h) : ''} ${h} ${translateHoursLeft(h)} i ${m} ${translateMinutesLeft(m)}`.trimStart()
+  }
+
+  return `${withLeft ? translateLeft(h) : ''} ${h} ${translateHoursLeft(h)}`.trimStart()
 }

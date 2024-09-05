@@ -35,7 +35,7 @@ class AuthenticateSessionTest extends TestCase
             ->assertSessionHasErrors(["email" => "Nieprawidłowy e-mail lub hasło."]);
     }
 
-    public function testUserCanNotLoginWithWrongEmail(\): void
+    public function testUserCanNotLoginWithWrongEmail(): void
     {
         User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
 

@@ -3,7 +3,7 @@ import { CheckIcon, XMarkIcon, StopCircleIcon } from '@heroicons/vue/20/solid'
 
 const props = withDefaults(defineProps<{
     id?: string
-    disabled?: boolean
+    native?: boolean
     checked?: boolean
     class?: string
     mode?: 'v' | 'x' | 'dot'
@@ -12,18 +12,18 @@ const props = withDefaults(defineProps<{
 </script>
 
 <template>
-  <label class="flex items-center text-sm text-black relative" :class="`${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`">
+  <label class="flex items-center text-sm text-black relative" :class="`${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} ${props.class}`">
     <input
       :id
       type="radio"
-      :disabled
+      disabled
       :checked
-      :class="`${props.class}`"
-      class="mr-2 appearance-none p-2 border border-gray-600 rounded-full"
+      :class="`${native ? '' : 'appearance-none'} ${props.class}`"
+      class="mr-2 p-2 border border-gray-600 rounded-full"
     >
 
     <div
-      v-if="checked"
+      v-if="checked && !native"
       class="flex justify-center items-center p-2 border border-transparent absolute"
       :class="{
         'stroke-gray-500 hover:stroke-gray-700': fill === 'gray',

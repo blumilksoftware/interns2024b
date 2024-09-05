@@ -7,14 +7,14 @@ import {calcSecondsBetweenDates, secondsToHour, timeToString} from '@/Helpers/Ti
 import {route} from 'ziggy-js'
 import {computed} from 'vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
-import Radio from '@/components/Common/Radio.vue'
+import FakeRadio from '@/components/Common/FakeRadio.vue'
 
 const props = defineProps<{ submission: QuizSubmission, hasRanking: boolean }>()
-const duration = secondsToHour(calcSecondsBetweenDates(props.submission.openedAt, props.submission.closedAt))
+const duration = secondsToHour(calcSecondsBetweenDates(props.submission.closedAt, props.submission.openedAt))
 
 const points = computed(() =>
   props.submission.answers.filter(
-    record => record.answers.some(answer => answer.correct),
+    record => record.answers.some(answer => record.selected === answer.id && answer.correct),
   ).length,
 )
 </script>
@@ -44,18 +44,19 @@ const points = computed(() =>
 
       <div class="mb-3 mt-2">
         <div class="flex flex-col gap-2">
-          <Radio
+          <FakeRadio
             v-for="answer in record.answers"
             :id="answer.id.toString()"
             :key="answer.id"
             type="radio"
-            :disabled="true"
+            :native="!hasRanking"
             :checked="record.selected == answer.id || answer.correct"
             :mode="!hasRanking ? 'dot' : answer.correct ? 'v' : 'x'"
+            :class="`${record.selected == answer.id ? 'font-semibold' : ''}`"
             :fill="!hasRanking ? 'primary' : answer.correct ? 'green' : 'red'"
           >
             {{ answer.text }}
-          </Radio>
+          </FakeRadio>
         </div>
       </div>
     </div>
