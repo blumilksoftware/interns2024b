@@ -43,10 +43,10 @@ function addExampleQuiz() {
 }
 
 function lock(quiz:Quiz) {
-  request.sendRequest(`/quizzes/${quiz.id}/lock`,{method:'patch'})
+  request.sendRequest(`/admin/quizzes/${quiz.id}/lock`,{method:'post'})
 }
 function unlock(quiz:Quiz) {
-  request.sendRequest(`/quizzes/${quiz.id}/unlock`,{method:'patch'})
+  request.sendRequest(`/admin/quizzes/${quiz.id}/unlock`,{method:'post'})
 }
 function deleteQuiz(quiz:Quiz) {
   request.sendRequest(`/admin/quizzes/${quiz.id}`, {method: 'delete'})
@@ -87,9 +87,9 @@ function formatDateStandard(date?:number | string):string|undefined{
       <span>createdAt:    </span> <b>{{ quiz.createdAt }}   </b>
       <span>updatedAt:    </span> <b>{{ quiz.updatedAt }}   </b>
       <hr><hr>
-      <button @click="unlock(quiz)">Unlock</button>
+      <button :disabled="quiz.state === 'unlocked'" class="disabled:text-black/50" @click="unlock(quiz)">Unlock</button>
       <button>Copy</button>
-      <button @click="lock(quiz)">Lock</button>
+      <button :disabled="quiz.state === 'locked'" class="disabled:text-black/50" @click="lock(quiz)">Lock</button>
       <button class="text-red" @click="deleteQuiz(quiz)">Delete</button>
     </div>
   </div>
