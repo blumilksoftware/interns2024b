@@ -8,6 +8,7 @@ import {route} from 'ziggy-js'
 import {computed} from 'vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
 import FakeRadio from '@/components/Common/FakeRadio.vue'
+import {Head} from "@inertiajs/vue3";
 
 const props = defineProps<{ submission: QuizSubmission, hasRanking: boolean }>()
 const duration = secondsToHour(calcSecondsBetweenDates(props.submission.closedAt, props.submission.openedAt))
@@ -20,6 +21,10 @@ const points = computed(() =>
 </script>
 
 <template>
+  <Head>
+    <title>{{ submission.name }} - Wyniki</title>
+  </Head>
+
   <div class="w-full p-2 md:w-7/12">
     <Divider>
       <h1 class="font-bold text-xl text-primary text-center px-4 whitespace-nowrap">

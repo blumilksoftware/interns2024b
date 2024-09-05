@@ -10,6 +10,7 @@ import {type AnswerRecord} from '@/Types/AnswerRecord'
 import TimeLeft from '@/components/Common/TimeLeft.vue'
 import MessageBox, { useMessageBox } from '@/components/Common/MessageBox.vue'
 import {route} from 'ziggy-js'
+import {Head} from "@inertiajs/vue3";
 
 const props = defineProps<{ submission: QuizSubmission }>()
 const answers = ref(props.submission.answers)
@@ -30,6 +31,10 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
 </script>
 
 <template>
+  <Head>
+    <title>{{ submission.name }}</title>
+  </Head>
+
   <div class="w-full p-2 md:w-7/12">
     <Divider>
       <h1 class="font-bold text-xl text-primary text-center px-4 whitespace-nowrap">
