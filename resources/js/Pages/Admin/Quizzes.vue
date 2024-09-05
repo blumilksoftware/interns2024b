@@ -1,39 +1,41 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import {Request} from '@/scripts/request'
 import SortIcon from '@/components/Icons/SortIcon.vue'
 import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
 import FilterIcon from '@/components/Icons/FilterIcon.vue'
 import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
 import { type Quiz } from '@/Types/Quiz'
-import {Request} from '@/scripts/request'
+import { type Question } from '@/Types/Question'
+import { type Answer } from '@/Types/Answer'
 const props = defineProps<{ quizzes: Quiz[] }>()
 const selectedQuiz = ref<number>()
 const showLockedQuizzes = ref<boolean>(true)
-const quizzesRef = ref<Quiz[]>(props.quizzes)
-import { type Question } from '@/Types/Question'
-import { type Answer } from '@/Types/Answer'
+const quizzes = ref<Quiz[]>(addKeys(props.quizzes))
 watch(
   () => props.quizzes,
-  (updatedQuizzes : Quiz[]) => {
-    quizzesRef.value = updatedQuizzes.map(
-      (quiz: Quiz)=>{
-        return {
-          ...quiz, key: quiz.key ?? quiz.id, questions: quiz.questions.map(
-            (q:Question)=>{
-              return {
-                ...q, key: q.key ?? q.id, answers: q.answers.map(
-                  (ans:Answer)=>{
-                    return {...ans, key: quiz.key ?? ans.id}
-                  },
-                ),
-              }
-            },
-          ),
-        }
-      },
-    )
-  },
+  (updatedQuizzes : Quiz[]) => quizzes.value = addKeys(updatedQuizzes),
 )
+
+function addKeys(quizzes:Quiz[]) {
+  return quizzes.map(
+    (quiz: Quiz)=>{
+      return {
+        ...quiz, key: quiz.key ?? quiz.id, questions: quiz.questions.map(
+          (q:Question)=>{
+            return {
+              ...q, key: q.key ?? q.id, answers: q.answers.map(
+                (ans:Answer)=>{
+                  return {...ans, key: quiz.key ?? ans.id}
+                },
+              ),
+            }
+          },
+        ),
+      }
+    },
+  )
+}
 
 const request = new Request()
 
@@ -55,9 +57,9 @@ function toggleQuizView(quiz: Quiz) {
       <div class="flex-1" />
       <button :disabled="request.isRequestOngoing.value" :class="{'opacity-70':request.isRequestOngoing.value}" class="font-bold" @click="addQuiz">+&nbsp;Dodaj&nbsp;test</button>
     </div>
-    <div v-for="(quiz, idx) of quizzesRef" :key="quiz.id" class="px-4">
+    <div v-for="(quiz, idx) of quizzes" :key="quiz.id" class="px-4">
       <QuizComponent
-        v-model="quizzesRef[idx]"
+        v-model="quizzes[idx]"
         :is-selected="selectedQuiz===quiz.id"
         :show-locked-quizzes="showLockedQuizzes"
         @display-toggle="toggleQuizView"
