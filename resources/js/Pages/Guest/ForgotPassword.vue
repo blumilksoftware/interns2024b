@@ -2,7 +2,6 @@
 import { useForm } from '@inertiajs/vue3'
 import CustomInput from '@/components/Common/CustomInput.vue'
 import { Head } from '@inertiajs/vue3'
-import { route } from 'ziggy-js'
 
 defineProps<{
   errors: Record<string, string>
@@ -11,8 +10,7 @@ defineProps<{
 const form = useForm({ email: '' })
 
 function submit() {
-  form.post(route('password.email'))
-}
+  form.post('/auth/forgot-password')}
 </script>
 
 <template>
