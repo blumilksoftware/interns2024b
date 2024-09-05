@@ -150,4 +150,51 @@ class QuizSubmissionTest extends TestCase
             ->get("/submissions/{$submission->id}/result")
             ->assertStatus(403);
     }
+
+    public function testUserCanSeeSubmissionResult(): void
+    {
+        $quiz = Quiz::factory()->create();
+        $quiz->ranking_published_at = Carbon::now();
+        $quiz->save();
+
+        Question::factory()->count(2)->create(["quiz_id" => $quiz->id]);
+        $submission = $quiz->createSubmission($this->user);
+        $submission->closed_at = Carbon::now();
+        $submission->save();
+
+        $this->actingAs($this->user)
+            ->get("/submissions/{$submission->id}/result")
+            ->assertInertia(
+                fn(Assert $page) => $page
+                    ->component("User/QuizResult")
+                    ->where("submission.name", $quiz->name)
+                    ->count("submission.answers", 2)
+                    ->where("hasRanking", true),
+            );
+    }
+
+    public function testUserCannotSeeSubmissionResultThatNotExisted(): void
+    {
+        $this->actingAs($this->user)
+            ->get("/submissions/0/result")
+            ->assertStatus(404);
+    }
+
+    public function testUserCannotSeeSubmissionResultThatIsNotHis(): void
+    {
+        $submission = QuizSubmission::factory()->closed()->create();
+
+        $this->actingAs($this->user)
+            ->get("/submissions/{$submission->id}/result")
+            ->assertStatus(403);
+    }
+
+    public function testUserCannotSeeSubmissionResultThatIsNotClosed(): void
+    {
+        $submission = QuizSubmission::factory()->create(["user_id" => $this->user->id]);
+
+        $this->actingAs($this->user)
+            ->get("/submissions/{$submission->id}/result")
+            ->assertStatus(403);
+    }
 }
