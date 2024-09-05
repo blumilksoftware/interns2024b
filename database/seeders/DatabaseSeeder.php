@@ -20,28 +20,9 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             UserSeeder::class,
         ]);
-        // $quiz = Quiz::factory()->create();
-        // $questions = Question::factory()->count(10)->create(["quiz_id" => $quiz->id]);
-        // foreach ($questions as $question) {
-        //     Answer::factory()->count(4)->create(["question_id" => $question->id]);
-        // }
-        // AnswerRecord::factory()->create();
-
         Quiz::factory()->create([
-            "name" => "unlocked"
-        ]);
-
-        Quiz::factory()->create([
-            "name" => "locked",
-            "locked_at" => Carbon::now()->subMinutes(10),
+            "name" => "quiz_name",
             "scheduled_at" => Carbon::now()->addMinutes(60),
-            "duration" => 120,
-        ]);
-
-        Quiz::factory()->create([
-            "name" => "published",
-            "locked_at" => Carbon::now()->subMinutes(60),
-            "scheduled_at" => Carbon::now()->subMinutes(10),
             "duration" => 120,
         ]);
     }
