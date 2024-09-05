@@ -5,10 +5,12 @@ import {useForm} from '@inertiajs/vue3'
 const form = useForm({})
 
 function logout() {
-  form.get('/auth/logout')
+  form.post('/auth/logout')
 }
 
 function sent() {
+
+
   form.post('/email/verification-notification')
 }
 
