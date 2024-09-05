@@ -34,8 +34,8 @@ function dismissEditing(){
 }
 
 // date formatters
-function formatDatePretty(date?:string):string|undefined{
-  return date ? dayjs(date).format('DD.MM.YYYY HH:mm').toString() : undefined
+function formatDatePretty(date?:string) {
+  return date ? dayjs(date).format('DD.MM.YYYY HH:mm') : 'brak'
 }
 
 function addQuestion(){
@@ -58,9 +58,10 @@ function copyQuiz() {
   request.sendRequest(`/admin/quizzes/${quiz.value.id}/clone`, {method: 'post'})
 }
 function updateQuiz() {
+  quiz.value.scheduledAt = dayjs(quiz.value.scheduledAt).format('YYYY-MM-DDTHH:mm')
   const payload : VisitPayload = {
     method: 'patch',
-    data: {...quiz.value},
+    data: quiz.value,
     onSuccess: ()=>isEditing.value = false,
   }
   request.sendRequest(`/admin/quizzes/${quiz.value.id}`, payload)
@@ -113,7 +114,7 @@ function isScheduled() {
         <button @click="toggleQuizView()"><ExapnsionToggleDynamicIcon :is-expanded="isSelected" /></button>
         <EditableInput v-model="quiz.name" :is-editing="isEditing && isSelected" type="text" />
       </div>
-      <span v-if="!isSelected">Czas rozpoczęcia: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) ? formatDatePretty(quiz.scheduledAt) : 'brak' }}</b> </span>
+      <span v-if="!isSelected">Czas rozpoczęcia: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) }}</b> </span>
       <span v-if="!isSelected">Czas trwania: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' minut': "brak" }}</b> </span>
       <div class="flex gap-5 justify-end">
         <button v-if="isDraft() && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
