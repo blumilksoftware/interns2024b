@@ -7,9 +7,10 @@ import CheckDynamicIcon from '@/components/Icons/CheckDynamicIcon.vue'
 import { computed, ref} from 'vue'
 import { type CleanAnswer } from '@/Types/CleanAnswer'
 import { type Question } from '@/Types/Question'
+import { type CleanQuestion } from '@/Types/CleanQuestion'
 
-defineProps<{ quizId: number, isEditing: boolean, index:number, questionsLength:number}>()
-const emit = defineEmits<{ delete: [question: Question] }>()
+defineProps<{ isEditing: boolean, index:number, questionsLength:number }>()
+const emit = defineEmits<{ delete: [question: CleanQuestion] }>()
 const question = defineModel<Question>({ required: true })
 const isAnswerExpanded = ref<boolean>(false)
 const hasAnswers = computed(() => question.value.answers.length > 0)
@@ -27,6 +28,7 @@ function addAnswer() {
   question.value.answers.push(answer)
   isAnswerExpanded.value = true
 }
+
 function deleteAnswer(answer: CleanAnswer) {
   question.value.answers = question.value.answers.filter(ans => ans !== answer)
 }
@@ -57,7 +59,7 @@ function setCorrectAnswer(answer: CleanAnswer) {
         </button>
       </div>
       <ol v-if="isAnswerExpanded && hasAnswers" class="flex flex-col gap-4 w-full">
-        <li v-for="answer of question.answers" :key="answer.key ?? answer.id"
+        <li v-for="answer of question.answers" :key="answer.key"
             class="w-full flex gap-4 p-4 border border-primary/30 rounded-lg bg-white/50"
         >
           <button :disabled="!isEditing" @click="setCorrectAnswer(answer)">
@@ -68,14 +70,14 @@ function setCorrectAnswer(answer: CleanAnswer) {
             <textarea v-else v-model="answer.text" class="w-full p-2 bg-transparent border border-primary/30 rounded-md" />
           </div>
           <div class="flex flex-col justify-evenly">
-            <button data-name="delete" @click="deleteAnswer(answer)">
+            <button v-if="isEditing" @click="deleteAnswer(answer)">
               <TrashIcon />
             </button>
           </div>
         </li>
       </ol>
     </div>
-    <div class="px-3 border-l border-primary/30 flex flex-col justify-evenly">
+    <div v-if="isEditing" class="px-3 border-l border-primary/30 flex flex-col justify-evenly">
       <button @click="deleteQuestion"><TrashIcon /></button>
     </div>
   </div>
