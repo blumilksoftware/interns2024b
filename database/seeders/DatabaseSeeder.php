@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             AdminSeeder::class,
             UserSeeder::class,
+            UserQuizSeeder::class,
         ]);
         // $quiz = Quiz::factory()->create();
         // $questions = Question::factory()->count(10)->create(["quiz_id" => $quiz->id]);

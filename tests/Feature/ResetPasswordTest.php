@@ -130,7 +130,7 @@ class ResetPasswordTest extends TestCase
                 "password_confirmation" => "new-password",
             ])
             ->assertRedirect("/profile")
-            ->assertSessionHas("success", "Zaktualizowano hasło");
+            ->assertSessionHas("status", "Zaktualizowano hasło");
         $this->assertTrue(Hash::check("new-password", $user->fresh()->password));
     }
 

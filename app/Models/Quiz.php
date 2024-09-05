@@ -18,6 +18,7 @@ use Illuminate\Support\Collection;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $scheduled_at
+ * @property Carbon $ranking_published_at
  * @property ?Carbon $locked_at
  * @property ?int $duration
  * @property bool $isLocked
@@ -25,6 +26,7 @@ use Illuminate\Support\Collection;
  * @property bool $canBeLocked
  * @property bool $canBeUnlocked
  * @property string $state
+ * @property bool $isRankingPublished
  * @property ?Carbon $closeAt
  * @property Collection<Question> $questions
  * @property Collection<Answer> $answers
@@ -37,6 +39,7 @@ class Quiz extends Model
         "name",
         "scheduled_at",
         "duration",
+        "ranking_published_at",
     ];
 
     public function questions(): HasMany
@@ -68,6 +71,11 @@ class Quiz extends Model
 
             return $this->isLocked ? "locked" : "unlocked";
         });
+    }
+
+    public function isRankingPublished(): Attribute
+    {
+        return Attribute::get(fn(): bool => $this->ranking_published_at !== null);
     }
 
     public function canBeUnlocked(): Attribute

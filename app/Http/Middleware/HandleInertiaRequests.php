@@ -34,7 +34,6 @@ class HandleInertiaRequests extends Middleware
     protected function getFlashData(Request $request): Closure
     {
         return fn(): array => [
-            "errors" => $request->session()->get("errors"),
             "status" => $request->session()->get("status"),
         ];
     }

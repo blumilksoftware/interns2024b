@@ -18,7 +18,7 @@ if (props.user?.isSuperAdmin) {
 </script>
 
 <template>
-  <BaseLayout :pages :app-name :user :flash>
+  <BaseLayout :pages :app-name="appName" :user :flash>
     <slot />
   </BaseLayout>
 </template>
