@@ -7,7 +7,6 @@ import {computed} from 'vue'
 import dayjs from 'dayjs'
 import FormButton from '@/components/Common/FormButton.vue'
 import Divider from '@/components/Common/Divider.vue'
-import { route } from 'ziggy-js'
 import LinkButton from '@/components/Common/LinkButton.vue'
 
 const props = defineProps<{
@@ -36,7 +35,7 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.name }}</p>
         <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
       </div>
-      <FormButton class="min-w-24 text-center" small method="post" :href="route('quizzes.start', quiz.id)" :options="{ preserveScroll: true }">
+      <FormButton class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/start`" :options="{ preserveScroll: true }">
         Weź udział
       </FormButton>
     </div>
@@ -50,10 +49,10 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
       </div>
 
-      <FormButton v-if="!quiz.isUserAssigned" class="min-w-24 text-center" small method="post" :href="route('quizzes.assign', quiz.id )" :options="{ preserveScroll: true }">
+      <FormButton v-if="!quiz.isUserAssigned" class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/assign`" :options="{ preserveScroll: true }">
         Zapisz się
       </FormButton>
-      <FormButton v-else class="min-w-24 text-center" disabled small method="post" :href="route('quizzes.assign', quiz.id)">
+      <FormButton v-else class="min-w-24 text-center" disabled small method="post" :href="`/quizzes/${quiz.id}/assign`">
         Zapisano
       </FormButton>
     </div>
@@ -70,7 +69,7 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ submission.name }}</p>
         <p class="text-xs py-1">{{ dayjs(submission.closedAt).fromNow() }}</p>
       </div>
-      <LinkButton class="min-w-24 text-center" small :href="route('submissions.result', submission.id)">
+      <LinkButton class="min-w-24 text-center" small :href="`/quizzes/${submission.id}/result`">
         Wyniki
       </LinkButton>
     </div>

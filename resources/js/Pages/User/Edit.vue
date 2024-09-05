@@ -4,7 +4,6 @@ import { useForm } from '@inertiajs/vue3'
 import { defineProps } from 'vue'
 import { type User } from '@/Types/User'
 import { type School } from '@/Types/School'
-import { route } from 'ziggy-js'
 
 const props = defineProps<{
   user: User
@@ -19,8 +18,7 @@ const form = useForm({
 })
 
 function update() {
-  form.patch(route('admin.users.update', props.user.id))
-}
+  form.patch(`/admin/users/${props.user.id}`)}
 </script>
 
 <template>

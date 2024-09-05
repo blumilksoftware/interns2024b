@@ -2,7 +2,6 @@
 import { useForm } from '@inertiajs/vue3'
 import { Head } from '@inertiajs/vue3'
 import CustomInput from '@/components/Common/CustomInput.vue'
-import { route } from 'ziggy-js'
 
 const props = defineProps<{
   token: string
@@ -17,8 +16,7 @@ const form = useForm({
 })
 
 function submit() {
-  form.post(route('password.update'))
-}
+  form.post('/auth/password/reset')}
 </script>
 
 <template>
