@@ -94,7 +94,7 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     });
 });
 
-Route::middleware(["auth"])->group(function (): void {
+Route::middleware(["auth", "verified"])->group(function (): void {
     Route::post("/quizzes/{quiz}/assign", [QuizController::class, "assign"])->can("assign,quiz")->name("quizzes.assign");
     Route::post("/quizzes/{quiz}/start", [QuizController::class, "createSubmission"])->middleware(EnsureQuizIsNotAlreadyStarted::class)->can("submit,quiz")->name("quizzes.start");
     Route::get("/submissions/{quizSubmission}/", [QuizSubmissionController::class, "show"])->can("view,quizSubmission")->name("submissions.show");
