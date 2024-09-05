@@ -1,8 +1,35 @@
 <script setup lang="ts">
-import {Request} from '@/scripts/request'
-import { type CleanQuiz } from '@/Types/CleanQuiz'
+import { ref, watch } from 'vue'
 import { type Quiz } from '@/Types/Quiz'
-defineProps<{ quizzes: Quiz[] }>()
+import {Request} from '@/scripts/request'
+const props = defineProps<{ quizzes: Quiz[] }>()
+const quizzesRef = ref<Quiz[]>(props.quizzes)
+import { type Question } from '@/Types/Question'
+import { type Answer } from '@/Types/Answer'
+import { type CleanQuiz } from '@/Types/CleanQuiz'
+watch(
+  () => props.quizzes,
+  (updatedQuizzes : Quiz[]) => {
+    quizzesRef.value = updatedQuizzes.map(
+      (quiz: Quiz)=>{
+        return {
+          ...quiz, key: quiz.key ?? quiz.id, questions: quiz.questions.map(
+            (q:Question)=>{
+              return {
+                ...q, key: q.key ?? q.id, answers: q.answers.map(
+                  (ans:Answer)=>{
+                    return {...ans, key: quiz.key ?? ans.id}
+                  },
+                ),
+              }
+            },
+          ),
+        }
+      },
+    )
+  },
+)
+
 const request = new Request()
 
 function addExampleQuiz() {

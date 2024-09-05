@@ -14,10 +14,17 @@ class QuizRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation(): void 
+    {
+        if ($this->has("scheduledAt")) {
+            $this->merge(['scheduled_at' => $this->input('scheduledAt')]);
+        }
+    }
+
     /**
      * @return array<string, ValidationRule|array|string>
      */
-    public function rules(): array
+    public function rules($req): array
     {
         return [
             "name" => ["required", "string"],

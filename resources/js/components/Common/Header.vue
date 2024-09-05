@@ -15,7 +15,7 @@ const isSelected = (page: Page) => page.href === window.location.pathname
 
 <template>
   <header class="w-full">
-    <nav class="flex w-full mx-auto items-center justify-between gap-x-6 p-6 px-[8vw]">
+    <nav class="flex w-full mx-auto items-center justify-between gap-x-6 p-6">
       <div class="flex gap-x-12 items-center">
         <a href="/">
           <svg class="size-10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -1,59 +1,34 @@
-<!-- eslint-disable @typescript-eslint/no-unused-vars -->
 <script setup lang="ts">
+import { nanoid } from 'nanoid'
 import ExapnsionToggleDynamicIcon from '../Icons/ExapnsionToggleDynamicIcon.vue'
 import TrashIcon from '@/components/Icons/TrashIcon.vue'
-import CopyIcon from '@/components/Icons/CopyIcon.vue'
 import CheckDynamicIcon from '@/components/Icons/CheckDynamicIcon.vue'
 
-import { computed, inject, ref, type Ref } from 'vue'
-import { type Option } from '@/Types/Option'
+import { computed, ref} from 'vue'
 import { type CleanAnswer } from '@/Types/CleanAnswer'
+import { type Question } from '@/Types/Question'
 import { type CleanQuestion } from '@/Types/CleanQuestion'
-import { type CleanQuiz } from '@/Types/CleanQuiz'
-import Dropdown from '../Common/Dropdown.vue'
-import EditableInput from '../Common/EditableInput.vue'
 
-defineProps<{ quizId: number, isEditing: boolean, index:number, questionsLength:number}>()
+defineProps<{ isEditing: boolean, index:number, questionsLength:number }>()
 const emit = defineEmits<{ delete: [question: CleanQuestion] }>()
-const question = defineModel<CleanQuestion>({ required: true })
+const question = defineModel<Question>({ required: true })
 const isAnswerExpanded = ref<boolean>(false)
 const hasAnswers = computed(() => question.value.answers.length > 0)
-const quizzesRef = inject<Ref<CleanQuiz[]>>('quizzes', ref<any[]>([]))
-
-const copyingOptions = computed(
-  ():Option[] => quizzesRef.value.map(quiz => ({ id: quiz.id, text: quiz.name }),
-  ),
-)
 
 function deleteQuestion() {
   emit('delete', question.value)
 }
 
-function copyQuestion(quizId:number) {
-  for (const quiz of quizzesRef.value) {
-    if (quiz.id === quizId) {
-      const newQuestion:CleanQuestion = JSON.parse(JSON.stringify(question.value))
-      newQuestion.id++
-      quiz.questions.push(newQuestion) 
-      return
-    }
-  }
-}
-
 function addAnswer() {
-  let newId = 0 
-  for (const ans of question.value.answers) {
-    if (newId < ans.id)
-      newId = ans.id
-  }
   const answer: CleanAnswer = {
-    id: newId+1,
+    key: nanoid(),
     text: 'Nowa odpowiedź',
     correct: false,
   }
   question.value.answers.push(answer)
   isAnswerExpanded.value = true
 }
+
 function deleteAnswer(answer: CleanAnswer) {
   question.value.answers = question.value.answers.filter(ans => ans !== answer)
 }
@@ -84,31 +59,25 @@ function setCorrectAnswer(answer: CleanAnswer) {
         </button>
       </div>
       <ol v-if="isAnswerExpanded && hasAnswers" class="flex flex-col gap-4 w-full">
-        <li v-for="answer of question.answers" :key="answer.id"
+        <li v-for="answer of question.answers" :key="answer.key"
             class="w-full flex gap-4 p-4 border border-primary/30 rounded-lg bg-white/50"
         >
           <button :disabled="!isEditing" @click="setCorrectAnswer(answer)">
             <CheckDynamicIcon class="size-6" :is-correct="answer.correct" />
           </button>
           <div class="flex items-center w-full">
-            <!-- <EditableInput v-model="answer.text" :is-editing="isEditing" type="text" :bold="false" /> -->
             <span v-if="!isEditing">{{ answer.text }}</span>
             <textarea v-else v-model="answer.text" class="w-full p-2 bg-transparent border border-primary/30 rounded-md" />
           </div>
           <div class="flex flex-col justify-evenly">
-            <button data-name="delete" @click="deleteAnswer(answer)">
+            <button v-if="isEditing" @click="deleteAnswer(answer)">
               <TrashIcon />
             </button>
           </div>
         </li>
       </ol>
     </div>
-    <div class="px-3 border-l border-primary/30 flex flex-col justify-evenly">
-      <!-- copying is temporarily disabled -->
-       
-      <!-- <Dropdown :options="copyingOptions" @option-click="copyQuestion">
-        <CopyIcon />
-      </Dropdown> -->
+    <div v-if="isEditing" class="px-3 border-l border-primary/30 flex flex-col justify-evenly">
       <button @click="deleteQuestion"><TrashIcon /></button>
     </div>
   </div>
