@@ -69,7 +69,7 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ submission.name }}</p>
         <p class="text-xs py-1">{{ dayjs(submission.closedAt).fromNow() }}</p>
       </div>
-      <LinkButton class="min-w-24 text-center" small :href="`/quizzes/${submission.id}/result`">
+      <LinkButton class="min-w-24 text-center" small :href="`/submissions/${submission.id}/result`">
         Wyniki
       </LinkButton>
     </div>
