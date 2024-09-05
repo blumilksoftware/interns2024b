@@ -132,9 +132,9 @@ function isScheduled() {
     <div v-if="isSelected" class="flex mt-8 px-2 gap-8 flex-col">
       <div class="grid grid-cols-[auto,auto] gap-2 w-fit rounded-lg items-center">
         <span>Rozpoczęcie testu:</span>
-        <EditableInput type="datetime-local" :is-editing="isEditing" :v-model:value="formatDateStandard(quiz.scheduledAt)" />
+        <EditableInput v-model="quiz.scheduledAt" type="datetime-local" :is-editing="isEditing" />
         <span>Czas trwania testu:</span>
-        <EditableInput placeholder="Podaj czas w minutach" type="number" min="0" :is-editing="isEditing" :v-model="quiz.duration" />
+        <EditableInput v-model="quiz.duration" placeholder="Podaj czas w minutach" type="number" min="0" :is-editing="isEditing" />
       </div>
           
       <!-- question -->

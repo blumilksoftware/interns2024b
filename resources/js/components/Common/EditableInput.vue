@@ -5,7 +5,7 @@ defineProps<{
   isEditing : boolean
   min?: string
 }>()
-const model = defineModel<string>()
+const model = defineModel<number | string>()
 
 </script>
 
