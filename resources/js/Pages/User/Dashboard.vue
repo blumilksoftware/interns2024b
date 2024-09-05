@@ -49,10 +49,11 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.name }}</p>
         <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
       </div>
-      <FormButton v-if="!quiz.isUserAssigned" class="min-w-24 text-center" small method="post" :href="route('quizzes.assign', quiz.id)" :options="{ preserveScroll: true }">
+
+      <FormButton v-if="!quiz.isUserAssigned" class="min-w-24 text-center" small method="post" :href="route('quizzes.assign', quiz.id )" :options="{ preserveScroll: true }">
         Zapisz się
       </FormButton>
-      <FormButton v-else class="min-w-24 text-center" disabled small method="post" :href="route('quizzes.assign')">
+      <FormButton v-else class="min-w-24 text-center" disabled small method="post" :href="route('quizzes.assign', quiz.id)">
         Zapisano
       </FormButton>
     </div>
