@@ -9,7 +9,7 @@ import {ref, watch} from 'vue'
 import {type PageProps} from '@/Types/PageProps'
 
 const props = defineProps<{ pages: Page[] } & PageProps>()
-const status = ref<string>(props.flash.status)
+const status = ref<string | undefined>(props.flash.status)
 
 watch(() => props.flash, flash => {
   status.value = flash.status
