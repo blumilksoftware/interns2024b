@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Actions\PublishQuizRanking;
-use App\Actions\UnpublishQuizRanking;
 use App\Actions\PublishQuizRankingAction;
 use App\Actions\UnpublishQuizRankingAction;
 use App\Http\Resources\RankingResource;
