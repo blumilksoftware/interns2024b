@@ -9,7 +9,8 @@ import { type Question } from '@/Types/Question'
 import { type Answer } from '@/Types/Answer'
 import { type CleanQuiz } from '@/Types/CleanQuiz'
 import { type VisitPayload } from '@/Types/VisitPayload'
-import dayjs from 'dayjs'
+import { type CleanAnswer } from '@/Types/CleanAnswer'
+import { type CleanQuestion } from '@/Types/CleanQuestion'
 watch(
   () => props.quizzes,
   (updatedQuizzes : Quiz[]) => quizzesRef.value = addKeys(updatedQuizzes),
@@ -54,27 +55,35 @@ function deleteQuiz(quiz:Quiz) {
 function copyQuiz(quiz:Quiz) {
   request.sendRequest(`/admin/quizzes/${quiz.id}/clone`, {method: 'post'})
 }
-function updateQuiz(quiz:Quiz) {
+function updateWithExampleData(quiz:Quiz) {
+  const cleanAnswer1: CleanAnswer = {key:9001, text:'answer1', correct: true}
+  const cleanAnswer2: CleanAnswer = {key:9002, text:'answer2', correct: false}
+  const cleanQuestion: CleanQuestion = {
+    key: 8001,
+    text: 'question1',
+    answers:[
+      cleanAnswer1,
+      cleanAnswer2,
+    ],
+  }
   const payload : VisitPayload = {
     method: 'patch',
-    data: quiz,
+    data: {
+      key : 1,
+      name : 'b',
+      scheduledAt : '2025-09-05T09:47:32',
+      duration : 20,
+      questions : [ cleanQuestion ],
+    },
   }
   request.sendRequest(`/admin/quizzes/${quiz.id}`, payload)
-}
-
-// date formatters
-function formatDatePretty(date?:number | string):string|undefined{
-  return date ? dayjs(date).format('MMM D, YYYY - h:mm').toString() : undefined
-}
-function formatDateStandard(date?:number | string):string|undefined{
-  return date ? dayjs(date).format().toString() : undefined
 }
 </script>
 
 <template>
   <div class="flex flex-col gap-5">
     <header class="flex gap-5">
-      <button @click="addExampleQuiz">Add example quiz</button>
+      <button title="works" @click="addExampleQuiz">Add example quiz</button>
     </header>
     <div v-for="quiz of quizzesRef" :key="quiz.key" class="bg-white shadow grid grid-cols-2 gap-5 p-5 rounded-lg">
       <span>id:           </span> <b>{{ quiz.id }}          </b>
@@ -88,9 +97,11 @@ function formatDateStandard(date?:number | string):string|undefined{
       <span>updatedAt:    </span> <b>{{ quiz.updatedAt }}   </b>
       <hr><hr>
       <button :disabled="quiz.state === 'unlocked'" class="disabled:text-black/50" @click="unlock(quiz)">Unlock</button>
-      <button>Copy</button>
-      <button :disabled="quiz.state === 'locked'" class="disabled:text-black/50" @click="lock(quiz)">Lock</button>
-      <button class="text-red" @click="deleteQuiz(quiz)">Delete</button>
+      <button title="works" @click="copyQuiz(quiz)">Copy</button>
+      <button title="works" :disabled="quiz.state === 'locked'" class="disabled:text-black/50" @click="lock(quiz)">Lock</button>
+      <button title="works" class="text-red" @click="deleteQuiz(quiz)">Delete</button>
+      <button title="Doesn't update scheduledAt. Doesn't let more than one question through" class="text-primary" @click="updateWithExampleData(quiz)">Update with example data</button>
+      {{ request.error }}
     </div>
   </div>
 </template>
