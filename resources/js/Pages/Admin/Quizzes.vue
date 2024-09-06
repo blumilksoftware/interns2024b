@@ -6,12 +6,11 @@ import { type Question } from '@/Types/Question'
 import { type Answer } from '@/Types/Answer'
 const props = defineProps<{ quizzes: Quiz[] }>()
 const quizzesRef = ref<Quiz[]>(addKeys(props.quizzes))
-import { type Question } from '@/Types/Question'
-import { type Answer } from '@/Types/Answer'
 import { type CleanQuiz } from '@/Types/CleanQuiz'
 import { type VisitPayload } from '@/Types/VisitPayload'
 import { type CleanAnswer } from '@/Types/CleanAnswer'
 import { type CleanQuestion } from '@/Types/CleanQuestion'
+import { Request } from '@/scripts/request'
 watch(
   () => props.quizzes,
   (updatedQuizzes : Quiz[]) => quizzesRef.value = addKeys(updatedQuizzes),
