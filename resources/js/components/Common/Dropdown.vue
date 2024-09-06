@@ -18,13 +18,15 @@ function pick(option: Option) {
 </script>
 
 <template>
-  <div class="flex flex-col items-center">
+  <div
+    ref="target"
+    class="flex flex-col items-start"
+  >
     <button @click="isVisible=!isVisible">
       <slot />
     </button>
     <div
       v-if="isVisible"
-      ref="target"
       class="absolute mt-10 z-50 w-fit rounded-lg bg-white border shadow border-primary/30 focus:outline-none" role="menu"
       aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
     >
