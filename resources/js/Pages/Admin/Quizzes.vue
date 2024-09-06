@@ -41,7 +41,7 @@ function addKeys(quizzes:Quiz[]) {
 const request = new Request()
 
 function addQuiz() {
-  request.sendRequest('/admin/quizzes',{ method: 'post', data:{name: 'Nowy test'} })
+  request.sendRequest('/admin/quizzes',{ method: 'post', data:{title: 'Nowy test'} })
 }
 
 function toggleQuizView(quiz: Quiz) {

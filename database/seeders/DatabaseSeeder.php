@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             UserQuizSeeder::class,
         ]);
         Quiz::factory()->create([
-            "title" => "quiz_name",
+            "title" => "quiz_title",
             "scheduled_at" => Carbon::now()->addMinutes(60),
             "duration" => 120,
         ]);
