@@ -62,7 +62,7 @@ const history = computed(() => props.submissions.filter(submission => submission
     </div>
 
     <div v-if="scheduled.length == 0 && started.length == 0">
-      <p>Obecnie nie mamy zaplanowanych konkursów.</p>
+      <p>Obecnie nie mamy zaplanowanych żadnych konkursów.</p>
     </div>
 
     <Divider v-if="history.length > 0">
