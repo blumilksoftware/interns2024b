@@ -15,7 +15,7 @@ const props = defineProps<{
 }>()
 
 const isClosed = (quiz: Quiz) => (
-    dayjs(quiz.scheduledAt).add(quiz.duration ?? 0, 'm').isBefore(Date.now()) ||
+  dayjs(quiz.scheduledAt).add(quiz.duration ?? 0, 'm').isBefore(Date.now()) ||
     props.submissions.find(submission => submission.quiz === quiz.id)?.closed
 )
 
