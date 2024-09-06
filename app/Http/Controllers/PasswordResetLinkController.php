@@ -38,7 +38,12 @@ class PasswordResetLinkController extends Controller
 
     public function resetCreate(string $token): Response
     {
-        return Inertia::render("User/ResetPassword", ["token" => $token]);
+        $email = request("email");
+
+        return Inertia::render("Guest/ResetPassword", [
+            "token" => $token,
+            "email" => $email,
+        ]);
     }
 
     public function resetStore(ResetPasswordRequest $request): RedirectResponse
@@ -58,6 +63,6 @@ class PasswordResetLinkController extends Controller
 
         return $status === Password::PASSWORD_RESET
             ? redirect()->route("home")->with("status", __($status))
-            : back()->withErrors(["email" => [__($status)]]);
+                : back()->withErrors(["email" => [__($status)]]);
     }
 }
