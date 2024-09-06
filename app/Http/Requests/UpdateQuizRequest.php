@@ -57,7 +57,7 @@ class UpdateQuizRequest extends FormRequest
             return;
         }
 
-        $correctAnswers = array_filter($question["answers"], fn(array $answer): bool => array_key_exists("correct", $answer));
+        $correctAnswers = array_filter($question["answers"], fn(array $answer): bool => array_key_exists("correct", $answer) && $question['correct']);
 
         if (count($correctAnswers) > 1) {
             throw ValidationException::withMessages([
