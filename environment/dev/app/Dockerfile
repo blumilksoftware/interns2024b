@@ -1,11 +1,11 @@
 # For other versions check: https://hub.docker.com/_/composer/tags
-FROM composer/composer:2.7.6-bin AS composer-bin
+FROM composer/composer:2.7.9-bin@sha256:16b920d0d55d162e3f624a6c4de2ad444a985318ac38566351d31958cbcf382b AS composer-bin
 
 # For other versions check: https://hub.docker.com/_/node/tags?page=1&name=bullseye-slim
-FROM node:22.6-bullseye-slim AS node
+FROM node:22.8.0-bullseye-slim@sha256:8c65df5951d957f9c3239a10a5eda4fc17505fd7c3fe69f602b34e4b2cb84390 AS node
 
 # For other versions check: https://hub.docker.com/_/php/tags?page=1&name=fpm-bullseye
-FROM php:8.3.7-fpm-bullseye
+FROM php:8.3.11-fpm-bullseye@sha256:a6992f50fecef134e61b477f7ba07783e771ea6df2f93a3d95ed4e72c3d82062
 
 COPY --from=composer-bin ./composer /usr/bin/composer
 
