@@ -35,6 +35,6 @@ class ProfileUserController extends Controller
         $user->save();
 
         return redirect()->back()
-            ->with("success", "Zaktualizowano hasło");
+            ->with("status", "Zaktualizowano hasło");
     }
 }
