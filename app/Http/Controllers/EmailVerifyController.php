@@ -22,14 +22,16 @@ class EmailVerifyController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render("Auth/Verify-Email");
+        return Inertia::render("Auth/VerifyEmail");
     }
 
     public function send(Request $request): RedirectResponse
     {
-        $request->user()->sendEmailVerificationNotification();
+        if (auth()->check()) {
+            $request->user()->sendEmailVerificationNotification();
+        }
 
         return back()
-            ->with("message", "Wiadomość z linkiem aktywacyjnym została wysłana na Twój adres e-mail!");
+            ->with("status", "Wiadomość z linkiem aktywacyjnym została wysłana na Twój adres e-mail!");
     }
 }
