@@ -29,9 +29,6 @@ class EmailVerifyController extends Controller
     {
         if (auth()->check()) {
             $request->user()->sendEmailVerificationNotification();
-
-            return back()
-                ->with("status", "Wiadomość z linkiem aktywacyjnym została wysłana na Twój adres e-mail!");
         }
 
         return back()
