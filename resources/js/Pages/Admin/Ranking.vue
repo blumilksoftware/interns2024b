@@ -8,8 +8,6 @@ import FormButton from '@/components/Common/FormButton.vue'
 
 const props = defineProps<QuizRankingProps>()
 
-const form = useForm({})
-
 const quiz = ref(props.quiz)
 const rankings = ref(props.rankings)
 
