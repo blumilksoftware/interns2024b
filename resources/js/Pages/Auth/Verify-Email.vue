@@ -9,8 +9,6 @@ function logout() {
 }
 
 function sent() {
-
-
   form.post('/email/verification-notification')
 }
 
