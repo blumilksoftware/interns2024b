@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             UserQuizSeeder::class,
         ]);
 
+        Quiz::factory()->locked()->count(5)->create(["scheduled_at" => Carbon::now()->addMonth()]);
+
         $quiz = Quiz::factory()->locked()->create(["name" => "Test Quiz", "scheduled_at" => Carbon::now(), "duration" => 2]);
         $questions = Question::factory()->count(10)->create(["quiz_id" => $quiz->id]);
 

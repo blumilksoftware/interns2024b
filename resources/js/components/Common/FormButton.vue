@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-import { useForm } from '@inertiajs/vue3'
+import { router } from '@inertiajs/vue3'
+import {ref} from 'vue'
 import Button from '@/components/Common/Button.vue'
 
-const form = useForm({})
 const props = withDefaults(defineProps<{
   small?: boolean
   disabled?: boolean
@@ -11,17 +11,31 @@ const props = withDefaults(defineProps<{
   class?: string
   href: string
   method?: 'post' | 'get' | 'put' | 'patch' | 'delete'
-  options?: any
-}>(), { method: 'get', class: '', options: {}})
+  data?: any
+  preserveState?: boolean
+  preserveScroll?: boolean
+  only?: string[]
+}>(), { method: 'get', class: '', options: undefined, data: undefined, only: undefined })
+
+const processing = ref(false)
+const emit = defineEmits(['click', 'finish'])
 
 function handleSubmit() {
-  form[props.method](props.href, props.options)
+  processing.value = true
+  emit('click')
+
+  router[props.method](props.href, props.data, {
+    onSuccess: () => { processing.value = false; emit('finish')},
+    only: props.only,
+    preserveState: props.preserveState,
+    preserveScroll: props.preserveScroll,
+  })
 }
 </script>
 
 <template>
-  <form :class="`${form.processing ? 'cursor-wait' : ''} ${props.class}`" @submit.prevent="handleSubmit">
-    <Button :disabled="disabled || form.processing" type="submit" :class="`${form.processing ? 'cursor-wait' : ''} ${props.class}`" :small="small" :text="text">
+  <form :class="`${processing ? 'cursor-wait' : ''} ${props.class}`" @submit.prevent="handleSubmit">
+    <Button :disabled="disabled || processing" type="submit" :class="`${processing ? 'cursor-wait' : ''} ${props.class}`" :small="small" :text="text">
       <slot />
     </Button>
   </form>
