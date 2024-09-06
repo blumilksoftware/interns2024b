@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Notifications\ResetPasswordNotification;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -14,6 +15,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
+ * @param string $token
  * @property int $id
  * @property string $name
  * @property string $surname
@@ -46,6 +48,11 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     public function school(): BelongsTo
     {
         return $this->belongsTo(School::class);
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 
     protected function casts(): array

@@ -20,9 +20,11 @@ class AppServiceProvider extends ServiceProvider
         JsonResource::withoutWrapping();
         VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
             return (new MailMessage())
+                ->subject("Weryfikacja Adresu E-mail")
                 ->view("emails.auth.verify", [
                     "user" => $notifiable,
-                    "url" => $url]);
+                    "url" => $url,
+                ]);
         });
     }
 }
