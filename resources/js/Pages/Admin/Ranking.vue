@@ -3,7 +3,6 @@
 import {computed, ref} from 'vue'
 import { defineProps } from 'vue'
 import type { QuizRankingProps} from '@/Types/Ranking'
-import { useForm } from '@inertiajs/vue3'
 import FormButton from '@/components/Common/FormButton.vue'
 
 const props = defineProps<QuizRankingProps>()
