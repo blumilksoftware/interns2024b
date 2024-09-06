@@ -30,11 +30,11 @@ class AnswerRecordResource extends JsonResource
      */
     protected function questionAnswersToArray(Question $question): Collection
     {
-        if ($question->quiz->isRankingPublished) {
-            return $question->answers->map(fn(Answer $answer) => $this->getFullAnswer($answer))->collect();
-        }
-
-        return $question->answers->map(fn(Answer $answer) => $this->getMinimalAnswer($answer))->collect();
+    return $question->answers->map(fn(Answer $answer) =>
+        $question->quiz->isRankingPublished
+            ? $this->getFullAnswer($answer)
+            : $this->getMinimalAnswer($answer)
+    )->collect();
     }
 
     protected function getFullAnswer(Answer $answer): array
