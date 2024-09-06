@@ -10,8 +10,7 @@ defineProps<{
 const form = useForm({ email: '' })
 
 function submit() {
-  form.post('/auth/forgot-password')
-}
+  form.post('/auth/forgot-password')}
 </script>
 
 <template>
