@@ -7,6 +7,8 @@
 cp .env.example .env
 make init
 make dev
+make shell
+php artisan queue:listen
 ```
 Application will be running under [localhost:63851](localhost:63851) and [http://interns2024b.blumilk.localhost/](http://interns2024b.blumilk.localhost/) in Blumilk traefik environment. If you don't have a Blumilk traefik environment set up yet, follow the instructions from this [repository](https://github.com/blumilksoftware/environment).
 
