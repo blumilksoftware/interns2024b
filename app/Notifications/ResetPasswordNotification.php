@@ -16,9 +16,6 @@ class ResetPasswordNotification extends Notification
         protected string $token,
     ) {}
 
-    /**
-     * @return array<int, string>
-     */
     public function via(object $notifiable): array
     {
         return ["mail"];
