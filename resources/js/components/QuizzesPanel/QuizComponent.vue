@@ -111,8 +111,8 @@ function isScheduled() {
         <button @click="toggleQuizView()"><ExapnsionToggleDynamicIcon :is-expanded="isSelected" /></button>
         <EditableInput v-model="quizRef.title" :error="request.errors.value.title" :is-editing="isEditing && isSelected" type="text" />
       </div>
-      <span v-if="!isSelected">Czas rozpoczęcia: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) }}</b> </span>
-      <span v-if="!isSelected">Czas trwania: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' minut': "brak" }}</b> </span>
+      <span v-if="!isSelected">Rozpoczęcie testu: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) }}</b> </span>
+      <span v-if="!isSelected">Czas trwania testu: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' minut': "brak" }}</b> </span>
       <div class="flex gap-5 justify-end">
         <button v-if="isDraft() && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
         <button v-if="isEditing" title="Anuluj edytowanie testu" @click="dismissEditing"><DismissIcon /></button>
