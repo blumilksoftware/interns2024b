@@ -7,6 +7,7 @@ use App\Http\Controllers\AnswerRecordController;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
 use App\Http\Controllers\EmailVerifyController;
+use App\Http\Controllers\InviteController;
 use App\Http\Controllers\PasswordResetLinkController;
 use App\Http\Controllers\ProfileUserController;
 use App\Http\Controllers\QuestionAnswerController;
@@ -82,6 +83,8 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::get("/users", [UserController::class, "index"])->name("admin.users.index");
     Route::get("/users/{user}/edit", [UserController::class, "edit"])->name("admin.users.edit");
     Route::patch("/users/{user}", [UserController::class, "update"])->name("admin.users.update");
+
+    Route::get("/invite", [InviteController::class, "index"])->name("admin.invite.index");
 
     Route::middleware(["role:super_admin"])->group(function (): void {
         Route::get("/admins", [AdminController::class, "index"])->name("admin.admins.index");
