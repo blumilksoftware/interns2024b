@@ -5,38 +5,27 @@ import SortIcon from '@/components/Icons/SortIcon.vue'
 import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
 import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
 import { type Quiz } from '@/Types/Quiz'
-import { type Question } from '@/Types/Question'
-import { type Answer } from '@/Types/Answer'
 import Dropdown from '@/components/Common/Dropdown.vue'
 import { Head } from '@inertiajs/vue3'
 const props = defineProps<{ quizzes: Quiz[] }>()
 const selectedQuiz = ref<number>()
 const showLockedQuizzes = ref<boolean>(true)
-const quizzes = ref<Quiz[]>(addKeys(props.quizzes))
+const quizzes = ref<Quiz[]>(mapKeys(props.quizzes))
 watch(
   () => props.quizzes,
-  (updatedQuizzes : Quiz[]) => quizzes.value = addKeys(updatedQuizzes),
+  (updatedQuizzes : Quiz[]) => quizzes.value = mapKeys(updatedQuizzes),
 )
 
-function addKeys(quizzes:Quiz[]) {
-  return quizzes.map(
-    (quiz: Quiz)=>{
-      return {
-        ...quiz, key: quiz.key ?? quiz.id, questions: quiz.questions.map(
-          (q:Question)=>{
-            return {
-              ...q, key: q.key ?? q.id, answers: q.answers.map(
-                (ans:Answer)=>{
-                  return {...ans, key: quiz.key ?? ans.id}
-                },
-              ),
-            }
-          },
-        ),
-      }
-    },
-  )
+function mapKeys<T extends {id: number, key?: number | string}>(array:T[]){
+  for (const record of array){
+    record.key ??= record.id
+    for (const key in record)
+      if (Array.isArray(record[key]))
+        mapKeys(record[key])
+  }
+  return array
 }
+
 
 const request = new Request()
 
