@@ -114,13 +114,13 @@ function isScheduled() {
       <span v-if="!isSelected">Rozpoczęcie testu: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) }}</b> </span>
       <span v-if="!isSelected">Czas trwania testu: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' minut': "brak" }}</b> </span>
       <div class="flex gap-5 justify-end">
+        <button v-if="!isEditing && isDraft()" class="bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="schedule">Opublikuj</button>
         <button v-if="isDraft() && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
         <button v-if="isEditing" title="Anuluj edytowanie testu" @click="dismissEditing"><DismissIcon /></button>
         <button v-if="isEditing" title="Zapisz edytowany test" @click="updateQuiz"><CheckIcon /></button>
         <button v-if="!isEditing" title="Skopiuj test" @click="copyQuiz()"><CopyIcon /></button>
         <div v-if="isPublished()" title="Ten test jest zablokowany. Nie można go modyfikować ani usunąć"><LockIcon /></div>
         <button v-else title="Usuń test" @click="deleteQuiz()"><TrashIcon /></button>
-        <button v-if="!isEditing && isDraft()" class="bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="schedule">Opublikuj</button>
         <button v-if="isScheduled()" class="border border-primary rounded-lg py-2 px-4 text-primary font-bold" @click="unSchedule">Wycofaj</button>
       </div>
     </div>
