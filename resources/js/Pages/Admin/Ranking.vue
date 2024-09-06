@@ -25,7 +25,7 @@ function unpublish() {
 
 <template>
   <div>
-    <h1>Ranking Quizu: {{ quiz.name }}</h1>
+    <h1>Ranking Quizu: {{ quiz.title }}</h1>
     <form @submit.prevent="publish">
       <button type="submit">Publikuj</button>
     </form>

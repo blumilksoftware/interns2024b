@@ -8,7 +8,6 @@ import { type Quiz } from '@/Types/Quiz'
 import { type Question } from '@/Types/Question'
 import { type Answer } from '@/Types/Answer'
 import Dropdown from '@/components/Common/Dropdown.vue'
-import Banner from '@/components/Common/Banner.vue'
 const props = defineProps<{ quizzes: Quiz[] }>()
 const selectedQuiz = ref<number>()
 const showLockedQuizzes = ref<boolean>(true)
@@ -49,16 +48,15 @@ function toggleQuizView(quiz: Quiz) {
 }
 
 function sortByNameAscending(){
-  quizzes.value.sort((a:Quiz, b:Quiz) => a.name.localeCompare(b.name))
+  quizzes.value.sort((a:Quiz, b:Quiz) => a.title.localeCompare(b.title))
 }
 
 function sortByNameDescending(){
-  quizzes.value.sort((a:Quiz, b:Quiz) => b.name.localeCompare(a.name))
+  quizzes.value.sort((a:Quiz, b:Quiz) => b.title.localeCompare(a.title))
 }
 </script>
 
 <template>
-  <Banner v-if="request.error.value" :text="request.error.value" banner-class="bg-red" @click="request.error.value=''" />
   <div class="flex flex-col w-full pb-3">
     <div data-name="toolbar" class="flex gap-5 px-6 backdrop-blur-md z-50">
       <Dropdown :options="[

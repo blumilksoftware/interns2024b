@@ -13,7 +13,6 @@ import PencilIcon from '../Icons/PencilIcon.vue'
 import CheckIcon from '../Icons/CheckIcon.vue'
 import DismissIcon from '../Icons/DismissIcon.vue'
 import { Request } from '@/scripts/request'
-import Banner from '../Common/Banner.vue'
 import { type VisitPayload } from '@/Types/VisitPayload'
 import { nanoid } from 'nanoid'
 
@@ -99,8 +98,6 @@ function isScheduled() {
     tabindex="0"
     class="mt-4 p-5 bg-white/70 rounded-lg items-center overflow-hidden relative shadow"
   >
-    <div v-if="request.error.value" class="h-10" />
-    <Banner v-if="request.error.value" :text="request.error.value" banner-class="-mx-5 bg-red/80" @click="request.error.value=''" />
     <div v-if="request.isRequestOngoing.value" class="absolute bg-white/50 backdrop-blur-md z-10 size-full left-0 flex items-center justify-center -mt-5">
       <div
         class="inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
@@ -112,7 +109,7 @@ function isScheduled() {
     <div class="min-h-12" :class="isSelected ? 'flex justify-between items-center' : 'grid grid-cols-[1fr,1fr,1fr,.8fr] gap-3 items-center'">
       <div class="flex gap-3">
         <button @click="toggleQuizView()"><ExapnsionToggleDynamicIcon :is-expanded="isSelected" /></button>
-        <EditableInput v-model="quizRef.name" :is-editing="isEditing && isSelected" type="text" />
+        <EditableInput v-model="quizRef.title" :error="request.errors.value.title" :is-editing="isEditing && isSelected" type="text" />
       </div>
       <span v-if="!isSelected">Czas rozpoczęcia: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) }}</b> </span>
       <span v-if="!isSelected">Czas trwania: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' minut': "brak" }}</b> </span>

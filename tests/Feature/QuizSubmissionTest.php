@@ -45,7 +45,7 @@ class QuizSubmissionTest extends TestCase
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("User/Quiz")
-                    ->where("submission.name", $quiz->name)
+                    ->where("submission.name", $quiz->title)
                     ->count("submission.answers", 2)
                     ->count("submission.answers.0.answers", 4)
                     ->count("submission.answers.1.answers", 4),

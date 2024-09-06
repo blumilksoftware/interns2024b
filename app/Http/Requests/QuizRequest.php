@@ -28,7 +28,7 @@ class QuizRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => ["required", "string"],
+            "title" => ["required", "string"],
             "scheduled_at" => ["date", "date_format:" . DateFormatHelper::DATETIME_FORMAT, "after:now"],
             "duration" => ["integer", "min:1"],
         ];

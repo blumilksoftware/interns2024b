@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
 
 /**
  * @property int $id
- * @property string $name
+ * @property string $title
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $scheduled_at
@@ -36,7 +36,7 @@ class Quiz extends Model
     use HasFactory;
 
     protected $fillable = [
-        "name",
+        "title",
         "scheduled_at",
         "duration",
         "ranking_published_at",

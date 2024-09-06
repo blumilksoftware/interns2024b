@@ -6,6 +6,7 @@ const props = defineProps<{
   type  :string
   isEditing : boolean
   min?: string
+  error?: string
 }>()
 const model = defineModel<number | string>()
 
@@ -17,21 +18,24 @@ function formatOutput(content: number | string | undefined) {
 </script>
 
 <template>
-  <span
-    v-if="!isEditing"
-    :class="{'font-normal':fontNormal }"
-    class="py-1 font-bold"
-  >
+  <div class="flex gap-3">
+    <span
+      v-if="!isEditing"
+      :class="{'font-normal':fontNormal }"
+      class="py-1 font-bold"
+    >
   
-    {{ formatOutput(model) }}
-  </span>
-  <input
-    v-else
-    v-model="model"
-    :min="min"
-    :type="type"
-    :class="{'font-normal':fontNormal }"
-    class="outline-none font-bold flex px-3 min-h-8 rounded-lg size-full ring-1 ring-primary/30 focus:ring-2 focus:ring-primary/50 bg-white/50"
-    autocomplete="off"
-  >
+      {{ formatOutput(model) }}
+    </span>
+    <input
+      v-else
+      v-model="model"
+      :min="min"
+      :type="type"
+      :class="{'font-normal':fontNormal }"
+      class="outline-none font-bold flex px-3 min-h-8 rounded-lg size-full ring-1 ring-primary/30 focus:ring-2 focus:ring-primary/50 bg-white/50"
+      autocomplete="off"
+    >
+    <span v-if="isEditing" class="text-red py-1 whitespace-nowrap">{{ error }}</span>
+  </div>
 </template>
