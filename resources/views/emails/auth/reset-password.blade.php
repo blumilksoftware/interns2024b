@@ -8,12 +8,12 @@
 </head>
 
 <header>
-    <img src="" alt="{{ config('app.name') }} Logo" width="150" height="50">
+    <img src="favicon.png" alt="{{ config('app.name') }} Logo" width="150" height="50">
     <h1>{{ config('app.name') }}</h1>
 </header>
 
 <body>
-<h1>Witaj,</h1>
+<h1>Witaj {{ $user->name }},</h1>
 
 <p>Otrzymaliśmy prośbę o zresetowanie hasła dla Twojego konta.</p>
 

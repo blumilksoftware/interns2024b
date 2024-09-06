@@ -31,6 +31,7 @@ class ResetPasswordNotification extends Notification
         return (new MailMessage())
             ->subject("Resetowanie hasła")
             ->view("emails.auth.reset-password", [
+                "user" => $notifiable,
                 "url" => $resetUrl,
             ]);
     }

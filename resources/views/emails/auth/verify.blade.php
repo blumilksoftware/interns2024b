@@ -4,10 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to {{ config('app.name') }}</title>
+    <title>Witaj w {{ config('app.name') }}</title>
 </head>
-
-<body>
 
 <header>
     <img src="" alt="{{ config('app.name') }} Logo" width="150" height="50">
@@ -15,11 +13,15 @@
 </header>
 
 <body>
-<p>Witaj,</p>
-<a href="{{ $url }}">Link </a>
-</body>
-<footer>
-</footer>
+<p>Witaj {{ $user->name }},</p>
+
+<p>Aby zweryfikować swoje konto, kliknij poniższy link:</p>
+
+<a href="{{ $url }}">Zweryfikuj E-mail </a>
+
+<p>Jeśli to nie Ty wysłałeś/aś tę prośbę, po prostu zignoruj tę wiadomość.</p>
+
+<p>Pozdrawiamy,<br>{{ config('app.name') }}</p>
 </body>
 
 </html>
