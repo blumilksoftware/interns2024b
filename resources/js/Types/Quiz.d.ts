@@ -5,7 +5,9 @@ export interface Quiz {
   name: string
   createdAt: number
   updatedAt: number
+  scheduledAt?: number
   duration?: number
-  locked: boolean
+  state:'published' | 'locked' | 'unlocked'
+  isUserAssigned: boolean
   questions: Question[]
 }

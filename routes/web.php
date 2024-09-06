@@ -23,9 +23,9 @@ use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Support\Facades\Route;
 
-Route::get("/email/verify", [EmailVerifyController::class, "create"])->middleware("auth")->name("verification.notice");
+Route::get("/email/verify", [EmailVerifyController::class, "create"])->name("verification.notice");
 Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["auth", "throttle:6,1"])->name("verification.verify");
-Route::post("/email/verification-notification", [EmailVerifyController::class, "send"])->middleware("auth", "throttle:3,60")->name("verification.send");
+Route::post("/email/verification-notification", [EmailVerifyController::class, "send"])->middleware("throttle:3,60")->name("verification.send");
 Route::post("/auth/logout", [AuthenticateSessionController::class, "logout"])->middleware("auth")->name("logout");
 
 Route::middleware(["guest"])->group(function (): void {
@@ -97,8 +97,10 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     });
 });
 
-Route::middleware(["auth"])->group(function (): void {
+Route::middleware(["auth", "verified"])->group(function (): void {
+    Route::post("/quizzes/{quiz}/assign", [QuizController::class, "assign"])->can("assign,quiz")->name("quizzes.assign");
     Route::post("/quizzes/{quiz}/start", [QuizController::class, "createSubmission"])->middleware(EnsureQuizIsNotAlreadyStarted::class)->can("submit,quiz")->name("quizzes.start");
     Route::get("/submissions/{quizSubmission}/", [QuizSubmissionController::class, "show"])->can("view,quizSubmission")->name("submissions.show");
+    Route::get("/submissions/{quizSubmission}/result", [QuizSubmissionController::class, "result"])->can("result,quizSubmission")->name("submissions.result");
     Route::patch("/answers/{answerRecord}/{answer}", [AnswerRecordController::class, "answer"])->can("answer,answerRecord,answer")->name("answers.answer");
 });

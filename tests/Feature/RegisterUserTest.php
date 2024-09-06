@@ -25,7 +25,7 @@ class RegisterUserTest extends TestCase
             "password" => "123456890",
             "school_id" => $school->id,
         ])
-            ->assertRedirect("/");
+            ->assertRedirect("/email/verify");
 
         $this->assertDatabaseHas("users", [
             "name" => "Test",
@@ -39,7 +39,7 @@ class RegisterUserTest extends TestCase
         ]);
     }
 
-    public function testUserCanNotCheckIfEmailIsAlreadyTakenViaRegisterForm(): void
+    public function testUserIsRedirectedToEmailVerifyIfEmailIsAlreadyTakenViaRegisterForm(): void
     {
         $school = School::factory()->create();
         User::factory()->create([
@@ -53,7 +53,9 @@ class RegisterUserTest extends TestCase
             "password" => "123456890",
             "school_id" => $school->id,
         ])
-            ->assertRedirect("/");
+            ->assertRedirect("/email/verify");
+
+        $this->assertGuest();
     }
 
     public function testUserCanNotRegisterWithWrongSchoolIndex(): void
