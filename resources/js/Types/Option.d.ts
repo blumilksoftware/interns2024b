@@ -1,4 +1,5 @@
 export interface Option{
-  id: number
+  key: number | string
   text: string
+  action: ()=>void
 }

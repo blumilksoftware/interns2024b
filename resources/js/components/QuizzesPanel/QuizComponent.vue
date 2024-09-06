@@ -17,10 +17,10 @@ import Banner from '../Common/Banner.vue'
 import { type VisitPayload } from '@/Types/VisitPayload'
 import { nanoid } from 'nanoid'
 
-const props = defineProps<{isSelected:boolean, showLockedQuizzes:boolean}>()
+const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])
 const isEditing = ref<boolean>(false)
-const quiz = defineModel<Quiz>({required:true})
+const quizRef = ref<Quiz>(props.quiz)
 
 // editing
 function edit(){
@@ -29,16 +29,13 @@ function edit(){
     toggleQuizView()
 }
 function dismissEditing(){
-  quiz.value = {...quiz.value}
+  quizRef.value = {...props.quiz}
   isEditing.value=false
 }
 
 // date formatters
-function formatDatePretty(date?:string):string|undefined{
-  return date ? dayjs(date).format('MMM D, YYYY - h:mm').toString() : undefined
-}
-function formatDateStandard(date?:string):string|undefined{
-  return date ? dayjs(date).format('Y-m-d H:i:s').toString() : undefined
+function formatDatePretty(date?:string) {
+  return date ? dayjs(date).format('DD.MM.YYYY HH:mm') : 'brak'
 }
 
 function addQuestion(){
@@ -47,7 +44,7 @@ function addQuestion(){
     text: 'Nowe pytanie',
     answers: [],
   }
-  quiz.value.questions.push(newQuestion)
+  quizRef.value.questions.push(newQuestion)
 }
 
 
@@ -55,43 +52,44 @@ function addQuestion(){
 const request = new Request()
 
 function deleteQuiz() {
-  request.sendRequest(`/admin/quizzes/${quiz.value.id}`, {method: 'delete'})
+  request.sendRequest(`/admin/quizzes/${quizRef.value.id}`, {method: 'delete'})
 }
 function copyQuiz() {
-  request.sendRequest(`/admin/quizzes/${quiz.value.id}/clone`, {method: 'post'})
+  request.sendRequest(`/admin/quizzes/${quizRef.value.id}/clone`, {method: 'post'})
 }
 function updateQuiz() {
+  quizRef.value.scheduledAt = dayjs(quizRef.value.scheduledAt).format('YYYY-MM-DDTHH:mm')
   const payload : VisitPayload = {
     method: 'patch',
-    data: {...quiz.value},
+    data: quizRef.value,
     onSuccess: ()=>isEditing.value = false,
   }
-  request.sendRequest(`/admin/quizzes/${quiz.value.id}`, payload)
+  request.sendRequest(`/admin/quizzes/${quizRef.value.id}`, payload)
 }
-function schedule(){
-  // No backend implemenation
+function schedule() {
+  request.sendRequest(`/admin/quizzes/${quizRef.value.id}/lock`,{method:'post'})
 }
-function unSchedule(){
-  // No backend implemenation
+function unSchedule() {
+  request.sendRequest(`/admin/quizzes/${quizRef.value.id}/unlock`,{method:'post'})
 }
 function deleteQuestion(question:CleanQuestion){
-  quiz.value.questions = quiz.value.questions.filter((q:CleanQuestion) => q !== question)
+  quizRef.value.questions = quizRef.value.questions.filter((q:CleanQuestion) => q !== question)
 }
 
 // emits
 function toggleQuizView() {
-  emit('displayToggle', quiz.value)
+  emit('displayToggle', quizRef.value)
 }
 
 // state
 function isPublished() {
-  return quiz.value.state === 'published'
+  return quizRef.value.state === 'published'
 }
 function isDraft() {
-  return quiz.value.state === 'unlocked'
+  return quizRef.value.state === 'unlocked'
 }
 function isScheduled() {
-  return quiz.value.state === 'locked'
+  return quizRef.value.state === 'locked'
 }
 </script>
 
@@ -114,9 +112,9 @@ function isScheduled() {
     <div class="min-h-12" :class="isSelected ? 'flex justify-between items-center' : 'grid grid-cols-[1fr,1fr,1fr,.8fr] gap-3 items-center'">
       <div class="flex gap-3">
         <button @click="toggleQuizView()"><ExapnsionToggleDynamicIcon :is-expanded="isSelected" /></button>
-        <EditableInput v-model="quiz.name" :is-editing="isEditing && isSelected" type="text" />
+        <EditableInput v-model="quizRef.name" :is-editing="isEditing && isSelected" type="text" />
       </div>
-      <span v-if="!isSelected">Czas rozpoczęcia: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) ? formatDatePretty(quiz.scheduledAt) : 'brak' }}</b> </span>
+      <span v-if="!isSelected">Czas rozpoczęcia: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) }}</b> </span>
       <span v-if="!isSelected">Czas trwania: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' minut': "brak" }}</b> </span>
       <div class="flex gap-5 justify-end">
         <button v-if="isDraft() && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
@@ -135,9 +133,9 @@ function isScheduled() {
     <div v-if="isSelected" class="flex mt-8 px-2 gap-8 flex-col">
       <div class="grid grid-cols-[auto,auto] gap-2 w-fit rounded-lg items-center">
         <span>Rozpoczęcie testu:</span>
-        <EditableInput type="datetime-local" :is-editing="isEditing" :v-model:value="formatDateStandard(quiz.scheduledAt)" />
+        <EditableInput v-model="quizRef.scheduledAt" type="datetime-local" :is-editing="isEditing" />
         <span>Czas trwania testu:</span>
-        <EditableInput placeholder="Podaj czas w minutach" type="number" min="0" :is-editing="isEditing" :v-model="quiz.duration" />
+        <EditableInput v-model="quizRef.duration" placeholder="Podaj czas w minutach" type="number" min="0" :is-editing="isEditing" />
       </div>
           
       <!-- question -->
@@ -149,7 +147,7 @@ function isScheduled() {
         <data v-if="isSelected" class="flex flex-col gap-4">
           <div v-for="(question, idx) of quiz.questions" :key="question.key">
             <QuestionComponent 
-              v-model="quiz.questions[idx]" :is-editing="isEditing"
+              v-model="quizRef.questions[idx]" :is-editing="isEditing"
               :index="idx" :questions-length="quiz.questions.length" @delete="deleteQuestion"
             />
           </div>

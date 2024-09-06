@@ -14,10 +14,10 @@ class QuizRequest extends FormRequest
         return true;
     }
 
-    public function prepareForValidation(): void 
+    public function prepareForValidation(): void
     {
         if ($this->has("scheduledAt")) {
-            $this->merge(['scheduled_at' => $this->input('scheduledAt')]);
+            $this->merge(["scheduled_at" => $this->input("scheduledAt")]);
         }
     }
 
