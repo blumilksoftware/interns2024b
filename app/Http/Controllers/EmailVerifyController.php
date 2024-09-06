@@ -27,9 +27,11 @@ class EmailVerifyController extends Controller
 
     public function send(Request $request): RedirectResponse
     {
-        $request->user()->sendEmailVerificationNotification();
+        if (auth()->check()) {
+            $request->user()->sendEmailVerificationNotification();
+        }
 
         return back()
-            ->with("message", "Wiadomość z linkiem aktywacyjnym została wysłana na Twój adres e-mail!");
+            ->with("status", "Wiadomość z linkiem aktywacyjnym została wysłana na Twój adres e-mail!");
     }
 }

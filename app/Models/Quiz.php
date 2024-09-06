@@ -77,13 +77,9 @@ class Quiz extends Model
 
     public function state(): Attribute
     {
-        return Attribute::get(function (): string {
-            if ($this->isPublished) {
-                return "published";
-            }
-
-            return $this->isLocked ? "locked" : "unlocked";
-        });
+        return Attribute::get(
+            fn(): string => $this->isPublished ? "published" : ($this->isLocked ? "locked" : "unlocked"),
+        );
     }
 
     public function isUserAssigned(User $user): bool
