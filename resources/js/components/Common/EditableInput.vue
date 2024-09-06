@@ -12,8 +12,9 @@ const model = defineModel<number | string>()
 
 function formatOutput(content: number | string | undefined) {
   if (content === null || content === undefined) return 'brak'
-  if (props.type !== 'datetime-local') return content
-  return dayjs(content).format('DD.MM.YYYY HH:mm')
+  if (props.type === 'number') return content + ' minut'
+  if (props.type === 'datetime-local') return dayjs(content).format('DD.MM.YYYY HH:mm')
+  return content
 }
 </script>
 
