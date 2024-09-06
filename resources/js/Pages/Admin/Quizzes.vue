@@ -8,6 +8,7 @@ import { type Quiz } from '@/Types/Quiz'
 import { type Question } from '@/Types/Question'
 import { type Answer } from '@/Types/Answer'
 import Dropdown from '@/components/Common/Dropdown.vue'
+import { Head } from '@inertiajs/vue3'
 const props = defineProps<{ quizzes: Quiz[] }>()
 const selectedQuiz = ref<number>()
 const showLockedQuizzes = ref<boolean>(true)
@@ -57,6 +58,9 @@ function sortByNameDescending(){
 </script>
 
 <template>
+  <Head>
+    <title>Testy - Panel Adminu</title>
+  </Head>
   <div class="flex flex-col w-full pb-3">
     <div data-name="toolbar" class="flex gap-5 px-6 backdrop-blur-md z-50">
       <Dropdown :options="[
