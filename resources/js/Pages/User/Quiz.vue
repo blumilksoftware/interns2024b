@@ -9,8 +9,7 @@ import Button from '@/components/Common/Button.vue'
 import {type AnswerRecord} from '@/Types/AnswerRecord'
 import TimeLeft from '@/components/Common/TimeLeft.vue'
 import MessageBox, { useMessageBox } from '@/components/Common/MessageBox.vue'
-import {route} from 'ziggy-js'
-import {Head} from "@inertiajs/vue3";
+import {Head} from '@inertiajs/vue3'
 
 const props = defineProps<{ submission: QuizSubmission }>()
 const answers = ref(props.submission.answers)
@@ -25,7 +24,7 @@ function handleTimeout() {
 }
 
 function handleAnswer(answers: AnswerRecord, selected: number) {
-  axios.post(route('answers.answer', { answerRecord: answers.id, answer: selected }), { _method: 'patch' })
+  axios.post(`/answers/${answers.id}/${selected}`, { _method: 'patch' })
   answers.selected = selected
 }
 </script>
@@ -77,13 +76,13 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
 
     <div v-if="!timeout" class="h-80 flex flex-col items-center justify-center">
       <p class="font-semibold text-primary text-xl p-5 text-center">To już wszystkie pytania. Czy chcesz oddać test?</p>
-      <FormButton v-if="allAnswered" small :href="route('submissions.close', submission.id)" method="post">Oddaj test</FormButton>
+      <FormButton v-if="allAnswered" small :href="`/submissions/${submission.id}/close`" method="post">Oddaj test</FormButton>
       <Button v-else small @click="emptyAnswerMessage.show">Oddaj test</Button>
     </div>
 
     <div v-else class="h-80 flex flex-col items-center justify-center">
       <p class="font-semibold text-primary text-xl p-5 text-center">Czas przewidziany na ten test dobiegł końca. <br> Twój test został przesłany do ocenienia</p>
-      <FormButton small :href="route('submissions.result', submission.id)" method="get">Podsumowanie</FormButton>
+      <FormButton small :href="`/submissions/${submission.id}/result`" method="get">Podsumowanie</FormButton>
     </div>
   </div>
 
@@ -98,7 +97,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
 
     <template #buttons>
       <Button small @click="emptyAnswerMessage.close">Wróć</Button>
-      <FormButton small :href="route('submissions.close', submission.id)" method="post">Oddaj mimo to</FormButton>
+      <FormButton small :href="`/submissions/${submission.id}/close`" method="post">Oddaj mimo to</FormButton>
     </template>
   </MessageBox>
 

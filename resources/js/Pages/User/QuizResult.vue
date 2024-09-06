@@ -4,11 +4,10 @@ import {type QuizSubmission} from '@/Types/QuizSubmission'
 import Divider from '@/components/Common/Divider.vue'
 import Button from '@/components/Common/Button.vue'
 import {calcSecondsBetweenDates, secondsToHour, timeToString} from '@/Helpers/Time'
-import {route} from 'ziggy-js'
 import {computed} from 'vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
 import FakeRadio from '@/components/Common/FakeRadio.vue'
-import {Head} from "@inertiajs/vue3";
+import {Head} from '@inertiajs/vue3'
 
 const props = defineProps<{ submission: QuizSubmission, hasRanking: boolean }>()
 const duration = secondsToHour(calcSecondsBetweenDates(props.submission.closedAt, props.submission.openedAt))
@@ -68,7 +67,7 @@ const points = computed(() =>
 
     <div v-if="hasRanking" class="h-80 flex flex-col items-center justify-center">
       <p class="font-semibold text-primary text-xl p-5 text-center">To już wszystkie pytania</p>
-      <LinkButton small :href="route('quizzes.ranking', submission.quiz)">Ranking</LinkButton>
+      <LinkButton small :href="`/quizzes/${submission.quiz}/ranking`">Ranking</LinkButton>
     </div>
 
     <div v-else class="h-80 flex flex-col items-center justify-center">
