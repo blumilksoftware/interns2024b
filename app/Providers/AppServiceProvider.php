@@ -18,13 +18,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         JsonResource::withoutWrapping();
-        VerifyEmail::toMailUsing(function (object $notifiable, string $url) {
-            return (new MailMessage())
+        VerifyEmail::toMailUsing(
+            fn(object $notifiable, string $url): MailMessage => (new MailMessage())
                 ->subject("Weryfikacja adresu e-mail")
                 ->view("emails.auth.verify", [
                     "user" => $notifiable,
                     "url" => $url,
-                ]);
-        });
+                ]),
+        );
     }
 }
