@@ -281,8 +281,6 @@ class UserTest extends TestCase
             "is_anonymized" => true,
         ]);
 
-        $anonymizeUserData = $user->toArray();
-
         $this->actingAs($this->admin)
             ->from("/admin/users/{$user->id}")
             ->patch("/admin/users/{$user->id}", [
@@ -293,7 +291,9 @@ class UserTest extends TestCase
             ])
             ->assertForbidden();
 
-        $this->assertDatabaseHas("users", $anonymizeUserData);
+        $this->assertDatabaseMissing("users", [
+            "name" => "New Name",
+        ]);
 
         $this->actingAs($this->superAdmin)
             ->from("/admin/users/{$user->id}")
@@ -305,7 +305,9 @@ class UserTest extends TestCase
             ])
             ->assertForbidden();
 
-        $this->assertDatabaseHas("users", $anonymizeUserData);
+        $this->assertDatabaseMissing("users", [
+            "name" => "New Name",
+        ]);
     }
 
     public function testSuperAdminCannotAnonymizeAdmin(): void

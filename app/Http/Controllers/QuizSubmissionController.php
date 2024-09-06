@@ -17,4 +17,14 @@ class QuizSubmissionController extends Controller
 
         return Inertia::render("User/Quiz", ["submission" => QuizSubmissionResource::make($quizSubmission)]);
     }
+
+    public function result(QuizSubmission $quizSubmission): Response
+    {
+        $quizSubmission->load(["answerRecords.question.answers", "quiz"]);
+
+        return Inertia::render("User/QuizResult", [
+            "submission" => QuizSubmissionResource::make($quizSubmission),
+            "hasRanking" => $quizSubmission->quiz->isRankingPublished,
+        ]);
+    }
 }
