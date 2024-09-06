@@ -112,7 +112,7 @@ function isScheduled() {
         <EditableInput v-model="quizRef.title" :error="request.errors.value.title" :is-editing="isEditing && isSelected" type="text" />
       </div>
       <span v-if="!isSelected">Rozpoczęcie testu: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) }}</b> </span>
-      <span v-if="!isSelected">Czas trwania testu (min): <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' minut': "brak" }}</b> </span>
+      <span v-if="!isSelected">Czas trwania testu: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' minut': "brak" }}</b> </span>
       <div class="flex gap-5 justify-end">
         <button v-if="isDraft() && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
         <button v-if="isEditing" title="Anuluj edytowanie testu" @click="dismissEditing"><DismissIcon /></button>
@@ -131,7 +131,7 @@ function isScheduled() {
       <div class="grid grid-cols-[auto,auto] gap-2 w-fit rounded-lg items-center">
         <span>Rozpoczęcie testu:</span>
         <EditableInput v-model="quizRef.scheduledAt" type="datetime-local" :is-editing="isEditing" />
-        <span>Czas trwania testu:</span>
+        <span>Czas trwania testu: <span v-if="isEditing">(min)</span></span>
         <EditableInput v-model="quizRef.duration" type="number" min="0" :is-editing="isEditing" />
       </div>
           
