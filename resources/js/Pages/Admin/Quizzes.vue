@@ -8,6 +8,7 @@ import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
 import { type Quiz } from '@/Types/Quiz'
 import { type Question } from '@/Types/Question'
 import { type Answer } from '@/Types/Answer'
+import Dropdown from '@/components/Common/Dropdown.vue'
 const props = defineProps<{ quizzes: Quiz[] }>()
 const selectedQuiz = ref<number>()
 const showLockedQuizzes = ref<boolean>(true)
@@ -50,9 +51,16 @@ function toggleQuizView(quiz: Quiz) {
 
 <template>
   <div class="flex flex-col w-full pb-3">
-    <div data-name="toolbar" class="flex gap-5 px-6 backdrop-blur-md">
-      <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <FilterIcon /> Filtruj </button>
-      <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <SortIcon /> Sortuj </button>
+    <div data-name="toolbar" class="flex gap-5 px-6 backdrop-blur-md z-50">
+      <Dropdown :options="[]"> 
+        <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <FilterIcon /> Filtruj </button>
+      </Dropdown>
+      <Dropdown :options="[
+        {key: 0, text: 'Sortuj według nazwy (A–Z)', action:()=>{}},
+        {key: 1, text: 'Sortuj według nazwy (Z–A)', action:()=>{}},
+      ]"> 
+        <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <SortIcon /> Sortuj </button>
+      </Dropdown>
       <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg" @click="showLockedQuizzes=!showLockedQuizzes"> <EyeDynamicIcon :is-opened="showLockedQuizzes" /> {{ showLockedQuizzes ? 'Pokaż' : 'Schowaj' }} zablokowane </button>
       <div class="flex-1" />
       <button :disabled="request.isRequestOngoing.value" :class="{'opacity-70':request.isRequestOngoing.value}" class="font-bold" @click="addQuiz">+&nbsp;Dodaj&nbsp;test</button>
