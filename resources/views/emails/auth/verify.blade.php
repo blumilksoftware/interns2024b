@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Witaj w {{ config('app.name') }}</title>
+    <title> {{ config('app.name') }}</title>
 </head>
 
 <header>
@@ -13,11 +13,11 @@
 </header>
 
 <body>
-<p>Witaj {{ $user->name }},</p>
+<p>Cześć {{ $user->name }},</p>
 
 <p>Aby zweryfikować swoje konto, kliknij poniższy link:</p>
 
-<a href="{{ $url }}">Zweryfikuj E-mail </a>
+<a href="{{ $url }}">Zweryfikuj e-mail </a>
 
 <p>Jeśli to nie Ty wysłałeś/aś tę prośbę, po prostu zignoruj tę wiadomość.</p>
 
