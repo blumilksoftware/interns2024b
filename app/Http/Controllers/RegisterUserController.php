@@ -26,6 +26,6 @@ class RegisterUserController extends Controller
             Auth::login($user);
         }
 
-        return Redirect::route("home");
+        return Redirect::route("verification.notice");
     }
 }
