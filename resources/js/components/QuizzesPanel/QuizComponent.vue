@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import dayjs from 'dayjs'
+import { computed, ref } from 'vue'
+import dayjs, { type ConfigType } from 'dayjs'
 import { type Quiz } from '@/Types/Quiz'
 import { type CleanQuestion } from '@/Types/CleanQuestion'
 import QuestionComponent from './QuestionComponent.vue'
@@ -15,11 +15,20 @@ import DismissIcon from '../Icons/DismissIcon.vue'
 import { Request } from '@/scripts/request'
 import { type VisitPayload } from '@/Types/VisitPayload'
 import { nanoid } from 'nanoid'
+import Datepicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
+import CalendarIcon from '../Icons/CalendarIcon.vue'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])
 const isEditing = ref<boolean>(false)
 const quizRef = ref<Quiz>(props.quiz)
+quizRef.value.scheduledAt = formatDateHTML(quizRef.value.scheduledAt)
+const isReadyToSchedule = computed<boolean>(()=>{
+  if (quizRef.value.scheduledAt && quizRef.value.duration)
+    return Date.parse(quizRef.value.scheduledAt) > Date.now()
+  return false
+})
 
 // editing
 function edit(){
@@ -33,8 +42,12 @@ function dismissEditing(){
 }
 
 // date formatters
-function formatDatePretty(date?:string) {
+function formatDatePretty(date?: ConfigType) {
   return date ? dayjs(date).format('DD.MM.YYYY HH:mm') : 'brak'
+}
+
+function formatDateHTML(date: ConfigType) {
+  return date ? dayjs(date).format('YYYY-MM-DDTHH:mm') : ''
 }
 
 function addQuestion(){
@@ -57,7 +70,6 @@ function copyQuiz() {
   request.sendRequest(`/admin/quizzes/${quizRef.value.id}/clone`, {method: 'post'})
 }
 function updateQuiz() {
-  quizRef.value.scheduledAt = dayjs(quizRef.value.scheduledAt).format('YYYY-MM-DDTHH:mm')
   const payload : VisitPayload = {
     method: 'patch',
     data: quizRef.value,
@@ -66,6 +78,7 @@ function updateQuiz() {
   request.sendRequest(`/admin/quizzes/${quizRef.value.id}`, payload)
 }
 function schedule() {
+  if (!isReadyToSchedule.value) return
   request.sendRequest(`/admin/quizzes/${quizRef.value.id}/lock`,{method:'post'})
 }
 function unSchedule() {
@@ -96,7 +109,7 @@ function isScheduled() {
   <div
     v-if="!(isPublished() && showLockedQuizzes)"
     tabindex="0"
-    class="mt-4 p-5 bg-white/70 rounded-lg items-center overflow-hidden relative shadow"
+    class="mt-4 p-5 bg-white/70 rounded-lg items-center relative shadow"
   >
     <div v-if="request.isRequestOngoing.value" class="absolute bg-white/50 backdrop-blur-md z-10 size-full left-0 flex items-center justify-center -mt-5">
       <div
@@ -114,14 +127,14 @@ function isScheduled() {
       <span v-if="!isSelected">Rozpoczęcie testu: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) }}</b> </span>
       <span v-if="!isSelected">Czas trwania testu: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' minut': "brak" }}</b> </span>
       <div class="flex gap-5 justify-end">
-        <button v-if="!isEditing && isDraft()" class="bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="schedule">Opublikuj</button>
+        <button v-if="!isEditing && isDraft()" title="Test jest niekompletny" :disabled="!isReadyToSchedule" class="disabled:opacity-50 bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="schedule">Opublikuj</button>
+        <button v-if="isScheduled()" class="border border-primary rounded-lg py-2 px-4 text-primary font-bold" @click="unSchedule">Wycofaj</button>
         <button v-if="isDraft() && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
         <button v-if="isEditing" title="Anuluj edytowanie testu" @click="dismissEditing"><DismissIcon /></button>
         <button v-if="isEditing" title="Zapisz edytowany test" @click="updateQuiz"><CheckIcon /></button>
         <button v-if="!isEditing" title="Skopiuj test" @click="copyQuiz()"><CopyIcon /></button>
         <div v-if="isPublished()" title="Ten test jest zablokowany. Nie można go modyfikować ani usunąć"><LockIcon /></div>
         <button v-else title="Usuń test" @click="deleteQuiz()"><TrashIcon /></button>
-        <button v-if="isScheduled()" class="border border-primary rounded-lg py-2 px-4 text-primary font-bold" @click="unSchedule">Wycofaj</button>
       </div>
     </div>
     <!-- header/ -->
@@ -130,7 +143,20 @@ function isScheduled() {
     <div v-if="isSelected" class="flex mt-8 px-2 gap-8 flex-col">
       <div class="grid grid-cols-[auto,auto] gap-2 w-fit rounded-lg items-center">
         <span>Rozpoczęcie testu:</span>
-        <EditableInput v-model="quizRef.scheduledAt" type="datetime-local" :is-editing="isEditing" />
+        <Datepicker
+          v-model="quizRef.scheduledAt"
+          locale="pl" 
+          :format="formatDatePretty"
+          :ui="{
+            menu: 'datepicker-menu',
+            input:'datepicker',
+          }"
+        >
+          <template #input-icon>
+            <CalendarIcon />
+          </template>
+        </Datepicker>
+        
         <span>Czas trwania testu: <span v-if="isEditing">(min)</span></span>
         <EditableInput v-model="quizRef.duration" type="number" min="0" :is-editing="isEditing" />
       </div>

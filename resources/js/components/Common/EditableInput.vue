@@ -19,24 +19,23 @@ function formatOutput(content: number | string | undefined) {
 </script>
 
 <template>
-  <div class="flex gap-3">
-    <span
+  <div>
+    <div
       v-if="!isEditing"
       :class="{'font-normal':fontNormal }"
-      class="py-1 font-bold"
+      class="py-1.5 font-bold"
     >
-  
       {{ formatOutput(model) }}
-    </span>
+    </div>
     <input
       v-else
       v-model="model"
       :min="min"
       :type="type"
       :class="{'font-normal':fontNormal }"
-      class="outline-none font-bold flex px-3 min-h-8 rounded-lg size-full ring-1 ring-primary/30 focus:ring-2 focus:ring-primary/50 bg-white/50"
+      class="outline-none font-bold flex px-3 py-2 min-h-8 rounded-md size-full ring-1 ring-primary/30 focus:ring-2 focus:ring-primary/50 bg-white/50"
       autocomplete="off"
     >
-    <span v-if="isEditing" class="text-red py-1 whitespace-nowrap">{{ error }}</span>
+    <span v-if="isEditing" class="text-red py-1.5 whitespace-nowrap">{{ error }}</span>
   </div>
 </template>

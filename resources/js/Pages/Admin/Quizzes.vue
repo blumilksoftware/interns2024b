@@ -73,3 +73,39 @@ function sortByNameDescending(){
     </div>
   </div>
 </template>
+
+<style>
+.datepicker {
+  @apply bg-white/50 rounded-md ring-1 ring-primary/30 outline-none border-none font-bold
+}
+.datepicker-menu{
+  @apply rounded-lg border border-primary/30
+}
+.dp__action_cancel{
+  @apply text-base py-4 px-4 rounded-md
+}
+.dp__action_cancel:hover{
+  @apply border-primary/30
+}
+.dp__action_select{
+  @apply !bg-primary text-base font-bold py-4 px-4 rounded-md
+}
+.dp__action_select:hover{
+  @apply bg-primary-950
+}
+.dp__active_date{
+  @apply bg-primary font-bold
+}
+.dp__today{
+  @apply border border-primary/30
+}
+.dp__btn {
+  @apply fill-primary text-primary stroke-primary
+}
+.dp__btn:hover {
+  @apply fill-primary-950 text-primary-950 stroke-primary-950
+}
+.dp__overlay {
+  @apply rounded-lg
+}
+</style>
