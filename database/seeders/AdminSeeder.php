@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Quiz;
-use App\Models\QuizSubmission;
 use App\Models\School;
 use App\Models\User;
 use Carbon\Carbon;
