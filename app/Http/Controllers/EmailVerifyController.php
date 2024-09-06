@@ -31,10 +31,10 @@ class EmailVerifyController extends Controller
             $request->user()->sendEmailVerificationNotification();
 
             return back()
-                ->with("message", "Wiadomość z linkiem aktywacyjnym została wysłana na Twój adres e-mail!");
+                ->with("status", "Wiadomość z linkiem aktywacyjnym została wysłana na Twój adres e-mail!");
         }
 
         return back()
-            ->with("message", "Wiadomość z linkiem aktywacyjnym została wysłana na Twój adres e-mail!");
+            ->with("status", "Wiadomość z linkiem aktywacyjnym została wysłana na Twój adres e-mail!");
     }
 }
