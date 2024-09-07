@@ -7,8 +7,8 @@ import LoginForm from '@/components/Home/LoginForm.vue'
 import type {School} from '@/Types/School'
 
 const isLogin = ref(false)
-defineExpose({ isLogin })
-
+const authSectionElement = ref<HTMLElement | undefined>() 
+defineExpose({ isLogin, authSectionElement})
 const { errors, schools } = defineProps<{
   errors: Record<string, string>
   schools: School[]
@@ -17,7 +17,7 @@ const { errors, schools } = defineProps<{
 </script>
 
 <template>
-  <section class="w-full flex flex-col items-center overflow-hidden backdrop-blur bg-white/30 lg:backdrop-blur-none lg:bg-transparent">
+  <section ref="authSectionElement" class="w-full flex flex-col items-center overflow-hidden backdrop-blur bg-white/30 lg:backdrop-blur-none lg:bg-transparent">
     <div class="w-full flex flex-col gap-10 max-w-lg px-5 py-20">
       <AuthButton v-model:is-login="isLogin" />
       <div class="grid">

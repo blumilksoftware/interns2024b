@@ -1,10 +1,11 @@
 <script setup lang="ts">
 
-import { ref, onMounted, onUnmounted, type Ref } from 'vue'
-import { inject } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
-const isLoginRef: Ref<any, any> | undefined = inject('isLoginRef')
 const isHidden = ref(false)
+const props = defineProps<{isLogin?:boolean}>()
+const isLoginRef = ref<boolean>(props.isLogin)
+const emit = defineEmits<{scrollToAuth:[isLogin:boolean]}>()
 
 function setBannerVisibility() {
   isHidden.value = window.scrollY / 100 >= 5
@@ -13,22 +14,17 @@ onMounted(() => window.addEventListener('scroll', setBannerVisibility))
 onUnmounted(() => window.removeEventListener('scroll', setBannerVisibility))
 
 function gotoAuthSection() {
-  window.scrollTo({
-    top: window.innerHeight,
-    behavior: 'smooth',
-  })
+  emit('scrollToAuth', isLoginRef.value)
 }
 
 function gotoRegisterSection() {
+  isLoginRef.value = false
   gotoAuthSection()
-  if (isLoginRef)
-    isLoginRef.value.isLogin = false
 }
 
 function gotoLoginSection() {
+  isLoginRef.value = true
   gotoAuthSection()
-  if (isLoginRef)
-    isLoginRef.value.isLogin = true
 }
 
 </script>
