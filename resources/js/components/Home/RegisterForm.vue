@@ -46,7 +46,7 @@ function submit() {
       <CustomInput v-model="form.surname" label="Nazwisko" :error="errors.surname" name="surname" type="surname" />
     </div>
 
-    <Searchbar :options="filteredSchoolOptions" :error="errors.school_id" @change="school => form.school_id = school.id.toString()" />
+    <Searchbar :options="filteredSchoolOptions" label="Szkoła" :error="errors.school_id" @change="school => form.school_id = school.id.toString()" />
 
     <CustomInput v-model="form.email" label="E-mail" :error="errors.email" name="email" type="email" />
     <PasswordInput v-model="form.password" :error="errors.password" />
