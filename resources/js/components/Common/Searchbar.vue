@@ -41,7 +41,9 @@ const onOptionClick = (school:School)=>{
         autocomplete="off"
         :value="isSearchFocused ? searchQuery : selected?.name"
         class="outline-none py-3 bg-transparent w-full text-gray-900"
-        required name="school_id" :class="{'cursor-pointer' : !isSearchFocused}"
+        required
+        name="search"
+        :class="{'cursor-pointer' : !isSearchFocused}"
         type="text"
         :placeholder="selected?.name"
         @input="(e:any)=>searchQuery=e.currentTarget.value"
