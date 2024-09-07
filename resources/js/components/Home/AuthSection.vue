@@ -10,7 +10,7 @@ const isLogin = ref(false)
 defineExpose({ isLogin })
 
 const { errors, schools } = defineProps<{
-  errors: Record<string, string[]>
+  errors: Record<string, string>
   schools: School[]
 }>()
 
@@ -22,7 +22,7 @@ const { errors, schools } = defineProps<{
       <AuthButton v-model:is-login="isLogin" />
       <div class="grid">
         <Transition :name="isLogin ? 'slide-right' : 'slide-left'">
-          <LoginForm v-if="isLogin" key="on" :errors />
+          <LoginForm v-if="isLogin" key="on" :errors="errors" />
           <RegisterForm v-else key="off" :errors="errors" :schools="schools" />
         </Transition>
       </div>

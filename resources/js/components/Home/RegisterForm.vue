@@ -6,6 +6,7 @@ import Searchbar from '@/components/Common/Searchbar.vue'
 import { type School } from '@/Types/School'
 import CustomInput from '../Common/CustomInput.vue'
 import { Request } from '@/scripts/request'
+import PasswordInput from '../Common/PasswordInput.vue'
 
 const { errors, schools } = defineProps<{
   errors: Record<string, string>
@@ -43,11 +44,7 @@ function submit() {
     </div>
 
     <CustomInput v-model="form.email" label="E-mail" :error="errors.email" name="email" type="email" />
-    <CustomInput v-model="form.password" label="Hasło" :error="errors.password" name="password" type="password">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5 stroke-primary/70">
-        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-      </svg>
-    </CustomInput>
+    <PasswordInput v-model="form.password" :error="errors.password" />
 
     <label class="mx-2 mt-4 flex flex-row items-center gap-4">
       <Checkbox />
