@@ -6,8 +6,10 @@ import UserLayout from '@/Layouts/UserLayout.vue'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import GuestLayout from '@/Layouts/GuestLayout.vue'
 
+const appName = import.meta.env.VITE_APP_NAME
+
 createInertiaApp({
-  title: (title) => `${title}`,
+  title: (title) => `${title} - ${appName}`,
   resolve: async (name) => {
     const page = await resolvePageComponent(
       `./Pages/${name}.vue`,

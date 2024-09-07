@@ -9,6 +9,7 @@ import BackgroundEffect from '@/components/Common/BackgroundEffect.vue'
 import {type School} from '@/Types/School'
 import Banner from '@/components/Common/Banner.vue'
 import type {PageProps} from '@/Types/PageProps'
+import { Head } from '@inertiajs/vue3'
 
 const isLogin = ref(null)
 
@@ -28,6 +29,9 @@ provide('isLoginRef', isLogin)
 </script>
 
 <template>
+  <Head>
+    <title>Strona główna</title>
+  </Head>
   <Transition>
     <Banner v-if="status" :text="status" @click="status = ''" />
   </Transition>

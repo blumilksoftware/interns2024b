@@ -1,51 +1,37 @@
 <script lang="ts" setup>
 
-import { reactive } from 'vue'
+import { ref } from 'vue'
 import Checkbox from '@/components/Common/Checkbox.vue'
 import Searchbar from '@/components/Common/Searchbar.vue'
-import { router } from '@inertiajs/vue3'
 import { type School } from '@/Types/School'
+import CustomInput from '../Common/CustomInput.vue'
+import { Request } from '@/scripts/request'
 
 const { errors, schools } = defineProps<{
-  errors: Record<string, string[]>
+  errors: Record<string, string>
   schools: School[]
 }>()
 
-const form = reactive({
-  name: null,
-  surname: null,
-  email: null,
-  password: null,
-  school_id: null,
+const form = ref({
+  name: '',
+  surname: '',
+  email: '',
+  password: '',
+  school_id: '',
 })
 
+const request = new Request()
+
 function submit() {
-  router.post('/auth/register', form)
+  request.sendRequest('/auth/register', {method: 'post', data: form.value, preserveScroll: true, preserveState: true})
 }
 </script>
 
 <template>
   <form class="row-start-1 col-start-1 space-y-6" @submit.prevent="submit">
     <div class="flex flex-col gap-6 sm:flex-row">
-      <div class="w-full">
-        <label for="name" class="text-sm font-medium leading-6 text-gray-900">Imię</label>
-        <div class="mt-2 w-full">
-          <input id="name" v-model="form.name" required name="name" type="text"
-                 :class="{'ring-red focus:ring-red':errors.name}" class="duration-200 ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400"
-          >
-          <div v-if="errors.name" class="text-red">{{ errors.name }}</div>
-        </div>
-      </div>
-
-      <div class="w-full">
-        <label for="surname" class="text-sm font-medium leading-6 text-gray-900">Nazwisko</label>
-        <div class="mt-2 w-full">
-          <input id="surname" v-model="form.surname" required name="surname" type="text"
-                 :class="{'ring-red focus:ring-red':errors.surname}" class="duration-200 ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400"
-          >
-          <div v-if="errors.surname" class="text-red">{{ errors.surname }}</div>
-        </div>
-      </div>
+      <CustomInput v-model="form.name" label="Imię" :error="errors.name" name="name" type="name" />
+      <CustomInput v-model="form.surname" label="Nazwisko" :error="errors.surname" name="surname" type="surname" />
     </div>
 
     <div>
@@ -56,44 +42,31 @@ function submit() {
       <div v-if="errors.school_id" class="text-red">{{ errors.school_id }}</div>
     </div>
 
-    <div>
-      <label for="email" class="block text-sm font-medium leading-6 text-gray-900">E-mail</label>
-      <div class="mt-2">
-        <input id="email" v-model="form.email" required name="email" type="email" autocomplete="email"
-               :class="{'ring-red focus:ring-red':errors.email}" class="duration-200 ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400"
-        >
-        <div v-if="errors.email" class="text-red">{{ errors.email }}</div>
-      </div>
-    </div>
+    <CustomInput v-model="form.email" label="E-mail" :error="errors.email" name="email" type="email" />
+    <CustomInput v-model="form.password" label="Hasło" :error="errors.password" name="password" type="password">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5 stroke-primary/70">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+      </svg>
+    </CustomInput>
 
-    <div>
-      <div class="flex items-center justify-between">
-        <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Hasło</label>
-      </div>
-      <div class="mt-2">
-        <input id="password" v-model="form.password" required name="password" type="password" autocomplete="current-password"
-               :class="{'ring-red focus:ring-red':errors.password}" class="duration-200 ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400"
-        >
-        <div v-if="errors.password" class="text-red">{{ errors.password }}</div>
-      </div>
-    </div>
-
-    <div class="mx-2 mt-4 flex flex-row items-center gap-4">
+    <label class="mx-2 mt-4 flex flex-row items-center gap-4">
       <Checkbox />
       <p class="w-fit text-sm text-gray-500">
         Akceptuję
         <a href="#" class="font-semibold leading-6 text-primary hover:primary">regulamin</a> i
         <a href="#" class="font-semibold leading-6 text-primary hover:primary">politykę prywatności</a>
       </p>
-    </div>
+    </label>
 
     <div>
-      <button type="submit"
-              class="
-              rounded-lg text-md flex w-full justify-center bg-primary p-3 font-bold text-white transition hover:bg-primary-950
-              focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      <button 
+        :disabled="request.isRequestOngoing.value"
+        type="submit"
+        class="rounded-lg text-md flex w-full justify-center bg-primary p-3 font-bold text-white
+        transition hover:bg-primary-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+        disabled:opacity-70"
       >
-        Zarejestruj się
+        Zaloguj się
       </button>
     </div>
   </form>
