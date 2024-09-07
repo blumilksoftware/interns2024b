@@ -53,7 +53,7 @@ watch(
 
   <div class="flex flex-col h-screen">
     <BackgroundEffect />
-    <AuthBanner :is-login="authSectiontRef?.isLogin" @scroll-to-auth="scrollToAuth"/>
+    <AuthBanner :is-login="authSectiontRef?.isLogin" @scroll-to-auth="scrollToAuth" />
     <div class="flex flex-col lg:flex-row lg:justify-evenly lg:gap-x-[5vw] lg:px-[5vw]">
       <GeneralSection />
       <AuthSection ref="authSectiontRef" :errors="errors" :schools="schools" />

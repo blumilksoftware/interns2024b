@@ -30,13 +30,12 @@ const model = defineModel<string>()
 <template>
   <label ref="target" class="block w-full text-sm font-medium leading-6 text-gray-900 duration-200" :class="{'text-red': error}">{{ label }}
     <div
-      class="
-        w-full mt-2 duration-200 max-h-12 flex bg-white/30 rounded-lg ring-2 ring-primary/30 ring-inset pl-3"
-      :class="{'ring-[0.2rem] ring-primary/100':isFocused}"
+      class=" w-full mt-2 duration-200 max-h-12 flex bg-white/30 rounded-lg border-2 border-primary/30 overflow-hidden px-3 gap-3"
+      :class="{'border-3 border-primary/60':isFocused}"
     >
       <input
         v-model="model"
-        class="outline-none py-3 bg-transparent w-full text-gray-900"
+        class="outline-none py-3 bg-transparent w-full"
         :name="name"
         :type="type"
         :required="required"
@@ -45,7 +44,7 @@ const model = defineModel<string>()
         @focus="isFocused=true"
       >
 
-      <div v-if="$slots.default" class="flex flex-1 items-center justify-center px-3 stroke-primary/100">
+      <div v-if="$slots.default" class="flex flex-1 items-center justify-center stroke-primary/100">
         <slot />
       </div>
     </div>

@@ -1,17 +1,28 @@
 <script lang="ts" setup>
 
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { type School } from '@/Types/School'
+import { type Option } from '@/Types/Option'
+import { Request } from '@/scripts/request'
 import Checkbox from '@/components/Common/Checkbox.vue'
 import Searchbar from '@/components/Common/Searchbar.vue'
-import { type School } from '@/Types/School'
 import CustomInput from '../Common/CustomInput.vue'
-import { Request } from '@/scripts/request'
 import PasswordInput from '../Common/PasswordInput.vue'
+import { nanoid } from 'nanoid'
 
-const { errors, schools } = defineProps<{
+const props = defineProps<{
   errors: Record<string, string>
   schools: School[]
 }>()
+
+const filteredSchools = computed(() => props.schools.toSorted((a, b) => (a.city + a.name).localeCompare(b.city + b.name)))
+const filteredSchoolOptions = computed(
+  ()=> filteredSchools.value.map(
+    (school: School):Option & School=>{
+      return {...school, key: nanoid(), title: school.city, text: school.name }
+    },
+  ),
+)
 
 const form = ref({
   name: '',
@@ -35,13 +46,7 @@ function submit() {
       <CustomInput v-model="form.surname" label="Nazwisko" :error="errors.surname" name="surname" type="surname" />
     </div>
 
-    <div>
-      <div class="flex items-center justify-between">
-        <label for="school_id" class="block text-sm font-medium leading-6 text-gray-900">Szkoła</label>
-      </div>
-      <Searchbar :schools="schools" @change="school => form.school_id = school" />
-      <div v-if="errors.school_id" class="text-red">{{ errors.school_id }}</div>
-    </div>
+    <Searchbar :options="filteredSchoolOptions" :error="errors.school_id" @change="school => form.school_id = school.id.toString()" />
 
     <CustomInput v-model="form.email" label="E-mail" :error="errors.email" name="email" type="email" />
     <PasswordInput v-model="form.password" :error="errors.password" />
