@@ -16,7 +16,7 @@ const form = ref({
 const request = new Request()
 
 function submit() {
-  request.sendRequest('/auth/register', {method: 'post', data: form.value, preserveScroll: true, preserveState: true})
+  request.sendRequest('/auth/login', {method: 'post', data: form.value, preserveScroll: true, preserveState: true})
 }
 </script>
 
