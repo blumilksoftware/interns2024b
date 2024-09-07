@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import dayjs, { type ConfigType } from 'dayjs'
 import { type Quiz } from '@/Types/Quiz'
 import { type CleanQuestion } from '@/Types/CleanQuestion'
@@ -24,11 +24,16 @@ const emit = defineEmits(['displayToggle'])
 const isEditing = ref<boolean>(false)
 const quizRef = ref<Quiz>(props.quiz)
 quizRef.value.scheduledAt = formatDateHTML(quizRef.value.scheduledAt)
+const currentTime = ref<number>(Date.now())
+const updateTimeInterval = setInterval(()=>currentTime.value = Date.now(), 1000)
+onBeforeUnmount(()=>{clearInterval(updateTimeInterval)})
+
 const isReadyToSchedule = computed<boolean>(()=>{
   if (quizRef.value.scheduledAt && quizRef.value.duration)
-    return Date.parse(quizRef.value.scheduledAt) > Date.now()
+    return Date.parse(quizRef.value.scheduledAt) > currentTime.value
   return false
 })
+
 
 // editing
 function edit(){
@@ -127,7 +132,7 @@ function isScheduled() {
       <span v-if="!isSelected">Rozpoczęcie testu: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) }}</b> </span>
       <span v-if="!isSelected">Czas trwania testu: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' minut': "brak" }}</b> </span>
       <div class="flex gap-5 justify-end">
-        <button v-if="!isEditing && isDraft()" title="Test jest niekompletny" :disabled="!isReadyToSchedule" class="disabled:opacity-50 bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="schedule">Opublikuj</button>
+        <button v-if="!isEditing && isDraft()" :title="!isReadyToSchedule ? 'Test jest niekompletny, lub czas jest źle ustawiony' : 'Udostępnij test uczniom'" :disabled="!isReadyToSchedule" class="disabled:opacity-50 bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="schedule">Opublikuj</button>
         <button v-if="isScheduled()" class="border border-primary rounded-lg py-2 px-4 text-primary font-bold" @click="unSchedule">Wycofaj</button>
         <button v-if="isDraft() && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
         <button v-if="isEditing" title="Anuluj edytowanie testu" @click="dismissEditing"><DismissIcon /></button>
