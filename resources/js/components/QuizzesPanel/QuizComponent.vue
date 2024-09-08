@@ -130,7 +130,7 @@ function isScheduled() {
         <EditableInput v-model="quizRef.title" :error="request.errors.value.title" :is-editing="isEditing && isSelected" type="text" />
       </div>
       <span v-if="!isSelected">Rozpoczęcie testu: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) }}</b> </span>
-      <span v-if="!isSelected">Czas trwania testu: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' minut': "brak" }}</b> </span>
+      <span v-if="!isSelected">Czas trwania testu: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' min': "brak" }}</b> </span>
       <div class="flex gap-5 justify-end">
         <button v-if="!isEditing && isDraft()" :title="!isReadyToSchedule ? 'Test jest niekompletny, lub czas jest źle ustawiony' : 'Udostępnij test uczniom'" :disabled="!isReadyToSchedule" class="disabled:opacity-50 bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="schedule">Opublikuj</button>
         <button v-if="isScheduled()" class="border border-primary rounded-lg py-2 px-4 text-primary font-bold" @click="unSchedule">Wycofaj</button>
