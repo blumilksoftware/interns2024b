@@ -86,10 +86,17 @@ function updateQuiz() {
 }
 function schedule() {
   if (!isReadyToSchedule.value) return
-  request.sendRequest(`/admin/quizzes/${quizRef.value.id}/lock`,{method:'post'})
+  request.sendRequest(`/admin/quizzes/${quizRef.value.id}/lock`,{
+    method:'post',
+    onSuccess:()=>quizRef.value.state = 'locked',
+  })
+  
 }
 function unSchedule() {
-  request.sendRequest(`/admin/quizzes/${quizRef.value.id}/unlock`,{method:'post'})
+  request.sendRequest(`/admin/quizzes/${quizRef.value.id}/unlock`,{
+    method:'post',
+    onSuccess:()=>quizRef.value.state = 'unlocked',
+  })
 }
 function deleteQuestion(question:CleanQuestion){
   quizRef.value.questions = quizRef.value.questions.filter((q:CleanQuestion) => q !== question)
@@ -101,20 +108,14 @@ function toggleQuizView() {
 }
 
 // state
-function isPublished() {
-  return quizRef.value.state === 'published'
-}
-function isDraft() {
-  return quizRef.value.state === 'unlocked'
-}
-function isScheduled() {
-  return quizRef.value.state === 'locked'
-}
+const isPublished = computed(() => quizRef.value.state === 'published')
+const isDraft = computed(() => quizRef.value.state === 'unlocked')
+const isScheduled = computed(() => quizRef.value.state === 'locked')
 </script>
 
 <template>
   <div
-    v-if="!(isPublished() && showLockedQuizzes)"
+    v-if="!(isPublished && showLockedQuizzes)"
     tabindex="0"
     class="mt-4 p-5 bg-white/70 rounded-lg items-center relative shadow"
   >
@@ -161,13 +162,13 @@ function isScheduled() {
       <span v-if="!isSelected">Rozpoczęcie testu: <b class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) }}</b> </span>
       <span v-if="!isSelected">Czas trwania testu: <b class="whitespace-nowrap">{{ quiz.duration ? quiz.duration + ' min': "brak" }}</b> </span>
       <div class="flex gap-5 justify-end">
-        <button v-if="!isEditing && isDraft()" :title="!isReadyToSchedule ? 'Test jest niekompletny, lub czas jest źle ustawiony' : 'Udostępnij test uczniom'" :disabled="!isReadyToSchedule" class="disabled:opacity-50 bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="schedule">Opublikuj</button>
-        <button v-if="isScheduled()" class="border border-primary rounded-lg py-2 px-4 text-primary font-bold" @click="unSchedule">Wycofaj</button>
-        <button v-if="isDraft() && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
+        <button v-if="!isEditing && isDraft" :title="!isReadyToSchedule ? 'Test jest niekompletny, lub czas jest źle ustawiony' : 'Udostępnij test uczniom'" :disabled="!isReadyToSchedule" class="disabled:opacity-50 bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="schedule">Opublikuj</button>
+        <button v-if="isScheduled" class="border border-primary rounded-lg py-2 px-4 text-primary font-bold" @click="unSchedule">Wycofaj</button>
+        <button v-if="isDraft && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
         <button v-if="isEditing" title="Anuluj edytowanie testu" @click="dismissEditing"><DismissIcon /></button>
         <button v-if="isEditing" title="Zapisz edytowany test" @click="updateQuiz"><CheckIcon /></button>
         <button v-if="!isEditing" title="Skopiuj test" @click="copyQuiz()"><CopyIcon /></button>
-        <div v-if="isPublished()" title="Ten test jest zablokowany. Nie można go modyfikować ani usunąć"><LockIcon /></div>
+        <div v-if="isPublished" title="Ten test jest zablokowany. Nie można go modyfikować ani usunąć"><LockIcon /></div>
         <button v-else title="Usuń test" @click="confirmDeleteMessage.show()"><TrashIcon /></button>
       </div>
     </div>
