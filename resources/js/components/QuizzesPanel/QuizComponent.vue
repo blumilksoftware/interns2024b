@@ -21,14 +21,14 @@ import CalendarIcon from '../Icons/CalendarIcon.vue'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])
-const isEditing = ref<boolean>(false)
+const isEditing = ref(false)
 const quizRef = ref<Quiz>(props.quiz)
 quizRef.value.scheduledAt = formatDateHTML(quizRef.value.scheduledAt)
-const currentTime = ref<number>(Date.now())
+const currentTime = ref(Date.now())
 const updateTimeInterval = setInterval(()=>currentTime.value = Date.now(), 1000)
 onBeforeUnmount(()=>{clearInterval(updateTimeInterval)})
 
-const isReadyToSchedule = computed<boolean>(()=>{
+const isReadyToSchedule = computed(()=>{
   if (quizRef.value.scheduledAt && quizRef.value.duration)
     return Date.parse(quizRef.value.scheduledAt) > currentTime.value
   return false
@@ -148,7 +148,9 @@ function isScheduled() {
     <div v-if="isSelected" class="flex mt-8 px-2 gap-8 flex-col">
       <div class="grid grid-cols-[auto,auto] gap-2 w-fit rounded-lg items-center">
         <span>Rozpoczęcie testu:</span>
+        <b v-if="!isEditing">{{ formatDatePretty(quizRef.scheduledAt) }}</b>
         <Datepicker
+          v-else
           v-model="quizRef.scheduledAt"
           locale="pl" 
           :format="formatDatePretty"
