@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
-const target =  ref(null)
+const target = ref()
 onClickOutside(target,()=>isFocused.value=false)
 
 withDefaults(defineProps<{
