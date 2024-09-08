@@ -68,7 +68,7 @@ function submit() {
         transition hover:bg-primary-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
         disabled:opacity-70"
       >
-        Zaloguj się
+        Zarejestruj się
       </button>
     </div>
   </form>
