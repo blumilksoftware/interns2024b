@@ -10,10 +10,11 @@ import { Head } from '@inertiajs/vue3'
 const props = defineProps<{ quizzes: Quiz[] }>()
 const selectedQuiz = ref<number>()
 const showLockedQuizzes = ref<boolean>(true)
-const quizzes = ref<Quiz[]>(mapKeys(props.quizzes))
+const sorter = ref(sortByNameAscending)
+const quizzes = ref<Quiz[]>(sorter.value(mapKeys(props.quizzes)))
 watch(
-  () => props.quizzes,
-  (updatedQuizzes : Quiz[]) => quizzes.value = mapKeys(updatedQuizzes),
+  [props.quizzes, sorter],
+  ([updatedQuizzes, sorted]) => quizzes.value = sorted(mapKeys(updatedQuizzes)),
 )
 
 function mapKeys<T extends {id: number, key?: number | string}>(array:T[]){
@@ -37,12 +38,12 @@ function toggleQuizView(quiz: Quiz) {
   selectedQuiz.value = selectedQuiz.value === quiz.id ? undefined : quiz.id
 }
 
-function sortByNameAscending(){
-  quizzes.value.sort((a:Quiz, b:Quiz) => a.title.localeCompare(b.title))
+function sortByNameAscending(arr : any[]){
+  return arr.sort((a:Quiz, b:Quiz) => a.title.localeCompare(b.title))
 }
 
-function sortByNameDescending(){
-  quizzes.value.sort((a:Quiz, b:Quiz) => b.title.localeCompare(a.title))
+function sortByNameDescending(arr : any[]){
+  return arr.sort((a:Quiz, b:Quiz) => b.title.localeCompare(a.title))
 }
 </script>
 
@@ -53,8 +54,8 @@ function sortByNameDescending(){
   <div class="flex flex-col w-full pb-3">
     <div data-name="toolbar" class="flex gap-5 px-6 backdrop-blur-md z-50">
       <Dropdown :options="[
-        {key: 0, text: 'Sortuj według nazwy (A–Z)', action:sortByNameAscending},
-        {key: 1, text: 'Sortuj według nazwy (Z–A)', action:sortByNameDescending},
+        {key: 0, text: 'Sortuj według nazwy (A–Z)', action:()=>sorter=sortByNameAscending},
+        {key: 1, text: 'Sortuj według nazwy (Z–A)', action:()=>sorter=sortByNameDescending},
       ]"
       > 
         <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <SortIcon /> Sortuj </button>
