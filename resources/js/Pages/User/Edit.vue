@@ -18,8 +18,7 @@ const form = useForm({
 })
 
 function update() {
-  form.patch(`/admin/users/${props.user.id}`)
-}
+  form.patch(`/admin/users/${props.user.id}`)}
 </script>
 
 <template>

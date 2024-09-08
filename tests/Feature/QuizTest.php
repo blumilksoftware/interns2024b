@@ -509,4 +509,47 @@ class QuizTest extends TestCase
             ->post("/admin/quizzes/{$quiz->id}/unlock")
             ->assertStatus(403);
     }
+
+    public function testUserCanAssignThemselvesToQuiz(): void
+    {
+        $quiz = Quiz::factory()->locked()->create();
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->post("/quizzes/{$quiz->id}/assign")
+            ->assertRedirect("/")
+            ->assertSessionHas(["status" => "Przypisano do testu"]);
+    }
+
+    public function testUserCannotAssignThemselvesToUnlockedQuiz(): void
+    {
+        $quiz = Quiz::factory()->create();
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->post("/quizzes/{$quiz->id}/assign")
+            ->assertStatus(403);
+    }
+
+    public function testUserCannotAssignThemselvesToQuizWithPastScheduledTime(): void
+    {
+        $quiz = Quiz::factory()->locked()->create([
+            "scheduled_at" => Carbon::now()->subMinutes(60),
+        ]);
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->post("/quizzes/{$quiz->id}/assign")
+            ->assertStatus(403);
+    }
+
+    public function testUserCannotAssignThemselvesToStartedQuiz(): void
+    {
+        $quiz = QuizSubmission::factory()->create(["user_id" => $this->user->id])->quiz;
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->post("/quizzes/{$quiz->id}/assign")
+            ->assertStatus(403);
+    }
 }

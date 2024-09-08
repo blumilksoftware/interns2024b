@@ -19,6 +19,7 @@ class QuizResource extends JsonResource
             "duration" => $this->duration,
             "state" => $this->state,
             "questions" => QuestionResource::collection($this->questions),
+            "isUserAssigned" => $this->isUserAssigned($request->user()),
         ];
     }
 }

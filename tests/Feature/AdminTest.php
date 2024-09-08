@@ -164,7 +164,6 @@ class AdminTest extends TestCase
     {
         $school = School::factory()->create();
         $admin = User::factory()->admin()->create(["school_id" => $school->id]);
-        $adminData = $admin->toArray();
 
         $this->actingAs($this->admin)
             ->from("/admin/admins/{$admin->id}/edit")
@@ -176,7 +175,9 @@ class AdminTest extends TestCase
             ])
             ->assertForbidden();
 
-        $this->assertDatabaseHas("users", $adminData);
+        $this->assertDatabaseMissing("users", [
+            "name" => "New Name",
+        ]);
     }
 
     public function testSuperAdminCannotEditAdminWithInvalidData(): void

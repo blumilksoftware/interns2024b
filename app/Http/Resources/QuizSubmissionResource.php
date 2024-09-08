@@ -18,6 +18,7 @@ class QuizSubmissionResource extends JsonResource
             "updatedAt" => $this->updated_at,
             "closedAt" => $this->closed_at,
             "closed" => $this->isClosed,
+            "quiz" => $this->quiz_id,
             "answers" => AnswerRecordResource::collection($this->answerRecords->shuffle()),
         ];
     }

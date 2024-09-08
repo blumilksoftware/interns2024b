@@ -5,9 +5,17 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
 import UserLayout from '@/Layouts/UserLayout.vue'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import GuestLayout from '@/Layouts/GuestLayout.vue'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import 'dayjs/locale/pl'
+
+dayjs.extend(relativeTime)
+dayjs.locale('pl')
+
+const appName = import.meta.env.VITE_APP_NAME
 
 createInertiaApp({
-  title: (title) => `${title}`,
+  title: (title) => `${title} - ${appName}`,
   resolve: async (name) => {
     const page = await resolvePageComponent(
       `./Pages/${name}.vue`,

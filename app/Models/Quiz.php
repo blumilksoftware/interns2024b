@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Collection;
@@ -30,6 +31,8 @@ use Illuminate\Support\Collection;
  * @property ?Carbon $closeAt
  * @property Collection<Question> $questions
  * @property Collection<Answer> $answers
+ * @property Collection<User> $assignedUsers
+ * @property Collection<QuizSubmission> $quizSubmissions
  */
 class Quiz extends Model
 {
@@ -52,6 +55,16 @@ class Quiz extends Model
         return $this->hasManyThrough(Answer::class, Question::class);
     }
 
+    public function assignedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, "quiz_assignments");
+    }
+
+    public function quizSubmissions(): HasMany
+    {
+        return $this->hasMany(QuizSubmission::class);
+    }
+
     public function isLocked(): Attribute
     {
         return Attribute::get(fn(): bool => $this->locked_at !== null);
@@ -64,13 +77,14 @@ class Quiz extends Model
 
     public function state(): Attribute
     {
-        return Attribute::get(function (): string {
-            if ($this->isPublished) {
-                return "published";
-            }
+        return Attribute::get(
+            fn(): string => $this->isPublished ? "published" : ($this->isLocked ? "locked" : "unlocked"),
+        );
+    }
 
-            return $this->isLocked ? "locked" : "unlocked";
-        });
+    public function isUserAssigned(User $user): bool
+    {
+        return $this->assignedUsers->contains($user);
     }
 
     public function isRankingPublished(): Attribute
@@ -126,6 +140,11 @@ class Quiz extends Model
     public function isReadyToBePublished(): bool
     {
         return $this->scheduled_at !== null && $this->duration !== null && $this->allQuestionsHaveCorrectAnswer();
+    }
+
+    public function hasSubmissionsFrom(User $user): bool
+    {
+        return $this->quizSubmissions->where("user_id", $user->id)->isNotEmpty();
     }
 
     protected function allQuestionsHaveCorrectAnswer(): bool
