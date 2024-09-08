@@ -13,7 +13,7 @@ const showLockedQuizzes = ref<boolean>(true)
 const sorter = ref(sortByNameAscending)
 const quizzes = ref<Quiz[]>(sorter.value(mapKeys(props.quizzes)))
 watch(
-  [props.quizzes, sorter],
+  [()=>props.quizzes, sorter],
   ([updatedQuizzes, sorted]) => quizzes.value = sorted(mapKeys(updatedQuizzes)),
 )
 
