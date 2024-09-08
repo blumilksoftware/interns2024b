@@ -52,7 +52,7 @@ function sortByNameDescending(arr : any[]){
     <title>Testy - Panel Adminu</title>
   </Head>
   <div class="flex flex-col w-full pb-3">
-    <div data-name="toolbar" class="flex gap-5 px-6 backdrop-blur-md z-50">
+    <div data-name="toolbar" class="flex gap-5 px-6">
       <Dropdown :options="[
         {key: 0, text: 'Sortuj według nazwy (A–Z)', action:()=>sorter=sortByNameAscending},
         {key: 1, text: 'Sortuj według nazwy (Z–A)', action:()=>sorter=sortByNameDescending},
