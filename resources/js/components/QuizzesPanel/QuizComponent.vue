@@ -164,7 +164,7 @@ function isScheduled() {
           </template>
         </Datepicker>
         
-        <span>Czas trwania testu: <span v-if="isEditing">(min)</span></span>
+        <span>Czas trwania testu <span v-if="isEditing">(min)</span>:</span>
         <EditableInput v-model="quizRef.duration" type="number" min="0" :is-editing="isEditing" />
       </div>
           
