@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Notifications\SendResetPasswordEmail;
+use App\Notifications\SendVerificationEmail;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -25,6 +29,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon $updated_at
  * @property School $school
  * @property boolean $is_anonymized
+ * @property Collection<QuizSubmission> $quizSubmissions
+ * @property Collection<Quiz> $assignedQuizzes
  */
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
@@ -46,6 +52,26 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     public function school(): BelongsTo
     {
         return $this->belongsTo(School::class);
+    }
+
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new SendVerificationEmail());
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new SendResetPasswordEmail($token));
+    }
+
+    public function quizSubmissions(): HasMany
+    {
+        return $this->hasMany(QuizSubmission::class);
+    }
+
+    public function assignedQuizzes()
+    {
+        return $this->belongsToMany(Quiz::class, "quiz_assignments");
     }
 
     protected function casts(): array

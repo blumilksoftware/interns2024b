@@ -7,8 +7,8 @@ import GeneralSection from '@/components/Home/GeneralSection.vue'
 import AuthSection from '@/components/Home/AuthSection.vue'
 import BackgroundEffect from '@/components/Common/BackgroundEffect.vue'
 import {type School} from '@/Types/School'
+import {type PageProps} from '@/Types/PageProps'
 import Banner from '@/components/Common/Banner.vue'
-import type {PageProps} from '@/Types/PageProps'
 import { Head } from '@inertiajs/vue3'
 
 const authSectiontRef = ref<InstanceType<typeof AuthSection>>()
