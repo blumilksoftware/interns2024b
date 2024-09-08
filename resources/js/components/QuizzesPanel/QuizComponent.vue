@@ -53,8 +53,12 @@ function formatDatePretty(date?: ConfigType) {
   return date ? dayjs(date).format('DD.MM.YYYY HH:mm') : 'brak'
 }
 
-function formatDateHTML(date: ConfigType) {
+function formatDateHTML(date?: ConfigType) {
   return date ? dayjs(date).format('YYYY-MM-DDTHH:mm') : ''
+}
+
+function formatDateDB(date?: ConfigType) {
+  return date ? dayjs(date).format('YYYY-MM-DD HH:mm:ss') : ''
 }
 
 function addQuestion(){
@@ -79,7 +83,7 @@ function copyQuiz() {
 function updateQuiz() {
   const payload : VisitPayload = {
     method: 'patch',
-    data: quizRef.value,
+    data: {...quizRef.value, scheduled_at: formatDateDB(quizRef.value.scheduledAt)},
     onSuccess: ()=>isEditing.value = false,
   }
   request.sendRequest(`/admin/quizzes/${quizRef.value.id}`, payload)
@@ -99,7 +103,7 @@ function unSchedule() {
   })
 }
 function deleteQuestion(question:CleanQuestion){
-  quizRef.value.questions = quizRef.value.questions.filter((q:CleanQuestion) => q !== question)
+  quizRef.value.questions = quizRef.value.questions.filter((q:CleanQuestion) => q.key !== question.key)
 }
 
 // emits
@@ -200,18 +204,18 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
           
       <!-- question -->
       <div class="flex flex-col gap-4">
-        <div v-if="isEditing" class="flex justify-between">
-          <button class="py-2 px-3 rounded-lg border border-primary/30 font-bold bg-white/50" @click="addQuestion()">+ Dodaj pytanie</button>
-        </div>
-
         <data v-if="isSelected" class="flex flex-col gap-4">
-          <div v-for="(question, idx) of quiz.questions" :key="question.key">
+          <div v-for="(question, idx) of quizRef.questions" :key="question.key">
             <QuestionComponent 
               v-model="quizRef.questions[idx]" :is-editing="isEditing"
               :index="idx" :questions-length="quiz.questions.length" @delete="deleteQuestion"
             />
           </div>
         </data>
+        
+        <div v-if="isEditing" class="flex justify-between">
+          <button class="py-2 px-3 rounded-lg border border-primary/30 font-bold bg-white/50" @click="addQuestion">+ Dodaj pytanie</button>
+        </div>
       </div>
       <!-- question/ -->
     </div>
