@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { ref, defineExpose } from 'vue'
+import { ref } from 'vue'
 import AuthButton from '@/components/Common/AuthButton.vue'
 import RegisterForm from '@/components/Home/RegisterForm.vue'
 import LoginForm from '@/components/Home/LoginForm.vue'
