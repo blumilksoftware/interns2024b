@@ -19,7 +19,7 @@ function formatOutput(content: number | string | undefined) {
 </script>
 
 <template>
-  <div>
+  <div class="flex gap-4">
     <div
       v-if="!isEditing"
       :class="{'font-normal':fontNormal }"
@@ -33,9 +33,9 @@ function formatOutput(content: number | string | undefined) {
       :min="min"
       :type="type"
       :class="{'font-normal':fontNormal }"
-      class="outline-none font-bold flex px-3 py-2 min-h-8 rounded-md size-full ring-1 ring-primary/30 focus:ring-2 focus:ring-primary/50 bg-white/50"
+      class="w-full outline-none font-bold flex px-3 py-2 min-h-8 rounded-md size-full ring-1 ring-primary/30 focus:ring-2 focus:ring-primary/50 bg-white/50"
       autocomplete="off"
     >
-    <span v-if="isEditing" class="text-red py-1.5 whitespace-nowrap">{{ error }}</span>
+    <span v-if="isEditing && error" class="text-red py-1.5 whitespace-nowrap">{{ error }}</span>
   </div>
 </template>
