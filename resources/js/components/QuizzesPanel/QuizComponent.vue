@@ -18,6 +18,7 @@ import { nanoid } from 'nanoid'
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import CalendarIcon from '../Icons/CalendarIcon.vue'
+import MessageBox, { useMessageBox } from '@/components/Common/MessageBox.vue'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])
@@ -26,6 +27,7 @@ const quizRef = ref<Quiz>(props.quiz)
 quizRef.value.scheduledAt = formatDateHTML(quizRef.value.scheduledAt)
 const currentTime = ref(Date.now())
 const updateTimeInterval = setInterval(()=>currentTime.value = Date.now(), 1000)
+const confirmDeleteMessage = useMessageBox()
 onBeforeUnmount(()=>{clearInterval(updateTimeInterval)})
 
 const isReadyToSchedule = computed(()=>{
@@ -116,6 +118,33 @@ function isScheduled() {
     tabindex="0"
     class="mt-4 p-5 bg-white/70 rounded-lg items-center relative shadow"
   >
+    <MessageBox v-bind="confirmDeleteMessage">
+      <template #title>
+        Uwaga
+      </template>
+
+      <template #message>
+        <div class="pt-3 px-24 flex flex-col items-center text-[1.05rem] gap-1">
+          <span>Czy na pewno chcesz usunąć test?</span>
+          <span>Ta operacja jest nieodwracalna.</span>
+        </div>
+      </template>
+
+      <template #buttons>
+        <button
+          class="px-2 font-bold"
+          @click="confirmDeleteMessage.close"
+        >
+          Anuluj
+        </button>
+        <button
+          class="bg-red font-bold text-white rounded-lg px-4 py-2"
+          @click="deleteQuiz"
+        >
+          Usuń
+        </button>
+      </template>
+    </MessageBox>
     <div v-if="request.isRequestOngoing.value" class="absolute bg-white/50 backdrop-blur-md z-10 size-full left-0 flex items-center justify-center -mt-5">
       <div
         class="inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
@@ -139,7 +168,7 @@ function isScheduled() {
         <button v-if="isEditing" title="Zapisz edytowany test" @click="updateQuiz"><CheckIcon /></button>
         <button v-if="!isEditing" title="Skopiuj test" @click="copyQuiz()"><CopyIcon /></button>
         <div v-if="isPublished()" title="Ten test jest zablokowany. Nie można go modyfikować ani usunąć"><LockIcon /></div>
-        <button v-else title="Usuń test" @click="deleteQuiz()"><TrashIcon /></button>
+        <button v-else title="Usuń test" @click="confirmDeleteMessage.show()"><TrashIcon /></button>
       </div>
     </div>
     <!-- header/ -->
