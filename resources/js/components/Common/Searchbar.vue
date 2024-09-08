@@ -16,7 +16,11 @@ const props = defineProps<{
 }>()
 
 const selectedOption = ref<T>()
-const options = computed(()=>props.options.filter(option=>option !== selectedOption.value))
+const optionsRef = computed(()=>props.options.filter(
+  option=>{
+    return option.text.toLowerCase().includes(searchQuery.value)
+    || (option.title && option.title.toLowerCase().includes(searchQuery.value))
+  }))
 
 const emit = defineEmits<{change:[option: T]}>()
 
@@ -58,9 +62,9 @@ const onOptionClick = (option:T)=>{
 
       <Transition>
         <div v-show="true" class="m-0.5 mt-0 py-2 overflow-auto">
-          <div v-if="options.length>0">
+          <div v-if="optionsRef.length>0">
             <div 
-              v-for="obj in options"
+              v-for="obj in optionsRef"
               :key="obj.key"
               class="cursor-pointer block px-4 py-2 hover:bg-primary/10 text-[0.9rem]"
               @mousedown="onOptionClick(obj)"
