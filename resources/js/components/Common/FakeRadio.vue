@@ -12,11 +12,11 @@ const props = withDefaults(defineProps<{
 </script>
 
 <template>
-  <label class="flex items-center text-sm text-black relative" :class="`${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} ${props.class}`">
+  <label class="flex items-center text-sm text-black relative cursor-not-allowed"  :class="`${props.class}`">
     <input
       :id
       type="radio"
-      disabled
+      disabled="disabled"
       :checked
       :class="`${native ? '' : 'appearance-none'} ${props.class}`"
       class="mr-2 p-2 border border-gray-600 rounded-full"
