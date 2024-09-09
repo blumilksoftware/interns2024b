@@ -16,36 +16,13 @@ import { type CleanAnswer } from '@/Types/CleanAnswer'
 import { type CleanQuestion } from '@/Types/CleanQuestion'
 
 const props = defineProps<{ quizzes: Quiz[] }>()
-const selectedQuiz = ref<number>()
-const showLockedQuizzes = ref<boolean>(true)
-const quizzes = ref<Quiz[]>(addKeys(props.quizzes))
-
 const quizzesRef = ref<Quiz[]>(addKeys(props.quizzes))
 
 watch(
   () => props.quizzes,
-  (updatedQuizzes : Quiz[]) => quizzes.value = addKeys(updatedQuizzes),
+  (updatedQuizzes : Quiz[]) => quizzesRef.value = addKeys(updatedQuizzes),
 )
 
-function addKeys(quizzes:Quiz[]) {
-  return quizzes.map(
-    (quiz: Quiz)=>{
-      return {
-        ...quiz, key: quiz.key ?? quiz.id, questions: quiz.questions.map(
-          (q:Question)=>{
-            return {
-              ...q, key: q.key ?? q.id, answers: q.answers.map(
-                (ans:Answer)=>{
-                  return {...ans, key: quiz.key ?? ans.id}
-                },
-              ),
-            }
-          },
-        ),
-      }
-    },
-  )
-}
 
 const request = new Request()
 
@@ -105,8 +82,7 @@ function sortByNameDescending(){
       <button title="works" @click="addExampleQuiz">Add example quiz</button>
     </header>
     <div v-for="quiz of quizzesRef" :key="quiz.key" class="bg-white shadow grid grid-cols-2 gap-5 p-5 rounded-lg">
-      <span>id:           </span> <b>{{ quiz.id }}          </b>
-      <span>key:          </span> <b>{{ quiz.key }}         </b>
+      <span>id:           </span> <b>{{quiz.id ?? quiz.key }} </b>
       <span>name:         </span> <b>{{ quiz.name }}        </b>
       <span>scheduledAt:  </span> <b>{{ quiz.scheduledAt }} </b>
       <span>duration:     </span> <b>{{ quiz.duration }}    </b>

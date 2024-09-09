@@ -15,6 +15,13 @@ class UpdateQuizRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation(): void
+    {
+        if ($this->has("scheduledAt")) {
+            $this->merge(["scheduled_at" => $this->input("scheduledAt")]);
+        }
+    }
+
     /**
      * @return array<string, ValidationRule|array|string>
      */
@@ -57,7 +64,7 @@ class UpdateQuizRequest extends FormRequest
             return;
         }
 
-        $correctAnswers = array_filter($question["answers"], fn(array $answer): bool => array_key_exists("correct", $answer) && $question['correct']);
+        $correctAnswers = array_filter($question["answers"], fn(array $answer): bool => array_key_exists("correct", $answer) && $answer["correct"]);
 
         if (count($correctAnswers) > 1) {
             throw ValidationException::withMessages([
