@@ -36,7 +36,7 @@ const points = computed(() =>
       </div>
 
       <div class="w-full text-right text-sm font-semibold">
-        Czas trwania testu: {{ timeToString(duration) }}
+        Twój czas rozwiązania testu: {{ timeToString(duration) }}
       </div>
     </div>
 
@@ -71,7 +71,7 @@ const points = computed(() =>
     </div>
 
     <div v-else class="h-80 flex flex-col items-center justify-center">
-      <p class="font-semibold text-primary text-xl p-5 text-center">Ranking  jest w trakcje przygotowywania, wyślemy powiadomienie na twoją skrzynkę pocztową gdy będzie gotowy!</p>
+      <p class="font-semibold text-primary text-xl p-5 text-center">Ranking jest w trakcie przygotowania, wyślemy powiadomienie na Twoją skrzynkę pocztową gdy będzie gotowy!</p>
       <Button small disabled>Ranking</Button>
     </div>
   </div>

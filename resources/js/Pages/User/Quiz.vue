@@ -96,7 +96,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     </template>
 
     <template #buttons>
-      <Button small @click="emptyAnswerMessage.close">Wróć</Button>
+      <Button small text @click="emptyAnswerMessage.close">Wróć</Button>
       <FormButton small :href="`/submissions/${submission.id}/close`" method="post">Oddaj mimo to</FormButton>
     </template>
   </MessageBox>
