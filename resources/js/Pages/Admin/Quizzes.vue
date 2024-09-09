@@ -11,10 +11,10 @@ const props = defineProps<{ quizzes: Quiz[] }>()
 const selectedQuiz = ref<number>()
 const showLockedQuizzes = ref<boolean>(true)
 const sorter = ref(sortByNameAscending)
-const quizzes = ref<Quiz[]>(sorter.value(mapKeys(props.quizzes)))
+const quizzesRef = ref<Quiz[]>(sorter.value(mapKeys(props.quizzes)))
 watch(
   [()=>props.quizzes, sorter],
-  ([updatedQuizzes, sorted]) => quizzes.value = sorted(mapKeys(updatedQuizzes)),
+  ([updatedQuizzes, sorted]) => quizzesRef.value = sorted(mapKeys(updatedQuizzes)),
 )
 
 function mapKeys<T extends {id: number, key?: number | string}>(array:T[]){
@@ -64,9 +64,9 @@ function sortByNameDescending(arr : any[]){
       <div class="flex-1" />
       <button :disabled="request.isRequestOngoing.value" :class="{'opacity-70':request.isRequestOngoing.value}" class="bg-primary font-bold rounded-lg text-white px-4" @click="addQuiz">+ Dodaj test</button>
     </div>
-    <div v-for="(quiz, idx) of quizzes" :key="quiz.id" class="px-4">
+    <div v-for="(quiz, idx) of quizzesRef" :key="quiz.id" class="px-4">
       <QuizComponent
-        :quiz="quizzes[idx]"
+        :quiz="quizzesRef[idx]"
         :is-selected="selectedQuiz===quiz.id"
         :show-locked-quizzes="showLockedQuizzes"
         @display-toggle="toggleQuizView"
