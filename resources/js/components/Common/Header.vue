@@ -4,16 +4,13 @@ import {type Page} from '@/Types/Page'
 import FormButton from '@/components/Common/FormButton.vue'
 import { TransitionRoot, Dialog, TransitionChild, DialogPanel, DialogTitle } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { type User } from '@/Types/User'
 
 defineProps<{ pages: Page[], user?: User, appName: string }>()
 
 
 const pageTitle = ref<string>(document.title)
-onMounted(() => {
-  window.addEventListener('load', ()=>pageTitle.value = document.title)
-})
 const open = ref<boolean>(false)
 const isSelected = (page: Page) => page.href === window.location.pathname
 </script>

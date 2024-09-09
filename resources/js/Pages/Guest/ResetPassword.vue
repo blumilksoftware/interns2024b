@@ -9,12 +9,10 @@ import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
 
 const props = defineProps<{
   token: string
-  email: string
 } & PageProps>()
 const isVisiblePassword = ref(false)
 const isVisibleConfirmPassword = ref(false)
 const form = useForm({
-  email: props.email,
   password: '',
   password_confirmation: '',
   token: props.token,
