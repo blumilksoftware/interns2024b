@@ -56,6 +56,8 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/quizzes/{quiz}/lock", [QuizController::class, "lock"])->name("admin.quizzes.lock");
     Route::post("/quizzes/{quiz}/unlock", [QuizController::class, "unlock"])->can("unlock,quiz")->name("admin.quizzes.unlock");
 
+    Route::get("/quizzes/{quiz}/invite", [InviteController::class, "index"])->name("admin.quizzes.invite.index");
+
     Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "index"])->name("admin.quizzes.ranking");
     Route::post("/quizzes/{quiz}/ranking/publish", [RankingController::class, "publish"])->name("admin.quizzes.ranking.publish");
     Route::post("/quizzes/{quiz}/ranking/unpublish", [RankingController::class, "unpublish"])->name("admin.quizzes.ranking.unpublish");
@@ -83,8 +85,6 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::get("/users", [UserController::class, "index"])->name("admin.users.index");
     Route::get("/users/{user}/edit", [UserController::class, "edit"])->name("admin.users.edit");
     Route::patch("/users/{user}", [UserController::class, "update"])->name("admin.users.update");
-
-    Route::get("/invite", [InviteController::class, "index"])->name("admin.invite.index");
 
     Route::middleware(["role:super_admin"])->group(function (): void {
         Route::get("/admins", [AdminController::class, "index"])->name("admin.admins.index");

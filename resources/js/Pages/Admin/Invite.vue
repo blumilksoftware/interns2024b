@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import {defineProps} from 'vue'
 import { type  User } from '@/Types/User'
 import { type Pagination} from '@/Types/Pagination'
 import FormButton from '@/components/Common/FormButton.vue'
+import { type Quiz} from '@/Types/Quiz'
 
-defineProps<{ users: Pagination<User> }>()
+defineProps<{
+  users: Pagination<User>
+  quiz: Quiz
+}>()
 </script>
 
 <template>
+  <h1>Quiz: {{ quiz.name }}</h1>
   Wszukiwarka użytkowników do zapraszania do testów
 
   <div>
