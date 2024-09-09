@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\CloseQuizSubmissionAction;
 use App\Http\Resources\QuizSubmissionResource;
 use App\Models\QuizSubmission;
-use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -20,10 +20,9 @@ class QuizSubmissionController extends Controller
         return Inertia::render("User/Quiz", ["submission" => QuizSubmissionResource::make($quizSubmission)]);
     }
 
-    public function close(QuizSubmission $quizSubmission): RedirectResponse
+    public function close(QuizSubmission $quizSubmission, CloseQuizSubmissionAction $action): RedirectResponse
     {
-        $quizSubmission->closed_at = Carbon::now();
-        $quizSubmission->save();
+        $action->execute($quizSubmission);
 
         return redirect()->route("submissions.result", $quizSubmission->id)->with("status", "Test został oddany.");
     }
