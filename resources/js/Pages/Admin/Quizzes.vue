@@ -1,23 +1,16 @@
 <script setup lang="ts">
 
 import { ref, watch } from 'vue'
-import {Request} from '@/scripts/request'
-import SortIcon from '@/components/Icons/SortIcon.vue'
-import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
-import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
 import { type Quiz } from '@/Types/Quiz'
 import { type Question } from '@/Types/Question'
 import { type Answer } from '@/Types/Answer'
-import Dropdown from '@/components/Common/Dropdown.vue'
-import Banner from '@/components/Common/Banner.vue'
+const props = defineProps<{ quizzes: Quiz[] }>()
+const quizzesRef = ref<Quiz[]>(addKeys(props.quizzes))
 import { type CleanQuiz } from '@/Types/CleanQuiz'
 import { type VisitPayload } from '@/Types/VisitPayload'
 import { type CleanAnswer } from '@/Types/CleanAnswer'
 import { type CleanQuestion } from '@/Types/CleanQuestion'
-
-const props = defineProps<{ quizzes: Quiz[] }>()
-const quizzesRef = ref<Quiz[]>(addKeys(props.quizzes))
-
+import { Request } from '@/scripts/request'
 watch(
   () => props.quizzes,
   (updatedQuizzes : Quiz[]) => quizzesRef.value = addKeys(updatedQuizzes),
