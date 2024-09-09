@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use App\Helpers\DateFormatHelper;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
@@ -16,6 +15,13 @@ class UpdateQuizRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation(): void
+    {
+        if ($this->has("scheduledAt")) {
+            $this->merge(["scheduled_at" => $this->input("scheduledAt")]);
+        }
+    }
+
     /**
      * @return array<string, ValidationRule|array|string>
      */
@@ -23,7 +29,7 @@ class UpdateQuizRequest extends FormRequest
     {
         return [
             "title" => ["required", "string"],
-            "scheduled_at" => ["date", "date_format:" . DateFormatHelper::DATETIME_FORMAT, "after:now"],
+            "scheduled_at" => ["date", "after:now"],
             "duration" => ["integer", "min:1"],
             "questions" => ["array"],
             "questions.*.id" => "integer|min:0",
@@ -58,7 +64,7 @@ class UpdateQuizRequest extends FormRequest
             return;
         }
 
-        $correctAnswers = array_filter($question["answers"], fn(array $answer): bool => array_key_exists("correct", $answer));
+        $correctAnswers = array_filter($question["answers"], fn(array $answer): bool => array_key_exists("correct", $answer) && $answer["correct"]);
 
         if (count($correctAnswers) > 1) {
             throw ValidationException::withMessages([

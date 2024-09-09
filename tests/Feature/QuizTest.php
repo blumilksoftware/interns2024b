@@ -170,6 +170,26 @@ class QuizTest extends TestCase
         ]);
     }
 
+    public function testAdminCanDeleteQuestion(): void
+    {
+        $quiz = Quiz::factory()->create(["name" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
+        $questions = Question::factory()->count(2)->create(["quiz_id" => $quiz->id]);
+
+        $data = [
+            "name" => "Quiz Name",
+            "scheduled_at" => "2024-08-28 15:00:00",
+            "duration" => 120,
+            "questions" => [],
+        ];
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->patch("/admin/quizzes/{$quiz->id}", $data)
+            ->assertRedirect("/");
+
+        $this->assertDatabaseCount("questions", 0);
+    }
+
     public function testAdminCannotEditQuizWithQuestionThatHasMoreThanOneCorrectAnswer(): void
     {
         $quiz = Quiz::factory()->create(["title" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
