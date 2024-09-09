@@ -14,10 +14,10 @@ class InviteController extends Controller
 {
     public function index(Request $request): Response
     {
-        $users = User::query()->role("user")->with("school")->orderBy("id")->get();
+        $users = User::query()->role("user")->with("school")->orderBy("id");
 
         return Inertia::render("Admin/Invite", [
-            "users" => UserResource::collection($users),
+            "users" => UserResource::collection($users->paginate(100)),
         ]);
     }
 }

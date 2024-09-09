@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
-import type { User } from '@/Types/User'
+import { type  User } from '@/Types/User'
+import { type Pagination} from '@/Types/Pagination'
+import FormButton from '@/components/Common/FormButton.vue'
 
-const props = defineProps<{ users: User[] }>()
+defineProps<{ users: Pagination<User> }>()
 </script>
 
 <template>
-  Super [działająca] wyszukiwarka użytkowników do testów
+  Wszukiwarka użytkowników do zapraszania do testów
 
   <div>
     <table>
@@ -19,7 +21,7 @@ const props = defineProps<{ users: User[] }>()
         </tr>
       </thead>
       <tbody>
-        <tr v-for="user in props.users" :key="user.id">
+        <tr v-for="user in users.data" :key="user.id">
           <td>{{ user.id }}</td>
           <td>{{ user.name }}</td>
           <td>{{ user.surname }}</td>
@@ -27,5 +29,8 @@ const props = defineProps<{ users: User[] }>()
         </tr>
       </tbody>
     </table>
+
+    <FormButton :disabled="!users.links.prev" method="get" :href="users.links.prev" small>Poprzednia</FormButton>
+    <FormButton :disabled="!users.links.next" method="get" :href="users.links.next" small>Następna</FormButton>
   </div>
 </template>
