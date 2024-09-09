@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\User;
-use App\Notifications\SendResetPasswordEmail;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use JsonException;
@@ -30,7 +30,7 @@ class ForgotPasswordTest extends TestCase
 
         Notification::assertSentTo(
             [$user],
-            SendResetPasswordEmail::class,
+            ResetPasswordNotification::class,
         );
     }
 
