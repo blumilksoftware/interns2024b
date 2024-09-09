@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<{
 </script>
 
 <template>
-  <label class="flex items-center text-sm text-black relative cursor-not-allowed"  :class="`${props.class}`">
+  <label class="flex items-center text-sm text-black relative cursor-not-allowed" :class="`${props.class}`">
     <input
       :id
       type="radio"
