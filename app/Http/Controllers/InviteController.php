@@ -6,9 +6,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\InviteQuizRequest;
 use App\Http\Resources\UserResource;
+use App\Jobs\SendInviteJob;
 use App\Models\Quiz;
 use App\Models\User;
-use App\Notifications\InviteUserNotification;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -36,7 +36,7 @@ class InviteController extends Controller
         $users = User::query()->whereIn("id", $userIds)->get();
 
         foreach ($users as $user) {
-            $user->notify((new InviteUserNotification($quiz))->delay(now()->addHour()));
+            SendInviteJob::dispatch($user, $quiz)->delay(now()->addMinutes(5));
         }
 
         return redirect()
