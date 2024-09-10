@@ -7,10 +7,11 @@ import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
 import { type Quiz } from '@/Types/Quiz'
 import Dropdown from '@/components/Common/Dropdown.vue'
 import { Head } from '@inertiajs/vue3'
+import dayjs from 'dayjs'
 const props = defineProps<{ quizzes: Quiz[] }>()
 const selectedQuiz = ref<number>()
 const showLockedQuizzes = ref<boolean>(true)
-const sorter = ref(sortByNameAscending)
+const sorter = ref(sortByCreationDateDescending)
 const quizzesRef = ref<Quiz[]>(sorter.value(mapKeys(props.quizzes)))
 watch(
   [()=>props.quizzes, sorter],
@@ -45,6 +46,14 @@ function sortByNameAscending(arr : any[]){
 function sortByNameDescending(arr : any[]){
   return arr.sort((a:Quiz, b:Quiz) => b.title.localeCompare(a.title))
 }
+
+function sortByCreationDateAscending(arr: any[]) {
+  return arr.sort((a: Quiz, b: Quiz) => dayjs(a.createdAt).diff(dayjs(b.createdAt)))
+}
+
+function sortByCreationDateDescending(arr: any[]) {
+  return arr.sort((a: Quiz, b: Quiz) => dayjs(b.createdAt).diff(dayjs(a.createdAt)))
+}
 </script>
 
 <template>
@@ -54,13 +63,15 @@ function sortByNameDescending(arr : any[]){
   <div class="flex flex-col w-full pb-3">
     <div data-name="toolbar" class="flex gap-5 px-6">
       <Dropdown :options="[
-        {key: 0, text: 'Sortuj według nazwy (A–Z)', action:()=>sorter=sortByNameAscending},
-        {key: 1, text: 'Sortuj według nazwy (Z–A)', action:()=>sorter=sortByNameDescending},
+        {key: 0, text: 'Po nazwie (A–Z)', action:()=>sorter=sortByNameAscending},
+        {key: 1, text: 'Po nazwie (Z–A)', action:()=>sorter=sortByNameDescending},
+        {key: 2, text: 'Od najnowszych', action:()=>sorter=sortByCreationDateDescending},
+        {key: 3, text: 'Od najstarszych', action:()=>sorter=sortByCreationDateAscending},
       ]"
       > 
         <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <SortIcon /> Sortuj </button>
       </Dropdown>
-      <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg" @click="showLockedQuizzes=!showLockedQuizzes"> <EyeDynamicIcon :is-opened="showLockedQuizzes" /> {{ showLockedQuizzes ? 'Pokaż' : 'Schowaj' }} zablokowane </button>
+      <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg" @click="showLockedQuizzes=!showLockedQuizzes"> <EyeDynamicIcon :is-opened="showLockedQuizzes" /> {{ showLockedQuizzes ? 'Wyświetl' : 'Schowaj' }} zarchiwizowane testy</button>
       <div class="flex-1" />
       <button :disabled="request.isRequestOngoing.value" :class="{'opacity-70':request.isRequestOngoing.value}" class="bg-primary font-bold rounded-lg text-white px-4" @click="addQuiz">+ Dodaj test</button>
     </div>

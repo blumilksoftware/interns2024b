@@ -13,7 +13,6 @@ import PencilIcon from '../Icons/PencilIcon.vue'
 import CheckIcon from '../Icons/CheckIcon.vue'
 import DismissIcon from '../Icons/DismissIcon.vue'
 import { Request } from '@/scripts/request'
-import { type VisitPayload } from '@/Types/VisitPayload'
 import { nanoid } from 'nanoid'
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -70,7 +69,6 @@ function addQuestion(){
   quizRef.value.questions.push(newQuestion)
 }
 
-
 // quiz CRUD operations
 const request = new Request()
 
@@ -80,13 +78,13 @@ function deleteQuiz() {
 function copyQuiz() {
   request.sendRequest(`/admin/quizzes/${quizRef.value.id}/clone`, {method: 'post'})
 }
-function updateQuiz() {
-  const payload : VisitPayload = {
-    method: 'patch',
-    data: {...quizRef.value, scheduled_at: formatDateDB(quizRef.value.scheduledAt)},
-    onSuccess: ()=>isEditing.value = false,
+async function updateQuiz() {
+  const data = {
+    ...quizRef.value,
+    scheduledAt: formatDateDB(quizRef.value.scheduledAt),
+    onSuccess: ()=>isEditing.value=false,
   }
-  request.sendRequest(`/admin/quizzes/${quizRef.value.id}`, payload)
+  await request.axiosPatch(`/admin/quizzes/${quizRef.value.id}`, data)
 }
 function schedule() {
   if (!isReadyToSchedule.value) return
@@ -198,7 +196,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
           </template>
         </Datepicker>
         
-        <span>Czas trwania testu <span v-if="isEditing">(min)</span>:</span>
+        <span>Czas trwania testu<span v-if="isEditing"> (min)</span>:</span>
         <EditableInput v-model="quizRef.duration" type="number" min="0" :is-editing="isEditing" />
       </div>
           
