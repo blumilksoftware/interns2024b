@@ -58,7 +58,7 @@ function sortByCreationDateDescending(arr: any[]) {
 
 <template>
   <Head>
-    <title>Testy - Panel Adminu</title>
+    <title>Testy - Panel administracyjny</title>
   </Head>
   <div class="flex flex-col w-full pb-3">
     <div data-name="toolbar" class="flex gap-5 px-6">
