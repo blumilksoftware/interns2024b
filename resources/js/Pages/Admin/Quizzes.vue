@@ -93,18 +93,6 @@ function sortByCreationDateDescending(arr: any[]) {
 .datepicker-menu{
   @apply rounded-lg border border-primary/30
 }
-.dp__action_cancel{
-  @apply text-base py-4 px-4 rounded-md
-}
-.dp__action_cancel:hover{
-  @apply border-primary/30
-}
-.dp__action_select{
-  @apply !bg-primary text-base font-bold py-4 px-4 rounded-md
-}
-.dp__action_select:hover{
-  @apply bg-primary-950
-}
 .dp__active_date{
   @apply bg-primary font-bold
 }

@@ -34,7 +34,7 @@ const isReadyToSchedule = computed(()=>{
     return Date.parse(quizRef.value.scheduledAt) > currentTime.value
   return false
 })
-
+const datepickerRef = ref<InstanceType<typeof Datepicker>>()
 
 // editing
 function edit(){
@@ -175,7 +175,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
       </div>
     </div>
     <!-- header/ -->
-
+     
     <!-- content -->
     <div v-if="isSelected" class="flex mt-8 px-2 gap-8 flex-col">
       <div class="grid grid-cols-[auto,auto] gap-2 w-fit rounded-lg items-center">
@@ -183,6 +183,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
         <b v-if="!isEditing">{{ formatDatePretty(quizRef.scheduledAt) }}</b>
         <Datepicker
           v-else
+          ref="datepickerRef"
           v-model="quizRef.scheduledAt"
           locale="pl" 
           :format="formatDatePretty"
@@ -193,6 +194,12 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
         >
           <template #input-icon>
             <CalendarIcon />
+          </template>
+          <template #action-buttons>
+            <div class="flex gap-4">
+              <button class="text-sm font-semibold rounded-md" @click="()=>datepickerRef?.toggleMenu()">Anuluj</button>
+              <button class="bg-primary text-white text-sm font-bold py-2 px-3 rounded-md duration-200 hover:bg-primary-950" @click="()=>datepickerRef?.selectDate()">Wybierz</button>
+            </div>
           </template>
         </Datepicker>
         
