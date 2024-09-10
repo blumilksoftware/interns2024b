@@ -26,7 +26,7 @@ class InviteUserNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage())
-            ->subject("Resetowanie hasła")
+            ->subject("Zaproszenie do Quizu")
             ->view("emails.auth.invite-user", [
                 "user" => $notifiable,
                 "quiz" => $this->quiz,
