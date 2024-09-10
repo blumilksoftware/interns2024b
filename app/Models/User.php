@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Notifications\SendResetPasswordEmail;
+use App\Notifications\ResetPasswordNotification;
 use App\Notifications\SendVerificationEmail;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\CanResetPassword;
@@ -18,6 +18,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
+ * @param string $token
  * @property int $id
  * @property string $name
  * @property string $surname
@@ -61,7 +62,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 
     public function sendPasswordResetNotification($token): void
     {
-        $this->notify(new SendResetPasswordEmail($token));
+        $this->notify(new ResetPasswordNotification($token));
     }
 
     public function quizSubmissions(): HasMany
