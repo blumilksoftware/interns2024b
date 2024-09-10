@@ -29,7 +29,7 @@ const history = computed(() => props.submissions.filter(submission => submission
     <title>Konkursy</title>
   </Head>
 
-  <div class="w-full p-2 md:w-4/5">
+  <div class="w-full p-2 md:max-w-8xl">
     <Divider v-if="started.length > 0">
       <h1 class="font-bold text-xl text-primary text-center p-4 whitespace-nowrap">Trwające konkursy</h1>
     </Divider>

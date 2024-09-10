@@ -23,7 +23,7 @@ const points = computed(() =>
     <title>{{ submission.name }} - Wyniki</title>
   </Head>
 
-  <div class="w-full p-2 md:w-7/12">
+  <div class="w-full p-2 md:max-w-7xl">
     <Divider>
       <h1 class="font-bold text-xl text-primary text-center px-4 whitespace-nowrap">
         {{ submission.name }}
