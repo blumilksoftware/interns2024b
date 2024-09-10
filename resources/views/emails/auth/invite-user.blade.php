@@ -13,7 +13,7 @@
 </header>
 
 <body>
-<p>Cześć {{ $user->name }},</p>
+<h1>Cześć {{ $user->name }},</h1>
 
 <p>Zostałeś zaproszony do udziału w quizie: {{ $quiz->name }}.</p>
 

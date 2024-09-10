@@ -6,10 +6,11 @@ namespace App\Notifications;
 
 use App\Models\Quiz;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class InviteUserNotification extends Notification
+class InviteUserNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
