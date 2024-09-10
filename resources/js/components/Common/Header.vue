@@ -25,7 +25,7 @@ const isSelected = (page: Page) => page.href === window.location.pathname
           </svg>
         </a>
         <span v-if="pages.length <= 0" class="font-semibold leading-6 text-gray-900">{{ titleRef }}</span>
-        <div v-else>
+        <div v-else class="flex gap-6">
           <a
             v-for="item in pages"
             :key="item.title"
