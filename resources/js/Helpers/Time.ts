@@ -1,6 +1,6 @@
 import {type TimeObject} from '@/Types/TimeObject'
 import dayjs, { type Dayjs } from 'dayjs'
-import {usePlurals} from "@/Helpers/Plurals";
+import {usePlurals} from '@/Helpers/Plurals'
 
 export function calcSecondsBetweenDates(from: string | number | Dayjs = 0, to: string | number | Dayjs = 0): number {
   return dayjs(from).diff(dayjs(to), 's')
