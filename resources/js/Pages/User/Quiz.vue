@@ -38,14 +38,17 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     <title>{{ submission.name }}</title>
   </Head>
 
-  <div class="w-full p-2 md:max-w-4xl">
+  <div class="w-full p-2 md:max-w-5xl">
     <Divider>
       <h1 class="font-bold text-xl text-primary text-center px-4 whitespace-nowrap">
         {{ submission.name }}
       </h1>
     </Divider>
-    <div class="w-full text-right text-sm font-semibold">
-      {{ timeLeft }}
+
+    <div class="w-full flex justify-end top-0 sticky">
+      <div class="text-sm font-semibold border-b-2 border-primary bg-white/80 px-1 py-2 backdrop-blur-sm">
+        {{ timeLeft }}
+      </div>
     </div>
 
     <div v-for="(record, index) in answers" :key="record.id" class="rounded-lg bg-white shadow border flex flex-col justify-between px-4 py-2 m-5">
