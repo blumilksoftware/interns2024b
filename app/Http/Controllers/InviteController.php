@@ -17,6 +17,7 @@ class InviteController extends Controller
 {
     public function index(Quiz $quiz): Response
     {
+        $this->authorize("invite", $quiz);
         $users = User::query()->role("user")->with("school")->orderBy("id");
 
         return Inertia::render("Admin/Invite", [
@@ -27,6 +28,7 @@ class InviteController extends Controller
 
     public function store(Quiz $quiz, InviteQuizRequest $request): RedirectResponse
     {
+        $this->authorize("invite", $quiz);
         $userIds = $request->input("ids", []);
 
         if (empty($userIds)) {

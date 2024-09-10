@@ -67,4 +67,9 @@ class QuizPolicy
     {
         return $quiz->isLocked && $user->hasRole("admin|super_admin");
     }
+
+    public function invite(User $user, Quiz $quiz): Response
+    {
+            return  $user->hasRole("admin|super_admin") ? (!$quiz->isPublished && $quiz->isLocked) ? Response::allow() : Response::deny("Stan quizu uniemożliwia Ci zaproszenie użytkowników do niego.") : Response::deny("Nie masz uprawnień do zapraszania użytkowników do quizu.");
+    }
 }
