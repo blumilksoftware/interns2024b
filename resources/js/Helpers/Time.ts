@@ -18,10 +18,6 @@ export function secondsToHour(seconds: number): TimeObject {
   }
 }
 
-export function isTimeout(time: TimeObject): boolean {
-  return time.s <= 0 && time.m <= 0 && time.h <= 0
-}
-
 const translateLeft = usePlurals('Pozostała', 'Pozostały', 'Pozostało')
 const translateSecondsLeft = usePlurals('sekunda', 'sekundy', 'sekund')
 const translateMinutesLeft = usePlurals('minuta', 'minuty', 'minut')

@@ -6,9 +6,9 @@ import axios from 'axios'
 import FormButton from '@/components/Common/FormButton.vue'
 import Button from '@/components/Common/Button.vue'
 import {type AnswerRecord} from '@/Types/AnswerRecord'
-import TimeLeft from '@/components/Common/TimeLeft.vue'
 import MessageBox, { useMessageBox } from '@/components/Common/MessageBox.vue'
 import {Head} from '@inertiajs/vue3'
+import {useTimer} from '@/Helpers/Timer'
 
 const props = defineProps<{ submission: QuizSubmission }>()
 const answers = ref(props.submission.answers)
@@ -18,10 +18,10 @@ const emptyAnswerMessage = useMessageBox()
 const timeoutMessage = useMessageBox()
 const networkErrorMessage = useMessageBox()
 
-function handleTimeout() {
+const timeLeft = useTimer(props.submission.closedAt, () => {
   timeout.value = true
   timeoutMessage.show()
-}
+})
 
 function handleAnswer(answers: AnswerRecord, selected: number) {
   answers.selected = selected
@@ -45,7 +45,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
       </h1>
     </Divider>
     <div class="w-full text-right text-sm font-semibold">
-      <TimeLeft :to="submission.closedAt" @timeout="handleTimeout" />
+      {{ timeLeft }}
     </div>
 
     <div v-for="(record, index) in answers" :key="record.id" class="rounded-lg bg-white shadow border flex flex-col justify-between px-4 py-2 m-5">
