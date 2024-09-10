@@ -1,6 +1,6 @@
 import {type TimeObject} from '@/Types/TimeObject'
 import dayjs, { type Dayjs } from 'dayjs'
-import {polishPlurals} from 'polish-plurals'
+import {usePlurals} from "@/Helpers/Plurals";
 
 export function calcSecondsBetweenDates(from: string | number | Dayjs = 0, to: string | number | Dayjs = 0): number {
   return dayjs(from).diff(dayjs(to), 's')
@@ -22,10 +22,10 @@ export function isTimeout(time: TimeObject): boolean {
   return time.s <= 0 && time.m <= 0 && time.h <= 0
 }
 
-const translateLeft = polishPlurals.bind(null, 'Pozostała', 'Pozostały', 'Pozostało')
-const translateSecondsLeft = polishPlurals.bind(null, 'sekunda', 'sekundy', 'sekund')
-const translateMinutesLeft = polishPlurals.bind(null, 'minuta', 'minuty', 'minut')
-const translateHoursLeft = polishPlurals.bind(null, 'godzina', 'godziny', 'godzin')
+const translateLeft = usePlurals('Pozostała', 'Pozostały', 'Pozostało')
+const translateSecondsLeft = usePlurals('sekunda', 'sekundy', 'sekund')
+const translateMinutesLeft = usePlurals('minuta', 'minuty', 'minut')
+const translateHoursLeft = usePlurals('godzina', 'godziny', 'godzin')
 
 export function timeToString(time: TimeObject, withLeft = false): string {
   const { s, m, h } = time
