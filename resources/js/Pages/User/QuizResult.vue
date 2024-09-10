@@ -5,7 +5,7 @@ import Button from '@/components/Common/Button.vue'
 import {calcSecondsBetweenDates, secondsToHour, timeToString} from '@/Helpers/Time'
 import {computed} from 'vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
-import FakeRadio from '@/components/Common/FakeRadio.vue'
+import AnswerResult from '@/components/Common/AnswerResult.vue'
 import {Head} from '@inertiajs/vue3'
 
 const props = defineProps<{ submission: QuizSubmission, hasRanking: boolean }>()
@@ -47,19 +47,17 @@ const points = computed(() =>
 
       <div class="mb-3 mt-2">
         <div class="flex flex-col gap-2">
-          <FakeRadio
+          <AnswerResult
             v-for="answer in record.answers"
             :id="answer.id.toString()"
             :key="answer.id"
             type="radio"
-            :native="!hasRanking"
             :checked="record.selected == answer.id || answer.correct"
-            :mode="!hasRanking ? 'dot' : answer.correct ? 'v' : 'x'"
-            :class="`${record.selected == answer.id ? 'font-semibold' : ''}`"
-            :fill="!hasRanking ? 'primary' : answer.correct ? 'green' : 'red'"
+            :mode="!hasRanking ? 'none' : answer.correct ? 'success' : 'error'"
+            :bold="record.selected == answer.id"
           >
             {{ answer.text }}
-          </FakeRadio>
+          </AnswerResult>
         </div>
       </div>
     </div>
