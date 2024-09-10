@@ -8,10 +8,10 @@ export function useTimer(to: string | number, timeout: () => void) {
     left.value = Math.max(0, left.value - 1)
 
     if (left.value === 0) {
-      timeout();
+      timeout()
       clearInterval(interval)
     }
   }, 1000)
 
-  return computed(() => timeToString(secondsToHour(left.value)), true)
+  return computed(() => timeToString(secondsToHour(left.value), true))
 }
