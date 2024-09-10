@@ -5,7 +5,7 @@ export function useTimer(to?: string | number, timeout?: () => void) {
   const left = ref(calcSecondsLeftToDate(to))
 
   const interval = setInterval(() => {
-    left.value = Math.max(0, left.value - 1);
+    left.value = Math.max(0, left.value - 1)
 
     if (left.value === 0) {
       timeout!()
