@@ -1,14 +1,18 @@
 <script setup lang="ts">
 import {type QuizSubmission} from '@/Types/QuizSubmission'
 import Divider from '@/components/Common/Divider.vue'
-import {computed, ref} from 'vue'
+import {computed, ref, watch} from 'vue'
 import axios from 'axios'
 import FormButton from '@/components/Common/FormButton.vue'
 import Button from '@/components/Common/Button.vue'
 import {type AnswerRecord} from '@/Types/AnswerRecord'
-import MessageBox, { useMessageBox } from '@/components/Common/MessageBox.vue'
+import MessageBox from '@/components/Common/MessageBox.vue'
 import {Head} from '@inertiajs/vue3'
 import {useTimer} from '@/Helpers/Timer'
+import { useWindowScroll } from '@vueuse/core'
+import { TransitionRoot } from '@headlessui/vue'
+import {useMessageBox} from '@/Helpers/MessageBox'
+import {calcSecondsLeftToDate} from '@/Helpers/Time'
 
 const props = defineProps<{ submission: QuizSubmission }>()
 const answers = ref(props.submission.answers)
@@ -16,7 +20,19 @@ const allAnswered = computed((() => answers.value.every(answer => answer.selecte
 const timeout = ref(false)
 const emptyAnswerMessage = useMessageBox()
 const timeoutMessage = useMessageBox()
+const timeoutWarningMessage = useMessageBox()
 const networkErrorMessage = useMessageBox()
+
+const scroll = useWindowScroll()
+const showDuration = ref(false)
+const durationInMilliseconds = calcSecondsLeftToDate(props.submission.closedAt) * 1000
+const fiveMinutesInMilliseconds = 300000
+
+watch(scroll.y, v => showDuration.value = v > 150)
+
+if (durationInMilliseconds > fiveMinutesInMilliseconds) {
+  setTimeout(timeoutWarningMessage.show, durationInMilliseconds - fiveMinutesInMilliseconds)
+}
 
 const timeLeft = useTimer(props.submission.closedAt, () => {
   timeout.value = true
@@ -37,6 +53,20 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
   <Head>
     <title>{{ submission.name }}</title>
   </Head>
+  <TransitionRoot
+    :show="showDuration"
+    enter="transition-opacity duration-75"
+    enter-from="opacity-0"
+    enter-to="opacity-100"
+    leave="transition-opacity duration-50"
+    leave-from="opacity-100"
+    leave-to="opacity-0"
+    appear
+  >
+    <div class="fixed top-0 right-0 w-full text-center bg-white border px-6 py-2.5 font-bold text-sm text-black">
+      {{ timeLeft }} - {{ scroll.y }}
+    </div>
+  </TransitionRoot>
 
   <div class="w-full p-2 md:max-w-5xl">
     <Divider>
@@ -45,15 +75,13 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
       </h1>
     </Divider>
 
-    <div class="w-full flex justify-end top-0 sticky">
-      <div class="text-sm font-semibold border-b-2 border-primary bg-white/80 px-1 py-2 backdrop-blur-sm">
-        {{ timeLeft }}
-      </div>
+    <div class="w-full text-sm font-semibold text-right">
+      {{ timeLeft }}
     </div>
 
     <div v-for="(record, index) in answers" :key="record.id" class="rounded-lg bg-white shadow border flex flex-col justify-between px-4 py-2 m-5">
       <div>
-        <p class="pt-2 font-semibold text-primary">Pytanie: {{ index + 1 }}/{{ answers.length }}</p>
+        <p class="pt-2 font-semibold text-primary">Pytanie: {{ index + 1 }}/{{ answers.length }} {{ scroll.y }}</p>
         <p class="py-2 mt-2">{{ record.question }}</p>
       </div>
 
@@ -133,6 +161,20 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
 
     <template #buttons>
       <Button small @click="networkErrorMessage.close">Ok</Button>
+    </template>
+  </MessageBox>
+
+  <MessageBox v-bind="timeoutWarningMessage">
+    <template #title>
+      Zbliża się koniec czasu
+    </template>
+
+    <template #message>
+      Pozostało 5 minut do końca testu.
+    </template>
+
+    <template #buttons>
+      <Button small @click="timeoutWarningMessage.close">Ok</Button>
     </template>
   </MessageBox>
 </template>

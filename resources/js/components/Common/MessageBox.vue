@@ -4,7 +4,7 @@ import {type MessageBox as MessageBoxProps} from '@/Types/MessageBox'
 import {type VNode} from 'vue'
 
 defineSlots<{
-  title: VNode
+  title: Node
   message: VNode
   buttons: VNode
 }>()
@@ -33,17 +33,3 @@ defineProps<MessageBoxProps>()
     </div>
   </Dialog>
 </template>
-
-<script lang="ts">
-import {ref} from 'vue'
-
-export function useMessageBox(open = false): MessageBoxProps {
-  const isOpen = ref(open)
-
-  return  {
-    isOpen,
-    show: () => isOpen.value = true,
-    close: () => isOpen.value = false,
-  }
-}
-</script>

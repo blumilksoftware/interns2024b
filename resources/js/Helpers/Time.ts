@@ -30,7 +30,7 @@ export function timeToString(time: TimeObject, withLeft = false): string {
     return `${withLeft ? translateLeft(s) : ''} ${s} ${translateSecondsLeft(s)}`.trimStart()
   }
 
-  if (h <= 0 && m < 5 && s > 0 ) {
+  if (h <= 0 && m < 10 && s > 0 ) {
     return `${withLeft ? translateLeft(m) : ''} ${m} ${translateMinutesLeft(m)} i ${s} ${translateSecondsLeft(s)}`.trimStart()
   }
 

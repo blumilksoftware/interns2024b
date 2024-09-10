@@ -4,7 +4,6 @@ import {type Quiz} from '@/Types/Quiz'
 import LinkButton from '@/components/Common/LinkButton.vue'
 
 defineProps<{ quizzes: Quiz[] }>()
-
 </script>
 
 <template>
