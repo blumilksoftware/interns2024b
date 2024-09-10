@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import {type QuizSubmission} from '@/Types/QuizSubmission'
 import Divider from '@/components/Common/Divider.vue'
 import {computed, ref} from 'vue'

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 import {Dialog, DialogPanel} from '@headlessui/vue'
 import {type MessageBox as MessageBoxProps} from '@/Types/MessageBox'
 import {type VNode} from 'vue'

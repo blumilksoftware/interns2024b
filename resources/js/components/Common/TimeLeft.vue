@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import {ref} from 'vue'
 import {calcSecondsLeftToDate, isTimeout, secondsToHour, timeToString} from '@/Helpers/Time'
 
