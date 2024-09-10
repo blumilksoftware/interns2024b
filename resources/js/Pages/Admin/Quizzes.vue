@@ -88,10 +88,10 @@ function sortByCreationDateDescending(arr: any[]) {
 
 <style>
 .datepicker {
-  @apply bg-white/50 rounded-md ring-1 ring-primary/30 outline-none border-none font-bold
+  @apply bg-white/50 rounded-md outline-none border-none font-bold
 }
 .datepicker-menu{
-  @apply rounded-lg border border-primary/30
+  @apply rounded-lg border
 }
 .dp__active_date{
   @apply bg-primary font-bold

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue'
-import dayjs, { type ConfigType } from 'dayjs'
+import dayjs, { type ConfigType as DayjsConfigType } from 'dayjs'
 import { type Quiz } from '@/Types/Quiz'
 import { type CleanQuestion } from '@/Types/CleanQuestion'
 import QuestionComponent from './QuestionComponent.vue'
@@ -14,10 +14,9 @@ import CheckIcon from '../Icons/CheckIcon.vue'
 import DismissIcon from '../Icons/DismissIcon.vue'
 import { Request } from '@/scripts/request'
 import { nanoid } from 'nanoid'
-import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
-import CalendarIcon from '../Icons/CalendarIcon.vue'
 import MessageBox, { useMessageBox } from '@/components/Common/MessageBox.vue'
+import CustomDatepicker from '../Common/CustomDatepicker.vue'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])
@@ -34,7 +33,6 @@ const isReadyToSchedule = computed(()=>{
     return Date.parse(quizRef.value.scheduledAt) > currentTime.value
   return false
 })
-const datepickerRef = ref<InstanceType<typeof Datepicker>>()
 
 // editing
 function edit(){
@@ -48,15 +46,15 @@ function dismissEditing(){
 }
 
 // date formatters
-function formatDatePretty(date?: ConfigType) {
+function formatDatePretty(date?: DayjsConfigType) {
   return date ? dayjs(date).format('DD.MM.YYYY HH:mm') : 'brak'
 }
 
-function formatDateHTML(date?: ConfigType) {
+function formatDateHTML(date?: DayjsConfigType) {
   return date ? dayjs(date).format('YYYY-MM-DDTHH:mm') : ''
 }
 
-function formatDateDB(date?: ConfigType) {
+function formatDateDB(date?: DayjsConfigType) {
   return date ? dayjs(date).format('YYYY-MM-DD HH:mm:ss') : ''
 }
 
@@ -162,7 +160,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
     <div class="min-h-12" :class="isSelected ? 'flex justify-between items-center' : 'grid grid-cols-[1fr,1fr,1fr,.8fr] gap-3 items-center'">
       <div class="flex gap-3">
         <button @click="toggleQuizView()"><ExapnsionToggleDynamicIcon :is-expanded="isSelected" /></button>
-        <EditableInput v-model="quizRef.title" :error="request.errors.value.title" :is-editing="isEditing && isSelected" type="text" />
+        <EditableInput v-model="quizRef.title" :error="request.errors.value?.title" :is-editing="isEditing && isSelected" type="text" />
       </div>
       <span v-if="!isSelected">Rozpoczęcie testu: <b class="whitespace-nowrap">{{ formatDatePretty(quizRef.scheduledAt) }}</b> </span>
       <span v-if="!isSelected">Czas trwania testu: <b class="whitespace-nowrap">{{ quizRef.duration ? quizRef.duration + ' min': "brak" }}</b> </span>
@@ -181,33 +179,12 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
 
     <!-- content -->
     <div v-if="isSelected" class="flex mt-8 px-2 gap-8 flex-col">
-      <div class="grid grid-cols-[auto,auto] gap-2 w-fit rounded-lg items-center">
-        <span>Rozpoczęcie testu:</span>
+      <div :class="isEditing ? 'flex flex-col' : 'grid grid-cols-[auto,auto] gap-2 w-fit rounded-lg items-center'">
+        <span class="py-1.5">Rozpoczęcie testu:</span>
         <b v-if="!isEditing">{{ formatDatePretty(quizRef.scheduledAt) }}</b>
-        <Datepicker
-          v-else
-          ref="datepickerRef"
-          v-model="quizRef.scheduledAt"
-          locale="pl" 
-          :format="formatDatePretty"
-          :ui="{
-            menu: 'datepicker-menu',
-            input:'datepicker',
-          }"
-        >
-          <template #input-icon>
-            <CalendarIcon />
-          </template>
-          <template #action-buttons>
-            <div class="flex gap-4">
-              <button class="text-sm font-semibold rounded-md" @click="()=>datepickerRef?.toggleMenu()">Anuluj</button>
-              <button class="bg-primary text-white text-sm font-bold py-2 px-3 rounded-md duration-200 hover:bg-primary-950" @click="()=>datepickerRef?.selectDate()">Wybierz</button>
-            </div>
-          </template>
-        </Datepicker>
-        
-        <span>Czas trwania testu<span v-if="isEditing"> (min)</span>:</span>
-        <EditableInput v-model="quizRef.duration" type="number" min="0" :is-editing="isEditing" />
+        <CustomDatepicker v-else :error="request.errors.value?.scheduled_at" :is-editing="isEditing" :format="formatDatePretty" />
+        <span class="py-1.5">Czas trwania testu<span v-if="isEditing"> (min)</span>:</span>
+        <EditableInput v-model="quizRef.duration" :error="request.errors.value?.duration" type="number" min="0" :is-editing="isEditing" />
       </div>
           
       <!-- question -->
