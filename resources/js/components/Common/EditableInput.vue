@@ -33,7 +33,7 @@ function formatOutput(content: number | string | undefined) {
       :min="min"
       :type="type"
       :class="{'font-normal':fontNormal, 'ring-red':error }"
-      class="w-full py-2 outline-none font-bold flex px-3 rounded-md size-full ring-1 ring-primary/30 focus:ring-2 focus:ring-primary/50 bg-white/50"
+      class="w-full py-1.5 outline-none font-bold px-3 rounded-md ring-1 ring-primary/30 focus:ring-2 focus:ring-primary/50 bg-white/50"
       autocomplete="off"
     >
     <span v-if="isEditing && error" :title="error" class="text-red text-sm truncate max-w-xs">{{ error }}</span>

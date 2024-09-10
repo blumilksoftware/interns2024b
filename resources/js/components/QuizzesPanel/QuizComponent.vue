@@ -17,6 +17,7 @@ import { nanoid } from 'nanoid'
 import '@vuepic/vue-datepicker/dist/main.css'
 import MessageBox, { useMessageBox } from '@/components/Common/MessageBox.vue'
 import CustomDatepicker from '../Common/CustomDatepicker.vue'
+import Banner from '../Common/Banner.vue'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])
@@ -76,12 +77,22 @@ function deleteQuiz() {
 function copyQuiz() {
   request.sendRequest(`/admin/quizzes/${quizRef.value.id}/clone`, {method: 'post'})
 }
+
+function assignDefinedValues<T extends object, U extends object>(target: T, source: U): T & U {
+  Object.keys(source).forEach((key) => {
+    const value = source[key as keyof U]
+    if (value) {
+      (target as any)[key] = value
+    }
+  })
+  return target as T & U
+}
+
 async function updateQuiz() {
-  const data = {
-    ...quizRef.value,
-    scheduledAt: formatDateDB(quizRef.value.scheduledAt),
-    onSuccess: ()=>isEditing.value=false,
-  }
+  let data : any = assignDefinedValues({}, quizRef.value)
+  if (data?.scheduledAt)
+    data.scheduledAt = formatDateDB(quizRef.value.scheduledAt)
+  data.onSuccess = ()=>isEditing.value=false 
   await request.axiosPatch(`/admin/quizzes/${quizRef.value.id}`, data)
 }
 function schedule() {
@@ -90,8 +101,8 @@ function schedule() {
     method:'post',
     onSuccess:()=>quizRef.value.state = 'locked',
   })
-  
 }
+
 function unSchedule() {
   request.sendRequest(`/admin/quizzes/${quizRef.value.id}/unlock`,{
     method:'post',
@@ -119,6 +130,8 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
     tabindex="0"
     class="mt-4 p-5 bg-white/70 rounded-lg items-center relative shadow"
   >
+    <div v-if="request.errors.value?.unknown" class="h-10" />
+    <Banner v-if="request.errors.value?.unknown" :text="request.errors.value?.unknown" banner-class="-mx-5 bg-red/80" @click="request.errors.value.unknown=''" />
     <MessageBox v-bind="confirmDeleteMessage">
       <template #message>
         <div class="flex gap-4">
@@ -182,7 +195,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
       <div :class="isEditing ? 'flex flex-col' : 'grid grid-cols-[auto,auto] gap-2 w-fit rounded-lg items-center'">
         <span class="py-1.5">Rozpoczęcie testu:</span>
         <b v-if="!isEditing">{{ formatDatePretty(quizRef.scheduledAt) }}</b>
-        <CustomDatepicker v-else :error="request.errors.value?.scheduled_at" :is-editing="isEditing" :format="formatDatePretty" />
+        <CustomDatepicker v-else v-model="quizRef.scheduledAt" :error="request.errors.value?.scheduled_at" :is-editing="isEditing" :format="formatDatePretty" />
         <span class="py-1.5">Czas trwania testu<span v-if="isEditing"> (min)</span>:</span>
         <EditableInput v-model="quizRef.duration" :error="request.errors.value?.duration" type="number" min="0" :is-editing="isEditing" />
       </div>
