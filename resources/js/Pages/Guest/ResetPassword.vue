@@ -4,9 +4,15 @@ import CustomInput from '@/components/Common/CustomInput.vue'
 import { Head } from '@inertiajs/vue3'
 import type { PageProps } from '@/Types/PageProps'
 import DisplayError from '@/components/Common/DisplayError.vue'
-import { ref } from 'vue'
+import { inject, onMounted, type Ref, ref } from 'vue'
 import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
+import type Header from '@/components/Common/Header.vue'
 
+const headerRef = inject<Ref<InstanceType<typeof Header>>>('header')
+onMounted(()=>{
+  if (headerRef)
+    headerRef.value.titleRef = 'Zmiana hasła'
+})
 const props = defineProps<{
   token: string
 } & PageProps>()
@@ -24,7 +30,7 @@ function submit() {
 
 <template>
   <Head>
-    <title>Zmiana hasła</title>
+    <title>{{ headerRef }}</title>
     <meta name="Zmiana hasła" content="Zmiana hasła">
   </Head>
 
