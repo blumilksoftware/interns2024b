@@ -50,7 +50,7 @@ class QuizUpdateService
                     $answer = $question->answers()->create($answerData);
                 }
 
-                if (array_key_exists("correct", $answerData)) {
+                if (array_key_exists("correct", $answerData) && $answerData["correct"] === true) {
                     $question->correctAnswer()->associate($answer);
                 }
 
