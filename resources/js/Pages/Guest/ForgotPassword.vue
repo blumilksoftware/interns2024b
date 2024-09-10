@@ -2,6 +2,14 @@
 import { useForm } from '@inertiajs/vue3'
 import CustomInput from '@/components/Common/CustomInput.vue'
 import { Head } from '@inertiajs/vue3'
+import { inject, onMounted, type Ref } from 'vue'
+import type Header from '@/components/Common/Header.vue'
+
+const headerRef = inject<Ref<InstanceType<typeof Header>>>('header')
+onMounted(()=>{
+  if (headerRef)
+    headerRef.value.titleRef = 'Przypomnij hasło'
+})
 
 defineProps<{
   errors: Record<string, string>
@@ -16,7 +24,7 @@ function submit() {
 
 <template>
   <Head>
-    <title>Przypomnij hasło</title>
+    <title>{{ headerRef }}</title>
     <meta name="Przypomnij hasło" content="Przypomnij hasło">
   </Head>
 

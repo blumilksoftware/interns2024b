@@ -8,8 +8,8 @@ import { ref } from 'vue'
 import { type User } from '@/Types/User'
 
 defineProps<{ pages: Page[], user?: User, appName: string }>()
-
-
+const titleRef = ref('')
+defineExpose({titleRef})
 const open = ref<boolean>(false)
 const isSelected = (page: Page) => page.href === window.location.pathname
 </script>
@@ -24,15 +24,18 @@ const isSelected = (page: Page) => page.href === window.location.pathname
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12.2545 17.8224V6.2803L15.3847 2.28313C15.731 1.84101 16.4307 2.21751 16.2525 2.75005L13.6885 10.4136C13.6668 10.4784 13.715 10.5453 13.7834 10.5453H16.4935C16.9005 10.5453 17.137 11.0056 16.9 11.3365L12.2545 17.8224Z" fill="#6566C2" />
           </svg>
         </a>
-        <a
-          v-for="item in pages"
-          :key="item.title"
-          :href="item.href"
-          class="hidden md:block font-semibold leading-6 text-gray-900 transition-colors duration-200 hover:text-primary-800"
-          :class="{'text-primary': isSelected(item) }"
-        >
-          {{ item.title }}
-        </a>
+        <span v-if="pages.length <= 0" class="font-semibold leading-6 text-gray-900">{{ titleRef }}</span>
+        <div v-else>
+          <a
+            v-for="item in pages"
+            :key="item.title"
+            :href="item.href"
+            class="hidden md:block font-semibold leading-6 text-gray-900 transition-colors duration-200 hover:text-primary-800"
+            :class="{'text-primary': isSelected(item) }"
+          >
+            {{ item.title }}
+          </a>
+        </div>
       </div>
 
       <div v-if="user" class="hidden md:flex flex-1 items-center justify-end gap-x-6">
