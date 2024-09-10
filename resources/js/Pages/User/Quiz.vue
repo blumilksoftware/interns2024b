@@ -16,6 +16,7 @@ const allAnswered = computed((() => answers.value.every(answer => answer.selecte
 const timeout = ref(false)
 const emptyAnswerMessage = useMessageBox()
 const timeoutMessage = useMessageBox()
+const networkErrorMessage = useMessageBox()
 
 function handleTimeout() {
   timeout.value = true
@@ -23,8 +24,12 @@ function handleTimeout() {
 }
 
 function handleAnswer(answers: AnswerRecord, selected: number) {
-  axios.post(`/answers/${answers.id}/${selected}`, { _method: 'patch' })
   answers.selected = selected
+
+  axios.post(`/answers/${answers.id}/${selected}`, { _method: 'patch' }).catch(() => {
+    networkErrorMessage.show()
+    answers.selected = null
+  })
 }
 </script>
 
@@ -111,6 +116,20 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
 
     <template #buttons>
       <Button small @click="timeoutMessage.close">Ok</Button>
+    </template>
+  </MessageBox>
+
+  <MessageBox v-bind="networkErrorMessage">
+    <template #title>
+      Nie udało się wysłać odpowiedzi
+    </template>
+
+    <template #message>
+      Wystąpił problem z wysłaniem Twojej odpowiedzi. Sprawdź swoje połączenie internetowe i spróbuj ponownie.
+    </template>
+
+    <template #buttons>
+      <Button small @click="networkErrorMessage.close">Ok</Button>
     </template>
   </MessageBox>
 </template>
