@@ -59,10 +59,10 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
             :title="timeout ? 'Czas przewidziany na ten test dobiegł końca' : undefined"
           >
             <input
-              :id="answer.id.toString()"
+              :id="answer.id"
               type="radio"
               :disabled="timeout"
-              :checked="record.selected == answer.id"
+              :checked="record.selected === answer.id"
               :class="`${timeout ? 'cursor-not-allowed' : 'cursor-pointer'}`"
               class="mr-2 size-6 border-black text-primary accent-primary"
               @change.prevent="handleAnswer(record, answer.id)"
@@ -87,7 +87,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
 
   <MessageBox v-bind="emptyAnswerMessage">
     <template #title>
-      Uwaga
+      Pytania bez odpowiedzi
     </template>
 
     <template #message>
