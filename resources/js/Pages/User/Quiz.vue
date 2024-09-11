@@ -11,17 +11,16 @@ import {Head} from '@inertiajs/vue3'
 import {useTimer} from '@/Helpers/Timer'
 import { useWindowScroll } from '@vueuse/core'
 import { TransitionRoot } from '@headlessui/vue'
-import {useMessageBox} from '@/Helpers/MessageBox'
 import {calcSecondsLeftToDate} from '@/Helpers/Time'
 
 const props = defineProps<{ submission: QuizSubmission }>()
 const answers = ref(props.submission.answers)
 const allAnswered = computed((() => answers.value.every(answer => answer.selected != null)))
 const timeout = ref(false)
-const emptyAnswerMessage = useMessageBox()
-const timeoutMessage = useMessageBox()
-const timeoutWarningMessage = useMessageBox()
-const networkErrorMessage = useMessageBox()
+const emptyAnswerMessage = ref(false);
+const timeoutMessage = ref(false);
+const timeoutWarningMessage = ref(false);
+const networkErrorMessage = ref(false);
 
 const scroll = useWindowScroll()
 const showDuration = ref(false)
@@ -31,19 +30,19 @@ const fiveMinutesInMilliseconds = 300000
 watch(scroll.y, v => showDuration.value = v > 150)
 
 if (durationInMilliseconds > fiveMinutesInMilliseconds) {
-  setTimeout(timeoutWarningMessage.show, durationInMilliseconds - fiveMinutesInMilliseconds)
+  setTimeout(() => timeoutWarningMessage.value = true, durationInMilliseconds - fiveMinutesInMilliseconds)
 }
 
 const timeLeft = useTimer(props.submission.closedAt, () => {
   timeout.value = true
-  timeoutMessage.show()
+  timeoutMessage.value = true
 })
 
 function handleAnswer(answers: AnswerRecord, selected: number) {
   answers.selected = selected
 
   axios.post(`/answers/${answers.id}/${selected}`, { _method: 'patch' }).catch(() => {
-    networkErrorMessage.show()
+    networkErrorMessage.value = true
     answers.selected = null
   })
 }
@@ -112,7 +111,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     <div v-if="!timeout" class="h-80 flex flex-col items-center justify-center">
       <p class="font-semibold text-primary text-xl p-5 text-center">To już wszystkie pytania. Czy chcesz oddać test?</p>
       <FormButton v-if="allAnswered" small :href="`/submissions/${submission.id}/close`" method="post">Oddaj test</FormButton>
-      <Button v-else small @click="emptyAnswerMessage.show">Oddaj test</Button>
+      <Button v-else small @click="emptyAnswerMessage = true">Oddaj test</Button>
     </div>
 
     <div v-else class="h-80 flex flex-col items-center justify-center">
@@ -121,7 +120,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     </div>
   </div>
 
-  <MessageBox v-bind="emptyAnswerMessage">
+  <MessageBox :open="emptyAnswerMessage" @close="emptyAnswerMessage = false">
     <template #title>
       Pytania bez odpowiedzi
     </template>
@@ -131,12 +130,12 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     </template>
 
     <template #buttons>
-      <Button small text @click="emptyAnswerMessage.close">Wróć</Button>
+      <Button small text @click="emptyAnswerMessage = false">Wróć</Button>
       <FormButton small :href="`/submissions/${submission.id}/close`" method="post">Oddaj mimo to</FormButton>
     </template>
   </MessageBox>
 
-  <MessageBox v-bind="timeoutMessage">
+  <MessageBox :open="timeoutMessage" @close="timeoutMessage = false">
     <template #title>
       Koniec czasu
     </template>
@@ -146,11 +145,11 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     </template>
 
     <template #buttons>
-      <Button small @click="timeoutMessage.close">Ok</Button>
+      <Button small @click="timeoutMessage = false">Ok</Button>
     </template>
   </MessageBox>
 
-  <MessageBox v-bind="networkErrorMessage">
+  <MessageBox :open="networkErrorMessage" @close="networkErrorMessage = false">
     <template #title>
       Nie udało się wysłać odpowiedzi
     </template>
@@ -160,11 +159,11 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     </template>
 
     <template #buttons>
-      <Button small @click="networkErrorMessage.close">Ok</Button>
+      <Button small @click="networkErrorMessage = false">Ok</Button>
     </template>
   </MessageBox>
 
-  <MessageBox v-bind="timeoutWarningMessage">
+  <MessageBox :open="timeoutWarningMessage" @close="timeoutWarningMessage = false">
     <template #title>
       Zbliża się koniec czasu
     </template>
@@ -174,7 +173,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     </template>
 
     <template #buttons>
-      <Button small @click="timeoutWarningMessage.close">Ok</Button>
+      <Button small @click="timeoutWarningMessage = false">Ok</Button>
     </template>
   </MessageBox>
 </template>

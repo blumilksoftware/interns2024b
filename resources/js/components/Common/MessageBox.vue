@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import {Dialog, DialogPanel} from '@headlessui/vue'
-import {type MessageBox as MessageBoxProps} from '@/Types/MessageBox'
-import {type VNode} from 'vue'
+import {computed, type Ref, type VNode} from 'vue'
 
 defineSlots<{
   title: Node
@@ -9,11 +8,12 @@ defineSlots<{
   buttons: VNode
 }>()
 
-defineProps<MessageBoxProps>()
+defineProps<{ open: boolean }>()
+const emit = defineEmits(["close"])
 </script>
 
 <template>
-  <Dialog :open="isOpen" class="relative z-50" @close="close">
+  <Dialog :open class="relative z-50" @close="emit('close')">
     <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
 
     <div class="fixed inset-0 flex w-screen items-center justify-center p-4">
