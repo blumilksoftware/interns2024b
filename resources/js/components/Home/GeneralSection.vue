@@ -6,7 +6,7 @@ import InformationButton from '@/components/Home/InformationButton.vue'
 
 <template>
   <section class="w-full flex flex-col overflow-hidden">
-    <div class="inset-0 top-16  h-[22rem] lg:h-screen lg:top-0 bg-white/30 absolute -z-10" />
+    <div class="inset-0 top-16  h-88 lg:h-screen lg:top-0 bg-white/30 absolute -z-10" />
     <div data-name="left" class="flex flex-col justify-center w-full gap-10 p-10 pb-16">
       <img class="h-40 object-contain" src="@/../assets/header-logo.png" alt="logo nagłówka">
       <InformationButton />

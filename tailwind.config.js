@@ -6,6 +6,13 @@ module.exports = {
     ],
     theme: {
         extend: {
+            fontSize: {
+                '512' : '32rem',
+                'hovered-inf-btn' : '1.55rem'
+            },
+            height:{
+                '88' : '22rem'
+            },
             screens: {
                 '2xs': '380px',
                 'xs': '480px',
