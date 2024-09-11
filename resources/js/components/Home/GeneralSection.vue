@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 import InformationButton from '@/components/Home/InformationButton.vue'
 
 </script>

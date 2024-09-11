@@ -7,6 +7,7 @@ use App\Http\Controllers\AnswerRecordController;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
 use App\Http\Controllers\EmailVerifyController;
+use App\Http\Controllers\InviteController;
 use App\Http\Controllers\PasswordResetLinkController;
 use App\Http\Controllers\ProfileUserController;
 use App\Http\Controllers\QuestionAnswerController;
@@ -36,13 +37,6 @@ Route::middleware(["guest"])->group(function (): void {
     Route::post("/auth/forgot-password", [PasswordResetLinkController::class, "store"])->name("password.email");
 });
 
-Route::middleware(["auth", "verified"])->group(function (): void {
-    Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
-    Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
-    Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "indexUser"])->name("quizzes.ranking");
-    Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update");
-});
-
 Route::get("/auth/password/reset/{token}", [PasswordResetLinkController::class, "resetCreate"])->name("password.reset");
 Route::post("/auth/password/reset", [PasswordResetLinkController::class, "resetStore"])->name("password.update");
 
@@ -54,6 +48,9 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/quizzes/{quiz}/clone", [QuizController::class, "clone"])->name("admin.quizzes.clone");
     Route::post("/quizzes/{quiz}/lock", [QuizController::class, "lock"])->can("lock,quiz")->name("admin.quizzes.lock");
     Route::post("/quizzes/{quiz}/unlock", [QuizController::class, "unlock"])->can("unlock,quiz")->name("admin.quizzes.unlock");
+
+    Route::get("/quizzes/{quiz}/invite", [InviteController::class, "index"])->name("admin.quizzes.invite.index");
+    Route::post("/quizzes/{quiz}/invite", [InviteController::class, "store"])->name("admin.quizzes.invite.store");
 
     Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "index"])->name("admin.quizzes.ranking");
     Route::post("/quizzes/{quiz}/ranking/publish", [RankingController::class, "publish"])->name("admin.quizzes.ranking.publish");
@@ -97,7 +94,12 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
 Route::middleware(["auth", "verified"])->group(function (): void {
     Route::post("/quizzes/{quiz}/assign", [QuizController::class, "assign"])->can("assign,quiz")->name("quizzes.assign");
     Route::post("/quizzes/{quiz}/start", [QuizController::class, "createSubmission"])->middleware(EnsureQuizIsNotAlreadyStarted::class)->can("submit,quiz")->name("quizzes.start");
+    Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "indexUser"])->name("quizzes.ranking");
     Route::get("/submissions/{quizSubmission}/", [QuizSubmissionController::class, "show"])->can("view,quizSubmission")->name("submissions.show");
+    Route::post("/submissions/{quizSubmission}/close", [QuizSubmissionController::class, "close"])->can("close,quizSubmission")->name("submissions.close");
     Route::get("/submissions/{quizSubmission}/result", [QuizSubmissionController::class, "result"])->can("result,quizSubmission")->name("submissions.result");
     Route::patch("/answers/{answerRecord}/{answer}", [AnswerRecordController::class, "answer"])->can("answer,answerRecord,answer")->name("answers.answer");
+    Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
+    Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
+    Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update");
 });

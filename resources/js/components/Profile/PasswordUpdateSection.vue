@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import CustomInput from '@/components/Common/CustomInput.vue'
 import {useForm} from '@inertiajs/vue3'
 

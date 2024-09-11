@@ -16,6 +16,7 @@ class QuizSubmissionResource extends JsonResource
             "name" => $this->quiz->title,
             "createdAt" => $this->created_at,
             "updatedAt" => $this->updated_at,
+            "openedAt" => $this->quiz->scheduled_at,
             "closedAt" => $this->closed_at,
             "closed" => $this->isClosed,
             "quiz" => $this->quiz_id,
