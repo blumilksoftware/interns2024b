@@ -17,10 +17,10 @@ const props = defineProps<{ submission: QuizSubmission }>()
 const answers = ref(props.submission.answers)
 const allAnswered = computed((() => answers.value.every(answer => answer.selected != null)))
 const timeout = ref(false)
-const emptyAnswerMessage = ref(false);
-const timeoutMessage = ref(false);
-const timeoutWarningMessage = ref(false);
-const networkErrorMessage = ref(false);
+const emptyAnswerMessage = ref(false)
+const timeoutMessage = ref(false)
+const timeoutWarningMessage = ref(false)
+const networkErrorMessage = ref(false)
 
 const scroll = useWindowScroll()
 const showDuration = ref(false)

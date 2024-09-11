@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {Dialog, DialogPanel} from '@headlessui/vue'
-import {computed, type Ref, type VNode} from 'vue'
+import {type VNode} from 'vue'
 
 defineSlots<{
   title: Node
@@ -9,7 +9,7 @@ defineSlots<{
 }>()
 
 defineProps<{ open: boolean }>()
-const emit = defineEmits(["close"])
+const emit = defineEmits(['close'])
 </script>
 
 <template>
