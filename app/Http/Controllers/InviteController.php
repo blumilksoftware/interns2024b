@@ -25,6 +25,7 @@ class InviteController extends Controller
         $sortField = $request->query("sort", "id");
         $sortDirection = $request->query("order", "asc");
         $schoolId = $request->query("schoolId") !== null ? (int)$request->query("schoolId") : null;
+        $limit = $request->query("limit");
 
         $users = User::query()->role("user")->with("school")->whereNotNull("email_verified_at");
 
@@ -33,8 +34,14 @@ class InviteController extends Controller
         $this->applyFilters($users, $searchText, $schoolId);
         $this->applySorting($users, $sortField, $sortDirection);
 
+        if ($limit && $limit > 0) {
+            $users = $users->paginate((int)$limit);
+        } else {
+            $users = $users->paginate(100);
+        }
+
         return Inertia::render("Admin/Invite", [
-            "users" => UserResource::collection($users->paginate(100)),
+            "users" => UserResource::collection($users),
             "quiz" => $quiz,
             "schools" => $schools,
             "filters" => [
@@ -42,6 +49,7 @@ class InviteController extends Controller
                 "sort" => $sortField,
                 "order" => $sortDirection,
                 "schoolId" => $schoolId,
+                "limit" => $limit,
             ],
         ]);
     }

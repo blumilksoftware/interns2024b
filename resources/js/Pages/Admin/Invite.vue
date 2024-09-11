@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { defineProps, ref, computed } from 'vue'
 import { type  User } from '@/Types/User'
 import { type Pagination } from '@/Types/Pagination'
 import FormButton from '@/components/Common/FormButton.vue'
@@ -47,6 +47,7 @@ const props = defineProps<{
     sort: string
     order: string
     schoolId: number | null
+    limit: number | null
   }
 }>()
 
@@ -56,6 +57,8 @@ const form = useForm({
   sort: props.filters.sort ?? 'id',
   order: props.filters.order ?? 'asc',
   schoolId: props.filters.schoolId ?? null,
+  limit: props.filters.limit ?? null,
+
 })
 
 const selectedUserIds = ref<number[]>([])
@@ -67,6 +70,10 @@ const toggleUserSelection = (userId: number) => {
     selectedUserIds.value.push(userId)
   }
 }
+
+const showPagination = computed(() => {
+  return props.filters.limit === null
+})
 </script>
 
 <template>
@@ -100,6 +107,10 @@ const toggleUserSelection = (userId: number) => {
         </option>
       </select>
 
+      <label for="limit">Liczba wyników:</label>
+      <input v-model.number="form.limit" type="number" min="1" placeholder="Wpisz liczbę wyników">
+
+
       <button type="submit">Apply Filters</button>
     </div>
   </form>
@@ -132,8 +143,10 @@ const toggleUserSelection = (userId: number) => {
       </tbody>
     </table>
 
-    <FormButton :disabled="!users.links.prev" method="get" :href="users.links.prev" small>Poprzednia</FormButton>
-    <FormButton :disabled="!users.links.next" method="get" :href="users.links.next" small>Następna</FormButton>
+    <div v-if="showPagination">
+      <FormButton :disabled="!users.links.prev" method="get" :href="users.links.prev" small>Poprzednia</FormButton>
+      <FormButton :disabled="!users.links.next" method="get" :href="users.links.next" small>Następna</FormButton>
+    </div>
     <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite`">Zaproś zaznaczonych użytkowników</FormButton>
   </div>
 </template>
