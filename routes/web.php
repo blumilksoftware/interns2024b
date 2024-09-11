@@ -70,7 +70,9 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/answers/{answer}/invalid", [QuestionAnswerController::class, "markAsInvalid"])->can("update,answer")->name("admin.answers.invalid");
 
     Route::get("/schools", [SchoolsController::class, "index"])->name("admin.schools.index");
+    Route::get("/schools/create", [SchoolsController::class, "create"])->name("admin.schools.create");
     Route::post("/schools", [SchoolsController::class, "store"])->name("admin.schools.store");
+    Route::get("/schools/{school}/edit", [SchoolsController::class, "edit"])->name("admin.schools.edit");
     Route::patch("/schools/{school}", [SchoolsController::class, "update"])->name("admin.schools.update");
     Route::delete("/schools/{school}", [SchoolsController::class, "destroy"])->name("admin.schools.destroy");
 

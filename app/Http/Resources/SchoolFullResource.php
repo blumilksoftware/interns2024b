@@ -7,7 +7,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SchoolResource extends JsonResource
+class SchoolFullResource extends JsonResource
 {
     /**
      * @return array<string, mixed>
@@ -22,6 +22,7 @@ class SchoolResource extends JsonResource
             "building" => $this->building_number,
             "apartment" => $this->apartment_number,
             "zipCode" => $this->zip_code,
+            "users" => $this->users->count()
         ];
     }
 }

@@ -196,7 +196,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
         <button v-if="isEditing" title="Zapisz edytowany test" @click="updateQuiz"><CheckIcon /></button>
         <button v-if="!isEditing" title="Skopiuj test" @click="copyQuiz()"><CopyIcon /></button>
         <div v-if="isPublished" title="Ten test jest zablokowany. Nie można go modyfikować ani usunąć"><LockIcon /></div>
-        <button v-else title="Usuń test" @click="confirmDeleteMessage.show()"><TrashIcon /></button>
+        <button v-else title="Usuń test" @click="confirmDeleteMessage = true"><TrashIcon /></button>
       </div>
     </div>
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3'
 import { defineProps } from 'vue'
+import Button from "@/components/Common/Button.vue";
 
 const props = defineProps<{
   errors: Record<string, string[]>
@@ -20,48 +21,35 @@ function submit() {
 </script>
 
 <template>
-  Dodawanie nowego administratora
+  <div class="bg-white p-8 shadow border rounded-md">
+    <h1 class="font-semibold text-xl text-primary">Dodawanie nowego administratora</h1>
 
-  <form @submit.prevent="submit">
-    <div>
-      <label for="name">Imię</label>
-      <div>
-        <input id="name" v-model="form.name" required name="name" type="text"
-               :class="{'ring-red focus:ring-red':props.errors.name}"
-        >
-        <div v-if="props.errors.name" class="text-red">{{ props.errors.name }}</div>
+    <form @submit.prevent="submit">
+      <div class="mt-4">
+        <label class="font-semibold text-nowrap block" for="name">Imię: </label>
+        <input class="border w-full border-black p-2 bg-white rounded-md" id="name" v-model="form.name" type="text" required>
+        <div v-if="errors.name" class="text-red">{{ errors.name }}</div>
       </div>
-    </div>
 
-    <div>
-      <label for="surname">Nazwisko</label>
-      <div>
-        <input id="surname" v-model="form.surname" required name="surname" type="text"
-               :class="{'ring-red focus:ring-red':props.errors.surname}"
-        >
-        <div v-if="props.errors.surname" class="text-red">{{ props.errors.surname }}</div>
+      <div class="mt-4">
+        <label class="font-semibold text-nowrap block" for="name">Nazwisko: </label>
+        <input class="border w-full border-black p-2 bg-white rounded-md" id="surname" v-model="form.surname" type="text" required>
+        <div v-if="errors.surname" class="text-red">{{ errors.surname }}</div>
       </div>
-    </div>
 
-    <div>
-      <label for="email">E-mail</label>
-      <div>
-        <input id="email" v-model="form.email" required name="email" type="email"
-               :class="{'ring-red focus:ring-red':props.errors.email}"
-        >
-        <div v-if="props.errors.email" class="text-red">{{ props.errors.email }}</div>
+      <div class="mt-4">
+        <label class="font-semibold text-nowrap block" for="name">E-mail: </label>
+        <input class="border w-full border-black p-2 bg-white rounded-md" id="email" v-model="form.email" type="email" required>
+        <div v-if="errors.email" class="text-red">{{ errors.email }}</div>
       </div>
-    </div>
 
-    <div>
-      <label for="password">Hasło</label>
-      <div>
-        <input id="password" v-model="form.password" required name="password" type="password" autocomplete="current-password"
-               :class="{'ring-red focus:ring-red':props.errors.password}"
-        >
-        <div v-if="props.errors.email" class="text-red">{{ props.errors.email }}</div>
+      <div class="mt-4">
+        <label class="font-semibold text-nowrap block" for="name">Hasło: </label>
+        <input class="border w-full border-black p-2 bg-white rounded-md" id="password" v-model="form.password" type="password" required>
+        <div v-if="errors.password" class="text-red">{{ errors.password }}</div>
       </div>
-    </div>
-    <button type="submit">Dodaj</button>
-  </form>
+
+      <Button class="mt-4 w-full" type="submit">Dodaj</Button>
+    </form>
+  </div>
 </template>

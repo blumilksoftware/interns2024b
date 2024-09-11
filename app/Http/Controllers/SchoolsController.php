@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\Voivodeship;
 use App\Http\Requests\SchoolRequest;
+use App\Http\Resources\SchoolFullResource;
 use App\Http\Resources\SchoolResource;
 use App\Jobs\FetchSchoolsJob;
 use App\Models\School;
@@ -26,15 +27,26 @@ class SchoolsController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolResource::collection(School::all())]);
+        return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolFullResource::collection(School::all())]);
     }
+
+    public function create(): Response
+    {
+        return Inertia::render("Admin/CreateSchool");
+    }
+
+    public function edit(School $school): Response
+    {
+        return Inertia::render("Admin/EditSchool", ["school" => SchoolFullResource::make($school)]);
+    }
+
 
     public function store(SchoolRequest $request): RedirectResponse
     {
         School::query()->create($request->validated());
 
         return redirect()
-            ->back();
+            ->route("admin.schools.index");
     }
 
     public function update(SchoolRequest $request, School $school): RedirectResponse
@@ -42,7 +54,7 @@ class SchoolsController extends Controller
         $school->update($request->validated());
 
         return redirect()
-            ->back();
+            ->route("admin.schools.index");
     }
 
     public function destroy(School $school): RedirectResponse

@@ -3,10 +3,12 @@ import { useForm } from '@inertiajs/vue3'
 import { defineProps } from 'vue'
 import { type User } from '@/Types/User'
 import { type School } from '@/Types/School'
+import Button from "@/components/Common/Button.vue";
 
 const props = defineProps<{
   user: User
   schools?: School[]
+  errors: Record<string, string[]>
 }>()
 
 const form = useForm({
@@ -22,35 +24,39 @@ function update() {
 </script>
 
 <template>
-  <div>
-    <h1>Edycja Użytkownika</h1>
+  <div class="bg-white p-8 shadow border rounded-md">
+    <h1 class="font-semibold text-xl text-primary">Edycja Użytkownika</h1>
     <form @submit.prevent="update">
       <div>ID: {{ props.user.id }}</div>
-      <div>
-        <label for="name">Imię</label>
-        <input id="name" v-model="form.name" type="text">
+      <div class="mt-4">
+        <label class="font-semibold text-nowrap block" for="name">Imię</label>
+        <input class="border border-black p-2 bg-white rounded-md  w-full" id="name" v-model="form.name" type="text">
+        <div v-if="errors.name" class="text-red">{{ errors.name }}</div>
       </div>
 
-      <div>
-        <label for="surname">Nazwisko</label>
-        <input id="surname" v-model="form.surname" type="text">
+      <div class="mt-4">
+        <label class="font-semibold text-nowrap block" for="surname">Nazwisko</label>
+        <input class="border border-black p-2 bg-white rounded-md  w-full" id="surname" v-model="form.surname" type="text">
+        <div v-if="errors.surname" class="text-red">{{ errors.surname }}</div>
       </div>
 
-      <div>
-        <label for="email">E-mail</label>
-        <input id="email" v-model="form.email" type="email">
+      <div class="mt-4">
+        <label class="font-semibold text-nowrap block" for="email">E-mail</label>
+        <input class="border border-black p-2 bg-white rounded-md w-full" id="email" v-model="form.email" type="email">
+        <div v-if="errors.email" class="text-red">{{ errors.email }}</div>
       </div>
 
-      <div>
-        <label for="school">Szkoła</label>
-        <select id="school" v-model="form.school_id">
-          <option v-for="school in schools" :key="school.id" :value="school.id">
+      <div class="mt-4">
+        <label class="font-semibold text-nowrap block" for="school">Szkoła</label>
+        <select id="school" v-model="form.school_id" class="border border-black p-2 bg-white rounded-md w-full">
+          <option v-for="school in schools" :key="school.id" :value="school.id" class="bg-white">
             {{ school.name }}
           </option>
         </select>
+        <div v-if="errors.school_id" class="text-red">{{ errors.school_id }}</div>
       </div>
 
-      <button type="submit">Zmień</button>
+      <Button class="mt-4 w-full" type="submit">Zmień</Button>
     </form>
   </div>
 </template>

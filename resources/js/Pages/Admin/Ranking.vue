@@ -16,7 +16,7 @@ const sortedRankings = computed(() => {
 <template>
   <div>
     <h1>Ranking Quizu: {{ quiz.name }}</h1>
-    <div class="flex gap-4">
+    <div class="flex gap-2 p-2">
       <FormButton method="post" :href="`/admin/quizzes/${quiz.id}/ranking/publish`" small preserve-scroll>Publikuj</FormButton>
       <FormButton method="post" :href="`/admin/quizzes/${quiz.id}/ranking/unpublish`" small preserve-scroll>Wycofaj publikacje</FormButton>
     </div>
