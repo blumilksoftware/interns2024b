@@ -2,7 +2,7 @@ import {type CleanQuiz} from '@/Types/CleanQuiz'
 
 export interface Quiz extends CleanQuiz {
   id: number
-  name: string
+  title: string
   createdAt: string
   updatedAt: string
   duration?: number
