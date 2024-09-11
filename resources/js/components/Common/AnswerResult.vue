@@ -2,7 +2,7 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/20/solid'
 
 withDefaults(defineProps<{
-    id?: string
+    id?: string | number
     checked?: boolean
     bold?: boolean
     mode?: 'success' | 'error' | 'none'
