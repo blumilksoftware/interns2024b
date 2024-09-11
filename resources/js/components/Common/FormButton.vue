@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import { router } from '@inertiajs/vue3'
 import {ref} from 'vue'
 import Button from '@/components/Common/Button.vue'
@@ -8,6 +9,7 @@ const props = withDefaults(defineProps<{
   disabled?: boolean
   text?: boolean
   class?: string
+  buttonClass?: string
   href: string
   method?: 'post' | 'get' | 'put' | 'patch' | 'delete'
   data?: any
@@ -33,8 +35,8 @@ function handleSubmit() {
 </script>
 
 <template>
-  <form :class="{ 'cursor-wait' : processing }" @submit.prevent="handleSubmit">
-    <Button :disabled="disabled || processing" type="submit" :class="`${processing ? 'cursor-wait' : ''} ${props.class}`" :small="small" :text="text">
+  <form :class="`${processing ? 'cursor-wait' : ''} ${props.class}`" @submit.prevent="handleSubmit">
+    <Button :disabled="disabled || processing" type="submit" :class="`${processing ? 'cursor-wait' : ''} ${props.buttonClass}`" :small="small" :text="text">
       <slot />
     </Button>
   </form>

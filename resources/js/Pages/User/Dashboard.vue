@@ -38,7 +38,7 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.name }}</p>
         <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
       </div>
-      <FormButton class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/start`" preserve-scroll>
+      <FormButton button-class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/start`" preserve-scroll>
         Weź udział
       </FormButton>
     </div>
@@ -52,11 +52,11 @@ const history = computed(() => props.submissions.filter(submission => submission
         <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
       </div>
 
-      <FormButton v-if="!quiz.isUserAssigned" class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/assign`" preserve-scroll>
+      <FormButton v-if="!quiz.isUserAssigned" button-class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/assign`" preserve-scroll>
         Zapisz się
       </FormButton>
 
-      <FormButton v-else class="min-w-24 text-center" disabled small method="post" :href="`/quizzes/${quiz.id}/assign`">
+      <FormButton v-else button-class="min-w-24 text-center" disabled small method="post" :href="`/quizzes/${quiz.id}/assign`">
         Zapisano
       </FormButton>
     </div>
