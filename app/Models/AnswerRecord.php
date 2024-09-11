@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $isCorrect
  * @property QuizSubmission $quizSubmission
  * @property Question $question
- * @property Answer $answer
+ * @property ?Answer $answer
  */
 class AnswerRecord extends Model
 {

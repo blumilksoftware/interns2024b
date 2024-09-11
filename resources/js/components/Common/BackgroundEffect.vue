@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { ref, onMounted, onUnmounted } from 'vue'
 
 defineProps<{white?: boolean}>()

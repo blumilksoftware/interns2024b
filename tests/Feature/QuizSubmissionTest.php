@@ -115,4 +115,39 @@ class QuizSubmissionTest extends TestCase
             ->get("/submissions/{$submission->id}/result")
             ->assertStatus(403);
     }
+
+    public function testUserCanCloseSubmission(): void
+    {
+        $submission = QuizSubmission::factory()->create(["user_id" => $this->user->id]);
+
+        $this->actingAs($this->user)
+            ->post("/submissions/{$submission->id}/close")
+            ->assertRedirect("/submissions/{$submission->id}/result")
+            ->assertSessionHas(["status" => "Test został oddany."]);
+    }
+
+    public function testUserCannotCloseSubmissionThatNotExisted(): void
+    {
+        $this->actingAs($this->user)
+            ->post("/submissions/0/close")
+            ->assertStatus(404);
+    }
+
+    public function testUserCannotCloseSubmissionThatIsNotHis(): void
+    {
+        $submission = QuizSubmission::factory()->create();
+
+        $this->actingAs($this->user)
+            ->post("/submissions/{$submission->id}/close")
+            ->assertStatus(403);
+    }
+
+    public function testUserCannotCloseClosedSubmission(): void
+    {
+        $submission = QuizSubmission::factory()->closed()->create(["user_id" => $this->user->id]);
+
+        $this->actingAs($this->user)
+            ->post("/submissions/{$submission->id}/close")
+            ->assertStatus(403);
+    }
 }

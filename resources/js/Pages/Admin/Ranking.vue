@@ -1,13 +1,9 @@
 <script setup lang="ts">
-
 import {computed, ref} from 'vue'
-import { defineProps } from 'vue'
 import type { QuizRankingProps} from '@/Types/Ranking'
-import { useForm } from '@inertiajs/vue3'
+import FormButton from '@/components/Common/FormButton.vue'
 
 const props = defineProps<QuizRankingProps>()
-
-const form = useForm({})
 
 const quiz = ref(props.quiz)
 const rankings = ref(props.rankings)
@@ -15,23 +11,15 @@ const rankings = ref(props.rankings)
 const sortedRankings = computed(() => {
   return [...rankings.value].sort((a, b) => b.points - a.points)
 })
-function publish() {
-  form.post(`/admin/quizzes/${quiz.value.id}/ranking/publish`)
-}
-function unpublish() {
-  form.post(`/admin/quizzes/${quiz.value.id}/ranking/unpublish`)
-}
 </script>
 
 <template>
   <div>
     <h1>Ranking Quizu: {{ quiz.name }}</h1>
-    <form @submit.prevent="publish">
-      <button type="submit">Publikuj</button>
-    </form>
-    <form @submit.prevent="unpublish">
-      <button type="submit">Wycofaj publikacje</button>
-    </form>
+    <div class="flex gap-4">
+      <FormButton method="post" :href="`/admin/quizzes/${quiz.id}/ranking/publish`" small preserve-scroll>Publikuj</FormButton>
+      <FormButton method="post" :href="`/admin/quizzes/${quiz.id}/ranking/unpublish`" small preserve-scroll>Wycofaj publikacje</FormButton>
+    </div>
     <table>
       <thead>
         <tr>
