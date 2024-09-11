@@ -30,8 +30,19 @@ const confirmDeleteMessage = useMessageBox()
 onBeforeUnmount(()=>{clearInterval(updateTimeInterval)})
 
 const isReadyToSchedule = computed(()=>{
+  function hasOneCorrectAnswer(){
+    for (const question of quizRef.value.questions) {
+      for (const answer of question.answers) {
+        if (answer.correct){
+          return true
+        }
+      }
+    }
+    return false
+  }
+
   if (quizRef.value.scheduledAt && quizRef.value.duration)
-    return Date.parse(quizRef.value.scheduledAt) > currentTime.value
+    return Date.parse(quizRef.value.scheduledAt) > currentTime.value && hasOneCorrectAnswer()
   return false
 })
 
