@@ -10,19 +10,40 @@ use App\Jobs\SendInviteJob;
 use App\Models\Quiz;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class InviteController extends Controller
 {
-    public function index(Quiz $quiz): Response
+    public function index(Quiz $quiz, Request $request): Response
     {
         $this->authorize("invite", $quiz);
-        $users = User::query()->role("user")->with("school")->orderBy("id");
+
+        $searchText = $request->query("search");
+        $sort = $request->query("sort", "id");
+
+        $users = User::query()->role("user")->with("school");
+
+        if ($sort === "name-asc") {
+            $users->orderBy("name", "asc");
+        } elseif ($sort === "name-desc") {
+            $users->orderBy("name", "desc");
+        } elseif ($sort === "surname-asc") {
+            $users->orderBy("surname", "asc");
+        } elseif ($sort === "surname-desc") {
+            $users->orderBy("surname", "desc");
+        } else {
+            $users->orderBy("id");
+        }
 
         return Inertia::render("Admin/Invite", [
             "users" => UserResource::collection($users->paginate(100)),
             "quiz" => $quiz,
+            "filters" => [
+                "search" => $searchText,
+                "sort" => $sort,
+            ],
         ]);
     }
 

@@ -1,14 +1,43 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { defineProps, ref, watch } from 'vue'
 import { type  User } from '@/Types/User'
 import { type Pagination } from '@/Types/Pagination'
 import FormButton from '@/components/Common/FormButton.vue'
 import { type Quiz } from '@/Types/Quiz'
+import { useForm } from '@inertiajs/vue3'
 
-defineProps<{
+const sortOptions = [
+  {
+    name: 'Sort by Name (A-Z)',
+    value: 'name-asc',
+  },
+  {
+    name: 'Sort by Name (Z-A)',
+    value: 'name-desc',
+  },
+  { name: 'Sort by Surname (A-Z)',
+    value: 'surname-asc',
+  },
+  {
+    name: 'Sort by Surname (Z-A)',
+    value: 'surname-desc',
+  },
+]
+
+const props = defineProps<{
   users: Pagination<User>
   quiz: Quiz
+  filters: {
+    search: string
+    sort: string
+  }
 }>()
+
+
+const form = useForm({
+  search: props.filters.search || '',
+  sort: props.filters.sort || 'name-asc',
+})
 
 const selectedUserIds = ref<number[]>([])
 
@@ -20,6 +49,12 @@ const toggleUserSelection = (userId: number) => {
   }
 }
 
+watch(() => [form.search, form.sort], () => {
+  form.get(`/admin/quizzes/${props.quiz.id}/invite`, {
+    preserveState: true,
+    replace: true,
+  })
+}, { immediate: true })
 </script>
 
 <template>
@@ -27,6 +62,11 @@ const toggleUserSelection = (userId: number) => {
   Wszukiwarka użytkowników do zapraszania do testów
 
   <div>
+    <select v-model="form.sort" class="sorting-dropdown">
+      <option v-for="option in sortOptions" :key="option.value" :value="option.value">
+        {{ option.name }}
+      </option>
+    </select>
     <table>
       <thead>
         <tr>
