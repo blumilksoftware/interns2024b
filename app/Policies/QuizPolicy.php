@@ -47,7 +47,7 @@ class QuizPolicy
 
     public function viewAdminRanking(User $user, Quiz $quiz): Response
     {
-        return ($quiz->isLocked && $user->hasRole("admin|super_admin")) ? Response::allow() : Response::deny("Nie masz uprawnień do zobaczenia rankingu.");
+        return ($quiz->isPublished && $user->hasRole("admin|super_admin")) ? Response::allow() : Response::deny("Nie masz uprawnień do zobaczenia rankingu.");
     }
 
     public function viewUserRanking(User $user, Quiz $quiz): Response
