@@ -16,11 +16,11 @@ use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
-use Symfony\Component\HttpFoundation\Response as Status;
 use Throwable;
 
 use function collect;
 use function config;
+use function redirect;
 
 class SchoolsController extends Controller
 {
@@ -66,10 +66,10 @@ class SchoolsController extends Controller
     /**
      * @throws Throwable
      */
-    public function fetch(): JsonResponse
+    public function fetch(): RedirectResponse
     {
         if ($this->isFetching()) {
-            return response()->json(["message" => "Pobieranie w toku, proszę czekać"], Status::HTTP_CONFLICT);
+            return redirect()->back()->with(["status" => "Pobieranie w toku, proszę czekać"]);
         }
 
         $voivodeships = collect(config("schools.voivodeships"));
@@ -78,7 +78,7 @@ class SchoolsController extends Controller
         $batch = Bus::batch($jobs)->finally(fn(): bool => Cache::delete("fetch_schools"))->dispatch();
         Cache::set("fetch_schools", $batch->id);
 
-        return response()->json(["message" => "Pobieranie rozpoczęte"], Status::HTTP_OK);
+        return redirect()->back()->with(["status" => "Pobieranie rozpoczęte"]);
     }
 
     public function status(): JsonResponse

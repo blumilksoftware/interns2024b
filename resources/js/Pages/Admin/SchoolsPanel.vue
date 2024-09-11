@@ -2,8 +2,20 @@
 import LinkButton from '@/components/Common/LinkButton.vue'
 import FormButton from '@/components/Common/FormButton.vue'
 import {type SchoolFull} from '@/Types/SchoolFull'
+import {ref, watch} from 'vue'
+import axios from 'axios'
+import {router} from '@inertiajs/vue3'
 
 defineProps<{ schools: SchoolFull[] }>()
+
+const status = ref(false)
+setInterval(() => {
+  axios.get('/admin/schools/status')
+    .then(res => status.value = res.data.done)
+    .catch(() => status.value = false)
+}, 1000)
+
+watch(status, () => router.reload())
 
 </script>
 
@@ -26,6 +38,6 @@ defineProps<{ schools: SchoolFull[] }>()
     </div>
 
     <FormButton href="/admin/schools/create" method="get" class="w-full" button-class="w-full">Dodaj nową szkołę</FormButton>
-    <FormButton href="/admin/schools/fetch" method="post" class="w-full" button-class="w-full">Pobierz szkoły</FormButton>
+    <FormButton :disabled="!status" href="/admin/schools/fetch" method="post" class="w-full" button-class="w-full">Pobierz szkoły</FormButton>
   </div>
 </template>
