@@ -33,8 +33,8 @@ class QuizFactory extends Factory
     {
         return $this->state(fn(array $attributes): array => [
             "scheduled_at" => Carbon::now()->subMinutes(30),
-            'locked_at' => Carbon::now(),
-            'ranking_published_at' => null,
+            "locked_at" => Carbon::now(),
+            "ranking_published_at" => null,
         ]);
     }
 }

@@ -71,7 +71,6 @@ class RankingTest extends TestCase
 
     public function testAdminCanViewPublishedQuizRanking(): void
     {
-
         $this->actingAs($this->admin)
             ->get("/admin/quizzes/{$this->quiz->id}/ranking")
             ->assertInertia(
