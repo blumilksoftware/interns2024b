@@ -34,7 +34,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <form :class="`${processing ? 'cursor-wait' : ''}`" @submit.prevent="handleSubmit">
+  <form :class="{ 'cursor-wait' : processing }" @submit.prevent="handleSubmit">
     <Button :disabled="disabled || processing" type="submit" :class="`${processing ? 'cursor-wait' : ''} ${props.class}`" :small="small" :text="text">
       <slot />
     </Button>
