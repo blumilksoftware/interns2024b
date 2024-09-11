@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
+const slots = defineSlots<{ default: any }>()
 const target = ref()
 onClickOutside(target,()=>isFocused.value=false)
 
@@ -44,7 +45,7 @@ const model = defineModel<string>()
         @focus="isFocused=true"
       >
 
-      <div v-if="$slots.default" class="flex flex-1 items-center justify-center stroke-primary/100">
+      <div v-if="slots.default" class="flex flex-1 items-center justify-center stroke-primary/100">
         <slot />
       </div>
     </div>
