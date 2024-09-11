@@ -3,7 +3,9 @@
 import { ref, defineProps, computed} from 'vue'
 import {type Option} from '@/Types/Option'
 import { onClickOutside } from '@vueuse/core'
+import { nanoid } from 'nanoid'
 
+const id = ref(nanoid())
 const target = ref()
 onClickOutside(target,()=>isFocused.value=false)
 
@@ -33,8 +35,8 @@ const onOptionClick = (option:T)=>{
 </script>
 
 <template>
-  <label ref="target" class="block w-full text-sm font-medium leading-6 text-gray-900 duration-200">
-    {{ label }}
+  <div ref="target" class="block w-full text-sm font-medium leading-6 text-gray-900 duration-200">
+    <label :for="id">{{ label }}</label>
     <div 
       class="mt-2 font-medium text-sm leading-6 text-gray-900 overflow-hidden duration-200 max-h-12 flex flex-col bg-white/30 placeholder:text-gray-400 rounded-[.5rem] ring-2 ring-primary/30 ring-inset"
       :class="{'scale-y-100 max-h-80': isFocused}"
@@ -47,6 +49,7 @@ const onOptionClick = (option:T)=>{
         </div>
 
         <input
+          :id="id"
           class="outline-none py-3 bg-transparent w-full text-gray-900"
           autocomplete="off"
           name="search"
@@ -80,5 +83,5 @@ const onOptionClick = (option:T)=>{
       </Transition>
     </div>
     <div v-if="error" class="text-red">{{ error }}</div>
-  </label>
+  </div>
 </template>
