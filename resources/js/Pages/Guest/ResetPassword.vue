@@ -35,6 +35,10 @@ function submit() {
   </Head>
 
   <div class="sm:p-6 sm:pt-12 size-full flex justify-center sm:h-fit">
+    <div class="text-md font-medium leading-6 text-gray-900 px-[5vw] text-center flex flex-col gap-1">
+      <p>Wpisz adres e-mail przypisany do Twojego konta.</p>
+      <p>Na ten adres wyślemy instrukcje dotyczące zresetowania hasła.</p>
+    </div>
     <form class="p-6 gap-4 flex flex-col size-full sm:rounded-lg sm:max-w-lg sm:h-fit" @submit.prevent="submit">
       <CustomInput v-model="form.password" label="Nowe hasło" :error="errors?.password" name="password" :type="isVisiblePassword ? 'text' : 'password'">
         <div class="cursor-pointer text-primary/70" @click="isVisiblePassword=!isVisiblePassword">
