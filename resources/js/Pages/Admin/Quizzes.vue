@@ -13,6 +13,12 @@ const selectedQuiz = ref<number>()
 const showLockedQuizzes = ref<boolean>(true)
 const sorter = ref(sortByCreationDateDescending)
 const quizzesRef = ref<Quiz[]>(sorter.value(mapKeys(props.quizzes)))
+const options = [
+  {key: 0, text: 'Po nazwie (A–Z)', action:()=>sorter.value=sortByNameAscending},
+  {key: 1, text: 'Po nazwie (Z–A)', action:()=>sorter.value=sortByNameDescending},
+  {key: 2, text: 'Od najnowszych', action:()=>sorter.value=sortByCreationDateDescending},
+  {key: 3, text: 'Od najstarszych', action:()=>sorter.value=sortByCreationDateAscending},
+]
 watch(
   [()=>props.quizzes, sorter],
   ([updatedQuizzes, sorted]) => quizzesRef.value = sorted(mapKeys(updatedQuizzes)),
@@ -62,13 +68,7 @@ function sortByCreationDateDescending(arr: any[]) {
   </Head>
   <div class="flex flex-col w-full pb-3">
     <div data-name="toolbar" class="flex gap-5 px-6">
-      <Dropdown :options="[
-        {key: 0, text: 'Po nazwie (A–Z)', action:()=>sorter=sortByNameAscending},
-        {key: 1, text: 'Po nazwie (Z–A)', action:()=>sorter=sortByNameDescending},
-        {key: 2, text: 'Od najnowszych', action:()=>sorter=sortByCreationDateDescending},
-        {key: 3, text: 'Od najstarszych', action:()=>sorter=sortByCreationDateAscending},
-      ]"
-      > 
+      <Dropdown :options="options"> 
         <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <SortIcon /> Sortuj </button>
       </Dropdown>
       <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg" @click="showLockedQuizzes=!showLockedQuizzes"> <EyeDynamicIcon :is-opened="showLockedQuizzes" /> {{ showLockedQuizzes ? 'Wyświetl' : 'Schowaj' }} zarchiwizowane testy</button>
