@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import { ref } from 'vue'
 import { Request } from '@/scripts/request'
 import CustomInput from '../Common/CustomInput.vue'

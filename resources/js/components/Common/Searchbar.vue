@@ -1,5 +1,4 @@
 <script lang="ts" setup generic="T extends Option">
-
 import { ref, defineProps, computed} from 'vue'
 import {type Option} from '@/Types/Option'
 import { onClickOutside } from '@vueuse/core'

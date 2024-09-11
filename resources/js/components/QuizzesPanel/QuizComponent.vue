@@ -35,7 +35,6 @@ const isReadyToSchedule = computed(()=>{
   return false
 })
 
-// editing
 function edit(){
   isEditing.value=true
   if (!props.isSelected)
@@ -46,7 +45,6 @@ function dismissEditing(){
   isEditing.value=false
 }
 
-// date formatters
 function formatDatePretty(date?: DayjsConfigType) {
   return date ? dayjs(date).format('DD.MM.YYYY HH:mm') : 'brak'
 }
@@ -169,7 +167,6 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
       />
     </div>
 
-    <!-- header -->
     <div class="min-h-12" :class="isSelected ? 'flex justify-between items-center' : 'grid grid-cols-[1fr,1fr,1fr,.8fr] gap-3 items-center'">
       <div class="flex gap-3">
         <button @click="toggleQuizView()"><ExapnsionToggleDynamicIcon :is-expanded="isSelected" /></button>
@@ -188,9 +185,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
         <button v-else title="Usuń test" @click="confirmDeleteMessage.show()"><TrashIcon /></button>
       </div>
     </div>
-    <!-- header/ -->
 
-    <!-- content -->
     <div v-if="isSelected" class="flex mt-8 px-2 gap-8 flex-col">
       <div :class="isEditing ? 'flex flex-col' : 'grid grid-cols-[auto,auto] gap-2 w-fit rounded-lg items-center'">
         <span class="py-1.5">Rozpoczęcie testu:</span>
@@ -200,7 +195,6 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
         <EditableInput v-model="quizRef.duration" :error="request.errors.value?.duration" type="number" min="0" :is-editing="isEditing" />
       </div>
           
-      <!-- question -->
       <div class="flex flex-col gap-4">
         <data v-if="isSelected" class="flex flex-col gap-4">
           <div v-for="(question, idx) of quizRef.questions" :key="question.key">
@@ -215,9 +209,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
           <button class="py-2 px-3 rounded-lg border border-primary/30 font-bold bg-white/50" @click="addQuestion">+ Dodaj pytanie</button>
         </div>
       </div>
-      <!-- question/ -->
     </div>
-    <!-- content/ -->
   </div>
   <footer v-if="isSelected" class="flex justify-end mt-4 px-4 gap-4">
     <span class="text-accent-600 text-[.95rem]"> Stworzony: {{ formatDatePretty(quizRef.createdAt) }}</span>

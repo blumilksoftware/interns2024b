@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import PasswordUpdate from '@/components/Profile/PasswordUpdateSection.vue'
 import UserData from '@/components/Profile/UserDataSection.vue'
 import { type User } from '@/Types/User'

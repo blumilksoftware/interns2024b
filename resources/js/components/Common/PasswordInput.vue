@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import CustomInput from '@/components/Common/CustomInput.vue'
 import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
+
 defineProps<{ error?: string }>()
 const model = defineModel<string>()
 const isVisible = ref<boolean>(false)

@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { nanoid } from 'nanoid'
-import ExapnsionToggleDynamicIcon from '../Icons/ExapnsionToggleDynamicIcon.vue'
+import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynamicIcon.vue'
 import TrashIcon from '@/components/Icons/TrashIcon.vue'
 import CheckDynamicIcon from '@/components/Icons/CheckDynamicIcon.vue'
-
 import { computed, ref} from 'vue'
 import { type CleanAnswer } from '@/Types/CleanAnswer'
 import { type Question } from '@/Types/Question'

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 import { computed, ref } from 'vue'
 import { type School } from '@/Types/School'
 import { type Option } from '@/Types/Option'
