@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import {type QuizSubmission} from '@/Types/QuizSubmission'
 import {type Quiz} from '@/Types/Quiz'
 import {Head} from '@inertiajs/vue3'

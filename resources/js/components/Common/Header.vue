@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import {type Page} from '@/Types/Page'
 import FormButton from '@/components/Common/FormButton.vue'
 import { TransitionRoot, Dialog, TransitionChild, DialogPanel, DialogTitle } from '@headlessui/vue'
