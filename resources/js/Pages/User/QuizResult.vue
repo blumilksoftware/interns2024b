@@ -49,7 +49,7 @@ const points = computed(() =>
         <div class="flex flex-col gap-2">
           <AnswerResult
             v-for="answer in record.answers"
-            :id="answer.id.toString()"
+            :id="answer.id"
             :key="answer.id"
             type="radio"
             :checked="record.selected == answer.id || answer.correct"
