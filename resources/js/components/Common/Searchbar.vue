@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import {computed, ref, defineProps} from 'vue'
+import {computed, ref} from 'vue'
 import {type School} from '@/Types/School'
 
 const isSearchFocused = ref(false)

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 
 import { useForm } from '@inertiajs/vue3'
-import { defineProps } from 'vue'
 import { type User } from '@/Types/User'
 import { type School } from '@/Types/School'
 

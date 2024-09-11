@@ -81,7 +81,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
 
     <div v-for="(record, index) in answers" :key="record.id" class="rounded-lg bg-white shadow border flex flex-col justify-between px-4 py-2 m-5">
       <div>
-        <p class="pt-2 font-semibold text-primary">Pytanie: {{ index + 1 }}/{{ answers.length }} {{ scroll.y }}</p>
+        <p class="pt-2 font-semibold text-primary">Pytanie: {{ index + 1 }}/{{ answers.length }}</p>
         <p class="py-2 mt-2">{{ record.question }}</p>
       </div>
 
