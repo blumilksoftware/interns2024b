@@ -18,7 +18,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import MessageBox from '@/components/Common/MessageBox.vue'
 import CustomDatepicker from '@/components/Common/CustomDatepicker.vue'
 import Banner from '@/components/Common/Banner.vue'
-import LinkButton from "@/components/Common/LinkButton.vue";
+import LinkButton from '@/components/Common/LinkButton.vue'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])
@@ -143,7 +143,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
   >
     <div v-if="request.errors.value?.unknown" class="h-10" />
     <Banner v-if="request.errors.value?.unknown" :text="request.errors.value?.unknown" class="-mx-5 bg-red/80" @click="request.errors.value.unknown=''" />
-    <MessageBox :open="confirmDeleteMessage" @open="confirmDeleteMessage = false">
+    <MessageBox :open="confirmDeleteMessage" @close="confirmDeleteMessage = false">
       <template #message>
         <div class="flex gap-4">
           <div class="bg-red/10 p-4 rounded-full">
@@ -196,7 +196,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
         <button v-if="isEditing" title="Zapisz edytowany test" @click="updateQuiz"><CheckIcon /></button>
         <button v-if="!isEditing" title="Skopiuj test" @click="copyQuiz()"><CopyIcon /></button>
         <div v-if="isPublished" title="Ten test jest zablokowany. Nie można go modyfikować ani usunąć"><LockIcon /></div>
-        <button v-else title="Usuń test" @click="confirmDeleteMessage.show()"><TrashIcon /></button>
+        <button v-else title="Usuń test" @click="confirmDeleteMessage=true"><TrashIcon /></button>
       </div>
     </div>
 
