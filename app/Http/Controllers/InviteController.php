@@ -8,6 +8,7 @@ use App\Http\Requests\InviteQuizRequest;
 use App\Http\Resources\UserResource;
 use App\Jobs\SendInviteJob;
 use App\Models\Quiz;
+use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,10 +23,16 @@ class InviteController extends Controller
 
         $searchText = $request->query("search");
         $sort = $request->query("sort", "id");
-
+        $schoolId = $request->query("schoolId");
         $users = User::query()->role("user")->with("school");
 
-        if ($sort === "name-asc") {
+        if ($schoolId) {
+            $users->where("school_id", $schoolId);
+        }
+
+        if ($sort === "id") {
+            $users->orderBy("id", "asc");
+        } elseif ($sort === "name-asc") {
             $users->orderBy("name", "asc");
         } elseif ($sort === "name-desc") {
             $users->orderBy("name", "desc");
@@ -33,16 +40,35 @@ class InviteController extends Controller
             $users->orderBy("surname", "asc");
         } elseif ($sort === "surname-desc") {
             $users->orderBy("surname", "desc");
+        } elseif ($sort === "school-asc") {
+            $users->join("schools", "users.school_id", "=", "schools.id")
+                ->orderBy("schools.name", "asc")
+                ->select("users.*");
+        } elseif ($sort === "school-desc") {
+            $users->join("schools", "users.school_id", "=", "schools.id")
+                ->orderBy("schools.name", "desc")
+                ->select("users.*");
         } else {
             $users->orderBy("id");
         }
 
+        if ($searchText) {
+            $users->where(function ($query) use ($searchText): void {
+                $query->where("users.name", "like", "%$searchText%")
+                    ->orWhere("users.surname", "like", "%$searchText%");
+            });
+        }
+
+        $schools = School::all(["id", "name", "city"]);
+
         return Inertia::render("Admin/Invite", [
             "users" => UserResource::collection($users->paginate(100)),
             "quiz" => $quiz,
+            "schools" => $schools,
             "filters" => [
                 "search" => $searchText,
                 "sort" => $sort,
+                "schoolId" => $schoolId,
             ],
         ]);
     }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, watch } from 'vue'
+import { defineProps, ref } from 'vue'
 import { type  User } from '@/Types/User'
 import { type Pagination } from '@/Types/Pagination'
 import FormButton from '@/components/Common/FormButton.vue'
@@ -8,35 +8,50 @@ import { useForm } from '@inertiajs/vue3'
 
 const sortOptions = [
   {
-    name: 'Sort by Name (A-Z)',
+    name: 'Sortuj po ID',
+    value: 'ID',
+  },
+  {
+    name: 'Sortuj po Imieniu (A-Z)',
     value: 'name-asc',
   },
   {
-    name: 'Sort by Name (Z-A)',
+    name: 'Sortuj po Imieniu (Z-A)',
     value: 'name-desc',
   },
-  { name: 'Sort by Surname (A-Z)',
+  { name: 'Sortuj po Nazwisku (A-Z)',
     value: 'surname-asc',
   },
   {
-    name: 'Sort by Surname (Z-A)',
-    value: 'surname-desc',
+    name: 'Sortuj po Szkole (A-Z)',
+    value: 'school-asc',
+  },
+  {
+    name: 'Sortuj po Szkole (Z-A)',
+    value: 'school-desc',
   },
 ]
 
 const props = defineProps<{
   users: Pagination<User>
   quiz: Quiz
+  schools: {
+    id: number
+    name: string
+    city: string
+  }
   filters: {
     search: string
     sort: string
+    schoolId: number | null
   }
 }>()
 
 
 const form = useForm({
   search: props.filters.search || '',
-  sort: props.filters.sort || 'name-asc',
+  sort: props.filters.sort || 'id',
+  schoolId: props.filters.schoolId ?? null,
 })
 
 const selectedUserIds = ref<number[]>([])
@@ -48,25 +63,37 @@ const toggleUserSelection = (userId: number) => {
     selectedUserIds.value.push(userId)
   }
 }
-
-watch(() => [form.search, form.sort], () => {
-  form.get(`/admin/quizzes/${props.quiz.id}/invite`, {
-    preserveState: true,
-    replace: true,
-  })
-}, { immediate: true })
 </script>
 
 <template>
   <h1>Quiz: {{ quiz.name }}</h1>
-  Wszukiwarka użytkowników do zapraszania do testów
+  Wyszukiwarka użytkowników do zapraszania do testów
+
+  <form @submit.prevent="form.get(`/admin/quizzes/${quiz.id}/invite`, { preserveState: true, replace: true })">
+    <div>
+      <label for="search">Wyszukaj użytkownika:</label>
+      <input v-model="form.search" type="text" placeholder="Wpisz nazwę użytkownika">
+
+      <label for="sort">Sortowanie:</label>
+      <select v-model="form.sort" class="sorting-dropdown">
+        <option v-for="option in sortOptions" :key="option.value" :value="option.value">
+          {{ option.name }}
+        </option>
+      </select>
+
+      <label for="school">Grupuj według szkoły:</label>
+      <select v-model="form.schoolId" class="school-dropdown">
+        <option :value="null">Wszystkie szkoły</option>
+        <option v-for="school in props.schools" :key="school.id" :value="school.id">
+          {{ school.name }}, {{ school.city }}
+        </option>
+      </select>
+
+      <button type="submit">Apply Filters</button>
+    </div>
+  </form>
 
   <div>
-    <select v-model="form.sort" class="sorting-dropdown">
-      <option v-for="option in sortOptions" :key="option.value" :value="option.value">
-        {{ option.name }}
-      </option>
-    </select>
     <table>
       <thead>
         <tr>
