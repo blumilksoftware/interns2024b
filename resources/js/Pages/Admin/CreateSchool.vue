@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3'
 import { defineProps } from 'vue'
-import Button from "@/components/Common/Button.vue";
+import Button from '@/components/Common/Button.vue'
 
-const props = defineProps<{
+defineProps<{
   errors: Record<string, string[]>
 }>()
 
@@ -17,7 +17,7 @@ const form = useForm({
 })
 
 function save() {
-  form.post(`/admin/schools`)
+  form.post('/admin/schools')
 }
 </script>
 
@@ -27,37 +27,37 @@ function save() {
     <form @submit.prevent="save">
       <div class="mt-4">
         <label class="font-semibold text-nowrap block" for="name">Nazwa: </label>
-        <input class="w-full border border-black p-2 bg-white rounded-md" id="name" v-model="form.name" type="text">
+        <input id="name" v-model="form.name" class="w-full border border-black p-2 bg-white rounded-md" type="text">
         <div v-if="errors.name" class="text-red">{{ errors.name }}</div>
       </div>
 
       <div class="mt-4">
         <label class="font-semibold text-nowrap block" for="city">Miejscowość</label>
-        <input class="w-full border border-black p-2 bg-white rounded-md" id="city" v-model="form.city" type="text">
+        <input id="city" v-model="form.city" class="w-full border border-black p-2 bg-white rounded-md" type="text">
         <div v-if="errors.city" class="text-red">{{ errors.city }}</div>
       </div>
 
       <div class="mt-4">
         <label class="font-semibold text-nowrap block" for="street">Ulica</label>
-        <input class="w-full border border-black p-2 bg-white rounded-md"  id="street" v-model="form.street" type="text">
+        <input id="street" v-model="form.street" class="w-full border border-black p-2 bg-white rounded-md" type="text">
         <div v-if="errors.street" class="text-red">{{ errors.street }}</div>
       </div>
 
       <div class="mt-4">
         <label class="font-semibold text-nowrap block" for="building_number">Numer budynku</label>
-        <input class="w-full border border-black p-2 bg-white rounded-md"  id="building_number" v-model="form.building_number" type="text">
+        <input id="building_number" v-model="form.building_number" class="w-full border border-black p-2 bg-white rounded-md" type="text">
         <div v-if="errors.building_number" class="text-red">{{ errors.building_number }}</div>
       </div>
 
       <div class="mt-4">
         <label class="font-semibold text-nowrap block" for="apartment_number">Numer lokalu</label>
-        <input class="w-full border border-black p-2 bg-white rounded-md"  id="apartment_number" v-model="form.apartment_number" type="text">
+        <input id="apartment_number" v-model="form.apartment_number" class="w-full border border-black p-2 bg-white rounded-md" type="text">
         <div v-if="errors.apartment_number" class="text-red">{{ errors.apartment_number }}</div>
       </div>
 
       <div class="mt-4">
         <label class="font-semibold text-nowrap block" for="zip_code">Kod pocztowy</label>
-        <input class="w-full border border-black p-2 bg-white rounded-md"  id="zip_code" v-model="form.zip_code" type="text">
+        <input id="zip_code" v-model="form.zip_code" class="w-full border border-black p-2 bg-white rounded-md" type="text">
         <div v-if="errors.zip_code" class="text-red">{{ errors.zip_code }}</div>
       </div>
 

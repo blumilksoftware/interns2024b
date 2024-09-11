@@ -18,7 +18,7 @@ import '@vuepic/vue-datepicker/dist/main.css'
 import MessageBox from '@/components/Common/MessageBox.vue'
 import CustomDatepicker from '@/components/Common/CustomDatepicker.vue'
 import Banner from '@/components/Common/Banner.vue'
-import LinkButton from "@/components/Common/LinkButton.vue";
+import LinkButton from '@/components/Common/LinkButton.vue'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])

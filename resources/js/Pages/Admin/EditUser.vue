@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/vue3'
 import { defineProps } from 'vue'
 import { type User } from '@/Types/User'
 import { type School } from '@/Types/School'
-import Button from "@/components/Common/Button.vue";
+import Button from '@/components/Common/Button.vue'
 
 const props = defineProps<{
   user: User
@@ -30,19 +30,19 @@ function update() {
       <div>ID: {{ props.user.id }}</div>
       <div class="mt-4">
         <label class="font-semibold text-nowrap block" for="name">Imię</label>
-        <input class="border border-black p-2 bg-white rounded-md  w-full" id="name" v-model="form.name" type="text">
+        <input id="name" v-model="form.name" class="border border-black p-2 bg-white rounded-md  w-full" type="text">
         <div v-if="errors.name" class="text-red">{{ errors.name }}</div>
       </div>
 
       <div class="mt-4">
         <label class="font-semibold text-nowrap block" for="surname">Nazwisko</label>
-        <input class="border border-black p-2 bg-white rounded-md  w-full" id="surname" v-model="form.surname" type="text">
+        <input id="surname" v-model="form.surname" class="border border-black p-2 bg-white rounded-md  w-full" type="text">
         <div v-if="errors.surname" class="text-red">{{ errors.surname }}</div>
       </div>
 
       <div class="mt-4">
         <label class="font-semibold text-nowrap block" for="email">E-mail</label>
-        <input class="border border-black p-2 bg-white rounded-md w-full" id="email" v-model="form.email" type="email">
+        <input id="email" v-model="form.email" class="border border-black p-2 bg-white rounded-md w-full" type="email">
         <div v-if="errors.email" class="text-red">{{ errors.email }}</div>
       </div>
 

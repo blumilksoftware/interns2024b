@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import LinkButton from "@/components/Common/LinkButton.vue";
-import FormButton from "@/components/Common/FormButton.vue";
-import {SchoolFull} from "@/Types/SchoolFull";
+import LinkButton from '@/components/Common/LinkButton.vue'
+import FormButton from '@/components/Common/FormButton.vue'
+import {type SchoolFull} from '@/Types/SchoolFull'
 
 defineProps<{ schools: SchoolFull[] }>()
 

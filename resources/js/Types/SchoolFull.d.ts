@@ -1,5 +1,5 @@
-import {School} from "@/Types/School";
+import {type School} from '@/Types/School'
 
 export interface SchoolFull extends School {
-  users: number,
+  users: number
 }

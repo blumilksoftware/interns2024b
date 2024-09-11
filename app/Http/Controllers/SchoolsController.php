@@ -7,7 +7,6 @@ namespace App\Http\Controllers;
 use App\Enums\Voivodeship;
 use App\Http\Requests\SchoolRequest;
 use App\Http\Resources\SchoolFullResource;
-use App\Http\Resources\SchoolResource;
 use App\Jobs\FetchSchoolsJob;
 use App\Models\School;
 use Illuminate\Bus\Batch;
@@ -39,7 +38,6 @@ class SchoolsController extends Controller
     {
         return Inertia::render("Admin/EditSchool", ["school" => SchoolFullResource::make($school)]);
     }
-
 
     public function store(SchoolRequest $request): RedirectResponse
     {

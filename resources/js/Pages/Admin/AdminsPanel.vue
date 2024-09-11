@@ -24,6 +24,5 @@ defineProps<{
     </div>
 
     <FormButton href="/admin/admins/create" method="get" class="w-full" button-class="w-full">Dodaj nowego administratora</FormButton>
-
   </div>
 </template>

@@ -22,7 +22,7 @@ class SchoolFullResource extends JsonResource
             "building" => $this->building_number,
             "apartment" => $this->apartment_number,
             "zipCode" => $this->zip_code,
-            "users" => $this->users->count()
+            "users" => $this->users->count(),
         ];
     }
 }
