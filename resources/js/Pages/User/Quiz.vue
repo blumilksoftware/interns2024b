@@ -89,7 +89,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
           <label
             v-for="answer in record.answers"
             :key="answer.id"
-            :class="`${timeout ? 'cursor-not-allowed' : 'cursor-pointer'}`"
+            :class="[timeout ? 'cursor-not-allowed' : 'cursor-pointer']"
             class="flex items-center text-sm text-black"
             :title="timeout ? 'Czas przewidziany na ten test dobiegł końca' : undefined"
           >
