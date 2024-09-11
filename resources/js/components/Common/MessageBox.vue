@@ -13,7 +13,7 @@ defineProps<MessageBoxProps>()
 </script>
 
 <template>
-  <Dialog :open="isOpen.value" class="relative z-50" @close="close">
+  <Dialog :open="isOpen" class="relative z-50" @close="close">
     <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
 
     <div class="fixed inset-0 flex w-screen items-center justify-center p-4">

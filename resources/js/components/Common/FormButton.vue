@@ -7,7 +7,6 @@ const props = withDefaults(defineProps<{
   small?: boolean
   disabled?: boolean
   text?: boolean
-  class?: string
   buttonClass?: string
   href: string
   method?: 'post' | 'get' | 'put' | 'patch' | 'delete'
@@ -15,7 +14,7 @@ const props = withDefaults(defineProps<{
   preserveState?: boolean
   preserveScroll?: boolean
   only?: string[]
-}>(), { method: 'get', class: '', options: undefined, data: undefined, only: undefined })
+}>(), { method: 'get', class: '', options: undefined, data: undefined, only: undefined, buttonClass: undefined })
 
 const processing = ref(false)
 const emit = defineEmits(['click', 'finish'])
@@ -34,7 +33,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <form :class="`${processing ? 'cursor-wait' : ''} ${props.class}`" @submit.prevent="handleSubmit">
+  <form :class="{'cursor-wait' : processing}" @submit.prevent="handleSubmit">
     <Button :disabled="disabled || processing" type="submit" :class="`${processing ? 'cursor-wait' : ''} ${props.buttonClass}`" :small="small" :text="text">
       <slot />
     </Button>
