@@ -144,9 +144,10 @@ const showPagination = computed(() => {
     </table>
 
     <div v-if="showPagination">
-      <FormButton :disabled="!users.links.prev" method="get" :href="users.links.prev" small>Poprzednia</FormButton>
-      <FormButton :disabled="!users.links.next" method="get" :href="users.links.next" small>Następna</FormButton>
+      <FormButton :disabled="!users.links.prev" method="get" :href="users.links.prev" preserve-scroll small>Poprzednia</FormButton>
+      <FormButton :disabled="!users.links.next" method="get" :href="users.links.next" preserve-scroll small>Następna</FormButton>
     </div>
-    <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite`">Zaproś zaznaczonych użytkowników</FormButton>
+    <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite`" preserve-scroll>Zaproś zaznaczonych użytkowników [MAIL]</FormButton>
+    <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite/assign`" preserve-scroll>Przypisz zaznaczonych użytkowników [NOMAIL]</FormButton>
   </div>
 </template>
