@@ -76,6 +76,22 @@ class InviteController extends Controller
             ->with("status", "Zaproszenia zostały zaplanowane do wysłania.");
     }
 
+    public function assign(Quiz $quiz, InviteQuizRequest $request): RedirectResponse
+    {
+        $this->authorize("invite", $quiz);
+        $userIds = $request->input("ids", []);
+
+        if (empty($userIds)) {
+            return redirect()->back()->withErrors("Brak użytkowników do przypisania.");
+        }
+
+        $quiz->assignedUsers()->attach($userIds);
+
+        return redirect()
+            ->back()
+            ->with("status", "Użytkownicy zostali przypisani do quizu.");
+    }
+
     private function applySorting($query, string $sortField, string $sortDirection): void
     {
         $allowedFields = ["id", "name", "surname", "school"];
