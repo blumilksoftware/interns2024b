@@ -22,9 +22,6 @@ class QuizController extends Controller
 {
     public function index(): Response
     {
-        $user = User::query()->firstOrFail();
-        auth()->login($user);
-
         $quizzes = Quiz::query()
             ->with("questions.answers")
             ->get();

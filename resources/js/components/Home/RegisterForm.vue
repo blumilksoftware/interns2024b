@@ -14,6 +14,7 @@ const props = defineProps<{
   schools: School[]
 }>()
 
+
 const filteredSchools = computed(() => props.schools.toSorted((a, b) => (a.city + a.name).localeCompare(b.city + b.name)))
 const filteredSchoolOptions = computed(
   ()=> filteredSchools.value.map(
@@ -60,7 +61,7 @@ function submit() {
     </label>
 
     <div>
-      <button 
+      <button
         :disabled="request.isRequestOngoing.value"
         type="submit"
         class="rounded-lg text-md flex w-full justify-center bg-primary p-3 font-bold text-white
