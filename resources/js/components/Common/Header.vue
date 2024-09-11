@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import {type Page} from '@/Types/Page'
 import FormButton from '@/components/Common/FormButton.vue'
 import { TransitionRoot, Dialog, TransitionChild, DialogPanel, DialogTitle } from '@headlessui/vue'
@@ -83,7 +82,7 @@ const isSelected = (page: Page) => page.href === window.location.pathname
                     </div>
 
                     <div v-if="user" class="flex flex-1 items-end justify-center px-6 py-2">
-                      <FormButton method="post" class="" href="/auth/logout" text>Wyloguj</FormButton>
+                      <FormButton method="post" href="/auth/logout" text>Wyloguj</FormButton>
                     </div>
                   </div>
                 </DialogPanel>
