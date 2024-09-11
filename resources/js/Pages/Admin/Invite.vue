@@ -8,27 +8,29 @@ import { useForm } from '@inertiajs/vue3'
 
 const sortOptions = [
   {
-    name: 'Sortuj po ID',
-    value: 'ID',
+    name: 'ID',
+    value: 'id',
   },
   {
-    name: 'Sortuj po Imieniu (A-Z)',
-    value: 'name-asc',
+    name: 'Imię',
+    value: 'name',
   },
   {
-    name: 'Sortuj po Imieniu (Z-A)',
-    value: 'name-desc',
-  },
-  { name: 'Sortuj po Nazwisku (A-Z)',
-    value: 'surname-asc',
+    name: 'Nazwisko',
+    value: 'surname',
   },
   {
-    name: 'Sortuj po Szkole (A-Z)',
-    value: 'school-asc',
+    name: 'Szkoła',
+    value: 'school',
   },
-  {
-    name: 'Sortuj po Szkole (Z-A)',
-    value: 'school-desc',
+]
+
+const orderOptions = [
+  { name: 'Rosnąco',
+    value: 'asc',
+  },
+  { name: 'Malejąco',
+    value: 'desc',
   },
 ]
 
@@ -43,14 +45,16 @@ const props = defineProps<{
   filters: {
     search: string
     sort: string
+    order: string
     schoolId: number | null
   }
 }>()
 
 
 const form = useForm({
-  search: props.filters.search || '',
-  sort: props.filters.sort || 'id',
+  search: props.filters.search ?? '',
+  sort: props.filters.sort ?? 'id',
+  order: props.filters.order ?? 'asc',
   schoolId: props.filters.schoolId ?? null,
 })
 
@@ -77,6 +81,13 @@ const toggleUserSelection = (userId: number) => {
       <label for="sort">Sortowanie:</label>
       <select v-model="form.sort" class="sorting-dropdown">
         <option v-for="option in sortOptions" :key="option.value" :value="option.value">
+          {{ option.name }}
+        </option>
+      </select>
+
+      <label for="order">Kierunek:</label>
+      <select v-model="form.order" class="order-dropdown">
+        <option v-for="option in orderOptions" :key="option.value" :value="option.value">
           {{ option.name }}
         </option>
       </select>
