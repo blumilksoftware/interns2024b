@@ -9,7 +9,7 @@ import AnswerResult from '@/components/Common/AnswerResult.vue'
 import {Head} from '@inertiajs/vue3'
 
 const props = defineProps<{ submission: QuizSubmission, hasRanking: boolean }>()
-const duration = secondsToHour(calcSecondsBetweenDates(props.submission.closedAt, props.submission.openedAt))
+const duration = secondsToHour(calcSecondsBetweenDates(props.submission.closedAt, props.submission.createdAt))
 
 const points = computed(() =>
   props.submission.answers.filter(
