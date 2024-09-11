@@ -1,6 +1,11 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { onClickOutside } from '@vueuse/core'
 
-withDefaults(defineProps< {
+const target = ref()
+onClickOutside(target,()=>isFocused.value=false)
+
+withDefaults(defineProps<{
   label: string
   name: string
   error?: string
@@ -16,23 +21,33 @@ withDefaults(defineProps< {
   error: '',
 })
 
+const isFocused = ref<boolean>(false) 
 const model = defineModel<string>()
 </script>
 
+
+
 <template>
-  <label :class="{'text-red': error}">{{ label }}
-    <div class="mt-2">
+  <label ref="target" class="block w-full text-sm font-medium leading-6 text-gray-900 duration-200" :class="{'text-red': error}">{{ label }}
+    <div
+      class=" w-full mt-2 duration-200 max-h-12 flex bg-white/30 rounded-lg border-2 border-primary/30 overflow-hidden px-3 gap-3"
+      :class="{'border-3 border-primary/60':isFocused, 'border-red' : error}"
+    >
       <input
         v-model="model"
+        class="outline-none py-3 bg-transparent w-full"
         :name="name"
-        :placeholder="placeholder"
-        :required="required"
         :type="type"
+        :required="required"
+        :placeholder="placeholder"
         :autocomplete="autocomplete"
-        :class="{'ring-red focus:ring-red': error}"
-        class="duration-200 ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400"
+        @focus="isFocused=true"
       >
-      <div v-if="error" class="text-red">{{ error }}</div>
+
+      <div v-if="$slots.default" class="flex flex-1 items-center justify-center stroke-primary/100">
+        <slot />
+      </div>
     </div>
+    <div v-if="error" class="text-red">{{ error }}</div>
   </label>
 </template>
