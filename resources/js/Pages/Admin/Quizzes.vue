@@ -1,21 +1,111 @@
 <script setup lang="ts">
-import {Head} from '@inertiajs/vue3'
-import {type Quiz} from '@/Types/Quiz'
-import LinkButton from '@/components/Common/LinkButton.vue'
+import { ref, watch } from 'vue'
+import {Request} from '@/scripts/request'
+import SortIcon from '@/components/Icons/SortIcon.vue'
+import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
+import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
+import { type Quiz } from '@/Types/Quiz'
+import Dropdown from '@/components/Common/Dropdown.vue'
+import { Head } from '@inertiajs/vue3'
+import dayjs from 'dayjs'
+const props = defineProps<{ quizzes: Quiz[] }>()
+const selectedQuiz = ref<number>()
+const showLockedQuizzes = ref<boolean>(true)
+const sorter = ref(sortByCreationDateDescending)
+const quizzesRef = ref<Quiz[]>(sorter.value(mapKeys(props.quizzes)))
+const options = [
+  {key: 0, text: 'Po nazwie (A–Z)', action:()=>sorter.value=sortByNameAscending},
+  {key: 1, text: 'Po nazwie (Z–A)', action:()=>sorter.value=sortByNameDescending},
+  {key: 2, text: 'Od najnowszych', action:()=>sorter.value=sortByCreationDateDescending},
+  {key: 3, text: 'Od najstarszych', action:()=>sorter.value=sortByCreationDateAscending},
+]
+watch(
+  [()=>props.quizzes, sorter],
+  ([updatedQuizzes, sorted]) => quizzesRef.value = sorted(mapKeys(updatedQuizzes)),
+)
 
-defineProps<{ quizzes: Quiz[] }>()
+function mapKeys<T extends {id: number, key?: number | string}>(array:T[]){
+  for (const record of array){
+    record.key ??= record.id
+    for (const key in record)
+      if (Array.isArray(record[key]))
+        mapKeys(record[key])
+  }
+  return array
+}
+
+
+const request = new Request()
+
+function addQuiz() {
+  request.sendRequest('/admin/quizzes',{ method: 'post', data:{title: 'Nowy test'} })
+}
+
+function toggleQuizView(quiz: Quiz) {
+  selectedQuiz.value = selectedQuiz.value === quiz.id ? undefined : quiz.id
+}
+
+function sortByNameAscending(arr : any[]){
+  return arr.sort((a:Quiz, b:Quiz) => a.title.localeCompare(b.title))
+}
+
+function sortByNameDescending(arr : any[]){
+  return arr.sort((a:Quiz, b:Quiz) => b.title.localeCompare(a.title))
+}
+
+function sortByCreationDateAscending(arr: any[]) {
+  return arr.sort((a: Quiz, b: Quiz) => dayjs(a.createdAt).diff(dayjs(b.createdAt)))
+}
+
+function sortByCreationDateDescending(arr: any[]) {
+  return arr.sort((a: Quiz, b: Quiz) => dayjs(b.createdAt).diff(dayjs(a.createdAt)))
+}
 </script>
 
 <template>
   <Head>
-    <title>Testy</title>
+    <title>Testy - Panel administracyjny</title>
   </Head>
-  Quizzes - CRUD
-
-  <div class="w-4/5">
-    <div v-for="quiz in quizzes" :key="quiz.id" class="m-4 bg-white w-100 rounded-2xl p-4 border shadow flex gap-4 items-center justify-between">
-      <b>{{ quiz.name }}</b>
-      <LinkButton :href="`/admin/quizzes/${quiz.id}/ranking`" small>Ranking</LinkButton>
+  <div class="flex flex-col w-full pb-3">
+    <div data-name="toolbar" class="flex gap-5 px-6">
+      <Dropdown :options="options"> 
+        <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <SortIcon /> Sortuj </button>
+      </Dropdown>
+      <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg" @click="showLockedQuizzes=!showLockedQuizzes"> <EyeDynamicIcon :is-opened="showLockedQuizzes" /> {{ showLockedQuizzes ? 'Wyświetl' : 'Schowaj' }} zarchiwizowane testy</button>
+      <div class="flex-1" />
+      <button :disabled="request.isRequestOngoing.value" :class="{'opacity-70':request.isRequestOngoing.value}" class="bg-primary font-bold rounded-lg text-white px-4" @click="addQuiz">+ Dodaj test</button>
+    </div>
+    <div v-for="(quiz, idx) of quizzesRef" :key="quiz.id" class="px-4">
+      <QuizComponent
+        :quiz="quizzesRef[idx]"
+        :is-selected="selectedQuiz===quiz.id"
+        :show-locked-quizzes="showLockedQuizzes"
+        @display-toggle="toggleQuizView"
+      />
     </div>
   </div>
 </template>
+
+<style>
+.datepicker {
+  @apply bg-white/50 rounded-md outline-none border-none font-bold
+}
+.datepicker-menu{
+  @apply rounded-lg border
+}
+.dp__active_date{
+  @apply bg-primary font-bold
+}
+.dp__today{
+  @apply border border-primary/30
+}
+.dp__btn {
+  @apply fill-primary text-primary stroke-primary
+}
+.dp__btn:hover {
+  @apply fill-primary-950 text-primary-950 stroke-primary-950
+}
+.dp__overlay {
+  @apply rounded-lg
+}
+</style>

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 import {ref, watch} from 'vue'
 import Footer from '@/components/Common/Footer.vue'
 import AuthBanner from '@/components/Home/AuthBanner.vue'
@@ -21,12 +20,19 @@ const { errors, schools, ...props } = defineProps<{
 const status = ref<string | undefined>(props.flash.status)
 
 function scrollToAuth(isLogin:boolean) {
-  if (!authSectiontRef.value) return 
-  authSectiontRef.value.isLogin = isLogin
-  if (!authSectiontRef.value.authSectionElement) return
-  const element = authSectiontRef.value.authSectionElement
+  if (!authSectiontRef.value) {
+    return
+  }
 
+  authSectiontRef.value.isLogin = isLogin
+
+  if (!authSectiontRef.value.authSectionElement) {
+    return
+  }
+
+  const element = authSectiontRef.value.authSectionElement
   const offsetTop = element.getBoundingClientRect().top + window.scrollY
+
   window.scrollTo({
     top: offsetTop,
     behavior: 'smooth',

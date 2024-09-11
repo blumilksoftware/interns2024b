@@ -3,29 +3,27 @@ import {type User} from '@/Types/User'
 import FormButton from '@/components/Common/FormButton.vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
 
-const props = defineProps<{
+defineProps<{
   users: User[]
 }>()
 </script>
 
 <template>
-  <h1 v-if="props.users.length > 0" class="text-xl">ADMINISTRATORZY</h1>
+  <div class="flex flex-col items-start gap-4">
+    <div v-for="user in users" :key="user.id" class="bg-white border shadow rounded-md p-4 w-full max-w-xl">
+      <div>ID: {{ user.id }}</div>
+      <div>Imię: {{ user.name }}</div>
+      <div>Nazwisko: {{ user.surname }}</div>
+      <div>E-mail: {{ user.email }}</div>
+      <div>Szkoła: {{ user.school.name }}</div>
 
-  <div>
-    <FormButton href="/admin/admins/create" method="post" />
-    <form @submit.prevent="addAdmin">
-      <button type="submit">Dodaj nowego administratora</button>
-    </form>
-  </div>
+      <div class="flex gap-4">
+        <LinkButton :href="`/admin/admins/${user.id}/edit`">Edit</LinkButton>
+        <FormButton :href="`/admin/admins/${user.id}`" method="delete">Delete</FormButton>
+      </div>
+    </div>
 
-  <div v-for="item in props.users" :key="item.id" class="ml-8 border-2">
-    <div>ID: {{ props.user.id }}</div>
-    <div>Imię: {{ props.user.name }}</div>
-    <div>Nazwisko: {{ props.user.surname }}</div>
-    <div>E-mail: {{ props.user.email }}</div>
-    <div>Szkoła: {{ props.user.school.name }}</div>
+    <FormButton href="/admin/admins/create" method="get" class="w-full" button-class="w-full">Dodaj nowego administratora</FormButton>
 
-    <LinkButton :href="`/admin/admins/${item.id}/edit`">Edit</LinkButton>
-    <FormButton :href="`/admin/admins/${item.id}`" method="delete">Edit</FormButton>
   </div>
 </template>

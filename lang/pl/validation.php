@@ -131,6 +131,7 @@ return [
     ],
     "attributes" => [
         "name" => "imię",
+        "title" => "tytuł",
         "surname" => "nazwisko",
         "email" => "e-mail",
         "date" => "data",

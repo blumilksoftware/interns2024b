@@ -14,7 +14,7 @@ const sortedRankings = computed(() => {
 
 <template>
   <div>
-    <h1>Ranking Quizu: {{ quiz.name }}</h1>
+    <h1>Ranking Quizu: {{ quiz.title }}</h1>
     <table>
       <thead>
         <tr>

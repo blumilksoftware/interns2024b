@@ -51,7 +51,6 @@ const props = defineProps<{
   }
 }>()
 
-
 const form = useForm({
   search: props.filters.search ?? '',
   sort: props.filters.sort ?? 'id',
@@ -77,7 +76,7 @@ const showPagination = computed(() => {
 </script>
 
 <template>
-  <h1>Quiz: {{ quiz.name }}</h1>
+  <h1>Quiz: {{ quiz.title }}</h1>
   Wyszukiwarka użytkowników do zapraszania do testów
 
   <form @submit.prevent="form.get(`/admin/quizzes/${quiz.id}/invite`, { preserveState: true, replace: true })">
