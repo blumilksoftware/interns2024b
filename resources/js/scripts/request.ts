@@ -57,7 +57,6 @@ export class Request{
   }
   private onError(errors: Record<string, string>){
     this.errors.value = errors
-    console.log(errors)
   }
   private onFinish(){
     this.isRequestOngoing.value = false
