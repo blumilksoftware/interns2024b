@@ -97,12 +97,12 @@ function assignDefinedValues<T extends object, U extends object>(target: T, sour
   return target as T & U
 }
 
-async function updateQuiz() {
+function updateQuiz() {
   let data : any = assignDefinedValues({}, quizRef.value)
   if (data?.scheduledAt)
     data.scheduledAt = formatDateDB(quizRef.value.scheduledAt)
   data.onSuccess = ()=>isEditing.value=false 
-  await request.axiosPatch(`/admin/quizzes/${quizRef.value.id}`, data)
+  request.axiosPatch(`/admin/quizzes/${quizRef.value.id}`, data)
 }
 function schedule() {
   if (!isReadyToSchedule.value) return
