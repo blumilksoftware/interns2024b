@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const props = defineProps<{isLogin: boolean}>()
 const emit = defineEmits<(e: 'update:isLogin', value: boolean) => void>()
 
@@ -11,7 +10,7 @@ const handleCheckboxChange = () => {
 <template>
   <label class="flex p-2 relative w-full cursor-pointer border-2 border-primary/30 rounded-xl  bg-white/30">
     <input type="checkbox" class="sr-only" @change="handleCheckboxChange">
-    <span 
+    <span
       :class="{ 'translate-x-full' : props.isLogin}"
       class="left-2 w-[calc(50%-.5rem)] absolute h-[calc(100%-1rem)] rounded-md bg-primary duration-200"
     />

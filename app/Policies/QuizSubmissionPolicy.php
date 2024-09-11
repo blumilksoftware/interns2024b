@@ -14,6 +14,11 @@ class QuizSubmissionPolicy
         return $user->id === $quizSubmission->user_id;
     }
 
+    public function close(User $user, QuizSubmission $quizSubmission): bool
+    {
+        return $user->id === $quizSubmission->user_id && !$quizSubmission->isClosed;
+    }
+
     public function result(User $user, QuizSubmission $quizSubmission): bool
     {
         return $user->id === $quizSubmission->user_id && $quizSubmission->isClosed;

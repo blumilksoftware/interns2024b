@@ -6,6 +6,13 @@ module.exports = {
     ],
     theme: {
         extend: {
+            width: {
+                '128': '32rem',
+                '8xl': '98rem'
+            },
+            maxWidth: {
+              '8xl': '98rem'
+            },
             screens: {
                 '2xs': '380px',
                 'xs': '480px',
