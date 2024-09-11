@@ -65,6 +65,8 @@ class InviteController extends Controller
 
         $users = User::query()->whereIn("id", $userIds)->get();
 
+        $quiz->assignedUsers()->attach($userIds);
+
         foreach ($users as $user) {
             SendInviteJob::dispatch($user, $quiz)->delay(now()->addMinutes(5));
         }
