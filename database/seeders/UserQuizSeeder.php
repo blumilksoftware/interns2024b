@@ -29,7 +29,7 @@ class UserQuizSeeder extends Seeder
                         Answer::factory()->count(4),
                     ),
             )
-            ->locked()
+            ->published()
             ->create();
 
         foreach ($this->quiz->questions as $question) {

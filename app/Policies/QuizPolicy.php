@@ -65,7 +65,7 @@ class QuizPolicy
 
     public function publish(User $user, Quiz $quiz): bool
     {
-        return $quiz->isLocked && $user->hasRole("admin|super_admin");
+        return $quiz->isPublished && $user->hasRole("admin|super_admin");
     }
 
     public function invite(User $user, Quiz $quiz): Response
