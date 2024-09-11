@@ -64,7 +64,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     appear
   >
     <div class="fixed top-0 right-0 w-full text-center bg-white border px-6 py-2.5 font-bold text-sm text-black">
-      {{ timeLeft }} - {{ scroll.y }}
+      {{ timeLeft }}
     </div>
   </TransitionRoot>
 
