@@ -99,7 +99,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
               type="radio"
               :disabled="timeout"
               :checked="record.selected === answer.id"
-              :class="`${timeout ? 'cursor-not-allowed' : 'cursor-pointer'}`"
+              :class="[timeout ? 'cursor-not-allowed' : 'cursor-pointer']"
               class="mr-2 size-6 border-black text-primary accent-primary"
               @change.prevent="handleAnswer(record, answer.id)"
             >
