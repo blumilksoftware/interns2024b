@@ -24,7 +24,7 @@ function submit() {
 
 <template>
   <Head>
-    <title>{{ headerRef }}</title>
+    <title>{{ headerRef?.titleRef }}</title>
     <meta name="Przypomnij hasło" content="Przypomnij hasło">
   </Head>
 

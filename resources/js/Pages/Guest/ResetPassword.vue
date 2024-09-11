@@ -30,7 +30,7 @@ function submit() {
 
 <template>
   <Head>
-    <title>{{ headerRef }}</title>
+    <title>{{ headerRef?.titleRef }}</title>
     <meta name="Zmiana hasła" content="Zmiana hasła">
   </Head>
 
