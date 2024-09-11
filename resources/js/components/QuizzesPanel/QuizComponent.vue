@@ -128,10 +128,10 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
   <div
     v-if="!(isPublished && showLockedQuizzes)"
     tabindex="0"
-    class="mt-4 p-5 bg-white/70 rounded-lg items-center relative shadow"
+    class="mt-4 p-5 bg-white/70 rounded-lg items-center relative shadow overflow-hidden"
   >
     <div v-if="request.errors.value?.unknown" class="h-10" />
-    <Banner v-if="request.errors.value?.unknown" :text="request.errors.value?.unknown" banner-class="-mx-5 bg-red/80" @click="request.errors.value.unknown=''" />
+    <Banner v-if="request.errors.value?.unknown" :text="request.errors.value?.unknown" class="-mx-5 bg-red/80" @click="request.errors.value.unknown=''" />
     <MessageBox v-bind="confirmDeleteMessage">
       <template #message>
         <div class="flex gap-4">
