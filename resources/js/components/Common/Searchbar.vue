@@ -60,7 +60,7 @@ const onOptionClick = (option:T)=>{
       </div>
 
       <Transition>
-        <div v-show="true" class="m-0.5 mt-0 py-2 overflow-auto">
+        <div v-show="isFocused" class="m-0.5 mt-0 py-2 overflow-auto">
           <div v-if="optionsRef.length>0">
             <div 
               v-for="obj in optionsRef"
