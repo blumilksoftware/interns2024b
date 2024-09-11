@@ -37,11 +37,11 @@ const orderOptions = [
 const props = defineProps<{
   users: Pagination<User>
   quiz: Quiz
-  schools: {
+  schools: Array<{
     id: number
     name: string
     city: string
-  }
+  }>
   filters: {
     search: string
     sort: string
@@ -143,8 +143,8 @@ const showPagination = computed(() => {
     </table>
 
     <div v-if="showPagination">
-      <FormButton :disabled="!users.links.prev" method="get" :href="users.links.prev" preserve-scroll small>Poprzednia</FormButton>
-      <FormButton :disabled="!users.links.next" method="get" :href="users.links.next" preserve-scroll small>Następna</FormButton>
+      <FormButton :disabled="!users.links.prev" method="get" :href="users.links.prev ?? ''" preserve-scroll small>Poprzednia</FormButton>
+      <FormButton :disabled="!users.links.next" method="get" :href="users.links.next ?? ''" preserve-scroll small>Następna</FormButton>
     </div>
     <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite`" preserve-scroll>Zaproś zaznaczonych użytkowników [MAIL]</FormButton>
     <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite/assign`" preserve-scroll>Przypisz zaznaczonych użytkowników [NOMAIL]</FormButton>
