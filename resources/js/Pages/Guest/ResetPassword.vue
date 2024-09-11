@@ -46,7 +46,7 @@ function submit() {
           <EyeDynamicIcon :is-opened="isVisibleConfirmPassword" />
         </div>
       </CustomInput>
-      <DisplayError :error="errors?.email ? 'Your link is invalid' : ''" />
+      <DisplayError :error="errors?.email ? 'Podany link jest niepoprawny' : ''" />
       <button :disabled="form.processing" type="submit" class="bg-primary text-white font-bold py-3 px-4 rounded-lg disabled:bg-primary/70">
         Zmień hasło
       </button>
