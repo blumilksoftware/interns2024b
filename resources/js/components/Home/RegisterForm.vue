@@ -6,8 +6,8 @@ import { type Option } from '@/Types/Option'
 import { Request } from '@/scripts/request'
 import Checkbox from '@/components/Common/Checkbox.vue'
 import Searchbar from '@/components/Common/Searchbar.vue'
-import CustomInput from '../Common/CustomInput.vue'
-import PasswordInput from '../Common/PasswordInput.vue'
+import CustomInput from '@/components/Common/CustomInput.vue'
+import PasswordInput from '@/components/Common/PasswordInput.vue'
 import { nanoid } from 'nanoid'
 
 const props = defineProps<{

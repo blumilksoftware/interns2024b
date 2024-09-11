@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Datepicker from '@vuepic/vue-datepicker'
-import CalendarIcon from '../Icons/CalendarIcon.vue'
+import CalendarIcon from '@/components/Icons/CalendarIcon.vue'
 
 import { ref } from 'vue'
 defineProps<{error?:string, isEditing:boolean, format: (content: any)=> string}>()

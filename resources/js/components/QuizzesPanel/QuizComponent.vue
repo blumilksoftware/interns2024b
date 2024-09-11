@@ -9,15 +9,15 @@ import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynami
 import CopyIcon from '@/components/Icons/CopyIcon.vue'
 import LockIcon from '@/components/Icons/LockIcon.vue'
 import TrashIcon from '@/components/Icons/TrashIcon.vue'
-import PencilIcon from '../Icons/PencilIcon.vue'
-import CheckIcon from '../Icons/CheckIcon.vue'
-import DismissIcon from '../Icons/DismissIcon.vue'
+import PencilIcon from '@/components/Icons/PencilIcon.vue'
+import CheckIcon from '@/components/Icons/CheckIcon.vue'
+import DismissIcon from '@/components/Icons/DismissIcon.vue'
 import { Request } from '@/scripts/request'
 import { nanoid } from 'nanoid'
 import '@vuepic/vue-datepicker/dist/main.css'
 import MessageBox, { useMessageBox } from '@/components/Common/MessageBox.vue'
-import CustomDatepicker from '../Common/CustomDatepicker.vue'
-import Banner from '../Common/Banner.vue'
+import CustomDatepicker from '@/components/Common/CustomDatepicker.vue'
+import Banner from '@/components/Common/Banner.vue'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])
