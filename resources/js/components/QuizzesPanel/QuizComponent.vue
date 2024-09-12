@@ -30,18 +30,23 @@ const updateTimeInterval = setInterval(()=>currentTime.value = Date.now(), 1000)
 const confirmDeleteMessage = ref(false)
 
 onBeforeUnmount(()=>{clearInterval(updateTimeInterval)})
-
-const isReadyToSchedule = computed(()=>{
-  function hasOneCorrectAnswer(){
-    for (const question of quizRef.value.questions) {
-      for (const answer of question.answers) {
-        if (answer.correct){
-          return true
-        }
-      }
+function checkQuestionCorrectAnswer(question:any) {
+  for (const answer of question.answers) {
+    if (answer.correct){
+      return true
     }
-    return false
   }
+  return false
+}
+function hasOneCorrectAnswer(){
+  for (const question of quizRef.value.questions) {
+    if (!checkQuestionCorrectAnswer(question))
+      return false
+  }
+  return true
+}
+const isReadyToSchedule = computed(()=>{
+  
 
   if (quizRef.value.scheduledAt && quizRef.value.duration)
     return Date.parse(quizRef.value.scheduledAt) > currentTime.value && hasOneCorrectAnswer()
