@@ -21,6 +21,7 @@ class RegisterUserController extends Controller
         if (!$userExists) {
             $user = new User($request->validated());
             $user->password = Hash::make($request->password);
+            $user->assignRole("user");
             $user->save();
             event(new Registered($user));
             Auth::login($user);
