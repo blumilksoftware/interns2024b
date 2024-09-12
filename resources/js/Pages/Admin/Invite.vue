@@ -39,11 +39,11 @@ const orderOptions = [
 const props = defineProps<{
   users: Pagination<User>
   quiz: Quiz
-  schools: {
+  schools: Array<{
     id: number
     name: string
     city: string
-  }
+  }>
   filters: {
     search: string
     sort: string
@@ -134,7 +134,13 @@ const indeterminate = computed(() => selectedUserIds.value.length > 0 && selecte
               <thead>
                 <tr>
                   <th scope="col" class="relative px-7 sm:w-12 sm:px-6">
-                    <input type="checkbox" class="absolute left-4 top-1/2 -mt-2 size-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" :checked="indeterminate || selectedUserIds.length === users.data.length" :indeterminate="indeterminate" @change="selectedUserIds = $event.target.checked ? users.data.map(({id}) => id) : []">
+                    <input 
+                      type="checkbox" 
+                      class="absolute left-4 top-1/2 -mt-2 size-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600" 
+                      :checked="indeterminate || selectedUserIds.length === users.data.length" 
+                      :indeterminate="indeterminate" 
+                      @change="({currentTarget}) => (currentTarget as HTMLInputElement)?.checked ? users.data.map(({id}) => id) : []"
+                    >
                   </th>
                   <th scope="col" class="min-w-48 py-3.5 pr-3 text-left text-sm font-semibold text-gray-900">ID</th>
                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Imię</th>
@@ -168,8 +174,8 @@ const indeterminate = computed(() => selectedUserIds.value.length > 0 && selecte
       </div>
 
       <div v-if="showPagination" class="w-full flex gap-4">
-        <FormButton :disabled="!users.links.prev" method="get" :href="users.links.prev" preserve-scroll small>Poprzednia</FormButton>
-        <FormButton :disabled="!users.links.next" method="get" :href="users.links.next" preserve-scroll small>Następna</FormButton>
+        <FormButton :disabled="!users.links.prev" method="get" :href="users.links.prev ?? ''" preserve-scroll small>Poprzednia</FormButton>
+        <FormButton :disabled="!users.links.next" method="get" :href="users.links.next ?? ''" preserve-scroll small>Następna</FormButton>
       </div>
     </div>
   </div>

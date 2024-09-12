@@ -30,18 +30,23 @@ const updateTimeInterval = setInterval(()=>currentTime.value = Date.now(), 1000)
 const confirmDeleteMessage = ref(false)
 
 onBeforeUnmount(()=>{clearInterval(updateTimeInterval)})
-
-const isReadyToSchedule = computed(()=>{
-  function hasOneCorrectAnswer(){
-    for (const question of quizRef.value.questions) {
-      for (const answer of question.answers) {
-        if (answer.correct){
-          return true
-        }
-      }
+function checkQuestionCorrectAnswer(question:any) {
+  for (const answer of question.answers) {
+    if (answer.correct){
+      return true
     }
-    return false
   }
+  return false
+}
+function hasOneCorrectAnswer(){
+  for (const question of quizRef.value.questions) {
+    if (!checkQuestionCorrectAnswer(question))
+      return false
+  }
+  return true
+}
+const isReadyToSchedule = computed(()=>{
+  
 
   if (quizRef.value.scheduledAt && quizRef.value.duration)
     return Date.parse(quizRef.value.scheduledAt) > currentTime.value && hasOneCorrectAnswer()
@@ -143,7 +148,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
   >
     <div v-if="request.errors.value?.unknown" class="h-10" />
     <Banner v-if="request.errors.value?.unknown" :text="request.errors.value?.unknown" class="-mx-5 bg-red/80" @click="request.errors.value.unknown=''" />
-    <MessageBox :open="confirmDeleteMessage" @open="confirmDeleteMessage = false">
+    <MessageBox :open="confirmDeleteMessage" @close="confirmDeleteMessage = false">
       <template #message>
         <div class="flex gap-4">
           <div class="bg-red/10 p-4 rounded-full">
