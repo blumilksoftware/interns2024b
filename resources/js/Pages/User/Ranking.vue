@@ -16,7 +16,7 @@ const sortedRankings = computed(() => {
 const groupedRanking = computed(() => Object.values<Ranking[]>(
   sortedRankings.value
     .reduce((prev, current) => ({ ...prev, [current.points]: [...(prev[current.points] || []), current] }), {}),
-))
+).reverse())
 
 </script>
 
