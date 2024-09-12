@@ -8,7 +8,6 @@ use App\Http\Requests\QuizRequest;
 use App\Http\Requests\UpdateQuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
-use App\Models\User;
 use App\Services\QuizUpdateService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;

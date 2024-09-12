@@ -28,7 +28,7 @@ class HandleInertiaRequests extends Middleware
             "appName" => fn() => config("app.name"),
             "user" => fn() => $request->user() ? UserResource::make($request->user()) : null,
             "flash" => $this->getFlashData($request),
-//            "csrf_token" => csrf_token(),
+            "csrf_token" => csrf_token(),
         ]);
     }
 

@@ -11,19 +11,18 @@ defineProps<{
 <template>
   <div class="flex flex-col items-start gap-4">
     <div v-for="user in users" :key="user.id" class="bg-white border shadow rounded-md p-4 w-full max-w-xl">
-      <div>ID: {{ user.id }}</div>
-      <div>Imię: {{ user.name }}</div>
-      <div>Nazwisko: {{ user.surname }}</div>
-      <div>E-mail: {{ user.email }}</div>
-      <div>Szkoła: {{ user.school.name }}</div>
+      <div><b>ID:</b> {{ user.id }}</div>
+      <div><b>Imię:</b> {{ user.name }}</div>
+      <div><b>Nazwisko:</b> {{ user.surname }}</div>
+      <div><b>E-mail:</b> {{ user.email }}</div>
+      <div><b>Szkoła:</b> {{ user.school.name }}</div>
 
-      <div class="flex gap-4">
-        <LinkButton :href="`/admin/admins/${user.id}/edit`">Edit</LinkButton>
-        <FormButton :href="`/admin/admins/${user.id}`" method="delete">Delete</FormButton>
+      <div class="flex gap-2 p-2">
+        <FormButton class="w-full" button-class="w-full" small :href="`/admin/admins/${user.id}`" method="delete">Delete</FormButton>
+        <LinkButton small :href="`/admin/admins/${user.id}/edit`">Edit</LinkButton>
       </div>
     </div>
 
     <FormButton href="/admin/admins/create" method="get" class="w-full" button-class="w-full">Dodaj nowego administratora</FormButton>
-
   </div>
 </template>

@@ -189,6 +189,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
       <span v-if="!isSelected">Czas trwania testu: <b class="whitespace-nowrap">{{ quizRef.duration ? quizRef.duration + ' min': "brak" }}</b> </span>
       <div class="flex gap-5 justify-end">
         <LinkButton v-if="isPublished" :href="`/admin/quizzes/${quiz.id}/ranking`">Ranking</LinkButton>
+        <LinkButton v-if="isScheduled" :href="`/admin/quizzes/${quiz.id}/invite`">Zaproś</LinkButton>
         <button v-if="!isEditing && isDraft" :title="!isReadyToSchedule ? 'Test jest niekompletny lub czas jest źle ustawiony' : 'Udostępnij test uczniom'" :disabled="!isReadyToSchedule" class="disabled:opacity-50 bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="schedule">Opublikuj</button>
         <button v-if="isScheduled" class="border border-primary rounded-lg py-2 px-4 text-primary font-bold" @click="unSchedule">Wycofaj</button>
         <button v-if="isDraft && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
@@ -196,7 +197,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
         <button v-if="isEditing" title="Zapisz edytowany test" @click="updateQuiz"><CheckIcon /></button>
         <button v-if="!isEditing" title="Skopiuj test" @click="copyQuiz()"><CopyIcon /></button>
         <div v-if="isPublished" title="Ten test jest zablokowany. Nie można go modyfikować ani usunąć"><LockIcon /></div>
-        <button v-else title="Usuń test" @click="confirmDeleteMessage=true"><TrashIcon /></button>
+        <button v-else title="Usuń test" @click="confirmDeleteMessage = true"><TrashIcon /></button>
       </div>
     </div>
 
