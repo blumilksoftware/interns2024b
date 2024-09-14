@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import IconLayout from '@/Layouts/IconLayout.vue'
+
 const props = defineProps<{isExpanded:boolean}>()
 </script>
 

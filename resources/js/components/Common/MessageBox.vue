@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import {Dialog, DialogPanel} from '@headlessui/vue'
-import {type MessageBox as MessageBoxProps} from '@/Types/MessageBox'
 import {type VNode} from 'vue'
 
 defineSlots<{
-  title: VNode
+  title: Node
   message: VNode
   buttons: VNode
 }>()
 
-defineProps<MessageBoxProps>()
+defineProps<{ open: boolean }>()
+const emit = defineEmits(['close'])
 </script>
 
 <template>
-  <Dialog :open="isOpen.value" class="relative z-50" @close="close">
+  <Dialog :open class="relative z-50" @close="emit('close')">
     <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
 
     <div class="fixed inset-0 flex w-screen items-center justify-center p-4">
@@ -33,17 +33,3 @@ defineProps<MessageBoxProps>()
     </div>
   </Dialog>
 </template>
-
-<script lang="ts">
-import {ref} from 'vue'
-
-export function useMessageBox(open = false): MessageBoxProps {
-  const isOpen = ref(open)
-
-  return  {
-    isOpen,
-    show: () => isOpen.value = true,
-    close: () => isOpen.value = false,
-  }
-}
-</script>

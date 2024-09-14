@@ -15,9 +15,10 @@ import DismissIcon from '@/components/Icons/DismissIcon.vue'
 import { Request } from '@/scripts/request'
 import { nanoid } from 'nanoid'
 import '@vuepic/vue-datepicker/dist/main.css'
-import MessageBox, { useMessageBox } from '@/components/Common/MessageBox.vue'
+import MessageBox from '@/components/Common/MessageBox.vue'
 import CustomDatepicker from '@/components/Common/CustomDatepicker.vue'
 import Banner from '@/components/Common/Banner.vue'
+import LinkButton from '@/components/Common/LinkButton.vue'
 
 const props = defineProps<{quiz:Quiz, isSelected:boolean, showLockedQuizzes:boolean}>()
 const emit = defineEmits(['displayToggle'])
@@ -26,20 +27,26 @@ const quizRef = ref<Quiz>(props.quiz)
 quizRef.value.scheduledAt = formatDateHTML(quizRef.value.scheduledAt)
 const currentTime = ref(Date.now())
 const updateTimeInterval = setInterval(()=>currentTime.value = Date.now(), 1000)
-const confirmDeleteMessage = useMessageBox()
-onBeforeUnmount(()=>{clearInterval(updateTimeInterval)})
+const confirmDeleteMessage = ref(false)
 
-const isReadyToSchedule = computed(()=>{
-  function hasOneCorrectAnswer(){
-    for (const question of quizRef.value.questions) {
-      for (const answer of question.answers) {
-        if (answer.correct){
-          return true
-        }
-      }
+onBeforeUnmount(()=>{clearInterval(updateTimeInterval)})
+function checkQuestionCorrectAnswer(question:any) {
+  for (const answer of question.answers) {
+    if (answer.correct){
+      return true
     }
-    return false
   }
+  return false
+}
+function hasOneCorrectAnswer(){
+  for (const question of quizRef.value.questions) {
+    if (!checkQuestionCorrectAnswer(question))
+      return false
+  }
+  return true
+}
+const isReadyToSchedule = computed(()=>{
+  
 
   if (quizRef.value.scheduledAt && quizRef.value.duration)
     return Date.parse(quizRef.value.scheduledAt) > currentTime.value && hasOneCorrectAnswer()
@@ -69,7 +76,7 @@ function formatDateDB(date?: DayjsConfigType) {
 }
 
 function addQuestion(){
-  const newQuestion: CleanQuestion = { 
+  const newQuestion: CleanQuestion = {
     key: nanoid(),
     text: 'Nowe pytanie',
     answers: [],
@@ -101,7 +108,7 @@ function updateQuiz() {
   let data : any = assignDefinedValues({}, quizRef.value)
   if (data?.scheduledAt)
     data.scheduledAt = formatDateDB(quizRef.value.scheduledAt)
-  data.onSuccess = ()=>isEditing.value=false 
+  data.onSuccess = ()=>isEditing.value=false
   request.axiosPatch(`/admin/quizzes/${quizRef.value.id}`, data)
 }
 function schedule() {
@@ -137,11 +144,11 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
   <div
     v-if="!(isPublished && showLockedQuizzes)"
     tabindex="0"
-    class="mt-4 p-5 bg-white/70 rounded-lg items-center relative shadow overflow-hidden"
+    class="mt-4 p-5 bg-white/70 rounded-lg items-center relative shadow"
   >
     <div v-if="request.errors.value?.unknown" class="h-10" />
     <Banner v-if="request.errors.value?.unknown" :text="request.errors.value?.unknown" class="-mx-5 bg-red/80" @click="request.errors.value.unknown=''" />
-    <MessageBox v-bind="confirmDeleteMessage">
+    <MessageBox :open="confirmDeleteMessage" @close="confirmDeleteMessage = false">
       <template #message>
         <div class="flex gap-4">
           <div class="bg-red/10 p-4 rounded-full">
@@ -159,7 +166,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
       <template #buttons>
         <button
           class="px-2 font-bold"
-          @click="confirmDeleteMessage.close"
+          @click="confirmDeleteMessage = false"
         >
           Anuluj
         </button>
@@ -186,6 +193,8 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
       <span v-if="!isSelected">Rozpoczęcie testu: <b class="whitespace-nowrap">{{ formatDatePretty(quizRef.scheduledAt) }}</b> </span>
       <span v-if="!isSelected">Czas trwania testu: <b class="whitespace-nowrap">{{ quizRef.duration ? quizRef.duration + ' min': "brak" }}</b> </span>
       <div class="flex gap-5 justify-end">
+        <LinkButton v-if="isPublished" :href="`/admin/quizzes/${quiz.id}/ranking`">Ranking</LinkButton>
+        <LinkButton v-if="isScheduled" :href="`/admin/quizzes/${quiz.id}/invite`">Zaproś</LinkButton>
         <button v-if="!isEditing && isDraft" :title="!isReadyToSchedule ? 'Test jest niekompletny lub czas jest źle ustawiony' : 'Udostępnij test uczniom'" :disabled="!isReadyToSchedule" class="disabled:opacity-50 bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="schedule">Opublikuj</button>
         <button v-if="isScheduled" class="border border-primary rounded-lg py-2 px-4 text-primary font-bold" @click="unSchedule">Wycofaj</button>
         <button v-if="isDraft && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
@@ -193,7 +202,7 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
         <button v-if="isEditing" title="Zapisz edytowany test" @click="updateQuiz"><CheckIcon /></button>
         <button v-if="!isEditing" title="Skopiuj test" @click="copyQuiz()"><CopyIcon /></button>
         <div v-if="isPublished" title="Ten test jest zablokowany. Nie można go modyfikować ani usunąć"><LockIcon /></div>
-        <button v-else title="Usuń test" @click="confirmDeleteMessage.show()"><TrashIcon /></button>
+        <button v-else title="Usuń test" @click="confirmDeleteMessage = true"><TrashIcon /></button>
       </div>
     </div>
 
@@ -205,17 +214,17 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
         <span class="py-1.5">Czas trwania testu<span v-if="isEditing"> (min)</span>:</span>
         <EditableInput v-model="quizRef.duration" :error="request.errors.value?.duration" type="number" min="0" :is-editing="isEditing" />
       </div>
-          
+
       <div class="flex flex-col gap-4">
         <data v-if="isSelected" class="flex flex-col gap-4">
           <div v-for="(question, idx) of quizRef.questions" :key="question.key">
-            <QuestionComponent 
+            <QuestionComponent
               v-model="quizRef.questions[idx]" :is-editing="isEditing"
               :index="idx" :questions-length="quizRef.questions.length" @delete="deleteQuestion"
             />
           </div>
         </data>
-        
+
         <div v-if="isEditing" class="flex justify-between">
           <button class="py-2 px-3 rounded-lg border border-primary/30 font-bold bg-white/50" @click="addQuestion">+ Dodaj pytanie</button>
         </div>
