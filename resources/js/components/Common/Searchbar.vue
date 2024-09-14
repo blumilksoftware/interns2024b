@@ -14,7 +14,7 @@ const searchQuery = ref('')
 const props = defineProps<{
   options: T[]
   label : string
-  error: string
+  error?: string
 }>()
 
 const selectedOption = ref<T>()
@@ -37,8 +37,8 @@ const onOptionClick = (option:T)=>{
 <template>
   <div ref="target" class="block w-full text-sm font-medium leading-6 text-gray-900 duration-200">
     <label :for="id">{{ label }}</label>
-    <div 
-      class="mt-2 font-medium text-sm leading-6 text-gray-900 overflow-hidden duration-200 max-h-12 flex flex-col bg-white/30 placeholder:text-gray-400 rounded-[.5rem] ring-2 ring-primary/30 ring-inset"
+    <div
+      class="mt-2 font-medium text-sm leading-6 text-gray-900 overflow-hidden duration-200 max-h-12 flex flex-col bg-white/30 placeholder:text-gray-400 rounded-lg ring-2 ring-primary/30 ring-inset"
       :class="{'scale-y-100 max-h-80': isFocused}"
     >
       <div class="flex h-inherit items-center justify-center duration-200 rounded-[.5rem]" :class="{'ring-inset ring-2 ring-[#7e76b8]':isFocused}">
@@ -66,7 +66,7 @@ const onOptionClick = (option:T)=>{
       <Transition>
         <div v-show="true" class="m-0.5 mt-0 py-2 overflow-auto">
           <div v-if="optionsRef.length>0">
-            <div 
+            <div
               v-for="obj in optionsRef"
               :key="obj.key"
               class="cursor-pointer block px-4 py-2 hover:bg-primary/10 text-[0.9rem]"

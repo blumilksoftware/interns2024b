@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, type VNode } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
+const slots = defineSlots<{ default: VNode }>()
 const target = ref()
 onClickOutside(target,()=>isFocused.value=false)
 
@@ -21,11 +22,9 @@ withDefaults(defineProps<{
   error: '',
 })
 
-const isFocused = ref<boolean>(false) 
+const isFocused = ref<boolean>(false)
 const model = defineModel<string>()
 </script>
-
-
 
 <template>
   <label ref="target" class="block w-full text-sm font-medium leading-6 text-gray-900 duration-200" :class="{'text-red': error}">{{ label }}
@@ -44,7 +43,7 @@ const model = defineModel<string>()
         @focus="isFocused=true"
       >
 
-      <div v-if="$slots.default" class="flex flex-1 items-center justify-center stroke-primary/100">
+      <div v-if="slots.default" class="flex flex-1 items-center justify-center stroke-primary/100">
         <slot />
       </div>
     </div>

@@ -22,7 +22,7 @@ class EmailVerifyController extends Controller
 
     public function create(): Response
     {
-        return Inertia::render("Auth/VerifyEmail");
+        return Inertia::render("Guest/VerifyEmail");
     }
 
     public function send(Request $request): RedirectResponse
