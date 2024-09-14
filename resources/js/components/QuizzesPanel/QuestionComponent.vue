@@ -81,9 +81,3 @@ function setCorrectAnswer(answer: CleanAnswer) {
     </div>
   </div>
 </template>
-
-<style scoped>
-ol>li::marker {
-  font-weight: bold;
-}
-</style>
