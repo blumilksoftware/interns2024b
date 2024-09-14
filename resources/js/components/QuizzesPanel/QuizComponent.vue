@@ -185,18 +185,18 @@ const isScheduled = computed(() => quizRef.value.state === 'locked')
       />
     </div>
 
-    <div class="min-h-12" :class="isSelected ? 'flex justify-between items-center' : 'grid grid-cols-[1fr,1fr,1fr,.8fr] gap-3 items-center'">
+    <div class="min-h-12" :class="isSelected ? 'flex justify-between items-center' : 'grid grid-cols-[1fr,1fr,1fr,1fr,auto] gap-3 items-center'">
       <div class="flex gap-3">
         <button @click="toggleQuizView()"><ExapnsionToggleDynamicIcon :is-expanded="isSelected" /></button>
         <EditableInput v-model="quizRef.title" :error="request.errors.value?.title" :is-editing="isEditing && isSelected" type="text" />
       </div>
       <span v-if="!isSelected">Rozpoczęcie testu: <b class="whitespace-nowrap">{{ formatDatePretty(quizRef.scheduledAt) }}</b> </span>
       <span v-if="!isSelected">Czas trwania testu: <b class="whitespace-nowrap">{{ quizRef.duration ? quizRef.duration + ' min': "brak" }}</b> </span>
+      <button v-if="!isEditing && isDraft" :title="!isReadyToSchedule ? 'Test jest niekompletny lub czas jest źle ustawiony' : 'Udostępnij test uczniom'" :disabled="!isReadyToSchedule" class="disabled:opacity-50 bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="schedule">Opublikuj</button>
+      <button v-if="isScheduled" class="border border-primary rounded-lg py-2 px-4 text-primary font-bold" @click="unSchedule">Wycofaj</button>
       <div class="flex gap-5 justify-end">
         <LinkButton v-if="isPublished" :href="`/admin/quizzes/${quiz.id}/ranking`">Ranking</LinkButton>
         <LinkButton v-if="isScheduled" :href="`/admin/quizzes/${quiz.id}/invite`">Zaproś</LinkButton>
-        <button v-if="!isEditing && isDraft" :title="!isReadyToSchedule ? 'Test jest niekompletny lub czas jest źle ustawiony' : 'Udostępnij test uczniom'" :disabled="!isReadyToSchedule" class="disabled:opacity-50 bg-primary rounded-lg py-2 px-4 text-white font-bold" @click="schedule">Opublikuj</button>
-        <button v-if="isScheduled" class="border border-primary rounded-lg py-2 px-4 text-primary font-bold" @click="unSchedule">Wycofaj</button>
         <button v-if="isDraft && !isEditing" title="Edytuj test" @click="edit"><PencilIcon /></button>
         <button v-if="isEditing" title="Anuluj edytowanie testu" @click="dismissEditing"><DismissIcon /></button>
         <button v-if="isEditing" title="Zapisz edytowany test" @click="updateQuiz"><CheckIcon /></button>
