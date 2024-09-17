@@ -15,6 +15,7 @@ onMounted(()=>{
 })
 const props = defineProps<{
   token: string
+  email: string
 } & PageProps>()
 const isVisiblePassword = ref(false)
 const isVisibleConfirmPassword = ref(false)
@@ -22,6 +23,7 @@ const form = useForm({
   password: '',
   password_confirmation: '',
   token: props.token,
+  email: props.email,
 })
 
 function submit() {
