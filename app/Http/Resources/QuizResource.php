@@ -22,6 +22,7 @@ class QuizResource extends JsonResource
             "canBeUnlocked" => $this->canBeUnlocked,
             "questions" => QuestionResource::collection($this->questions),
             "isUserAssigned" => $this->isUserAssigned($request->user()),
+            "isRankingPublished" => $this->isRankingPublished,
         ];
     }
 }

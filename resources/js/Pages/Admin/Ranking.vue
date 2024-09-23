@@ -24,39 +24,31 @@ const grouped = computed(() => groupBy('points', sorted.value))
       <h1 class="font-bold text-xl text-primary text-center p-4 whitespace-nowrap">{{ quiz.name }} - Ranking</h1>
     </Divider>
 
-    <div class="p-4 bg-white border shadow rounded-md">
-      <div class="flow-root -mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-          <table class="min-w-full">
-            <thead class="bg-white">
-              <tr>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Imię</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Nazwisko</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Szkoła</th>
-                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Punkty</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white">
-              <template v-for="(place, index) in grouped" :key="index">
-                <tr class="border-t border-gray-200">
-                  <th colspan="5" scope="colgroup" class="bg-gray-50 py-2 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-3">Miejsce {{ index + 1 }}</th>
-                </tr>
-                <tr v-for="(ranking, userId) in place" :key="ranking.user.id" :class="[userId === 0 ? 'border-gray-300' : 'border-gray-200', 'border-t']">
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ ranking.user.name }}</td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ ranking.user.surname }}</td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ ranking.user.school.name }}</td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ ranking.points }}</td>
-                </tr>
-              </template>
-            </tbody>
-          </table>
+    <div class="w-full flex justify-between text-sm font-semibold text-gray-900 border shadow bg-white rounded-md px-4 py-2 gap-x-1">
+      <div class="flex-1 sm:flex-none sm:w-full sm:max-w-56">Imię</div>
+      <div class="flex-1">Nazwisko</div>
+      <div class="flex-1">Szkoła</div>
+      <div class="flex-none w-full max-w-16">Punkty</div>
+    </div>
+
+    <div v-for="(place, index) in grouped" :key="index" class="mt-4">
+      <div class="mt-2 bg-white border shadow rounded-md">
+        <h1 class="text-white bg-primary font-semibold border-b rounded-t-md p-2 text-sm text-left">
+          Miejsce {{ index + 1 }}
+        </h1>
+
+        <div v-for="ranking in place" :key="ranking.user.id" class="w-full flex justify-between text-sm text-gray-900 p-4 gap-x-1">
+          <div class="flex-1 sm:flex-none sm:w-full sm:max-w-56">{{ ranking.user.name }}</div>
+          <div class="flex-1">{{ ranking.user.surname }}</div>
+          <div class="flex-1">{{ ranking.user.school.name }}</div>
+          <div class="flex-none w-full max-w-16 text-center">{{ ranking.points }}</div>
         </div>
       </div>
     </div>
 
-    <div class="flex gap-2 p-2">
-      <FormButton method="post" :href="`/admin/quizzes/${quiz.id}/ranking/publish`" small preserve-scroll>Publikuj</FormButton>
-      <FormButton method="post" :href="`/admin/quizzes/${quiz.id}/ranking/unpublish`" small preserve-scroll>Wycofaj publikacje</FormButton>
+    <div class="flex gap-4 p-4 pl-0">
+      <FormButton :disabled="quiz.isRankingPublished" method="post" :href="`/admin/quizzes/${quiz.id}/ranking/publish`" small preserve-scroll>Publikuj</FormButton>
+      <FormButton :disabled="!quiz.isRankingPublished" method="post" :href="`/admin/quizzes/${quiz.id}/ranking/unpublish`" small preserve-scroll>Wycofaj publikacje</FormButton>
     </div>
   </div>
 </template>
