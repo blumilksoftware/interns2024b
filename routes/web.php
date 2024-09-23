@@ -48,9 +48,9 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/quizzes/{quiz}/lock", [QuizController::class, "lock"])->name("admin.quizzes.lock");
     Route::post("/quizzes/{quiz}/unlock", [QuizController::class, "unlock"])->can("unlock,quiz")->name("admin.quizzes.unlock");
 
-    Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "index"])->name("admin.quizzes.ranking");
-    Route::post("/quizzes/{quiz}/ranking/publish", [RankingController::class, "publish"])->name("admin.quizzes.ranking.publish");
-    Route::post("/quizzes/{quiz}/ranking/unpublish", [RankingController::class, "unpublish"])->name("admin.quizzes.ranking.unpublish");
+    Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "index"])->can("viewAdminRanking,quiz")->name("admin.quizzes.ranking");
+    Route::post("/quizzes/{quiz}/ranking/publish", [RankingController::class, "publish"])->can("publish,quiz")->name("admin.quizzes.ranking.publish");
+    Route::post("/quizzes/{quiz}/ranking/unpublish", [RankingController::class, "unpublish"])->can("publish,quiz")->name("admin.quizzes.ranking.unpublish");
 
     Route::post("/quizzes/{quiz}/questions", [QuizQuestionController::class, "store"])->can("create," . Question::class . ",quiz")->name("admin.questions.store");
     Route::patch("/questions/{question}", [QuizQuestionController::class, "update"])->can("update,question")->name("admin.questions.update");
@@ -90,7 +90,7 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
 Route::middleware(["auth", "verified"])->group(function (): void {
     Route::post("/quizzes/{quiz}/assign", [QuizController::class, "assign"])->can("assign,quiz")->name("quizzes.assign");
     Route::post("/quizzes/{quiz}/start", [QuizController::class, "createSubmission"])->middleware(EnsureQuizIsNotAlreadyStarted::class)->can("submit,quiz")->name("quizzes.start");
-    Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "indexUser"])->name("quizzes.ranking");
+    Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "indexUser"])->can("viewUserRanking,quiz")->name("quizzes.ranking");
     Route::get("/submissions/{quizSubmission}/", [QuizSubmissionController::class, "show"])->can("view,quizSubmission")->name("submissions.show");
     Route::post("/submissions/{quizSubmission}/close", [QuizSubmissionController::class, "close"])->can("close,quizSubmission")->name("submissions.close");
     Route::get("/submissions/{quizSubmission}/result", [QuizSubmissionController::class, "result"])->can("result,quizSubmission")->name("submissions.result");
