@@ -27,7 +27,7 @@ const model = defineModel<string>()
 </script>
 
 <template>
-  <label ref="target" class="block w-full text-sm font-medium leading-6 text-gray-900 duration-200" :class="{'text-red': error}">{{ label }}
+  <label ref="target" class="block w-full text-sm font-medium leading-6 text-gray-900 duration-200">{{ label }}
     <div
       class=" w-full mt-2 duration-200 max-h-12 flex bg-white/30 rounded-lg border-2 border-primary/30 overflow-hidden px-3 gap-3"
       :class="{'border-3 border-primary/60':isFocused, 'border-red' : error}"
