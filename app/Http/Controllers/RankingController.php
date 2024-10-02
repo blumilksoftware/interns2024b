@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\PublishQuizRankingAction;
 use App\Actions\UnpublishQuizRankingAction;
+use App\Http\Resources\QuizResource;
 use App\Http\Resources\RankingResource;
 use App\Models\Quiz;
 use App\Models\QuizSubmission;
@@ -17,18 +18,14 @@ class RankingController extends Controller
 {
     public function index(Quiz $quiz): Response
     {
-        $this->authorize("viewAdminRanking", $quiz);
-
         $submissions = QuizSubmission::query()
             ->where("quiz_id", $quiz->id)
             ->with("user.school")
             ->get();
 
-        $rankings = $submissions->map(fn($submission): RankingResource => new RankingResource($submission));
-
         return Inertia::render("Admin/Ranking", [
-            "quiz" => $quiz,
-            "rankings" => $rankings,
+            "quiz" => QuizResource::make($quiz),
+            "rankings" => RankingResource::collection($submissions),
         ]);
     }
 
@@ -41,11 +38,9 @@ class RankingController extends Controller
             ->with("user.school")
             ->get();
 
-        $rankings = $submissions->map(fn($submission): RankingResource => new RankingResource($submission));
-
         return Inertia::render("User/Ranking", [
-            "quiz" => $quiz,
-            "rankings" => $rankings,
+            "quiz" => QuizResource::make($quiz),
+            "rankings" => RankingResource::collection($submissions),
         ]);
     }
 
@@ -54,8 +49,6 @@ class RankingController extends Controller
         if (!$quiz->exists) {
             abort(404);
         }
-
-        $this->authorize("publish", $quiz);
 
         $publishQuizRankingAction->execute($quiz);
 
@@ -69,8 +62,6 @@ class RankingController extends Controller
         if (!$quiz->exists) {
             abort(404);
         }
-
-        $this->authorize("publish", $quiz);
 
         $unpublishQuizRankingAction->execute($quiz);
 
