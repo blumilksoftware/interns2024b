@@ -1,8 +1,7 @@
 <script setup lang="ts">
-
 import { ref } from 'vue'
+import CustomInput from '@/components/Common/CustomInput.vue'
 import { Request } from '@/scripts/request'
-import CustomInput from '../Common/CustomInput.vue'
 
 const { errors } = defineProps<{
   errors: Record<string, string>
