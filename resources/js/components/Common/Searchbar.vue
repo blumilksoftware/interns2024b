@@ -1,5 +1,4 @@
 <script lang="ts" setup generic="T extends Option">
-
 import { ref, defineProps, computed} from 'vue'
 import {type Option} from '@/Types/Option'
 import { onClickOutside } from '@vueuse/core'
@@ -7,14 +6,15 @@ import { nanoid } from 'nanoid'
 
 const id = ref(nanoid())
 const target = ref()
-onClickOutside(target,()=>isFocused.value=false)
+onClickOutside(target, () => isFocused.value = false)
 
 const isFocused = ref(false)
 const searchQuery = ref('')
 const props = defineProps<{
-  options: T[]
-  label : string
-  error?: string
+  options:T[]
+  label:string
+  ariaLabel?:string
+  error?:string
 }>()
 
 const selectedOption = ref<T>()
@@ -58,6 +58,7 @@ const onOptionClick = (option:T)=>{
           name="search"
           type="text"
           required
+          :aria-label="ariaLabel"
           :value="isFocused ? searchQuery : selectedOption?.text"
           :class="{'cursor-pointer' : !isFocused}"
           :placeholder="selectedOption?.text"
@@ -69,15 +70,16 @@ const onOptionClick = (option:T)=>{
       <Transition>
         <div v-show="true" class="m-0.5 mt-0 py-2 overflow-auto">
           <div v-if="optionsRef.length>0">
-            <div
+            <button
               v-for="obj in optionsRef"
               :key="obj.key"
-              class="cursor-pointer block px-4 py-2 hover:bg-primary/10 text-[0.9rem]"
-              @mousedown="onOptionClick(obj)"
+              class="cursor-pointer block px-4 py-2 hover:bg-primary/10 outline-none focus:bg-primary/10 text-[0.9rem] w-full text-left"
+              @click="onOptionClick(obj)"
+              @focus="isFocused=true"
             >
               <b v-if="obj.title">{{ obj.title.toUpperCase() }}</b>
               <p>{{ obj.text }}</p>
-            </div>
+            </button>
           </div>
           <span v-else class="block px-4 py-2 text-sm">
             Nie znaleziono szkoły

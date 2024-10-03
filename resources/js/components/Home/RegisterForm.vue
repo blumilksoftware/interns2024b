@@ -45,9 +45,16 @@ function submit() {
       <CustomInput v-model="form.surname" label="Nazwisko" :error="errors.surname" name="surname" type="surname" />
     </div>
 
-    <Searchbar :options="filteredSchoolOptions" label="Szkoła" :error="errors.school_id" @change="school => form.school_id = school.id.toString()" />
+    <Searchbar
+      label="Szkoła"
+      aria-label="Poszukiwanie szkół. Otwiera listę szkół"
+      :options="filteredSchoolOptions"
+      :error="errors.school_id"
+      @change="school => form.school_id = school.id.toString()"
+    />
 
     <CustomInput v-model="form.email" label="E-mail" :error="errors.email" name="email" type="email" />
+
     <PasswordInput v-model="form.password" :error="errors.password" />
 
     <label class="mx-2 mt-4 flex flex-row items-center gap-4">
@@ -72,27 +79,3 @@ function submit() {
     </div>
   </form>
 </template>
-
-<style scoped>
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #ffffff4c;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #262c8926;
-  border-radius: 1rem;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #262c894c;
-  border: 2px solid transparent;
-  background-clip: content-box;
-}
-</style>

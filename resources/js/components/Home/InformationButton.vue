@@ -7,7 +7,7 @@ const isInformationVisible = ref(false)
 
 <template>
   <div class="flex h-12 justify-center items-center">
-    <button class="text-primary text-2xl font-bold text-center hover:text-hovered-inf-btn duration-200" @click="isInformationVisible = true">
+    <button class="text-primary text-2xl font-bold duration-200 hover:text-primary-800 hover:scale-105" @click="isInformationVisible = true">
       INFORMACJE O KONKURSIE
     </button>
   </div>

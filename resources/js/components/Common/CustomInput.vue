@@ -41,6 +41,7 @@ const model = defineModel<string>()
         :placeholder="placeholder"
         :autocomplete="autocomplete"
         @focus="isFocused=true"
+        @blur="isFocused=false"
       >
 
       <div v-if="slots.default" class="flex flex-1 items-center justify-center stroke-primary/100">
