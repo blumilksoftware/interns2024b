@@ -1,83 +1,87 @@
 <script setup lang="ts">
-import { nanoid } from 'nanoid'
+import { computed, inject, ref, type Ref } from 'vue'
+import { DocumentDuplicateIcon, PlusCircleIcon, TrashIcon } from '@heroicons/vue/24/outline'
+import { vAutoAnimate } from '@formkit/auto-animate'
 import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynamicIcon.vue'
-import TrashIcon from '@/components/Icons/TrashIcon.vue'
-import CheckDynamicIcon from '@/components/Icons/CheckDynamicIcon.vue'
-import { computed, ref} from 'vue'
-import { type CleanAnswer } from '@/Types/CleanAnswer'
-import { type Question } from '@/Types/Question'
-import { type CleanQuestion } from '@/Types/CleanQuestion'
+import AnswerComponent from '@/components/QuizzesPanel/AnswerComponent.vue'
+import getKey from '@/Helpers/KeysManager'
+import type Answer from '@/Types/Answer'
+import type Question from '@/Types/Question'
 
-defineProps<{ isEditing: boolean, index:number, questionsLength:number }>()
-const emit = defineEmits<{ delete: [question: CleanQuestion] }>()
+const clipboard = inject<Ref<Question|undefined>>('questionsClipboard')
+defineProps<{ editing: boolean, index:number, questionsTotal:number }>()
+const emit = defineEmits<{ delete: [question:Question] }>()
 const question = defineModel<Question>({ required: true })
-const isAnswerExpanded = ref<boolean>(false)
+const answersPaneExpanded = ref<boolean>(false)
 const hasAnswers = computed(() => question.value.answers.length > 0)
 
-function deleteQuestion() {
-  emit('delete', question.value)
+function questionToClipboard() {
+  if (!clipboard) return
+  clipboard.value = JSON.parse(JSON.stringify(question.value))
 }
 
 function addAnswer() {
-  const answer: CleanAnswer = {
-    key: nanoid(),
+  const answer: Answer = {
     text: 'Nowa odpowiedź',
     correct: false,
   }
   question.value.answers.push(answer)
-  isAnswerExpanded.value = true
+  answersPaneExpanded.value = true
 }
 
-function deleteAnswer(answer: CleanAnswer) {
-  question.value.answers = question.value.answers.filter(ans => ans !== answer)
+function deleteAnswer(currentAnswer: Answer) {
+  question.value.answers = question.value.answers.filter((answer:Answer) => answer !== currentAnswer)
 }
-function setCorrectAnswer(answer: CleanAnswer) {
-  for (const ans of question.value.answers)
-    ans.correct = false
-  answer.correct = true
+
+function setCorrectAnswer(currentAnswer: Answer) {
+  for (const answer of question.value.answers)
+    answer.correct = false
+  currentAnswer.correct = true
 }
 </script>
 
 <template>
-  <div class="rounded-lg border border-primary/30 flex justify-between">
-    <div class="flex flex-col gap-4 p-4 w-full">
-      <div class="flex flex-col gap-1.5">
-        <b class="text-[1.1rem]">Pytanie {{ `${index+1}/${questionsLength}` }}</b>
-        <span v-if="!isEditing">{{ question.text }}</span>
-        <textarea v-else v-model="question.text" class="w-full p-2 border border-primary/30 rounded-md bg-white/50" />
-      </div>
-      <div v-if="isEditing || hasAnswers" class="flex gap-4 ">
-        <button v-if="isEditing" class="w-fit border border-primary/30 rounded-lg py-2 px-3 gap-2 flex bg-white/50" @click="addAnswer">
-          <b>+ Dodaj odpowiedź</b>
-        </button>
-        <button v-if="hasAnswers" class="w-fit border border-primary/30 rounded-lg py-2 px-3 gap-2 flex bg-white/50"
-                @click="isAnswerExpanded = !isAnswerExpanded"
-        >
-          <b>Odpowiedzi</b>
-          <ExapnsionToggleDynamicIcon :is-expanded="isAnswerExpanded" />
-        </button>
-      </div>
-      <ol v-if="isAnswerExpanded && hasAnswers" class="flex flex-col gap-4 w-full">
-        <li v-for="answer of question.answers" :key="answer.key"
-            class="w-full flex gap-4 p-4 border border-primary/30 rounded-lg bg-white/50"
-        >
-          <button :disabled="!isEditing" @click="setCorrectAnswer(answer)">
-            <CheckDynamicIcon class="size-6" :is-correct="answer.correct" />
+  <div v-auto-animate class="flex flex-col gap-5 p-5 w-full rounded-lg border border-primary/30">
+    <div class="flex flex-col gap-1.5">
+      <div class="flex justify-between">
+        <b class="text-lg">Pytanie {{ `${index+1}/${questionsTotal}` }}</b>
+        <div class="flex gap-5">
+          <button title="Skopiuj pytanie" @click="questionToClipboard">
+            <DocumentDuplicateIcon class="icon" />
           </button>
-          <div class="flex items-center w-full">
-            <span v-if="!isEditing">{{ answer.text }}</span>
-            <textarea v-else v-model="answer.text" class="w-full p-2 bg-transparent border border-primary/30 rounded-md" />
-          </div>
-          <div class="flex flex-col justify-evenly">
-            <button v-if="isEditing" @click="deleteAnswer(answer)">
-              <TrashIcon />
-            </button>
-          </div>
-        </li>
-      </ol>
+          <button v-if="editing" title="Usuń pytanie" @click="emit('delete', question)">
+            <TrashIcon class="icon text-red hover:text-red-500" />
+          </button>
+        </div>
+      </div>
+      
+      <span v-if="!editing">{{ question.text }}</span>
+      <textarea v-else v-model="question.text" class="h-12 w-full bg-transparent outline-none border-b border-primary/30 focus:border-primary/60" />
     </div>
-    <div v-if="isEditing" class="px-3 border-l border-primary/30 flex flex-col justify-evenly">
-      <button @click="deleteQuestion"><TrashIcon /></button>
-    </div>
+      
+    <button
+      v-if="hasAnswers"
+      class="flex gap-1.5 font-bold text-primary hover:text-primary-800 items-center text-percentage-105"
+      @click="answersPaneExpanded = !answersPaneExpanded"
+    >
+      Odpowiedzi
+      <ExapnsionToggleDynamicIcon class="size-3.5 stroke-[4]" :expanded="answersPaneExpanded" />
+    </button>
+
+    <template v-if="answersPaneExpanded && hasAnswers">
+      <AnswerComponent
+        v-for="(answer, idx) of question.answers"
+        :key="getKey(answer)"
+        v-model="question.answers[idx]"
+        class="-mt-3"
+        :editing="editing"
+        @delete="deleteAnswer"
+        @set-correct="setCorrectAnswer"
+      />
+    </template>
+
+    <button v-if="editing" class="icon-button" @click="addAnswer">
+      <PlusCircleIcon class="icon" /> Dodaj odpowiedź
+    </button>
   </div>
 </template>

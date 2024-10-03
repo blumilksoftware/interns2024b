@@ -24,9 +24,7 @@ watch(
   <BackgroundEffect />
 
   <div class="flex flex-col items-center h-full min-h-screen">
-    <Transition>
-      <Banner v-if="status" :text="status" @click="status = ''" />
-    </Transition>
+    <Banner v-model="status" />
     <Header ref="header" :pages="[]" :user="props.user" :app-name="props.appName" />
     <slot />
     <Footer />

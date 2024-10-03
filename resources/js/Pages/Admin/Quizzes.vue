@@ -1,64 +1,49 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
-import {Request} from '@/scripts/request'
-import SortIcon from '@/components/Icons/SortIcon.vue'
-import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
-import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
-import { type Quiz } from '@/Types/Quiz'
-import Dropdown from '@/components/Common/Dropdown.vue'
+import { provide, type Ref, ref, watch } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import dayjs from 'dayjs'
-const props = defineProps<{ quizzes: Quiz[] }>()
-const selectedQuiz = ref<number>()
-const showLockedQuizzes = ref<boolean>(true)
-const sorter = ref(sortByCreationDateDescending)
-const quizzesRef = ref<Quiz[]>(sorter.value(mapKeys(props.quizzes)))
-const options = [
-  {key: 0, text: 'Po nazwie (A–Z)', action:()=>sorter.value=sortByNameAscending},
-  {key: 1, text: 'Po nazwie (Z–A)', action:()=>sorter.value=sortByNameDescending},
-  {key: 2, text: 'Od najnowszych', action:()=>sorter.value=sortByCreationDateDescending},
-  {key: 3, text: 'Od najstarszych', action:()=>sorter.value=sortByCreationDateAscending},
-]
+import { ArrowsUpDownIcon } from '@heroicons/vue/24/outline'
+import { PlusCircleIcon } from '@heroicons/vue/20/solid'
+import Expand from '@/components/Common/Expand.vue'
+import RequestButton from '@/components/Common/RequestButton.vue'
+import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
+import Dropdown from '@/components/Common/Dropdown.vue'
+import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
+import useCurrentTime from '@/Helpers/CurrentTime'
+import { keysWrapper } from '@/Helpers/KeysManager'
+import type Quiz from '@/Types/Quiz'
+import type Question from '@/Types/Question'
+
+provide<Ref<number>>('currentTime', useCurrentTime())
+provide<Ref<Question|undefined>>('questionsClipboard', ref())
+const props = defineProps<{ quizzes:Quiz[] }>()
+const quizzes = ref<Quiz[]>(props.quizzes)
+const sorter = ref(getQuizzesSorter('creationDate', true))
+const showArchivedQuizzes = ref<boolean>(true)
+const options = keysWrapper([
+  { text: 'Po nazwie (A–Z)', action: () => sorter.value = getQuizzesSorter('name') },
+  { text: 'Po nazwie (Z–A)', action: () => sorter.value = getQuizzesSorter('name', true) },
+  { text: 'Od najnowszych' , action: () => sorter.value = getQuizzesSorter('creationDate', true) },
+  { text: 'Od najstarszych', action: () => sorter.value = getQuizzesSorter('creationDate') },
+])
+
 watch(
-  [()=>props.quizzes, sorter],
-  ([updatedQuizzes, sorted]) => quizzesRef.value = sorted(mapKeys(updatedQuizzes)),
+  [() => props.quizzes, sorter],
+  ([_quizzes, sorter]) => {
+    quizzes.value = _quizzes
+    quizzes.value.sort(sorter)
+  },
+  { immediate: true },
 )
 
-function mapKeys<T extends {id: number, key?: number | string}>(array:T[]){
-  for (const record of array){
-    record.key ??= record.id
-    for (const key in record)
-      if (Array.isArray(record[key]))
-        mapKeys(record[key])
+function getQuizzesSorter(type: 'name' | 'creationDate', desc = false) {
+  return (a:Quiz, b:Quiz) => {
+    if (desc) [a, b] = [b, a]
+    return {
+      name: a.title.localeCompare(b.title),
+      creationDate: dayjs(a.createdAt).diff(dayjs(b.createdAt)),
+    }[type]
   }
-  return array
-}
-
-
-const request = new Request()
-
-function addQuiz() {
-  request.sendRequest('/admin/quizzes',{ method: 'post', data:{title: 'Nowy test'} })
-}
-
-function toggleQuizView(quiz: Quiz) {
-  selectedQuiz.value = selectedQuiz.value === quiz.id ? undefined : quiz.id
-}
-
-function sortByNameAscending(arr : any[]){
-  return arr.sort((a:Quiz, b:Quiz) => a.title.localeCompare(b.title))
-}
-
-function sortByNameDescending(arr : any[]){
-  return arr.sort((a:Quiz, b:Quiz) => b.title.localeCompare(a.title))
-}
-
-function sortByCreationDateAscending(arr: any[]) {
-  return arr.sort((a: Quiz, b: Quiz) => dayjs(a.createdAt).diff(dayjs(b.createdAt)))
-}
-
-function sortByCreationDateDescending(arr: any[]) {
-  return arr.sort((a: Quiz, b: Quiz) => dayjs(b.createdAt).diff(dayjs(a.createdAt)))
 }
 </script>
 
@@ -67,45 +52,42 @@ function sortByCreationDateDescending(arr: any[]) {
     <title>Testy - Panel administracyjny</title>
   </Head>
   <div class="flex flex-col w-full pb-3">
-    <div data-name="toolbar" class="flex gap-5 px-6">
-      <Dropdown :options="options"> 
-        <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg"> <SortIcon /> Sortuj </button>
+    <div data-name="toolbar" class="flex px-4 gap-1 sm:gap-2">
+      <Dropdown class-btn="rounded-lg" :options="options" title="Sortuj">
+        <div class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg">
+          <ArrowsUpDownIcon class="size-6" />
+          <span class="hidden sm:block">Sortuj</span>
+        </div>
       </Dropdown>
-      <button class="flex gap-2 hover:bg-primary/5 duration-200 p-2 rounded-lg" @click="showLockedQuizzes=!showLockedQuizzes"> <EyeDynamicIcon :is-opened="showLockedQuizzes" /> {{ showLockedQuizzes ? 'Wyświetl' : 'Schowaj' }} zarchiwizowane testy</button>
-      <div class="flex-1" />
-      <button :disabled="request.isRequestOngoing.value" :class="{'opacity-70':request.isRequestOngoing.value}" class="bg-primary font-bold rounded-lg text-white px-4" @click="addQuiz">+ Dodaj test</button>
+
+      <button
+        :title="`${showArchivedQuizzes ? 'Wyświetl' : 'Schowaj'} zarchiwizowane testy`"
+        class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg"
+        @click="showArchivedQuizzes = !showArchivedQuizzes"
+      >
+        <ArchiveDynamicIcon :active="showArchivedQuizzes" />
+        <span class="hidden sm:block">{{ showArchivedQuizzes ? 'Wyświetl' : 'Schowaj' }} zarchiwizowane testy</span>
+      </button>
+
+      <Expand />
+
+      <RequestButton
+        class="flex gap-2 items-center bg-primary font-bold rounded-xl text-white pl-3 pr-4 disabled:opacity-50 hover:bg-primary-950 duration-200 transition-colors"
+        method="post"
+        href="/admin/quizzes"
+        :data="{ title: 'Nowy test' }"
+      >
+        <PlusCircleIcon class="size-6 text-white" /> Dodaj test
+      </RequestButton>
     </div>
-    <div v-for="(quiz, idx) of quizzesRef" :key="quiz.id" class="px-4">
+
+    <div class="flex flex-col gap-4 p-4">
       <QuizComponent
-        :quiz="quizzesRef[idx]"
-        :is-selected="selectedQuiz===quiz.id"
-        :show-locked-quizzes="showLockedQuizzes"
-        @display-toggle="toggleQuizView"
+        v-for="quiz of quizzes"
+        :key="quiz.id"
+        :quiz="quiz"
+        :show-archived-quizzes="showArchivedQuizzes"
       />
     </div>
   </div>
 </template>
-
-<style>
-.datepicker {
-  @apply bg-white/50 rounded-md outline-none border-none font-bold
-}
-.datepicker-menu{
-  @apply rounded-lg border
-}
-.dp__active_date{
-  @apply bg-primary font-bold
-}
-.dp__today{
-  @apply border border-primary/30
-}
-.dp__btn {
-  @apply fill-primary text-primary stroke-primary
-}
-.dp__btn:hover {
-  @apply fill-primary-950 text-primary-950 stroke-primary-950
-}
-.dp__overlay {
-  @apply rounded-lg
-}
-</style>

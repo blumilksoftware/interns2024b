@@ -1,10 +1,7 @@
-import {type CleanQuestion} from '@/Types/CleanQuestion'
+import type Answer from '@/Types/Answer'
 
-export interface Question extends CleanQuestion{
-  id: number
-  createdAt: string
-  updatedAt: string
-  locked: boolean
-  correct?: number
+export default interface Question {
+  id?: number
+  text: string | undefined
   answers: Answer[]
 }

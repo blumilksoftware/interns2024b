@@ -1,11 +1,13 @@
-import {type CleanQuiz} from '@/Types/CleanQuiz'
+import type Question from '@/Types/Question'
 
-export interface Quiz extends CleanQuiz {
+export default interface Quiz {
+  [key: string]
   id: number
   title: string
+  scheduledAt?: string
+  duration?: number
   createdAt: string
   updatedAt: string
   state:'published' | 'locked' | 'unlocked'
-  isUserAssigned: boolean
   questions: Question[]
 }

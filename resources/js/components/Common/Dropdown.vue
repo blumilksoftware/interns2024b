@@ -1,42 +1,47 @@
 <script setup lang="ts">
-import { type Option } from '@/Types/Option'
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
+import type Option from '@/Types/Option'
 
+defineProps<{ options:Option[], classBtn?:string }>()
+const emit = defineEmits<{ optionClick: [option:Option] }>()
+const isVisible = ref<boolean>(false)
 const target = ref(null)
 
 onClickOutside(target, () => isVisible.value=false)
-defineProps<{ options: Option[] }>()
-const isVisible = ref<boolean>(false)
-const emit = defineEmits<{ optionClick: [id: number | string] }>()
 
 function pick(option: Option) {
-  option.action()
-  emit('optionClick', option.key)
+  if (option.action) option.action()
+  emit('optionClick', option)
 }
-
 </script>
 
 <template>
-  <div
-    ref="target"
-    class="flex flex-col items-start"
-  >
-    <button @click="isVisible=!isVisible">
+  <div ref="target">
+    <button :class="classBtn" @click="isVisible=!isVisible">
       <slot />
     </button>
-    <div
-      v-if="isVisible"
-      class="absolute mt-10 z-50 w-fit rounded-lg bg-white border shadow border-primary/30 focus:outline-none" role="menu"
-      aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
-    >
-      <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-        <li v-for="option of options" :key="option.key">
-          <a id="menu-item-0" href="#"
-             class="truncate block px-4 py-2 text-sm text-gray-700 hover:bg-primary hover:text-white hover:drop-shadow-2xl transition-all" role="menuitem" tabindex="-1" @click="pick(option)"
-          >{{ option.text }}</a>
-        </li>
-      </ul>
-    </div>
+    <Transition>
+      <div
+        v-if="isVisible"
+        class="absolute z-50 w-fit rounded-lg bg-white/70 backdrop-blur-md outline-none shadow border border-primary/30 mt-1" role="menu"
+        aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
+      >
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full border-transparent border-b-primary/30 border-9" />
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full border-transparent border-b-white border-8" />
+        <ul class="py-0.5 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+          <li v-for="option of options" :key="option.key">
+            <a 
+              id="menu-item-0" href="#"
+              class="truncate block py-2 px-3 m-1 text-sm text-gray-700 rounded-lg hover-focus:bg-primary/5 hover-focus:text-primary transition-colors outline-none"
+              role="menuitem"
+              @click="pick(option)"
+            >
+              {{ option.text }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </Transition>
   </div>
 </template>

@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import {ref, watch} from 'vue'
+import { Head } from '@inertiajs/vue3'
 import Footer from '@/components/Common/Footer.vue'
 import AuthBanner from '@/components/Home/AuthBanner.vue'
+import Banner from '@/components/Common/Banner.vue'
 import GeneralSection from '@/components/Home/GeneralSection.vue'
 import AuthSection from '@/components/Home/AuthSection.vue'
 import BackgroundEffect from '@/components/Common/BackgroundEffect.vue'
-import {type School} from '@/Types/School'
-import {type PageProps} from '@/Types/PageProps'
-import Banner from '@/components/Common/Banner.vue'
-import { Head } from '@inertiajs/vue3'
+import { type PageProps } from '@/Types/PageProps'
+import { type School } from '@/Types/School'
 
 const authSectiontRef = ref<InstanceType<typeof AuthSection>>()
 
@@ -46,9 +46,8 @@ watch(
   <Head>
     <title>Strona główna</title>
   </Head>
-  <Transition>
-    <Banner v-if="status" :text="status" @click="status = ''" />
-  </Transition>
+
+  <Banner v-model="status" />
 
   <div class="flex flex-col h-screen">
     <BackgroundEffect />

@@ -45,6 +45,8 @@ class Quiz extends Model
         "ranking_published_at",
     ];
 
+    protected $guarded = [];
+
     public function questions(): HasMany
     {
         return $this->hasMany(Question::class);
