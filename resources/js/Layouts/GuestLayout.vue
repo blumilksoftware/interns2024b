@@ -1,12 +1,34 @@
 <script setup lang="ts">
-import BaseLayout from '@/Layouts/BaseLayout.vue'
-import type {PageProps} from '@/Types/PageProps'
 
-defineProps<PageProps>()
+import BackgroundEffect from '@/components/Common/BackgroundEffect.vue'
+import Banner from '@/components/Common/Banner.vue'
+import Footer from '@/components/Common/Footer.vue'
+import Header from '@/components/Common/Header.vue'
+import type {PageProps} from '@/Types/PageProps'
+import { provide, ref, watch } from 'vue'
+
+const props = defineProps<PageProps>()
+const status = ref<string | undefined>(props.flash.status)
+const header = ref()
+provide('header', header)
+
+watch(
+  () => props.flash,
+  flash => {
+    status.value = flash.status
+  }, { immediate: true },
+)
 </script>
 
 <template>
-  <BaseLayout :pages="[]" :app-name="appName" :user :flash>
+  <BackgroundEffect />
+
+  <div class="flex flex-col items-center h-full min-h-screen">
+    <Transition>
+      <Banner v-if="status" :text="status" @click="status = ''" />
+    </Transition>
+    <Header ref="header" :pages="[]" :user="props.user" :app-name="props.appName" />
     <slot />
-  </BaseLayout>
+    <Footer />
+  </div>
 </template>
