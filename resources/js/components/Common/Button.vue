@@ -20,9 +20,10 @@ const emit = defineEmits(['click'])
       'rounded-xl': !small && !extraSmall,
       'focus:rounded-sm text-black hover:text-primary-800 p-0': text,
       'px-4 bg-primary text-white hover:bg-primary-950 py-2': !text,
-      'opacity-50 hover:text-black cursor-not-allowed': disabled
+      'opacity-50 pointer-events-none': disabled
     }"
     :type="type"
+    :disabled="disabled"
     @click="emit('click')"
   >
     <slot />
