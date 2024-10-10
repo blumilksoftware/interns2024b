@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArchiveBoxXMarkIcon } from '@heroicons/vue/20/solid';
+import { ArchiveBoxXMarkIcon } from '@heroicons/vue/20/solid'
 import { ArchiveBoxIcon } from '@heroicons/vue/24/outline'
 
 defineProps<{ active:boolean }>()

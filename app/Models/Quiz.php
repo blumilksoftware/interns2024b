@@ -44,7 +44,6 @@ class Quiz extends Model
         "duration",
         "ranking_published_at",
     ];
-
     protected $guarded = [];
 
     public function questions(): HasMany

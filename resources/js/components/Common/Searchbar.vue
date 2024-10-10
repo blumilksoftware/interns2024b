@@ -1,8 +1,8 @@
 <script lang="ts" setup generic="T extends Option">
 import { ref, defineProps, computed} from 'vue'
-import {type Option} from '@/Types/Option'
 import { onClickOutside } from '@vueuse/core'
 import { nanoid } from 'nanoid'
+import type Option from '@/Types/Option'
 
 const id = ref(nanoid())
 const target = ref()
@@ -20,7 +20,7 @@ const selectedOption = ref<T>()
 const optionsRef = computed(()=>props.options.filter(
   option=>{
     return option.text.toLowerCase().includes(searchQuery.value)
-    || (option.title && option.title.toLowerCase().includes(searchQuery.value))
+    || (option.title?.toLowerCase().includes(searchQuery.value))
   }))
 
 const emit = defineEmits<{change:[option: T]}>()
