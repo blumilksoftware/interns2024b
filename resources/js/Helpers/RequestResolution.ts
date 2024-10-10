@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid'
 import { inject, provide, ref } from 'vue'
-import { type Errors } from '@inertiajs/core/types'
+import { type Errors } from '@inertiajs/core'
 
 interface RequestResolutionEmitter {
   emitRequestProcessing: (processing: boolean) => void

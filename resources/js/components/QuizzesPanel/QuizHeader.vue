@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type Errors } from '@inertiajs/core/types'
+import { type Errors } from '@inertiajs/core'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import CustomDatepicker from '@/components/Common/CustomDatepicker.vue'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'

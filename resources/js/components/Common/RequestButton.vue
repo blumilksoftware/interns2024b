@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { router } from '@inertiajs/vue3'
-import { type Errors, type ActiveVisit, type VisitOptions, type PendingVisit } from '@inertiajs/core/types'
+import { type Errors, type ActiveVisit, type VisitOptions, type PendingVisit } from '@inertiajs/core'
 import Button from '@/components/Common/Button.vue'
 import { injectRequestResolutionEmitter } from '@/Helpers/RequestResolution'
 
