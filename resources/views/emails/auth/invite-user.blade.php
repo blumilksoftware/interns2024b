@@ -15,11 +15,7 @@
 <body>
 <h1>Cześć {{ $user->name }},</h1>
 
-<p>Aby zweryfikować swoje konto, kliknij poniższy link:</p>
-
-<a href="{{ $url }}">Zweryfikuj e-mail </a>
-
-<p>Jeśli to nie Ty wysłałeś/aś tę prośbę, po prostu zignoruj tę wiadomość.</p>
+<p>Zostałeś zaproszony do udziału w quizie: {{ $quiz->name }}.</p>
 
 <p>Pozdrawiamy,<br>{{ config('app.name') }}</p>
 </body>
