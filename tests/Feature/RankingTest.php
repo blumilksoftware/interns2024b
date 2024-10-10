@@ -20,6 +20,7 @@ class RankingTest extends TestCase
     protected User $user2;
     protected User $user3;
     protected User $admin;
+    protected Quiz $quiz;
     protected Quiz $quiz2;
 
     protected function setUp(): void

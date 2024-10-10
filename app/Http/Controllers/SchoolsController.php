@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\Voivodeship;
 use App\Http\Requests\SchoolRequest;
-use App\Http\Resources\SchoolFullResource;
+use App\Http\Resources\SchoolResource;
 use App\Jobs\FetchSchoolsJob;
 use App\Models\School;
 use Illuminate\Bus\Batch;
@@ -16,27 +16,17 @@ use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as Status;
 use Throwable;
 
 use function collect;
 use function config;
-use function redirect;
 
 class SchoolsController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolFullResource::collection(School::all())]);
-    }
-
-    public function create(): Response
-    {
-        return Inertia::render("Admin/CreateSchool");
-    }
-
-    public function edit(School $school): Response
-    {
-        return Inertia::render("Admin/EditSchool", ["school" => SchoolFullResource::make($school)]);
+        return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolResource::collection(School::all())]);
     }
 
     public function store(SchoolRequest $request): RedirectResponse
@@ -44,7 +34,7 @@ class SchoolsController extends Controller
         School::query()->create($request->validated());
 
         return redirect()
-            ->route("admin.schools.index");
+            ->back();
     }
 
     public function update(SchoolRequest $request, School $school): RedirectResponse
@@ -52,7 +42,7 @@ class SchoolsController extends Controller
         $school->update($request->validated());
 
         return redirect()
-            ->route("admin.schools.index");
+            ->back();
     }
 
     public function destroy(School $school): RedirectResponse
@@ -66,10 +56,10 @@ class SchoolsController extends Controller
     /**
      * @throws Throwable
      */
-    public function fetch(): RedirectResponse
+    public function fetch(): JsonResponse
     {
         if ($this->isFetching()) {
-            return redirect()->back()->with(["status" => "Pobieranie w toku, proszę czekać"]);
+            return response()->json(["message" => "Pobieranie w toku, proszę czekać"], Status::HTTP_CONFLICT);
         }
 
         $voivodeships = collect(config("schools.voivodeships"));
@@ -78,7 +68,7 @@ class SchoolsController extends Controller
         $batch = Bus::batch($jobs)->finally(fn(): bool => Cache::delete("fetch_schools"))->dispatch();
         Cache::set("fetch_schools", $batch->id);
 
-        return redirect()->back()->with(["status" => "Pobieranie rozpoczęte"]);
+        return response()->json(["message" => "Pobieranie rozpoczęte"], Status::HTTP_OK);
     }
 
     public function status(): JsonResponse
