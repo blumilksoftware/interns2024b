@@ -7,6 +7,7 @@ use App\Http\Controllers\AnswerRecordController;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
 use App\Http\Controllers\EmailVerifyController;
+use App\Http\Controllers\InviteController;
 use App\Http\Controllers\PasswordResetLinkController;
 use App\Http\Controllers\ProfileUserController;
 use App\Http\Controllers\QuestionAnswerController;
@@ -45,8 +46,12 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::patch("/quizzes/{quiz}", [QuizController::class, "update"])->can("update,quiz")->name("admin.quizzes.update");
     Route::delete("/quizzes/{quiz}", [QuizController::class, "destroy"])->can("delete,quiz")->name("admin.quizzes.destroy");
     Route::post("/quizzes/{quiz}/clone", [QuizController::class, "clone"])->name("admin.quizzes.clone");
-    Route::post("/quizzes/{quiz}/lock", [QuizController::class, "lock"])->name("admin.quizzes.lock");
+    Route::post("/quizzes/{quiz}/lock", [QuizController::class, "lock"])->can("lock,quiz")->name("admin.quizzes.lock");
     Route::post("/quizzes/{quiz}/unlock", [QuizController::class, "unlock"])->can("unlock,quiz")->name("admin.quizzes.unlock");
+
+    Route::get("/quizzes/{quiz}/invite", [InviteController::class, "index"])->name("admin.quizzes.invite.index");
+    Route::post("/quizzes/{quiz}/invite", [InviteController::class, "store"])->name("admin.quizzes.invite.store");
+    Route::post("/quizzes/{quiz}/invite/assign", [InviteController::class, "assign"])->name("admin.quizzes.invite.assign");
 
     Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "index"])->name("admin.quizzes.ranking");
     Route::post("/quizzes/{quiz}/ranking/publish", [RankingController::class, "publish"])->name("admin.quizzes.ranking.publish");
@@ -65,7 +70,9 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/answers/{answer}/invalid", [QuestionAnswerController::class, "markAsInvalid"])->can("update,answer")->name("admin.answers.invalid");
 
     Route::get("/schools", [SchoolsController::class, "index"])->name("admin.schools.index");
+    Route::get("/schools/create", [SchoolsController::class, "create"])->name("admin.schools.create");
     Route::post("/schools", [SchoolsController::class, "store"])->name("admin.schools.store");
+    Route::get("/schools/{school}/edit", [SchoolsController::class, "edit"])->name("admin.schools.edit");
     Route::patch("/schools/{school}", [SchoolsController::class, "update"])->name("admin.schools.update");
     Route::delete("/schools/{school}", [SchoolsController::class, "destroy"])->name("admin.schools.destroy");
 

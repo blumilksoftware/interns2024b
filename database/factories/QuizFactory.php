@@ -16,7 +16,7 @@ class QuizFactory extends Factory
     public function definition(): array
     {
         return [
-            "name" => fake()->name(),
+            "title" => fake()->name(),
             "duration" => fake()->numberBetween(60, 120),
         ];
     }
@@ -26,6 +26,15 @@ class QuizFactory extends Factory
         return $this->state(fn(array $attributes): array => [
             "scheduled_at" => Carbon::now()->addMinutes(30),
             "locked_at" => Carbon::now(),
+        ]);
+    }
+
+    public function published(): static
+    {
+        return $this->state(fn(array $attributes): array => [
+            "scheduled_at" => Carbon::now()->subMinutes(30),
+            "locked_at" => Carbon::now(),
+            "ranking_published_at" => null,
         ]);
     }
 }

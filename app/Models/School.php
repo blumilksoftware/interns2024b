@@ -7,6 +7,8 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 /**
  * @property int $id
@@ -18,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $zip_code
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Collection<User> $users
  */
 class School extends Model
 {
@@ -31,4 +34,9 @@ class School extends Model
         "apartment_number",
         "zip_code",
     ];
+
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
 }
