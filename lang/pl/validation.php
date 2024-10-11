@@ -131,6 +131,9 @@ return [
     ],
     "attributes" => [
         "name" => "imię",
+        "title" => "tytuł",
+        "duration" => "czas trwania",
+        "scheduled_at" => "rozpoczęcie",
         "surname" => "nazwisko",
         "email" => "e-mail",
         "date" => "data",

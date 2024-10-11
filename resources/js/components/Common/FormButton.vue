@@ -5,6 +5,7 @@ import Button from '@/components/Common/Button.vue'
 
 const props = withDefaults(defineProps<{
   small?: boolean
+  extraSmall?: boolean
   disabled?: boolean
   text?: boolean
   buttonClass?: string
@@ -34,7 +35,7 @@ function handleSubmit() {
 
 <template>
   <form :class="{'cursor-wait' : processing}" @submit.prevent="handleSubmit">
-    <Button :disabled="disabled || processing" type="submit" :class="`${processing ? 'cursor-wait' : ''} ${props.buttonClass}`" :small="small" :text="text">
+    <Button :disabled="disabled || processing" type="submit" :class="`${processing ? 'cursor-wait' : ''} ${props.buttonClass}`" :extra-small="extraSmall" :small="small" :text="text">
       <slot />
     </Button>
   </form>
