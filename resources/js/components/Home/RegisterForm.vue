@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { nanoid } from 'nanoid'
-import { Request } from '@/scripts/request'
+import { useForm } from '@inertiajs/vue3'
+import { type Errors } from '@inertiajs/core'
 import Checkbox from '@/components/Common/Checkbox.vue'
 import Searchbar from '@/components/Common/Searchbar.vue'
 import CustomInput from '@/components/Common/CustomInput.vue'
@@ -9,21 +10,14 @@ import PasswordInput from '@/components/Common/PasswordInput.vue'
 import { type School } from '@/Types/School'
 import { type Option } from '@/Types/Option'
 
-const props = defineProps<{
-  errors: Record<string, string>
-  schools: School[]
-}>()
-
+const props = defineProps<{ errors:Errors, schools:School[] }>()
 const filteredSchools = computed(() => props.schools.toSorted((a, b) => (a.city + a.name).localeCompare(b.city + b.name)))
-const filteredSchoolOptions = computed(
-  ()=> filteredSchools.value.map(
-    (school: School):Option & School=>{
-      return {...school, key: nanoid(), title: school.city, text: school.name }
-    },
+const filteredSchoolOptions = computed(() =>
+  filteredSchools.value.map((school:School):Option & School =>
+    ({...school, key: nanoid(), title: school.city, text: school.name }),
   ),
 )
-
-const form = ref({
+const form = useForm({
   name: '',
   surname: '',
   email: '',
@@ -31,10 +25,8 @@ const form = ref({
   school_id: '',
 })
 
-const request = new Request()
-
 function submit() {
-  request.sendRequest('/auth/register', {method: 'post', data: form.value, preserveScroll: true, preserveState: true})
+  form.post('/auth/register', { preserveScroll: true, preserveState: true })
 }
 </script>
 
@@ -68,7 +60,7 @@ function submit() {
 
     <div>
       <button 
-        :disabled="request.isRequestOngoing.value"
+        :disabled="form.processing"
         type="submit"
         class="rounded-lg text-md flex w-full justify-center bg-primary p-3 font-bold text-white
         transition hover:bg-primary-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary

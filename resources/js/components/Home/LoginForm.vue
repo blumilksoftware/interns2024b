@@ -1,26 +1,21 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import CustomInput from '@/components/Common/CustomInput.vue'
-import { Request } from '@/scripts/request'
+import { useForm } from '@inertiajs/vue3'
+import { type Errors } from '@inertiajs/core'
 
-const { errors } = defineProps<{
-  errors: Record<string, string>
-}>()
-
-const form = ref({
+const { errors } = defineProps<{ errors:Errors }>()
+const form = useForm({
   email: '',
   password: '',
 })
 
-const request = new Request()
-
 function submit() {
-  request.sendRequest('/auth/login', {method: 'post', data: form.value, preserveScroll: true, preserveState: true})
+  form.post('/auth/login', { preserveScroll: true, preserveState: true })
 }
 </script>
 
 <template>
-  <form class="row-start-1 col-start-1 space-y-6 sm:min-h-[32rem] min-h-[38.5rem]" @submit.prevent="submit">
+  <form class="row-start-1 col-start-1 space-y-6 sm:min-h-512 min-h-616" @submit.prevent="submit">
     <CustomInput v-model="form.email" label="E-mail" :error="errors.email" name="email" type="email" />
 
     <div class="flex flex-col gap-2">
@@ -30,7 +25,7 @@ function submit() {
 
     <div>
       <button
-        :disabled="request.isRequestOngoing.value"
+        :disabled="form.processing"
         type="submit"
         class="rounded-lg text-md flex w-full justify-center bg-primary p-3 font-bold text-white
         transition hover:bg-primary-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
