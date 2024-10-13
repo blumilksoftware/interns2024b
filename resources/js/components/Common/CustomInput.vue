@@ -4,7 +4,7 @@ import { onClickOutside } from '@vueuse/core'
 
 const slots = defineSlots<{ default: VNode }>()
 const target = ref()
-onClickOutside(target,()=>isFocused.value=false)
+onClickOutside(target, ()=> isFocused.value = false)
 
 withDefaults(defineProps<{
   label: string

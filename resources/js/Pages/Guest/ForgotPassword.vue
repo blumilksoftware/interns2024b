@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3'
+import { type Errors } from '@inertiajs/core'
 import CustomInput from '@/components/Common/CustomInput.vue'
 import { Head } from '@inertiajs/vue3'
 import { inject, onMounted, type Ref } from 'vue'
 import type Header from '@/components/Common/Header.vue'
 
 const headerRef = inject<Ref<InstanceType<typeof Header>>>('header')
-onMounted(()=>{
+onMounted(() => {
   if (headerRef)
     headerRef.value.titleRef = 'Przypomnij hasło'
 })
 
-defineProps<{
-  errors: Record<string, string>
-}>()
+defineProps<Errors>()
 
 const form = useForm({ email: '' })
 

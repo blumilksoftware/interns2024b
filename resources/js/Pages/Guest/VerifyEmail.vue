@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type Header from '@/components/Common/Header.vue'
-import {Head, useForm} from '@inertiajs/vue3'
+import { Head, useForm } from '@inertiajs/vue3'
 import { inject, onMounted, type Ref } from 'vue'
 
 const form = useForm({})

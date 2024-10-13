@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import { Head } from '@inertiajs/vue3'
+import { type Errors } from '@inertiajs/core'
 import Footer from '@/components/Common/Footer.vue'
 import AuthBanner from '@/components/Home/AuthBanner.vue'
 import Banner from '@/components/Common/Banner.vue'
@@ -11,35 +12,28 @@ import { type PageProps } from '@/Types/PageProps'
 import { type School } from '@/Types/School'
 
 const authSectiontRef = ref<InstanceType<typeof AuthSection>>()
-
 const { errors, schools, ...props } = defineProps<{
-  errors: Record<string, string[]>
-  schools: School[]
+  errors:Errors
+  schools:School[]
 } & PageProps>()
-
 const status = ref<string | undefined>(props.flash.status)
 
-function scrollToAuth(isLogin:boolean) {
-  if (!authSectiontRef.value) return 
-  authSectiontRef.value.isLogin = isLogin
-  if (!authSectiontRef.value.authSectionElement) return
-  const element = authSectiontRef.value.authSectionElement
+watch(
+  () => props.flash,
+  flash => status.value = flash.status,
+  { immediate: true },
+)
 
+function scrollToAuth(isLogin:boolean) {
+  if (!authSectiontRef.value?.authSectionElement) return 
+  authSectiontRef.value.isLogin = isLogin
+  const element = authSectiontRef.value.authSectionElement
   const offsetTop = element.getBoundingClientRect().top + window.scrollY
   window.scrollTo({
     top: offsetTop,
     behavior: 'smooth',
   })
 }
-
-watch(
-  () => props.flash,
-  flash => {
-    status.value = flash.status
-  },
-  { immediate: true },
-)
-
 </script>
 
 <template>

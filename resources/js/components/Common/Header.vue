@@ -8,7 +8,7 @@ import { type User } from '@/Types/User'
 
 defineProps<{ pages: Page[], user?: User, appName: string }>()
 const titleRef = ref('')
-defineExpose({titleRef})
+defineExpose({ titleRef })
 const open = ref<boolean>(false)
 const isSelected = (page: Page) => page.href === window.location.pathname
 </script>
