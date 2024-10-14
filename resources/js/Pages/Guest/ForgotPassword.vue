@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3'
-import { type Errors } from '@inertiajs/core'
 import CustomInput from '@/components/Common/CustomInput.vue'
 import { Head } from '@inertiajs/vue3'
 import { inject, onMounted, type Ref } from 'vue'
@@ -11,9 +10,6 @@ onMounted(() => {
   if (headerRef)
     headerRef.value.titleRef = 'Przypomnij hasło'
 })
-
-defineProps<Errors>()
-
 const form = useForm({ email: '' })
 
 function submit() {
