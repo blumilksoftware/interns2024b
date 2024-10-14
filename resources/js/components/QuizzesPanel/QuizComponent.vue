@@ -1,0 +1,133 @@
+<script setup lang="ts">
+import { computed, inject, ref, watch, type Ref } from 'vue'
+import { vAutoAnimate } from '@formkit/auto-animate'
+import { ClipboardDocumentIcon, PlusCircleIcon } from '@heroicons/vue/24/outline'
+import QuestionComponent from '@/components/QuizzesPanel/QuestionComponent.vue'
+import QuizHeader from '@/components/QuizzesPanel/QuizHeader.vue'
+import QuizNavbar from '@/components/QuizzesPanel/QuizNavbar.vue'
+import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynamicIcon.vue'
+import getKey from '@/Helpers/KeysManager'
+import useRequestResolution from '@/Helpers/RequestResolution'
+import { formatDatePretty } from '@/Helpers/Format'
+import type Quiz from '@/Types/Quiz'
+import type Question from '@/Types/Question'
+
+const currentTime = inject<Ref<number>>('currentTime')
+const questionsClipboard = inject<Ref<Question|undefined>>('questionsClipboard')
+const props = defineProps<{ quiz:Quiz, showArchivedQuizzes:boolean }>()
+const quiz = ref<Quiz>(JSON.parse(JSON.stringify(props.quiz)))
+const selected = ref(false)
+const editing = ref(false)
+const archived = computed(() => quiz.value.state === 'published')
+const { processing, errors } = useRequestResolution()
+const startTimeReached = computed<boolean>(() =>
+  !!quiz.value.scheduledAt &&
+  !!currentTime?.value &&
+  Date.parse(quiz.value.scheduledAt) > currentTime.value,
+)
+
+watch(startTimeReached, quizHasStarted => {
+  if (quizHasStarted && quiz.value.state === 'locked')
+    quiz.value.state = 'published'
+})
+
+function addQuestion() {
+  quiz.value.questions.push({
+    text: 'Nowe pytanie',
+    answers: [],
+  })
+}
+
+function popClipboardQuestion() {
+  if (!questionsClipboard?.value) return
+  quiz.value.questions.push(questionsClipboard.value)
+  questionsClipboard.value = undefined
+}
+
+function deleteQuestion(question:Question) {
+  quiz.value.questions = quiz.value.questions.filter((q:Question) => q.id !== question.id)
+}
+
+function toggleSelection(isSelected:boolean) {
+  selected.value = editing.value || isSelected
+}
+
+function toggleEditing(isEditing:boolean){
+  editing.value = isEditing
+  toggleSelection(isEditing) 
+}
+</script>
+
+<template>
+  <div
+    v-if="!(archived && showArchivedQuizzes)"
+    v-auto-animate
+    class="flex flex-col gap-5 p-5 bg-white/70 border-2 rounded-xl shadow-sm"
+  >
+    <Transition>
+      <div v-show="processing" class="absolute bg-white/50 backdrop-blur-md z-10 size-full left-0 flex items-center justify-center -mt-4 rounded-xl">
+        <div class="inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status" />
+      </div>
+    </Transition>
+
+    <div class="flex justify-between">
+      <button :disabled="editing" class="h-7 disabled:opacity-50" @click="toggleSelection(!selected)">
+        <ExapnsionToggleDynamicIcon class="text-primary stroke-4 w-4" :expanded="selected" />
+      </button>
+
+      <QuizHeader
+        v-model="quiz"
+        class="hidden sm:flex"
+        :editing="editing"
+        :selected="selected"
+        :errors="errors"
+      />
+
+      <QuizNavbar
+        :quiz="quiz"
+        :unlocked="quiz.state === 'unlocked'"
+        :locked="quiz.state === 'locked'"
+        :archived="archived"
+        :editing="editing"
+        :start-time-reached="startTimeReached"
+        @toggle-editing="toggleEditing"
+        @cancel-changes="quiz = JSON.parse(JSON.stringify(props.quiz))"
+      />
+    </div>
+
+    <QuizHeader
+      v-model="quiz"
+      class="sm:hidden -mt-3"
+      :editing="editing"
+      :selected="selected"
+      :errors="errors"
+    />
+
+    <template v-if="selected">
+      <QuestionComponent
+        v-for="(question, idx) of quiz.questions"
+        :key="getKey(question)"
+        v-model="quiz.questions[idx]"
+        :editing="editing"
+        :index="idx"
+        :questions-total="quiz.questions.length"
+        @delete="deleteQuestion"
+      />
+    </template>
+    <div v-if="editing" class="flex gap-4 px-2">
+      <button class="icon-button" @click="addQuestion">
+        <PlusCircleIcon class="icon" /> Dodaj pytanie
+      </button>
+      <Transition>
+        <button v-if="questionsClipboard" class="icon-button" @click="popClipboardQuestion">
+          <ClipboardDocumentIcon class="icon" /> Wklej pytanie
+        </button>
+      </Transition>
+    </div>
+
+    <footer v-if="selected" class="flex flex-col justify-end text-right sm:flex-row gap-x-4">
+      <span class="text-gray-400 text-sm"> Stworzony: {{ formatDatePretty(quiz.createdAt) }}</span>
+      <span class="text-gray-400 text-sm"> Ostatnio edytowany: {{ formatDatePretty(quiz.updatedAt) }}</span>
+    </footer>
+  </div>
+</template>

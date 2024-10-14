@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {computed, ref} from 'vue'
 import type { QuizRankingProps} from '@/Types/Ranking'
-import FormButton from '@/components/Common/FormButton.vue'
 
 const props = defineProps<QuizRankingProps>()
 
@@ -16,16 +15,10 @@ const sortedRankings = computed(() => {
 <template>
   <div>
     <h1>Ranking Quizu: {{ quiz.name }}</h1>
-    <div class="flex gap-4">
-      <FormButton method="post" :href="`/admin/quizzes/${quiz.id}/ranking/publish`" small preserve-scroll>Publikuj</FormButton>
-      <FormButton method="post" :href="`/admin/quizzes/${quiz.id}/ranking/unpublish`" small preserve-scroll>Wycofaj publikacje</FormButton>
-    </div>
     <table>
       <thead>
         <tr>
           <th>ID Użytkownika</th>
-          <th>Imię</th>
-          <th>Nazwisko</th>
           <th>Szkoła</th>
           <th>Punkty</th>
         </tr>
@@ -33,8 +26,6 @@ const sortedRankings = computed(() => {
       <tbody>
         <tr v-for="(ranking) in sortedRankings" :key="ranking.user.id">
           <td>{{ ranking.user.id }}</td>
-          <td>{{ ranking.user.name }}</td>
-          <td>{{ ranking.user.surname }}</td>
           <td>{{ ranking.user.school.name }}</td>
           <td>{{ ranking.points }}</td>
         </tr>
