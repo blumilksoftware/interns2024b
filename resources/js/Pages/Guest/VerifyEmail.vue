@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type Header from '@/components/Common/Header.vue'
 import { Head, useForm } from '@inertiajs/vue3'
 import { inject, onMounted, type Ref } from 'vue'
+import type Header from '@/components/Common/Header.vue'
 
 const form = useForm({})
 
@@ -30,7 +30,7 @@ function sent() {
       <p>Kliknij w link aktywacyjny, aby dokończyć proces rejestracji.</p>
     </div>
     <div class="p-6 gap-6 flex flex-col size-full sm:max-w-lg sm:h-fit">
-      <button class="bg-primary text-white font-bold py-3 px-4 rounded-lg disabled:bg-primary/70" @click="sent">
+      <button :disabled="form.processing" class="bg-primary text-white font-bold py-3 px-4 rounded-lg disabled:bg-primary/70" @click="sent">
         Wyślij ponownie link weryfikacyjny
       </button>
     </div>

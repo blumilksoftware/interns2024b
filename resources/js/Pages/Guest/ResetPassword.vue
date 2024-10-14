@@ -9,7 +9,7 @@ import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
 import type Header from '@/components/Common/Header.vue'
 
 const headerRef = inject<Ref<InstanceType<typeof Header>>>('header')
-onMounted(()=>{
+onMounted(() => {
   if (headerRef)
     headerRef.value.titleRef = 'Zmiana hasła'
 })
