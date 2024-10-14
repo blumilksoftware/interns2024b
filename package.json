@@ -1,38 +1,42 @@
 {
-    "name": "interns2024b",
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build",
-        "lint": "eslint .",
-        "lintf": "eslint . --fix",
-        "tsc": "vue-tsc"
-    },
-    "dependencies": {
-        "@headlessui/vue": "^1.7.23",
-        "@heroicons/vue": "^2.1.5",
-        "@inertiajs/vue3": "^1.2.0",
-        "@tailwindcss/forms": "^0.5.9",
-        "@tailwindcss/typography": "^0.5.15",
-        "@vueuse/core": "^11.1.0",
-        "dayjs": "^1.11.13",
-        "laravel-vite-plugin": "^1.0.5",
-        "lodash": "^4.17.21",
-        "tailwindcss": "^3.4.13",
-        "vue": "^3.5.10"
-    },
-    "devDependencies": {
-        "@blumilksoftware/eslint-config": "^2.0.0",
-        "@typescript-eslint/eslint-plugin": "^8.7.0",
-        "@vitejs/plugin-vue": "^5.1.4",
-        "autoprefixer": "^10.4.20",
-        "eslint": "^8.57.1",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint-plugin-tailwindcss": "^3.17.4",
-        "eslint-plugin-vue": "^9.28.0",
-        "postcss": "^8.4.47",
-        "vite": "^5.4.2",
-        "vue-tsc": "^2.1.6"
+        "name": "interns2024b",
+        "private": true,
+        "type": "module",
+        "scripts": {
+            "dev": "vite",
+            "build": "vite build",
+            "lint": "eslint .",
+            "lintf": "eslint . --fix",
+            "tsc": "vue-tsc"
+        },
+        "dependencies": {
+            "@formkit/auto-animate": "^0.8.2",
+            "@headlessui/vue": "^1.7.23",
+            "@heroicons/vue": "^2.1.5",
+            "@inertiajs/vue3": "^1.2.0",
+            "@tailwindcss/forms": "^0.5.9",
+            "@tailwindcss/typography": "^0.5.15",
+            "@vuepic/vue-datepicker": "^9.0.3",
+            "@vueuse/core": "^11.1.0",
+            "dayjs": "^1.11.13",
+            "laravel-vite-plugin": "^1.0.5",
+            "lodash": "^4.17.21",
+            "nanoid": "^5.0.7",
+            "tailwindcss": "^3.4.13",
+            "vue": "^3.5.10"
+        },
+        "devDependencies": {
+            "@blumilksoftware/eslint-config": "^2.0.0",
+            "@typescript-eslint/eslint-plugin": "^8.7.0",
+            "@vitejs/plugin-vue": "^5.1.4",
+            "autoprefixer": "^10.4.20",
+            "eslint": "^8.57.1",
+            "eslint-config-prettier": "^9.1.0",
+            "eslint-plugin-tailwindcss": "^3.17.4",
+            "eslint-plugin-vue": "^9.28.0",
+            "postcss": "^8.4.47",
+            "vite": "^5.4.2",
+            "vue-tsc": "^2.1.6"
+        }
     }
-}
+    

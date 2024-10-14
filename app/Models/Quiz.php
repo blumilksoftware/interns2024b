@@ -15,7 +15,7 @@ use Illuminate\Support\Collection;
 
 /**
  * @property int $id
- * @property string $name
+ * @property string $title
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $scheduled_at
@@ -39,11 +39,12 @@ class Quiz extends Model
     use HasFactory;
 
     protected $fillable = [
-        "name",
+        "title",
         "scheduled_at",
         "duration",
         "ranking_published_at",
     ];
+    protected $guarded = [];
 
     public function questions(): HasMany
     {
@@ -110,6 +111,9 @@ class Quiz extends Model
     public function clone(): self
     {
         $quizCopy = $this->replicate();
+        $quizCopy->locked_at = null;
+        $quizCopy->duration = null;
+        $quizCopy->scheduled_at = null;
         $quizCopy->save();
 
         foreach ($this->questions as $question) {
