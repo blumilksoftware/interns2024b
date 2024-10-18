@@ -16,7 +16,7 @@ const hasAnswers = computed(() => question.value.answers.length > 0)
 
 function addAnswer() {
   const answer: Answer = {
-    text: 'Nowa odpowiedź',
+    text: '',
     correct: false,
   }
   question.value.answers.push(answer)
