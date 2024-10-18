@@ -21,7 +21,6 @@ const datepickerRef = ref<InstanceType<typeof Datepicker>>()
       locale="pl"
       :format="format"
       :min-date="new Date()"
-      :min-time="{ hours: dayjs().hour(), minutes: dayjs().minute(), seconds: dayjs().second() }"
       :ui="{
         menu: 'datepicker-menu',
         input: `datepicker ${error ? ' error' : ''}`,
