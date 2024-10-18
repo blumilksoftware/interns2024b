@@ -42,7 +42,7 @@ function copyQuestion(question:Question) {
 }
 
 function deleteQuestion(question:Question) {
-  quiz.value.questions = quiz.value.questions.filter((q:Question) => q.id !== question.id)
+  quiz.value.questions = quiz.value.questions.filter((q:Question) => q !== question)
 }
 
 function toggleSelection(isSelected:boolean) {
