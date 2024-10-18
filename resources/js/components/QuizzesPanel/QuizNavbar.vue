@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { CheckIcon, CloudArrowUpIcon, DocumentDuplicateIcon, ExclamationTriangleIcon, PencilIcon, TrashIcon, UserPlusIcon, UsersIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { CloudArrowDownIcon } from '@heroicons/vue/20/solid'
-import RequestButton from '@/components/Common/RequestButton.vue'
+import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import MessageBox from '@/components/Common/MessageBox.vue'
 import type Quiz from '@/Types/Quiz'
 import type Question from '@/Types/Question'
@@ -57,14 +57,14 @@ const isDraftValidated = computed(() =>
         Anuluj
       </button>
 
-      <RequestButton
+      <RequestWrapper
         class="bg-red font-bold text-white rounded-lg px-4 py-2"
         title="Usuń test"
         method="delete"
         :href="`/admin/quizzes/${quiz.id}`"
       >
         Usuń
-      </RequestButton>
+      </RequestWrapper>
     </template>
   </MessageBox>
   
@@ -90,7 +90,7 @@ const isDraftValidated = computed(() =>
         <XMarkIcon class="icon" />
       </button>
 
-      <RequestButton
+      <RequestWrapper
         title="Zapisz zmiany"
         preserve-scroll
         preserve-state
@@ -100,23 +100,23 @@ const isDraftValidated = computed(() =>
         @success="emit('toggleEditing', false)"
       >
         <CheckIcon class="icon" title="Zapisz edytowany test" />
-      </RequestButton>
+      </RequestWrapper>
     </template>
 
-    <RequestButton
+    <RequestWrapper
       v-if="!editing" 
       title="Skopiuj test"
       method="post"
       :href="`/admin/quizzes/${quiz.id}/clone`"
     >
       <DocumentDuplicateIcon class="icon" />
-    </RequestButton>
+    </RequestWrapper>
 
     <button v-if="!archived" title="Usuń test" @click="showDeleteMessage=true">
       <TrashIcon class="icon text-red hover:text-red-500" />
     </button>
     
-    <RequestButton
+    <RequestWrapper
       v-if="!editing && unlocked"
       class="rounded-xl"
       method="post"
@@ -128,16 +128,16 @@ const isDraftValidated = computed(() =>
         class="h-7.5 text-primary stroke-2"
         :class="{ 'opacity-50' : !isDraftValidated, 'hover:text-primary-800' : isDraftValidated}"
       />
-    </RequestButton>
+    </RequestWrapper>
 
-    <RequestButton
+    <RequestWrapper
       v-if="locked"
       method="post"
       title="Cofnij publikację"
       :href="`/admin/quizzes/${quiz.id}/unlock`"
     >
       <CloudArrowDownIcon class="icon w-7.5 h-7.5" />
-    </RequestButton>
+    </RequestWrapper>
 
     <a
       v-if="archived"

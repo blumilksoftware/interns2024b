@@ -40,6 +40,11 @@ module.exports = {
                 '2xs': '380px',
                 'xs': '480px',
             },
+            transitionProperty: {
+                'colors-opacity' : {
+                    'transition-property': 'color, background-color, border-color, text-decoration-color, fill, stroke, opacity'
+                },
+            },
             colors: {
                 'primary': {
                     'DEFAULT': '#262c89',

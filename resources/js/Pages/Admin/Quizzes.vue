@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/outline'
 import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 import Expand from '@/components/Common/Expand.vue'
-import RequestButton from '@/components/Common/RequestButton.vue'
+import FormButton from '@/components/Common/FormButton.vue'
 import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
 import Dropdown from '@/components/Common/Dropdown.vue'
 import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
@@ -69,14 +69,15 @@ function getQuizzesSorter(type: 'name' | 'creationDate', desc = false) {
 
       <Expand />
 
-      <RequestButton
-        class="flex gap-2 items-center bg-primary font-bold rounded-xl text-white pl-3 pr-4 disabled:opacity-50 hover:bg-primary-950 duration-200 transition-colors"
+      <FormButton
+        class="rounded-xl"
+        button-class="pl-3 font-bold"
         method="post"
         href="/admin/quizzes"
         :data="{ title: 'Nowy test' }"
       >
         <PlusCircleIcon class="size-6 text-white" /> Dodaj test
-      </RequestButton>
+      </FormButton>
     </div>
 
     <div class="flex flex-col gap-4 p-4">
