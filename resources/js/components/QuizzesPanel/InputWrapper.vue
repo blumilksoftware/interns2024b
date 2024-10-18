@@ -16,7 +16,7 @@ defineProps<{ label?:string, hasContent:boolean, error?:string, showError:boolea
     <span
       v-if="showError && error"
       :title="error"
-      class="text-red text-sm truncate max-w-xs"
+      class="text-red text-sm truncate"
     >
       {{ error }}
     </span>
