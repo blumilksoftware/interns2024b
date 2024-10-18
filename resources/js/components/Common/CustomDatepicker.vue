@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import dayjs from 'dayjs'
 import { CalendarDaysIcon } from '@heroicons/vue/24/outline'
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
