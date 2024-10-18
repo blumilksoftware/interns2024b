@@ -8,7 +8,7 @@ import QuizNavbar from '@/components/QuizzesPanel/QuizNavbar.vue'
 import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynamicIcon.vue'
 import getKey from '@/Helpers/KeysManager'
 import useRequestResolution from '@/Helpers/RequestResolution'
-import { formatDatePretty } from '@/Helpers/Format'
+import { formatDate } from '@/Helpers/Format'
 import type Quiz from '@/Types/Quiz'
 import type Question from '@/Types/Question'
 
@@ -117,8 +117,8 @@ function toggleEditing(isEditing:boolean){
     </button>
 
     <footer v-if="selected" class="flex flex-col justify-end text-right sm:flex-row gap-x-4">
-      <span class="text-gray-400 text-sm"> Stworzony: {{ formatDatePretty(quiz.createdAt) }}</span>
-      <span class="text-gray-400 text-sm"> Ostatnio edytowany: {{ formatDatePretty(quiz.updatedAt) }}</span>
+      <span class="text-gray-400 text-sm"> Stworzony: {{ formatDate(quiz.createdAt) }}</span>
+      <span class="text-gray-400 text-sm"> Ostatnio edytowany: {{ formatDate(quiz.updatedAt) }}</span>
     </footer>
   </div>
 </template>
