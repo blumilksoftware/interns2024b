@@ -47,7 +47,7 @@ const grouped = computed(() => groupBy('points', sorted.value))
     </div>
 
     <div class="flex gap-4 p-4 pl-0">
-      <FormButton :disabled="quiz.isRankingPublished" method="post" :href="`/admin/quizzes/${quiz.id}/ranking/publish`" small preserve-scroll>Publikuj</FormButton>
+      <FormButton :disabled="quiz.isRankingPublished || rankings.length == 0" method="post" :href="`/admin/quizzes/${quiz.id}/ranking/publish`" small preserve-scroll>Publikuj</FormButton>
       <FormButton :disabled="!quiz.isRankingPublished" method="post" :href="`/admin/quizzes/${quiz.id}/ranking/unpublish`" small preserve-scroll>Wycofaj publikacje</FormButton>
     </div>
   </div>

@@ -46,10 +46,6 @@ class RankingController extends Controller
 
     public function publish(Quiz $quiz, PublishQuizRankingAction $publishQuizRankingAction): RedirectResponse
     {
-        if (!$quiz->exists) {
-            abort(404);
-        }
-
         $publishQuizRankingAction->execute($quiz);
 
         return redirect()
@@ -59,10 +55,6 @@ class RankingController extends Controller
 
     public function unpublish(Quiz $quiz, UnpublishQuizRankingAction $unpublishQuizRankingAction): RedirectResponse
     {
-        if (!$quiz->exists) {
-            abort(404);
-        }
-
         $unpublishQuizRankingAction->execute($quiz);
 
         return redirect()
