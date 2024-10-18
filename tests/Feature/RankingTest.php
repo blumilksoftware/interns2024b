@@ -20,6 +20,8 @@ class RankingTest extends TestCase
     protected User $user2;
     protected User $user3;
     protected User $admin;
+    protected Quiz $quiz;
+    protected Quiz $quiz1;
     protected Quiz $quiz2;
 
     protected function setUp(): void
@@ -36,6 +38,7 @@ class RankingTest extends TestCase
         $this->quiz = $seeder->quiz;
         $seeder->createSubmissionForUser($this->user1, 2);
         $seeder->createSubmissionForUser($this->user2, 3);
+        $this->quiz1 = Quiz::factory()->locked()->create();
         $this->quiz2 = Quiz::factory()->create();
     }
 
@@ -135,6 +138,13 @@ class RankingTest extends TestCase
         $this->actingAs($this->admin)
             ->post("/admin/quizzes/9999/ranking/publish")
             ->assertNotFound();
+    }
+
+    public function testAdminCannotPublishEmptyQuizRanking(): void
+    {
+        $this->actingAs($this->admin)
+            ->post("/admin/quizzes/{$this->quiz1->id}/ranking/publish")
+            ->assertForbidden();
     }
 
     public function testAdminCannotUnpublishNotExistingQuizRanking(): void
