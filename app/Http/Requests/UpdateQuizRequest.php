@@ -30,7 +30,7 @@ class UpdateQuizRequest extends FormRequest
         return [
             "title" => ["required", "string"],
             "scheduled_at" => ["date", "after:now"],
-            "duration" => ["integer", "min:1"],
+            "duration" => ["integer", "min:1", "max:2147483647"],
             "questions" => ["array"],
             "questions.*.id" => "integer|min:0",
             "questions.*.text" => "required|string",
