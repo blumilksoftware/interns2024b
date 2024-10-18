@@ -10,7 +10,7 @@ const emit = defineEmits<{ delete: [answer:Answer], setCorrect: [answer:Answer]}
 
 <template>
   <label class="w-full flex gap-2">
-    <button aria-label="Odznać jako prawidłowa odpowiedź" :disabled="!editing" @click="emit('setCorrect', answer)">
+    <button aria-label="Odznać jako prawidłowa odpowiedź" class="h-10" :disabled="!editing" @click="emit('setCorrect', answer)">
       <CheckDynamicIcon class="icon stroke-1.5" :correct="answer.correct" />
     </button>
 
@@ -19,7 +19,7 @@ const emit = defineEmits<{ delete: [answer:Answer], setCorrect: [answer:Answer]}
       <textarea v-else v-model="answer.text" class="h-12 w-full p-2 bg-transparent outline-none border-b border-primary/30 focus:border-primary/60" />
     </div>
     
-    <button v-if="editing" title="Usuń odpowiedź" @click="emit('delete', answer)">
+    <button v-if="editing" title="Usuń odpowiedź" class="h-10" @click="emit('delete', answer)">
       <XMarkIcon class="size-4 text-red stroke-3" />
     </button>
   </label>
