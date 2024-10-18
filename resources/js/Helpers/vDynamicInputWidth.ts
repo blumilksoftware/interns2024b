@@ -5,6 +5,7 @@ const canvas = document.createElement('canvas')
 function initDynamicWidthCalc(input:HTMLInputElement & { _calculateDynamicWidth:() => void }, binding?:DirectiveBinding<boolean>) {
   input._calculateDynamicWidth = () => calculateDynamicWidth(input, binding)
   document.fonts.addEventListener('loadingdone', input._calculateDynamicWidth)
+  input.addEventListener('transitionend', input._calculateDynamicWidth)
   input._calculateDynamicWidth()
 }
 
@@ -20,6 +21,7 @@ function calculateDynamicWidth(input:HTMLInputElement, binding?:DirectiveBinding
 
 function removeDynamicWidthCalc(input:HTMLInputElement & { _calculateDynamicWidth:() => void }) {
   document.fonts.removeEventListener('loadingdone', input._calculateDynamicWidth)
+  input.removeEventListener('transitionend', input._calculateDynamicWidth)
 }
 
 const vDynamicInputWidth = {

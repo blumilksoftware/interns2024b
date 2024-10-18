@@ -66,20 +66,20 @@ const quiz = defineModel<Quiz>({ required: true })
         :error="errors.duration"
         :show-error="editing"
       >
+        <b v-if="!editing">{{ quiz.duration }}</b>
         <input
+          v-else
           v-model="quiz.duration"
           v-dynamic-input-width
           type="number"
           name="title"
           min="1"
           autocomplete="off"
-          class="h-fit w-full outline-none font-bold border-b border-transparent duration-200 transition-colors bg-transparent focus:border-b-primary"
+          class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
           :class="{
-            'border-b-primary/30 duration-200 transition-colors hover:border-b-primary/60 text-primary text-center' : editing,
-            'text-sm' : !selected,
+            'border-b-primary/30 hover:border-b-primary/60 text-primary text-center' : editing,
             'border-b-red' : errors.duration
           }"
-          :disabled="!editing"
         >
       </InputWrapper>
     </div>
