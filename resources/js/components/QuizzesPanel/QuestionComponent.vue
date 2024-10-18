@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject, ref, type Ref } from 'vue'
+import { computed, ref } from 'vue'
 import { DocumentDuplicateIcon, PlusCircleIcon, TrashIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
 import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynamicIcon.vue'
@@ -8,17 +8,11 @@ import getKey from '@/Helpers/KeysManager'
 import type Answer from '@/Types/Answer'
 import type Question from '@/Types/Question'
 
-const clipboard = inject<Ref<Question|undefined>>('questionsClipboard')
-defineProps<{ editing: boolean, index:number, questionsTotal:number }>()
-const emit = defineEmits<{ delete: [question:Question] }>()
+defineProps<{ editing:boolean, index:number, questionsTotal:number }>()
+const emit = defineEmits<{ copy: [question:Question], delete: [question:Question] }>()
 const question = defineModel<Question>({ required: true })
 const answersPaneExpanded = ref<boolean>(false)
 const hasAnswers = computed(() => question.value.answers.length > 0)
-
-function questionToClipboard() {
-  if (!clipboard) return
-  clipboard.value = JSON.parse(JSON.stringify(question.value))
-}
 
 function addAnswer() {
   const answer: Answer = {
@@ -45,11 +39,11 @@ function setCorrectAnswer(currentAnswer: Answer) {
     <div class="flex flex-col gap-1.5">
       <div class="flex justify-between">
         <b class="text-lg">Pytanie {{ `${index+1}/${questionsTotal}` }}</b>
-        <div class="flex gap-5">
-          <button title="Skopiuj pytanie" @click="questionToClipboard">
+        <div v-if="editing" class="flex gap-5">
+          <button title="Skopiuj pytanie" @click="emit('copy', question)">
             <DocumentDuplicateIcon class="icon" />
           </button>
-          <button v-if="editing" title="Usuń pytanie" @click="emit('delete', question)">
+          <button title="Usuń pytanie" @click="emit('delete', question)">
             <TrashIcon class="icon text-red hover:text-red-500" />
           </button>
         </div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, inject, ref, watch, type Ref } from 'vue'
 import { vAutoAnimate } from '@formkit/auto-animate'
-import { ClipboardDocumentIcon, PlusCircleIcon } from '@heroicons/vue/24/outline'
+import { PlusCircleIcon } from '@heroicons/vue/24/outline'
 import QuestionComponent from '@/components/QuizzesPanel/QuestionComponent.vue'
 import QuizHeader from '@/components/QuizzesPanel/QuizHeader.vue'
 import QuizNavbar from '@/components/QuizzesPanel/QuizNavbar.vue'
@@ -13,7 +13,6 @@ import type Quiz from '@/Types/Quiz'
 import type Question from '@/Types/Question'
 
 const currentTime = inject<Ref<number>>('currentTime')
-const questionsClipboard = inject<Ref<Question|undefined>>('questionsClipboard')
 const props = defineProps<{ quiz:Quiz, showArchivedQuizzes:boolean }>()
 const quiz = ref<Quiz>(JSON.parse(JSON.stringify(props.quiz)))
 const selected = ref(false)
@@ -38,10 +37,8 @@ function addQuestion() {
   })
 }
 
-function popClipboardQuestion() {
-  if (!questionsClipboard?.value) return
-  quiz.value.questions.push(questionsClipboard.value)
-  questionsClipboard.value = undefined
+function copyQuestion(question:Question) {
+  quiz.value.questions.push(JSON.parse(JSON.stringify(question)))
 }
 
 function deleteQuestion(question:Question) {
@@ -111,19 +108,13 @@ function toggleEditing(isEditing:boolean){
         :editing="editing"
         :index="idx"
         :questions-total="quiz.questions.length"
+        @copy="copyQuestion"
         @delete="deleteQuestion"
       />
     </template>
-    <div v-if="editing" class="flex gap-4 px-2">
-      <button class="icon-button" @click="addQuestion">
-        <PlusCircleIcon class="icon" /> Dodaj pytanie
-      </button>
-      <Transition>
-        <button v-if="questionsClipboard" class="icon-button" @click="popClipboardQuestion">
-          <ClipboardDocumentIcon class="icon" /> Wklej pytanie
-        </button>
-      </Transition>
-    </div>
+    <button v-if="editing" class="icon-button px-2" @click="addQuestion">
+      <PlusCircleIcon class="icon" /> Dodaj pytanie
+    </button>
 
     <footer v-if="selected" class="flex flex-col justify-end text-right sm:flex-row gap-x-4">
       <span class="text-gray-400 text-sm"> Stworzony: {{ formatDatePretty(quiz.createdAt) }}</span>

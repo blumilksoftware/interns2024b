@@ -12,10 +12,8 @@ import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
 import useCurrentTime from '@/Helpers/CurrentTime'
 import { keysWrapper } from '@/Helpers/KeysManager'
 import type Quiz from '@/Types/Quiz'
-import type Question from '@/Types/Question'
 
 provide<Ref<number>>('currentTime', useCurrentTime())
-provide<Ref<Question|undefined>>('questionsClipboard', ref())
 const props = defineProps<{ quizzes:Quiz[] }>()
 const quizzes = ref<Quiz[]>(props.quizzes)
 const sorter = ref(getQuizzesSorter('creationDate', true))
