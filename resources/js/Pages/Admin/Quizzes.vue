@@ -2,6 +2,7 @@
 import { provide, type Ref, ref, watch } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import dayjs from 'dayjs'
+import { vAutoAnimate } from '@formkit/auto-animate'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/outline'
 import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 import Expand from '@/components/Common/Expand.vue'
@@ -80,7 +81,7 @@ function getQuizzesSorter(type: 'name' | 'creationDate', desc = false) {
       </FormButton>
     </div>
 
-    <div class="flex flex-col gap-4 p-4">
+    <div v-auto-animate class="flex flex-col gap-4 p-4">
       <QuizComponent
         v-for="quiz of quizzes"
         :key="quiz.id"
