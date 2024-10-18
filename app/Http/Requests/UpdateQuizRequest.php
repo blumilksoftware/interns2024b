@@ -42,6 +42,16 @@ class UpdateQuizRequest extends FormRequest
     }
 
     /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            "scheduled_at.after" => "Pole :attribute musi mieć datę późniejszą niż teraz.",
+        ];
+    }
+
+    /**
      * @throws ValidationException
      */
     protected function passedValidation(): void
