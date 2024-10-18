@@ -3,7 +3,7 @@ import { type Errors } from '@inertiajs/core'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import CustomDatepicker from '@/components/Common/CustomDatepicker.vue'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
-import { formatDatePretty } from '@/Helpers/Format'
+import { formatDate } from '@/Helpers/Format'
 import type Quiz from '@/Types/Quiz'
 
 defineProps<{
@@ -46,12 +46,12 @@ const quiz = defineModel<Quiz>({ required: true })
         :error="errors.scheduled_at"
         :show-error="editing"
       >
-        <b v-if="!editing" class="whitespace-nowrap">{{ formatDatePretty(quiz.scheduledAt) }}</b>
+        <b v-if="!editing" class="whitespace-nowrap">{{ formatDate(quiz.scheduledAt) }}</b>
         <CustomDatepicker
           v-else
           v-model="quiz.scheduledAt"
           :error="errors.scheduled_at"
-          :format="formatDatePretty"
+          :format="formatDate"
         />
       </InputWrapper>
     </div>

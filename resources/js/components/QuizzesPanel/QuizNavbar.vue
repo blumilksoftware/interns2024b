@@ -4,6 +4,7 @@ import { CheckIcon, CloudArrowUpIcon, DocumentDuplicateIcon, ExclamationTriangle
 import { CloudArrowDownIcon } from '@heroicons/vue/20/solid'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import MessageBox from '@/components/Common/MessageBox.vue'
+import { formatDate } from '@/Helpers/Format'
 import type Quiz from '@/Types/Quiz'
 import type Question from '@/Types/Question'
 import type Answer from '@/Types/Answer'
@@ -96,7 +97,7 @@ const isDraftValidated = computed(() =>
         preserve-state
         method="patch"
         :href="`/admin/quizzes/${quiz.id}`"
-        :data="quiz"
+        :data="{ ...quiz, scheduledAt: formatDate(quiz.scheduledAt) }"
         @success="emit('toggleEditing', false)"
       >
         <CheckIcon class="icon" title="Zapisz edytowany test" />
