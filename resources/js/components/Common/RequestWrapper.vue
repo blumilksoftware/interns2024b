@@ -5,7 +5,10 @@ import { type Errors, type ActiveVisit, type VisitOptions, type PendingVisit } f
 import { injectRequestResolutionEmitter } from '@/Helpers/RequestResolution'
 
 const resolution = injectRequestResolutionEmitter()
-const props = defineProps<VisitOptions & { href:string, disabled?:boolean, type?:'button'|'submit'|'reset' }>()
+const props = withDefaults(
+  defineProps<VisitOptions & { href:string, disabled?:boolean, type?:'button'|'submit'|'reset' }>(),
+  { type: undefined, preserveState: true, preserveScroll: true},
+)
 const processing = ref(false)
 const emit = defineEmits<{ processing: [processing:boolean], errors: [errors:Errors], click: [] }>()
 

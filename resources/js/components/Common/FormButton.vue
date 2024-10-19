@@ -5,7 +5,11 @@ import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import ButtonFrame from '@/components/Common/ButtonFrame.vue'
 import type ButtonFrameProps from '@/Types/ButtonFrameProps'
 
-defineProps<{ href:string, buttonClass?:string } & ButtonFrameProps & VisitOptions>()
+withDefaults(
+  defineProps<{ href:string, buttonClass?:string } & ButtonFrameProps & VisitOptions>(),
+  { buttonClass: undefined, preserveState: true, preserveScroll: true },
+)
+
 const emit = defineEmits<{
   click: []
   processing: [processing:boolean]
