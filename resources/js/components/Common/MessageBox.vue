@@ -14,7 +14,7 @@ const emit = defineEmits(['close'])
 
 <template>
   <Teleport to="body">
-    <TransitionRoot :unmount="false" :show="open" as="template">
+    <TransitionRoot :show="open" as="template">
       <Dialog class="relative z-50 duration-200" @close="emit('close')">
         <TransitionChild
           as="template"
