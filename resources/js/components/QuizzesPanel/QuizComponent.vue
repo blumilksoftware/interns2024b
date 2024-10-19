@@ -117,7 +117,7 @@ function toggleEditing(isEditing:boolean){
     </button>
 
     <footer v-if="selected" class="flex flex-col justify-end text-right sm:flex-row gap-x-4">
-      <span class="text-gray-400 text-sm"> Stworzony: {{ formatDate(quiz.createdAt) }}</span>
+      <span class="text-gray-400 text-sm"> Utworzony: {{ formatDate(quiz.createdAt) }}</span>
       <span class="text-gray-400 text-sm"> Ostatnio edytowany: {{ formatDate(quiz.updatedAt) }}</span>
     </footer>
   </div>
