@@ -63,6 +63,7 @@ const isDraftValidated = computed(() =>
         title="Usuń test"
         method="delete"
         :href="`/admin/quizzes/${quiz.id}`"
+        @click="showDeleteMessage = false"
       >
         Usuń
       </RequestWrapper>
@@ -113,7 +114,7 @@ const isDraftValidated = computed(() =>
       <DocumentDuplicateIcon class="icon slide-up-animation" />
     </RequestWrapper>
 
-    <button v-if="!archived" title="Usuń test" @click="showDeleteMessage=true">
+    <button v-if="!archived" title="Usuń test" @click="showDeleteMessage = true">
       <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
     </button>
     

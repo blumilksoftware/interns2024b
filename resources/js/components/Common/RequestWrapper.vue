@@ -7,7 +7,7 @@ import { injectRequestResolutionEmitter } from '@/Helpers/RequestResolution'
 const resolution = injectRequestResolutionEmitter()
 const props = defineProps<VisitOptions & { href:string, disabled?:boolean, type?:'button'|'submit'|'reset' }>()
 const processing = ref(false)
-const emit = defineEmits<{ processing: [processing:boolean], errors: [errors:Errors] }>()
+const emit = defineEmits<{ processing: [processing:boolean], errors: [errors:Errors], click: [] }>()
 
 function onRequestStart(pending: PendingVisit) {
   if (props.onStart) props.onStart(pending)
@@ -66,7 +66,7 @@ function visit() {
   <button
     :type="type ?? 'submit'"
     :disabled="disabled || processing"
-    @click="visit"
+    @click="() => { visit(); emit('click') }"
   >
     <slot />
   </button>

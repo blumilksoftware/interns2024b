@@ -45,6 +45,7 @@ function onProcessing(isProcessing:boolean) {
     @error="onError"
     @processing="onProcessing"
     @errors="errors => emit('errors', errors)"
+    @click="emit('click')"
   >
     <ButtonFrame
       :disabled="disabled || processing"
