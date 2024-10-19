@@ -69,7 +69,7 @@ class RankingTest extends TestCase
         $this->assertEquals(3, $user2Score);
     }
 
-    public function testAdminCanViewLockedQuizRanking(): void
+    public function testAdminCanViewPublishedQuizRanking(): void
     {
         $this->actingAs($this->admin)
             ->get("/admin/quizzes/{$this->quiz->id}/ranking")
