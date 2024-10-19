@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide, type Ref, ref, watch } from 'vue'
+import { onMounted, provide, type Ref, ref, watch } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import dayjs from 'dayjs'
 import { vAutoAnimate } from '@formkit/auto-animate'
@@ -17,26 +17,33 @@ import type Quiz from '@/Types/Quiz'
 provide<Ref<number>>('currentTime', useCurrentTime())
 const props = defineProps<{ quizzes:Quiz[] }>()
 const quizzes = ref<Quiz[]>(props.quizzes)
-const sorter = ref(getQuizzesSorter('creationDate', true))
+const sorter = ref<(a:Quiz, b:Quiz) => number>()
 const showArchivedQuizzes = ref<boolean>(true)
 const options = keysWrapper([
-  { text: 'Po nazwie (A–Z)', action: () => sorter.value = getQuizzesSorter('name') },
-  { text: 'Po nazwie (Z–A)', action: () => sorter.value = getQuizzesSorter('name', true) },
-  { text: 'Od najnowszych' , action: () => sorter.value = getQuizzesSorter('creationDate', true) },
-  { text: 'Od najstarszych', action: () => sorter.value = getQuizzesSorter('creationDate') },
+  { text: 'Po nazwie (A–Z)', action: () => setQuizzesSorter('name') },
+  { text: 'Po nazwie (Z–A)', action: () => setQuizzesSorter('name', true) },
+  { text: 'Od najnowszych' , action: () => setQuizzesSorter('creationDate', true) },
+  { text: 'Od najstarszych', action: () => setQuizzesSorter('creationDate') },
 ])
+
+onMounted(() => {
+  const savedSorter = localStorage.getItem('quizzesSorterPreference')
+  const [type, desc] = savedSorter ? JSON.parse(savedSorter) : ['creationDate', true]
+  setQuizzesSorter(type, desc)
+})
 
 watch(
   [() => props.quizzes, sorter],
-  ([_quizzes, sorter]) => {
-    quizzes.value = _quizzes
+  ([newQuizzes, sorter]) => {
+    quizzes.value = newQuizzes
     quizzes.value.sort(sorter)
   },
   { immediate: true },
 )
 
-function getQuizzesSorter(type: 'name' | 'creationDate', desc = false) {
-  return (a:Quiz, b:Quiz) => {
+function setQuizzesSorter(type: 'name' | 'creationDate', desc = false) {
+  localStorage.setItem('quizzesSorterPreference', JSON.stringify([type, desc]))
+  sorter.value = (a:Quiz, b:Quiz) => {
     if (desc) [a, b] = [b, a]
     return {
       name: a.title.localeCompare(b.title),
