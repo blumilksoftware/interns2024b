@@ -76,11 +76,11 @@ const isDraftValidated = computed(() =>
       class="flex items-center"
       :href="`/admin/quizzes/${quiz.id}/invite`"
     >
-      <UserPlusIcon class="icon" />
+      <UserPlusIcon class="icon slide-up-animation" />
     </a>
 
     <button v-if="unlocked && !editing" title="Edytuj test" @click="emit('toggleEditing', true)">
-      <PencilIcon class="icon" />
+      <PencilIcon class="icon slide-up-animation" />
     </button>
 
     <template v-if="editing">
@@ -110,11 +110,11 @@ const isDraftValidated = computed(() =>
       method="post"
       :href="`/admin/quizzes/${quiz.id}/clone`"
     >
-      <DocumentDuplicateIcon class="icon" />
+      <DocumentDuplicateIcon class="icon slide-up-animation" />
     </RequestWrapper>
 
     <button v-if="!archived" title="Usuń test" @click="showDeleteMessage=true">
-      <TrashIcon class="icon text-red hover:text-red-500" />
+      <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
     </button>
     
     <RequestWrapper
@@ -137,7 +137,7 @@ const isDraftValidated = computed(() =>
       title="Cofnij publikację"
       :href="`/admin/quizzes/${quiz.id}/unlock`"
     >
-      <CloudArrowDownIcon class="icon w-7.5 h-7.5" />
+      <CloudArrowDownIcon class="icon slide-up-animation w-7.5 h-7.5" />
     </RequestWrapper>
 
     <a
@@ -145,7 +145,7 @@ const isDraftValidated = computed(() =>
       title="Przejdź do rankingu"
       :href="`/admin/quizzes/${quiz.id}/ranking`"
     >
-      <UsersIcon class="icon" />
+      <UsersIcon class="icon slide-up-animation" />
     </a>
   </div>
 </template>

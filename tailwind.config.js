@@ -127,6 +127,9 @@ module.exports = {
                 '.icon': {
                   '@apply size-6 stroke-2 text-primary hover:text-primary-800 transition-colors duration-200':{},
                 },
+                '.slide-up-animation' : {
+                    '@apply hover:-translate-y-1 h-full transition-transform ease-in duration-150':{},
+                },
                 '.icon-button': {
                   '@apply flex gap-2 w-fit font-bold text-primary hover:text-primary-800 text-percentage-105':{},
                 }

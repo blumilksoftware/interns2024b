@@ -41,10 +41,10 @@ function setCorrectAnswer(currentAnswer: Answer) {
         <b class="text-lg">Pytanie {{ `${index+1}/${questionsTotal}` }}</b>
         <div v-if="editing" class="flex gap-5">
           <button title="Skopiuj pytanie" @click="emit('copy', question)">
-            <DocumentDuplicateIcon class="icon" />
+            <DocumentDuplicateIcon class="icon slide-up-animation" />
           </button>
           <button title="Usuń pytanie" @click="emit('delete', question)">
-            <TrashIcon class="icon text-red hover:text-red-500" />
+            <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
           </button>
         </div>
       </div>
