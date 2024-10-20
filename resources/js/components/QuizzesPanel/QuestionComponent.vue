@@ -50,7 +50,7 @@ function setCorrectAnswer(currentAnswer: Answer) {
       </div>
       
       <span v-if="!editing">{{ question.text }}</span>
-      <textarea v-else v-model="question.text" class="h-12 w-full bg-transparent outline-none border-b border-primary/30 focus:border-primary/60" />
+      <textarea v-else v-model="question.text" placeholder="Wpisz pytanie" class="h-12 w-full bg-transparent outline-none border-b border-primary/30 focus:border-primary/60" />
     </div>
       
     <button
