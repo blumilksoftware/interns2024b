@@ -32,7 +32,7 @@ watch(startTimeReached, quizHasStarted => {
 
 function addQuestion() {
   quiz.value.questions.push({
-    text: 'Nowe pytanie',
+    text: '',
     answers: [],
   })
 }

@@ -16,7 +16,7 @@ const emit = defineEmits<{ delete: [answer:Answer], setCorrect: [answer:Answer]}
 
     <div class="flex items-center w-full">
       <span v-if="!editing">{{ answer.text }}</span>
-      <textarea v-else v-model="answer.text" class="h-12 w-full p-2 bg-transparent outline-none border-b border-primary/30 focus:border-primary/60" />
+      <textarea v-else v-model="answer.text" placeholder="Wpisz odpowiedź" class="h-12 w-full p-2 bg-transparent outline-none border-b border-primary/30 focus:border-primary/60" />
     </div>
     
     <button v-if="editing" title="Usuń odpowiedź" class="h-10" @click="emit('delete', answer)">
