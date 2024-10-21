@@ -11,21 +11,21 @@ import type Question from '@/Types/Question'
 import type Answer from '@/Types/Answer'
 
 const props = defineProps<{
-  quiz:Quiz
   archived:boolean
   unlocked:boolean
   locked:boolean
   editing:boolean
   startTimeReached:boolean
 }>()
+const quiz = defineModel<Quiz>({ required: true })
 const emit = defineEmits<{ toggleEditing:[editing:boolean], cancelChanges:[] }>()
 const showDeleteMessage = ref(false)
 const publishValidation = computed<{ validated: boolean, error: string }>(
   () => {
     const validations: Record<string, boolean> = {
       hasCorrectAnswers: questionsHaveOneCorrectAnswer(),
-      hasQuestions: props.quiz.questions.length > 0,
-      duration: !!props.quiz.duration,
+      hasQuestions: quiz.value.questions.length > 0,
+      duration: !!quiz.value.duration,
       startTimeReached: props.startTimeReached,
     }
     const errors: Errors = {
@@ -45,7 +45,7 @@ const publishValidation = computed<{ validated: boolean, error: string }>(
 )
 
 function questionsHaveOneCorrectAnswer() {
-  return props.quiz.questions.every(
+  return quiz.value.questions.every(
     (question: Question) => {
       const correctIdx = question.answers.findIndex(answer => answer.correct)
       return correctIdx !== -1 && question.answers.slice(correctIdx+1).every(
@@ -110,8 +110,6 @@ function questionsHaveOneCorrectAnswer() {
 
       <RequestWrapper
         title="Zapisz zmiany"
-        preserve-scroll
-        preserve-state
         method="patch"
         :href="`/admin/quizzes/${quiz.id}`"
         :data="{ ...quiz, scheduledAt: formatDate(quiz.scheduledAt) }"
@@ -141,10 +139,11 @@ function questionsHaveOneCorrectAnswer() {
       :href="`/admin/quizzes/${quiz.id}/lock`"
       :title="!publishValidation.validated ? `Nie można oddać testu. ${publishValidation.error}` : 'Udostępnij test publicznie'"
       :disabled="!publishValidation.validated"
+      @click="quiz.state = 'locked'"
     >
       <CloudArrowUpIcon
-        class="h-7.5 text-primary stroke-2"
-        :class="{ 'opacity-50' : !publishValidation.validated, 'hover:text-primary-800' : publishValidation.validated}"
+        class="w-7.5 h-7.5 text-primary stroke-2"
+        :class="{ 'opacity-50': !publishValidation.validated, 'hover:text-primary-800': publishValidation.validated }"
       />
     </RequestWrapper>
 
@@ -153,6 +152,7 @@ function questionsHaveOneCorrectAnswer() {
       method="post"
       title="Cofnij publikację"
       :href="`/admin/quizzes/${quiz.id}/unlock`"
+      @click="quiz.state = 'unlocked'"
     >
       <CloudArrowDownIcon class="icon slide-up-animation w-7.5 h-7.5" />
     </RequestWrapper>
