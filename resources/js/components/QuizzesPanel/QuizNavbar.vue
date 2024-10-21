@@ -75,7 +75,6 @@ const isDraftValidated = computed(() =>
       v-if="locked"
       title="Zaproś uczęstników"
       class="flex items-center"
-      :href="`/admin/quizzes/${quiz.id}/invite`"
     >
       <UserPlusIcon class="icon slide-up-animation" />
     </a>
