@@ -111,7 +111,7 @@ class Quiz extends Model
     public function clone(): self
     {
         $quizCopy = $this->replicate();
-        $quizCopy->title = $quizCopy->title . ' - kopia';
+        $quizCopy->title = $quizCopy->title . " - kopia";
         $quizCopy->locked_at = null;
         $quizCopy->duration = null;
         $quizCopy->scheduled_at = null;
