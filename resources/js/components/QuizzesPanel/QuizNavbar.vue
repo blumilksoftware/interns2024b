@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import { CheckIcon, CloudArrowUpIcon, DocumentDuplicateIcon, ExclamationTriangleIcon, PencilIcon, TrashIcon, UserPlusIcon, UsersIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { CloudArrowDownIcon } from '@heroicons/vue/20/solid'
+import {type Errors} from '@inertiajs/core'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import MessageBox from '@/components/Common/MessageBox.vue'
 import { formatDate } from '@/Helpers/Format'
@@ -19,8 +20,31 @@ const props = defineProps<{
 }>()
 const emit = defineEmits<{ toggleEditing:[editing:boolean], cancelChanges:[] }>()
 const showDeleteMessage = ref(false)
+const publishValidation = computed<{ validated: boolean, error: string }>(
+  () => {
+    const validations: Record<string, boolean> = {
+      hasCorrectAnswers: questionsHaveOneCorrectAnswer(),
+      hasQuestions: props.quiz.questions.length > 0,
+      duration: !!props.quiz.duration,
+      startTimeReached: props.startTimeReached,
+    }
+    const errors: Errors = {
+      hasCorrectAnswers: 'Pytanie nie zawiera zaznaczonej prawidłowej odpowiedzi.',
+      hasQuestions: 'Test nie zawiera żadnego pytania.',
+      duration: 'Czas trwania testu nie jest ustawiony.',
+      startTimeReached: 'Czas rozpoczęcia testu upłynął.',
+    }
+    const validationOutcome = { validated: true,  error: ''}
+    for (const key in validations) {
+      validationOutcome.validated &&= validations[key]
+      if (!validations[key])
+        validationOutcome.error = errors[key]
+    }
+    return validationOutcome
+  },
+)
 
-function hasOneCorrectAnswer() {
+function questionsHaveOneCorrectAnswer() {
   return props.quiz.questions.every(
     (question: Question) => {
       const correctIdx = question.answers.findIndex(answer => answer.correct)
@@ -30,13 +54,6 @@ function hasOneCorrectAnswer() {
     },
   )
 }
-
-const isDraftValidated = computed(() =>
-  props.quiz.duration &&
-  props.startTimeReached &&
-  props.quiz.questions.length > 0 &&
-  hasOneCorrectAnswer(),
-)
 </script>
 
 <template>
@@ -122,12 +139,12 @@ const isDraftValidated = computed(() =>
       class="rounded-xl"
       method="post"
       :href="`/admin/quizzes/${quiz.id}/lock`"
-      :title="!isDraftValidated ? 'Nie można oddać testu. Uzupełnij brakujące dane' : 'Udostępnij test publicznie'"
-      :disabled="!isDraftValidated"
+      :title="!publishValidation.validated ? `Nie można oddać testu. ${publishValidation.error}` : 'Udostępnij test publicznie'"
+      :disabled="!publishValidation.validated"
     >
       <CloudArrowUpIcon
         class="h-7.5 text-primary stroke-2"
-        :class="{ 'opacity-50' : !isDraftValidated, 'hover:text-primary-800' : isDraftValidated}"
+        :class="{ 'opacity-50' : !publishValidation.validated, 'hover:text-primary-800' : publishValidation.validated}"
       />
     </RequestWrapper>
 
