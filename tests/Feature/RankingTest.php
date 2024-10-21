@@ -20,6 +20,7 @@ class RankingTest extends TestCase
     protected User $user2;
     protected User $user3;
     protected User $admin;
+    protected Quiz $quiz;
     protected Quiz $quiz2;
 
     protected function setUp(): void
@@ -69,7 +70,7 @@ class RankingTest extends TestCase
         $this->assertEquals(3, $user2Score);
     }
 
-    public function testAdminCanViewLockedQuizRanking(): void
+    public function testAdminCanViewPublishedQuizRanking(): void
     {
         $this->actingAs($this->admin)
             ->get("/admin/quizzes/{$this->quiz->id}/ranking")

@@ -60,11 +60,11 @@ class QuizTest extends TestCase
     {
         $this->actingAs($this->admin)
             ->from("/")
-            ->post("/admin/quizzes", ["name" => "Example quiz", "scheduled_at" => "2024-02-10 11:40:00"])
+            ->post("/admin/quizzes", ["title" => "Example quiz", "scheduled_at" => "2024-02-10 11:40:00"])
             ->assertRedirect("/");
 
         $this->assertDatabaseHas("quizzes", [
-            "name" => "Example quiz",
+            "title" => "Example quiz",
             "scheduled_at" => "2024-02-10 11:40:00",
         ]);
     }
@@ -75,11 +75,11 @@ class QuizTest extends TestCase
 
         $this->actingAs($this->admin)
             ->from("/")
-            ->post("/admin/quizzes", ["name" => "Example quiz"])
+            ->post("/admin/quizzes", ["title" => "Example quiz"])
             ->assertRedirect("/");
 
         $this->assertDatabaseHas("quizzes", [
-            "name" => "Example quiz",
+            "title" => "Example quiz",
             "scheduled_at" => null,
         ]);
     }
@@ -88,20 +88,20 @@ class QuizTest extends TestCase
     {
         $this->actingAs($this->admin)
             ->from("/")
-            ->post("/admin/quizzes", ["name" => "Example quiz 1"])
+            ->post("/admin/quizzes", ["title" => "Example quiz 1"])
             ->assertRedirect("/");
 
         $this->from("/")
-            ->post("/admin/quizzes", ["name" => "Example quiz 2"])
+            ->post("/admin/quizzes", ["title" => "Example quiz 2"])
             ->assertRedirect("/");
 
         $this->from("/")
-            ->post("/admin/quizzes", ["name" => "Example quiz 3"])
+            ->post("/admin/quizzes", ["title" => "Example quiz 3"])
             ->assertRedirect("/");
 
-        $this->assertDatabaseHas("quizzes", ["name" => "Example quiz 1"]);
-        $this->assertDatabaseHas("quizzes", ["name" => "Example quiz 2"]);
-        $this->assertDatabaseHas("quizzes", ["name" => "Example quiz 2"]);
+        $this->assertDatabaseHas("quizzes", ["title" => "Example quiz 1"]);
+        $this->assertDatabaseHas("quizzes", ["title" => "Example quiz 2"]);
+        $this->assertDatabaseHas("quizzes", ["title" => "Example quiz 2"]);
     }
 
     public function testAdminCannotCreateInvalidQuiz(): void
@@ -109,11 +109,27 @@ class QuizTest extends TestCase
         $this->actingAs($this->admin)
             ->from("/")
             ->post("/admin/quizzes", [])
-            ->assertRedirect("/")->assertSessionHasErrors(["name"]);
+            ->assertRedirect("/")->assertSessionHasErrors(["title"]);
 
         $this->from("/")
-            ->post("/admin/quizzes", ["name" => false])
-            ->assertRedirect("/")->assertSessionHasErrors(["name"]);
+            ->post("/admin/quizzes", ["title" => false])
+            ->assertRedirect("/")->assertSessionHasErrors(["title"]);
+
+        $this->from("/")
+            ->post("/admin/quizzes", ["title" => "correct", "scheduled_at" => "invalid format"])
+            ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
+
+        $this->from("/")
+            ->post("/admin/quizzes", ["title" => "correct", "scheduled_at" => "2022-01-01 01:01:01"])
+            ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
+
+        $this->from("/")
+            ->post("/admin/quizzes", ["title" => "correct", "duration" => -100])
+            ->assertRedirect("/")->assertSessionHasErrors(["duration"]);
+
+        $this->from("/")
+            ->post("/admin/quizzes", ["title" => "correct", "duration" => 0])
+            ->assertRedirect("/")->assertSessionHasErrors(["duration"]);
 
         $this->from("/")
             ->post("/admin/quizzes", ["name" => "correct", "scheduled_at" => "invalid format"])
@@ -136,11 +152,11 @@ class QuizTest extends TestCase
 
     public function testAdminCanEditQuiz(): void
     {
-        $quiz = Quiz::factory()->create(["name" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
+        $quiz = Quiz::factory()->create(["title" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
         $question = Question::factory()->create(["quiz_id" => $quiz->id]);
 
         $data = [
-            "name" => "Quiz Name",
+            "title" => "Quiz Name",
             "scheduled_at" => "2024-08-28 15:00:00",
             "duration" => 120,
             "questions" => [
@@ -158,7 +174,7 @@ class QuizTest extends TestCase
 
         $this->assertDatabaseHas("quizzes", [
             "id" => $quiz->id,
-            "name" => "Quiz Name",
+            "title" => "Quiz Name",
             "scheduled_at" => "2024-08-28 15:00:00",
             "duration" => 120,
         ]);
@@ -170,12 +186,32 @@ class QuizTest extends TestCase
         ]);
     }
 
-    public function testAdminCannotEditQuizWithQuestionThatHasMoreThanOneCorrectAnswer(): void
+    public function testAdminCanDeleteQuestion(): void
     {
-        $quiz = Quiz::factory()->create(["name" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
+        $quiz = Quiz::factory()->create(["title" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
+        $questions = Question::factory()->count(2)->create(["quiz_id" => $quiz->id]);
 
         $data = [
-            "name" => "Quiz Name",
+            "title" => "Quiz Name",
+            "scheduled_at" => "2024-08-28 15:00:00",
+            "duration" => 120,
+            "questions" => [],
+        ];
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->patch("/admin/quizzes/{$quiz->id}", $data)
+            ->assertRedirect("/");
+
+        $this->assertDatabaseCount("questions", 0);
+    }
+
+    public function testAdminCannotEditQuizWithQuestionThatHasMoreThanOneCorrectAnswer(): void
+    {
+        $quiz = Quiz::factory()->create(["title" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
+
+        $data = [
+            "title" => "Quiz Name",
             "scheduled_at" => "2024-08-28 15:00:00",
             "duration" => 120,
             "questions" => [
@@ -209,57 +245,57 @@ class QuizTest extends TestCase
     {
         $this->actingAs($this->admin)
             ->from("/")
-            ->patch("/admin/quizzes/1", ["name" => "New quiz"])
+            ->patch("/admin/quizzes/1", ["title" => "New quiz"])
             ->assertStatus(404);
     }
 
     public function testAdminCannotMakeInvalidEdit(): void
     {
-        $quiz = Quiz::factory()->create(["name" => "Old quiz"]);
+        $quiz = Quiz::factory()->create(["title" => "Old quiz"]);
 
         $this->actingAs($this->admin)
             ->from("/")
             ->patch("/admin/quizzes/{$quiz->id}", [])
-            ->assertRedirect("/")->assertSessionHasErrors(["name"]);
+            ->assertRedirect("/")->assertSessionHasErrors(["title"]);
 
         $this->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => true])
-            ->assertRedirect("/")->assertSessionHasErrors(["name"]);
+            ->patch("/admin/quizzes/{$quiz->id}", ["title" => true])
+            ->assertRedirect("/")->assertSessionHasErrors(["title"]);
 
         $this->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "correct", "scheduled_at" => "invalid format"])
+            ->patch("/admin/quizzes/{$quiz->id}", ["title" => "correct", "scheduled_at" => "invalid format"])
             ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
 
         $this->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "correct", "scheduled_at" => "2022-01-01 01:01:01"])
+            ->patch("/admin/quizzes/{$quiz->id}", ["title" => "correct", "scheduled_at" => "2022-01-01 01:01:01"])
             ->assertRedirect("/")->assertSessionHasErrors(["scheduled_at"]);
 
         $this->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "correct", "duration" => -100])
+            ->patch("/admin/quizzes/{$quiz->id}", ["title" => "correct", "duration" => -100])
             ->assertRedirect("/")->assertSessionHasErrors(["duration"]);
 
         $this->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "correct", "duration" => 0])
+            ->patch("/admin/quizzes/{$quiz->id}", ["title" => "correct", "duration" => 0])
             ->assertRedirect("/")->assertSessionHasErrors(["duration"]);
 
-        $this->assertDatabaseHas("quizzes", ["name" => "Old quiz"]);
+        $this->assertDatabaseHas("quizzes", ["title" => "Old quiz"]);
     }
 
     public function testAdminCannotEditLockedQuiz(): void
     {
-        $quiz = Quiz::factory()->locked()->create(["name" => "Old quiz"]);
+        $quiz = Quiz::factory()->locked()->create(["title" => "Old quiz"]);
 
         $this->actingAs($this->admin)
             ->from("/")
-            ->patch("/admin/quizzes/{$quiz->id}", ["name" => "New quiz"])
+            ->patch("/admin/quizzes/{$quiz->id}", ["title" => "New quiz"])
             ->assertStatus(403);
 
-        $this->assertDatabaseHas("quizzes", ["name" => "Old quiz"]);
+        $this->assertDatabaseHas("quizzes", ["title" => "Old quiz"]);
     }
 
     public function testAdminCanDeleteQuiz(): void
     {
-        $quiz = Quiz::factory()->create(["name" => "quiz"]);
+        $quiz = Quiz::factory()->create(["title" => "quiz"]);
         $question = Question::factory()->create(["quiz_id" => $quiz->id]);
         Answer::factory()->create(["question_id" => $question->id]);
 
@@ -272,7 +308,7 @@ class QuizTest extends TestCase
             ->delete("/admin/quizzes/{$quiz->id}")
             ->assertRedirect("/");
 
-        $this->assertDatabaseMissing("quizzes", ["name" => "quiz"]);
+        $this->assertDatabaseMissing("quizzes", ["title" => "quiz"]);
         $this->assertDatabaseCount("quizzes", 0);
         $this->assertDatabaseCount("questions", 0);
         $this->assertDatabaseCount("answers", 0);
@@ -280,14 +316,14 @@ class QuizTest extends TestCase
 
     public function testAdminCannotDeleteLockedQuiz(): void
     {
-        $quiz = Quiz::factory()->locked()->create(["name" => "quiz"]);
+        $quiz = Quiz::factory()->locked()->create(["title" => "quiz"]);
 
         $this->actingAs($this->admin)
             ->from("/")
             ->delete("/admin/quizzes/{$quiz->id}")
             ->assertStatus(403);
 
-        $this->assertDatabaseHas("quizzes", ["name" => "quiz"]);
+        $this->assertDatabaseHas("quizzes", ["title" => "quiz"]);
     }
 
     public function testAdminCannotDeleteQuestionThatNotExisted(): void

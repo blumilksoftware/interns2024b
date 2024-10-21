@@ -1,11 +1,8 @@
-import {type Answer} from '@/Types/Answer'
+import type Answer from '@/Types/Answer'
 
-export interface Question {
-  id: number
-  text: string
-  createdAt: number
-  updatedAt: number
-  locked: boolean
-  correct?: number
+export default interface Question {
+  [key: string]
+  id?: number
+  text: string | undefined
   answers: Answer[]
 }

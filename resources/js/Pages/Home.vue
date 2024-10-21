@@ -27,9 +27,7 @@ provide('isLoginRef', isLogin)
 </script>
 
 <template>
-  <Transition>
-    <Banner v-if="status" :text="status" @click="status = ''" />
-  </Transition>
+  <Banner v-model="status" />
 
   <div class="flex flex-col h-screen">
     <BackgroundEffect />
