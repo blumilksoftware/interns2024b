@@ -24,11 +24,13 @@ const options = keysWrapper([
   { text: 'Po nazwie (Z–A)', action: () => setQuizzesSorter('name', true) },
   { text: 'Od najnowszych' , action: () => setQuizzesSorter('creationDate', true) },
   { text: 'Od najstarszych', action: () => setQuizzesSorter('creationDate') },
+  { text: 'Od najnowszych zmienionych', action: () => setQuizzesSorter('modificationDate', true) },
+  { text: 'Od najstarszych zmienionych', action: () => setQuizzesSorter('modificationDate') },
 ])
 
 onMounted(() => {
   const savedSorter = localStorage.getItem('quizzesSorterPreference')
-  const [type, desc] = savedSorter ? JSON.parse(savedSorter) : ['creationDate', true]
+  const [type, desc] = savedSorter ? JSON.parse(savedSorter) : ['modificationDate', true]
   setQuizzesSorter(type, desc)
 })
 
@@ -41,13 +43,14 @@ watch(
   { immediate: true },
 )
 
-function setQuizzesSorter(type: 'name' | 'creationDate', desc = false) {
+function setQuizzesSorter(type: 'name' | 'creationDate' | 'modificationDate', desc = false) {
   localStorage.setItem('quizzesSorterPreference', JSON.stringify([type, desc]))
   sorter.value = (a:Quiz, b:Quiz) => {
     if (desc) [a, b] = [b, a]
     return {
       name: a.title.localeCompare(b.title),
       creationDate: dayjs(a.createdAt).diff(dayjs(b.createdAt)),
+      modificationDate: dayjs(a.updatedAt).diff(dayjs(b.updatedAt)),
     }[type]
   }
 }
