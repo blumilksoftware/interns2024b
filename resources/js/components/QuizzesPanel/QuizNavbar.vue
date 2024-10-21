@@ -73,7 +73,7 @@ const isDraftValidated = computed(() =>
   <div class="flex gap-5 pl-5 h-fit">
     <a
       v-if="locked"
-      title="Zaproś uczęstników"
+      title="Zaproś uczestników"
       class="flex items-center"
     >
       <UserPlusIcon class="icon slide-up-animation" />
