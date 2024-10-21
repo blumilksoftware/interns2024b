@@ -10,6 +10,7 @@
         "tsc": "vue-tsc"
     },
     "dependencies": {
+        "@formkit/auto-animate": "^0.8.2",
         "@headlessui/vue": "^1.7.23",
         "@heroicons/vue": "^2.1.5",
         "@inertiajs/vue3": "^1.2.0",
