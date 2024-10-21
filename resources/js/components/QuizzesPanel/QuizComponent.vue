@@ -81,7 +81,7 @@ function toggleEditing(isEditing:boolean){
       />
 
       <QuizNavbar
-        :quiz="quiz"
+        v-model="quiz"
         :unlocked="quiz.state === 'unlocked'"
         :locked="quiz.state === 'locked'"
         :archived="archived"
