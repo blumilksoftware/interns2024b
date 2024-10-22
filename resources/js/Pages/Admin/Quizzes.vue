@@ -29,7 +29,7 @@ const options = keysWrapper([
 ])
 
 onMounted(() => {
-  const savedSorter = localStorage.getItem('quizzesSorterPreference')
+  const savedSorter = sessionStorage.getItem('quizzesSorterPreference')
   const [type, desc] = savedSorter ? JSON.parse(savedSorter) : ['modificationDate', true]
   setQuizzesSorter(type, desc)
 })
@@ -44,7 +44,7 @@ watch(
 )
 
 function setQuizzesSorter(type: 'name' | 'creationDate' | 'modificationDate', desc = false) {
-  localStorage.setItem('quizzesSorterPreference', JSON.stringify([type, desc]))
+  sessionStorage.setItem('quizzesSorterPreference', JSON.stringify([type, desc]))
   sorter.value = (a:Quiz, b:Quiz) => {
     if (desc) [a, b] = [b, a]
     return {
