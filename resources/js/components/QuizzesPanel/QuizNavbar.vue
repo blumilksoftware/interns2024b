@@ -137,7 +137,7 @@ function questionsHaveOneCorrectAnswer() {
       class="rounded-xl"
       method="post"
       :href="`/admin/quizzes/${quiz.id}/lock`"
-      :title="!publishValidation.validated ? `Nie można oddać testu. ${publishValidation.error}` : 'Udostępnij test publicznie'"
+      :title="!publishValidation.validated ? `Nie można opublikować testu. ${publishValidation.error}` : 'Udostępnij test publicznie'"
       :disabled="!publishValidation.validated"
       @click="quiz.state = 'locked'"
     >
