@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RoleSeeder::class,
             AdminSeeder::class,
-            UserSeeder::class,
         ]);
 
         Quiz::factory()->locked()->count(5)->create(["scheduled_at" => Carbon::now()->addMonth()]);
@@ -40,5 +39,7 @@ class DatabaseSeeder extends Seeder
                 $answer->save();
             }
         }
+
+        User::factory()->count(10)->create();
     }
 }
