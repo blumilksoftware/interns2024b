@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { type Errors, type VisitOptions } from '@inertiajs/core'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import ButtonFrame from '@/components/Common/ButtonFrame.vue'
-import type ButtonFrameProps from '@/Types/ButtonFrameProps'
+import { type ButtonFrameProps } from '@/Types/ButtonFrameProps'
 
 withDefaults(
   defineProps<{ href:string, buttonClass?:string } & ButtonFrameProps & VisitOptions>(),

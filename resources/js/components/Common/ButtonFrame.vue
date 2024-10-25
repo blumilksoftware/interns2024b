@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type ButtonFrameProps from '@/Types/ButtonFrameProps'
+import { type ButtonFrameProps } from '@/Types/ButtonFrameProps'
 
 defineProps<ButtonFrameProps>()
 </script>

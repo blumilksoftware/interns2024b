@@ -13,7 +13,7 @@ return new class() extends Migration {
             $table->id();
             $table->timestamps();
             $table->timestamp("locked_at")->nullable();
-            $table->string("name");
+            $table->string("title");
         });
     }
 
