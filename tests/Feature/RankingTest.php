@@ -141,8 +141,10 @@ class RankingTest extends TestCase
 
     public function testAdminCannotPublishEmptyQuizRanking(): void
     {
+        $emptyQuiz = Quiz::factory()->locked()->create();
+
         $this->actingAs($this->admin)
-            ->post("/admin/quizzes/{$this->quiz->id}/ranking/publish")
+            ->post("/admin/quizzes/{$emptyQuiz->id}/ranking/publish")
             ->assertForbidden();
     }
 
