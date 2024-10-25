@@ -139,6 +139,13 @@ class RankingTest extends TestCase
             ->assertNotFound();
     }
 
+    public function testAdminCannotPublishEmptyQuizRanking(): void
+    {
+        $this->actingAs($this->admin)
+            ->post("/admin/quizzes/{$this->quiz->id}/ranking/publish")
+            ->assertForbidden();
+    }
+
     public function testAdminCannotUnpublishNotExistingQuizRanking(): void
     {
         $this->actingAs($this->admin)
