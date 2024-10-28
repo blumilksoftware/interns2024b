@@ -18,10 +18,10 @@ class AdminSeeder extends Seeder
         $superAdmin = User::firstOrCreate(
             ["email" => "superadmin@example.com"],
             [
-                "name" => "Super Admin Name",
-                "surname" => "Super Admin Surname",
+                "name" => "Example",
+                "surname" => "Super Admin",
                 "email_verified_at" => Carbon::now(),
-                "password" => Hash::make("superadmin@example.com"),
+                "password" => Hash::make("password"),
                 "remember_token" => Str::random(10),
                 "school_id" => School::factory()->create()->id,
             ],
@@ -31,10 +31,10 @@ class AdminSeeder extends Seeder
         $admin = User::firstOrCreate(
             ["email" => "admin@example.com"],
             [
-                "name" => "Admin Name",
-                "surname" => "Admin Surname",
+                "name" => "Example",
+                "surname" => "Admin",
                 "email_verified_at" => Carbon::now(),
-                "password" => Hash::make("admin@example.com"),
+                "password" => Hash::make("password"),
                 "remember_token" => Str::random(10),
                 "school_id" => School::factory()->create()->id,
             ],
@@ -44,10 +44,10 @@ class AdminSeeder extends Seeder
         $user = User::firstOrCreate(
             ["email" => "user@example.com"],
             [
-                "name" => "User Name",
-                "surname" => "User Surname",
+                "name" => "Example",
+                "surname" => "User",
                 "email_verified_at" => Carbon::now(),
-                "password" => Hash::make("user@example.com"),
+                "password" => Hash::make("password"),
                 "remember_token" => Str::random(10),
                 "school_id" => School::factory()->create()->id,
             ],
