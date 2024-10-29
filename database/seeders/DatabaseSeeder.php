@@ -21,12 +21,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Quiz::factory()->count(2)->create(["scheduled_at" => Carbon::now()->addMonth()]);
-        Quiz::factory()->count(2)->create(["scheduled_at" => Carbon::now(), "duration" => 6]);
+        Quiz::factory()->locked()->count(2)->create(["scheduled_at" => Carbon::now()->subMonth(), "duration" => 6]);
 
         $quizzes = Quiz::factory()->count(4)->locked()->create(["scheduled_at" => Carbon::now()->addDay()]);
 
         foreach ($quizzes as $quiz) {
             $questions = Question::factory()->count(4)->create(["quiz_id" => $quiz->id]);
+
             foreach ($questions as $question) {
                 $answers = Answer::factory()->count(4)->create(["question_id" => $question->id]);
                 $question->correct_answer_id = $answers[rand(0, 3)]->id;
