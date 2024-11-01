@@ -9,5 +9,6 @@ export interface Quiz {
   duration?: number
   state:'published' | 'locked' | 'unlocked'
   isUserAssigned: boolean
+  isRankingPublished: boolean
   questions: Question[]
 }

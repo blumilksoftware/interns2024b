@@ -16,32 +16,31 @@ class RankingTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected User $user1;
-    protected User $user2;
-    protected User $user3;
+    protected User $user;
+    protected UserQuizSeeder $seeder;
     protected User $admin;
-    protected Quiz $quiz2;
+    protected Quiz $quiz;
+    protected Quiz $unlockedQuiz;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $seeder = new UserQuizSeeder();
-        $seeder->run();
+        $this->seeder = new UserQuizSeeder();
+        $this->seeder->run();
 
-        $this->user1 = User::factory()->create();
-        $this->user2 = User::factory()->create();
-        $this->user3 = User::factory()->create();
+        $this->user = User::factory()->create();
         $this->admin = User::factory()->admin()->create();
-        $this->quiz = $seeder->quiz;
-        $seeder->createSubmissionForUser($this->user1, 2);
-        $seeder->createSubmissionForUser($this->user2, 3);
-        $this->quiz2 = Quiz::factory()->create();
+
+        $this->quiz = $this->seeder->quiz;
+        $this->seeder->createSubmissionForUser($this->user, 2);
+
+        $this->unlockedQuiz = Quiz::factory()->create();
     }
 
     public function testUserHasPointsInAnsweredQuiz(): void
     {
-        $quizSubmission = QuizSubmission::where("user_id", $this->user1->id)->first();
+        $quizSubmission = QuizSubmission::where("user_id", $this->user->id)->first();
 
         $quizSubmission->refresh();
 
@@ -51,21 +50,24 @@ class RankingTest extends TestCase
 
     public function testUserPointsAreCalculatedCorrectly(): void
     {
-        $quizSubmission1 = QuizSubmission::where("user_id", $this->user1->id)
+        $user2 = User::factory()->create();
+        $this->seeder->createSubmissionForUser($user2, 3);
+
+        $quizSubmission1 = QuizSubmission::where("user_id", $this->user->id)
             ->where("quiz_id", $this->quiz->id)
             ->first();
 
-        $quizSubmission2 = QuizSubmission::where("user_id", $this->user2->id)
+        $quizSubmission2 = QuizSubmission::where("user_id", $user2->id)
             ->where("quiz_id", $this->quiz->id)
             ->first();
 
         $quizSubmission1->refresh();
         $quizSubmission2->refresh();
 
-        $user1Score = $quizSubmission1->points;
+        $userScore = $quizSubmission1->points;
         $user2Score = $quizSubmission2->points;
 
-        $this->assertEquals(2, $user1Score);
+        $this->assertEquals(2, $userScore);
         $this->assertEquals(3, $user2Score);
     }
 
@@ -82,7 +84,7 @@ class RankingTest extends TestCase
     public function testAdminCannotViewUnlockedQuizRanking(): void
     {
         $this->actingAs($this->admin)
-            ->get("/admin/quizzes/{$this->quiz2->id}/ranking")
+            ->get("/admin/quizzes/{$this->unlockedQuiz->id}/ranking")
             ->assertForbidden();
     }
 
@@ -99,7 +101,7 @@ class RankingTest extends TestCase
     public function testAdminCannotPublishUnlockedQuizRanking(): void
     {
         $this->actingAs($this->admin)
-            ->post("/admin/quizzes/{$this->quiz2->id}/ranking/publish")
+            ->post("/admin/quizzes/{$this->unlockedQuiz->id}/ranking/publish")
             ->assertForbidden();
     }
 
@@ -119,7 +121,7 @@ class RankingTest extends TestCase
     public function testAdminCannotUnpublishUnlockedQuizRanking(): void
     {
         $this->actingAs($this->admin)
-            ->post("/admin/quizzes/{$this->quiz2->id}/ranking/unpublish")
+            ->post("/admin/quizzes/{$this->unlockedQuiz->id}/ranking/unpublish")
             ->assertForbidden();
     }
 
@@ -137,6 +139,15 @@ class RankingTest extends TestCase
             ->assertNotFound();
     }
 
+    public function testAdminCannotPublishEmptyQuizRanking(): void
+    {
+        $emptyQuiz = Quiz::factory()->locked()->create();
+
+        $this->actingAs($this->admin)
+            ->post("/admin/quizzes/{$emptyQuiz->id}/ranking/publish")
+            ->assertForbidden();
+    }
+
     public function testAdminCannotUnpublishNotExistingQuizRanking(): void
     {
         $this->actingAs($this->admin)
@@ -149,53 +160,55 @@ class RankingTest extends TestCase
         $this->quiz->ranking_published_at = now();
         $this->quiz->save();
 
-        $this->actingAs($this->user1)
+        $this->actingAs($this->user)
             ->get("/quizzes/{$this->quiz->id}/ranking/")
             ->assertInertia(fn(Assert $page) => $page->component("User/Ranking"));
     }
 
     public function testUserCannotViewUnpublishedQuizRankingHeParticipated(): void
     {
-        $this->actingAs($this->user1)
+        $this->actingAs($this->user)
             ->get("/quizzes/{$this->quiz->id}/ranking")
             ->assertForbidden();
     }
 
     public function testUserCannotViewPublishedQuizRankingHeDidNotParticipated(): void
     {
+        $userWithoutSubmissions = User::factory()->create();
+
         $this->quiz->ranking_published_at = now();
         $this->quiz->save();
 
-        $this->actingAs($this->user3)
+        $this->actingAs($userWithoutSubmissions)
             ->get("/quizzes/{$this->quiz->id}/ranking")
             ->assertForbidden();
     }
 
     public function testUserCannotViewUnpublishedQuizRankingHeDidNotParticipated(): void
     {
-        $this->actingAs($this->user1)
-            ->get("/quizzes/{$this->quiz2->id}/ranking")
+        $this->actingAs($this->user)
+            ->get("/quizzes/{$this->unlockedQuiz->id}/ranking")
             ->assertForbidden();
     }
 
     public function testUserCannotViewQuizRankingThatQuizDoesNotExist(): void
     {
-        $this->actingAs($this->user1)
+        $this->actingAs($this->user)
             ->get("/quizzes/9999/ranking")
             ->assertNotFound();
     }
 
     public function testUserCannotAccessToAdminRanking(): void
     {
-        $this->actingAs($this->user1)
+        $this->actingAs($this->user)
             ->get("/admin/quizzes/{$this->quiz->id}/ranking")
             ->assertForbidden();
 
-        $this->actingAs($this->user1)
+        $this->actingAs($this->user)
             ->post("/admin/quizzes/{$this->quiz->id}/ranking/publish")
             ->assertForbidden();
 
-        $this->actingAs($this->user1)
+        $this->actingAs($this->user)
             ->post("/admin/quizzes/{$this->quiz->id}/ranking/unpublish")
             ->assertForbidden();
     }
