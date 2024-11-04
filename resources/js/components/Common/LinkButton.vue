@@ -1,8 +1,8 @@
 <script setup lang="ts">
 defineProps<{
-    small?: boolean
-    href: string
-  }>()
+  small?: boolean
+  href: string
+}>()
 </script>
 
 <template>
@@ -17,5 +17,3 @@ defineProps<{
     <slot />
   </a>
 </template>
-
-

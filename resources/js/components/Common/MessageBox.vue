@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import {Dialog, DialogPanel} from '@headlessui/vue'
-import {type VNode} from 'vue'
+import { Dialog, DialogPanel } from '@headlessui/vue'
+import { type VNode } from 'vue'
 
 defineSlots<{
   title: Node
@@ -13,8 +13,15 @@ const emit = defineEmits(['close'])
 </script>
 
 <template>
-  <Dialog :open class="relative z-50" @close="emit('close')">
-    <div class="fixed inset-0 bg-black/30" aria-hidden="true" />
+  <Dialog
+    :open
+    class="relative z-50"
+    @close="emit('close')"
+  >
+    <div
+      class="fixed inset-0 bg-black/30"
+      aria-hidden="true"
+    />
 
     <div class="fixed inset-0 flex w-screen items-center justify-center p-4">
       <DialogPanel class="bg-white shadow rounded-lg">
@@ -22,9 +29,11 @@ const emit = defineEmits(['close'])
           <h3 class="font-semibold leading-6 text-xl text-primary">
             <slot name="title" />
           </h3>
+
           <div class="mt-2 max-w-xl text-black">
             <slot name="message" />
           </div>
+
           <div class="mt-5 flex gap-4 justify-end">
             <slot name="buttons" />
           </div>

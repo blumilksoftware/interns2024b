@@ -1,4 +1,4 @@
-import type {User} from '@/Types/User'
+import type { User } from '@/Types/User'
 
 export interface Ranking {
   id: number

@@ -1,12 +1,12 @@
 import '../css/app.css'
-import { createApp, h, type DefineComponent } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-import UserLayout from '@/Layouts/UserLayout.vue'
-import AdminLayout from '@/Layouts/AdminLayout.vue'
-import GuestLayout from '@/Layouts/GuestLayout.vue'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
+import { createApp, h, type DefineComponent } from 'vue'
+import AdminLayout from '@/Layouts/AdminLayout.vue'
+import GuestLayout from '@/Layouts/GuestLayout.vue'
+import UserLayout from '@/Layouts/UserLayout.vue'
 import 'dayjs/locale/pl'
 
 dayjs.extend(relativeTime)
@@ -39,7 +39,5 @@ createInertiaApp({
       .use(plugin)
       .mount(el)
   },
-  progress: {
-    color: '#4B5563',
-  },
+  progress: { color: '#4B5563' },
 })

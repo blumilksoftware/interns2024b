@@ -1,16 +1,22 @@
 <script setup lang="ts">
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/20/solid'
 
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
     id?: string | number
     checked?: boolean
     bold?: boolean
     mode?: 'success' | 'error' | 'none'
-  }>(), { mode: 'none', id: undefined })
+  }>(), 
+  { mode: 'none', id: undefined },
+)
 </script>
 
 <template>
-  <label class="flex items-center text-sm text-black relative cursor-not-allowed" :class="{'font-semibold': bold }">
+  <label
+    class="flex items-center text-sm text-black relative cursor-not-allowed"
+    :class="{'font-semibold': bold }"
+  >
     <input
       :id
       type="radio"
@@ -29,10 +35,17 @@ withDefaults(defineProps<{
         'stroke-green-700 hover:stroke-green-900': mode === 'success'
       }"
     >
-      <XMarkIcon v-if="mode=='error'" class="size-3 absolute" />
-      <CheckIcon v-else-if="mode=='success'" class="size-3 absolute" />
+      <XMarkIcon
+        v-if="mode=='error'"
+        class="size-3 absolute"
+      />
+
+      <CheckIcon
+        v-else-if="mode=='success'"
+        class="size-3 absolute"
+      />
     </div>
+
     <slot />
   </label>
 </template>
-

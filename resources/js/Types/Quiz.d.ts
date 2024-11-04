@@ -1,4 +1,4 @@
-import {type Question} from '@/Types/Question'
+import { type Question } from '@/Types/Question'
 
 export interface Quiz {
   id: number
@@ -7,7 +7,7 @@ export interface Quiz {
   updatedAt: number
   scheduledAt?: number
   duration?: number
-  state:'published' | 'locked' | 'unlocked'
+  state: 'published' | 'locked' | 'unlocked'
   isUserAssigned: boolean
   isRankingPublished: boolean
   questions: Question[]
