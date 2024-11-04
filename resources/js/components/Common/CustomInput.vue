@@ -1,26 +1,29 @@
 <script setup lang="ts">
-
-withDefaults(defineProps< {
-  label: string
-  name: string
-  error?: string
-  type?: string
-  required? : boolean
-  placeholder? : string
-  autocomplete?: string
-}>(), {
-  type: 'text',
-  required: true,
-  autocomplete: 'off',
-  placeholder: '',
-  error: '',
-})
+withDefaults(
+  defineProps< {
+    label: string
+    name: string
+    error?: string
+    type?: string
+    required?: boolean
+    placeholder?: string
+    autocomplete?: string
+  }>(), 
+  {
+    type: 'text',
+    required: true,
+    autocomplete: 'off',
+    placeholder: '',
+    error: '',
+  },
+)
 
 const model = defineModel<string>()
 </script>
 
 <template>
-  <label :class="{'text-red': error}">{{ label }}
+  <label :class="{'text-red': error}">
+    {{ label }}
     <div class="mt-2">
       <input
         v-model="model"
@@ -32,7 +35,13 @@ const model = defineModel<string>()
         :class="{'ring-red focus:ring-red': error}"
         class="duration-200 ring-inset outline-none focus:ring focus:ring-primary bg-white/30 rounded-lg w-full p-3 text-gray-900 ring-2 ring-primary/30 placeholder:text-gray-400"
       >
-      <div v-if="error" class="text-red">{{ error }}</div>
+
+      <div
+        v-if="error"
+        class="text-red"
+      >
+        {{ error }}
+      </div>
     </div>
   </label>
 </template>

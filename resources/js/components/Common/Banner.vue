@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { XMarkIcon } from '@heroicons/vue/20/solid'
 
-defineProps<{text:string}>()
+defineProps<{ text: string }>()
 const emit = defineEmits<{ click: [] }>()
 </script>
 
@@ -10,9 +10,17 @@ const emit = defineEmits<{ click: [] }>()
     <b class="text-white">
       {{ text }}
     </b>
+
     <div class="flex flex-1 justify-end">
-      <button type="button" class="-m-3 p-3 focus-visible:outline-offset-[-4px]">
-        <XMarkIcon class="size-5 text-white" aria-hidden="true" @click="emit('click')" />
+      <button
+        type="button"
+        class="-m-3 p-3 focus-visible:outline-offset-[-4px]"
+      >
+        <XMarkIcon
+          class="size-5 text-white"
+          aria-hidden="true"
+          @click="emit('click')"
+        />
       </button>
     </div>
   </div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type {Page} from '@/Types/Page'
+import type { Page } from '@/Types/Page'
 import BaseLayout from '@/Layouts/BaseLayout.vue'
-import {type PageProps} from '@/Types/PageProps'
+import { type PageProps } from '@/Types/PageProps'
 
 const props = defineProps<PageProps>()
 
@@ -12,12 +12,17 @@ const pages: Page[] = [
 ]
 
 if (props.user?.isSuperAdmin) {
-  pages.push({ title: 'Administratorzy', href: '/admin/admins'})
+  pages.push({ title: 'Administratorzy', href: '/admin/admins' })
 }
 </script>
 
 <template>
-  <BaseLayout :pages :app-name="appName" :user :flash>
+  <BaseLayout
+    :pages
+    :app-name="appName"
+    :user
+    :flash
+  >
     <slot />
   </BaseLayout>
 </template>

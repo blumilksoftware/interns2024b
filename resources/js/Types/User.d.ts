@@ -1,4 +1,4 @@
-import {type School} from '@/Types/School'
+import { type School } from '@/Types/School'
 
 export interface User {
   id: number

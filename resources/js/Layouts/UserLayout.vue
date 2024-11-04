@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type {Page} from '@/Types/Page'
+import type { Page } from '@/Types/Page'
+import type { PageProps } from '@/Types/PageProps'
 import BaseLayout from '@/Layouts/BaseLayout.vue'
-import type {PageProps} from '@/Types/PageProps'
 
 defineProps<PageProps>()
 
@@ -12,7 +12,12 @@ const pages: Page[] = [
 </script>
 
 <template>
-  <BaseLayout :pages :app-name="appName" :user :flash>
+  <BaseLayout
+    :pages
+    :app-name="appName"
+    :user
+    :flash
+  >
     <slot />
   </BaseLayout>
 </template>

@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import {type QuizSubmission} from '@/Types/QuizSubmission'
-import Divider from '@/components/Common/Divider.vue'
-import {computed, ref, watch} from 'vue'
-import axios from 'axios'
-import FormButton from '@/components/Common/FormButton.vue'
-import Button from '@/components/Common/Button.vue'
-import {type AnswerRecord} from '@/Types/AnswerRecord'
-import MessageBox from '@/components/Common/MessageBox.vue'
-import {Head} from '@inertiajs/vue3'
-import {useTimer} from '@/Helpers/Timer'
-import { useWindowScroll } from '@vueuse/core'
 import { TransitionRoot } from '@headlessui/vue'
-import {calcSecondsLeftToDate} from '@/Helpers/Time'
+import { Head } from '@inertiajs/vue3'
+import { useWindowScroll } from '@vueuse/core'
+import axios from 'axios'
+import { computed, ref, watch } from 'vue'
+import Button from '@/components/Common/Button.vue'
+import Divider from '@/components/Common/Divider.vue'
+import FormButton from '@/components/Common/FormButton.vue'
+import MessageBox from '@/components/Common/MessageBox.vue'
+import { calcSecondsLeftToDate } from '@/Helpers/Time'
+import { useTimer } from '@/Helpers/Timer'
+import { type AnswerRecord } from '@/Types/AnswerRecord'
+import { type QuizSubmission } from '@/Types/QuizSubmission'
 
 const props = defineProps<{ submission: QuizSubmission }>()
 const answers = ref(props.submission.answers)
@@ -52,6 +52,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
   <Head>
     <title>{{ submission.name }}</title>
   </Head>
+
   <TransitionRoot
     :show="showDuration"
     enter="transition-opacity duration-75"
@@ -78,10 +79,19 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
       {{ timeLeft }}
     </div>
 
-    <div v-for="(record, index) in answers" :key="record.id" class="rounded-lg bg-white shadow border flex flex-col justify-between px-4 py-2 m-5">
+    <div
+      v-for="(record, index) in answers"
+      :key="record.id"
+      class="rounded-lg bg-white shadow border flex flex-col justify-between px-4 py-2 m-5"
+    >
       <div>
-        <p class="pt-2 font-semibold text-primary">Pytanie: {{ index + 1 }}/{{ answers.length }}</p>
-        <p class="py-2 mt-2">{{ record.question }}</p>
+        <p class="pt-2 font-semibold text-primary">
+          Pytanie: {{ index + 1 }}/{{ answers.length }}
+        </p>
+
+        <p class="py-2 mt-2">
+          {{ record.question }}
+        </p>
       </div>
 
       <div class="mb-3 mt-2">
@@ -108,19 +118,54 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
       </div>
     </div>
 
-    <div v-if="!timeout" class="h-80 flex flex-col items-center justify-center">
-      <p class="font-semibold text-primary text-xl p-5 text-center">To już wszystkie pytania. Czy chcesz oddać test?</p>
-      <FormButton v-if="allAnswered" small :href="`/submissions/${submission.id}/close`" method="post">Oddaj test</FormButton>
-      <Button v-else small @click="emptyAnswerMessage = true">Oddaj test</Button>
+    <div
+      v-if="!timeout"
+      class="h-80 flex flex-col items-center justify-center"
+    >
+      <p class="font-semibold text-primary text-xl p-5 text-center">
+        To już wszystkie pytania. Czy chcesz oddać test?
+      </p>
+
+      <FormButton
+        v-if="allAnswered"
+        small
+        :href="`/submissions/${submission.id}/close`"
+        method="post"
+      >
+        Oddaj test
+      </FormButton>
+
+      <Button
+        v-else
+        small
+        @click="emptyAnswerMessage = true"
+      >
+        Oddaj test
+      </Button>
     </div>
 
-    <div v-else class="h-80 flex flex-col items-center justify-center">
-      <p class="font-semibold text-primary text-xl p-5 text-center">Czas przewidziany na ten test dobiegł końca. <br> Twój test został przesłany do ocenienia</p>
-      <FormButton small :href="`/submissions/${submission.id}/result`" method="get">Podsumowanie</FormButton>
+    <div
+      v-else
+      class="h-80 flex flex-col items-center justify-center"
+    >
+      <p class="font-semibold text-primary text-xl p-5 text-center">
+        Czas przewidziany na ten test dobiegł końca. <br> Twój test został przesłany do ocenienia
+      </p>
+
+      <FormButton
+        small
+        :href="`/submissions/${submission.id}/result`"
+        method="get"
+      >
+        Podsumowanie
+      </FormButton>
     </div>
   </div>
 
-  <MessageBox :open="emptyAnswerMessage" @close="emptyAnswerMessage = false">
+  <MessageBox
+    :open="emptyAnswerMessage"
+    @close="emptyAnswerMessage = false"
+  >
     <template #title>
       Pytania bez odpowiedzi
     </template>
@@ -130,12 +175,28 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     </template>
 
     <template #buttons>
-      <Button small text @click="emptyAnswerMessage = false">Wróć</Button>
-      <FormButton small :href="`/submissions/${submission.id}/close`" method="post">Oddaj mimo to</FormButton>
+      <Button
+        small
+        text
+        @click="emptyAnswerMessage = false"
+      >
+        Wróć
+      </Button>
+
+      <FormButton
+        small
+        :href="`/submissions/${submission.id}/close`"
+        method="post"
+      >
+        Oddaj mimo to
+      </FormButton>
     </template>
   </MessageBox>
 
-  <MessageBox :open="timeoutMessage" @close="timeoutMessage = false">
+  <MessageBox
+    :open="timeoutMessage"
+    @close="timeoutMessage = false"
+  >
     <template #title>
       Koniec czasu
     </template>
@@ -145,11 +206,19 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     </template>
 
     <template #buttons>
-      <Button small @click="timeoutMessage = false">Ok</Button>
+      <Button
+        small
+        @click="timeoutMessage = false"
+      >
+        Ok
+      </Button>
     </template>
   </MessageBox>
 
-  <MessageBox :open="networkErrorMessage" @close="networkErrorMessage = false">
+  <MessageBox
+    :open="networkErrorMessage"
+    @close="networkErrorMessage = false"
+  >
     <template #title>
       Nie udało się wysłać odpowiedzi
     </template>
@@ -159,11 +228,19 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     </template>
 
     <template #buttons>
-      <Button small @click="networkErrorMessage = false">Ok</Button>
+      <Button
+        small
+        @click="networkErrorMessage = false"
+      >
+        Ok
+      </Button>
     </template>
   </MessageBox>
 
-  <MessageBox :open="timeoutWarningMessage" @close="timeoutWarningMessage = false">
+  <MessageBox
+    :open="timeoutWarningMessage"
+    @close="timeoutWarningMessage = false"
+  >
     <template #title>
       Zbliża się koniec czasu
     </template>
@@ -173,7 +250,12 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
     </template>
 
     <template #buttons>
-      <Button small @click="timeoutWarningMessage = false">Ok</Button>
+      <Button
+        small
+        @click="timeoutWarningMessage = false"
+      >
+        Ok
+      </Button>
     </template>
   </MessageBox>
 </template>

@@ -1,6 +1,6 @@
-import {type TimeObject} from '@/Types/TimeObject'
 import dayjs, { type Dayjs } from 'dayjs'
-import {usePlurals} from '@/Helpers/Plurals'
+import { usePlurals } from '@/Helpers/Plurals'
+import { type TimeObject } from '@/Types/TimeObject'
 
 export function calcSecondsBetweenDates(from: string | number | Dayjs = 0, to: string | number | Dayjs = 0): number {
   return dayjs(from).diff(dayjs(to), 's')
@@ -12,9 +12,9 @@ export function calcSecondsLeftToDate(date: string | number | Dayjs = 0): number
 
 export function secondsToHour(seconds: number): TimeObject {
   return {
-    'h': Math.floor(seconds / 3600),
-    'm': Math.floor(seconds % 3600  / 60),
-    's': seconds % 60,
+    h: Math.floor(seconds / 3600),
+    m: Math.floor(seconds % 3600  / 60),
+    s: seconds % 60,
   }
 }
 
@@ -30,7 +30,7 @@ export function timeToString(time: TimeObject, withLeft = false): string {
     return `${withLeft ? translateLeft(s) : ''} ${s} ${translateSecondsLeft(s)}`.trimStart()
   }
 
-  if (h <= 0 && m < 10 && s > 0 ) {
+  if (h <= 0 && m < 10 && s > 0) {
     return `${withLeft ? translateLeft(m) : ''} ${m} ${translateMinutesLeft(m)} i ${s} ${translateSecondsLeft(s)}`.trimStart()
   }
 

@@ -1,4 +1,4 @@
-import {type AnswerRecord} from '@/Types/AnswerRecord'
+import { type AnswerRecord } from '@/Types/AnswerRecord'
 
 export interface QuizSubmission {
   id: number
