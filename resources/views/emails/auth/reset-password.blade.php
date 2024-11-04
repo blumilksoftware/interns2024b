@@ -84,7 +84,7 @@
         </svg>
         <h1>{{ config('app.name') }}</h1>
     </header>
-    <h1>Cześć {{ $user->name }},</h1>
+    <h2>Cześć {{ $user->name }},</h2>
 
     <p>Otrzymaliśmy prośbę o zresetowanie hasła dla Twojego konta.</p>
 
