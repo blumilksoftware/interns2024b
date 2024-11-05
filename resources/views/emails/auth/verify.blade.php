@@ -18,7 +18,7 @@
     <div style="padding: 16px 48px;">
         <h3>Cześć {{ $user->name }},</h3>
 
-        <p>Aby zweryfikować swoje konto, klilnij poniższy pzycisk:</p>
+        <p>Aby zweryfikować swoje konto, kliknij poniższy przycisk:</p>
         
         <table style="margin: 24px auto;"><tr><td style="text-align: center;">
             <b><a class="button" href="{{ $url }}">Zweryfikuj e-mail</a></b>
