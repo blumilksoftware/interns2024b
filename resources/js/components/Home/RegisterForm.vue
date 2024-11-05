@@ -8,7 +8,6 @@ import Searchbar from '@/components/Common/Searchbar.vue'
 import CustomInput from '@/components/Common/CustomInput.vue'
 import PasswordInput from '@/components/Common/PasswordInput.vue'
 import { type School } from '@/Types/School'
-import { type Option } from '@/Types/Option'
 
 const props = defineProps<{ errors:Errors, schools:School[] }>()
 const filteredSchools = computed(() => props.schools.toSorted((a, b) => (a.city + a.name).localeCompare(b.city + b.name)))

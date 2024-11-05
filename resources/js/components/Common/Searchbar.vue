@@ -2,7 +2,6 @@
 import { ref, defineProps, computed} from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import { nanoid } from 'nanoid'
-import { type Option } from '@/Types/Option'
 
 const id = ref(nanoid())
 const target = ref()

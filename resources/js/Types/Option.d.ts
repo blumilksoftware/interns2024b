@@ -1,4 +1,4 @@
-export interface Option{
+interface Option{
   key: number | string
   title? : string
   text: string
