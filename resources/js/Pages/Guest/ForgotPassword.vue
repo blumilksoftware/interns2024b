@@ -3,12 +3,12 @@ import { useForm } from '@inertiajs/vue3'
 import CustomInput from '@/components/Common/CustomInput.vue'
 import { Head } from '@inertiajs/vue3'
 import { inject, onMounted, type Ref } from 'vue'
-import type Header from '@/components/Common/Header.vue'
 
-const headerRef = inject<Ref<InstanceType<typeof Header>>>('header')
+const titleRef = inject<Ref<string>>('titleRef')
+
 onMounted(() => {
-  if (headerRef)
-    headerRef.value.titleRef = 'Przypomnij hasło'
+  if (titleRef)
+    titleRef.value = 'Przypomnij hasło'
 })
 const form = useForm({ email: '' })
 
@@ -18,10 +18,7 @@ function submit() {
 </script>
 
 <template>
-  <Head>
-    <title>{{ headerRef?.titleRef }}</title>
-    <meta name="Przypomnij hasło" content="Przypomnij hasło">
-  </Head>
+  <Head :title="titleRef" />
 
   <div class="sm:p-6 sm:pt-12 size-full flex flex-col items-center justify-center sm:h-fit gap-6">
     <div class="text-md font-medium leading-6 text-gray-900 px-[5vw] text-center flex flex-col gap-1">

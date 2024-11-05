@@ -6,12 +6,12 @@ import type { PageProps } from '@/Types/PageProps'
 import DisplayError from '@/components/Common/DisplayError.vue'
 import { inject, onMounted, type Ref, ref } from 'vue'
 import EyeDynamicIcon from '@/components/Icons/EyeDynamicIcon.vue'
-import type Header from '@/components/Common/Header.vue'
 
-const headerRef = inject<Ref<InstanceType<typeof Header>>>('header')
+const titleRef = inject<Ref<string>>('titleRef')
+
 onMounted(() => {
-  if (headerRef)
-    headerRef.value.titleRef = 'Zmiana hasła'
+  if (titleRef)
+    titleRef.value = 'Zmiana hasła'
 })
 const props = defineProps<{
   token: string
@@ -31,10 +31,8 @@ function submit() {
 </script>
 
 <template>
-  <Head>
-    <title>{{ headerRef?.titleRef }}</title>
-    <meta name="Zmiana hasła" content="Zmiana hasła">
-  </Head>
+  <Head :title="titleRef" />
+
   <div class="sm:p-6 sm:pt-12 size-full flex flex-col items-center justify-center sm:h-fit gap-6">
     <div class="text-md font-medium leading-6 text-gray-900 px-[5vw] text-center flex flex-col gap-1">
       <p>Wprowadź nowe hasło, z którego będziesz korzystać w aplikacji.</p>
