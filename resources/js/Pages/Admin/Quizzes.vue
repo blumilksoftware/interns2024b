@@ -62,7 +62,7 @@ function setQuizzesSorter(type: 'name' | 'creationDate' | 'modificationDate', de
   </Head>
   <div class="flex flex-col w-full pb-3">
     <div data-name="toolbar" class="flex px-4 gap-1 sm:gap-2">
-      <Dropdown class-btn="rounded-lg" :options="options" title="Sortuj">
+      <Dropdown class-btn="rounded-lg" :options="options" title="Sortuj" pointer-position="left">
         <div class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg">
           <ArrowsUpDownIcon class="size-6" />
           <span class="hidden sm:block">Sortuj</span>
