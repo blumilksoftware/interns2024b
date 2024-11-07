@@ -31,7 +31,9 @@ module.exports = {
                 '8xl': '98rem'
             },
             minHeight: {
-                '6.5' : '1.66rem'
+                '6.5' : '1.66rem',
+                '512' : '32rem',
+                '616' : '38.5rem'
             },
             maxWidth: {
                 '8xl': '98rem'

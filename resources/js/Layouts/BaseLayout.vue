@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type {Page} from '@/Types/Page'
 import Header from '@/components/Common/Header.vue'
 import Footer from '@/components/Common/Footer.vue'
 import BackgroundEffect from '@/components/Common/BackgroundEffect.vue'

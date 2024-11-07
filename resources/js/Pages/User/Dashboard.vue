@@ -6,7 +6,6 @@ import FormButton from '@/components/Common/FormButton.vue'
 import Divider from '@/components/Common/Divider.vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
 import {type QuizSubmission} from '@/Types/QuizSubmission'
-import type Quiz from '@/Types/Quiz'
 
 const props = defineProps<{
   submissions: QuizSubmission[]

@@ -3,12 +3,8 @@ import FormButton from '@/components/Common/FormButton.vue'
 import { TransitionRoot, Dialog, TransitionChild, DialogPanel, DialogTitle } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { ref } from 'vue'
-import { type User } from '@/Types/User'
-import { type Page } from '@/Types/Page'
 
-defineProps<{ pages: Page[], user?: User, appName: string }>()
-const titleRef = ref('')
-defineExpose({titleRef})
+defineProps<{ pages: Page[], user?: User, appName: string, title?: string }>()
 const open = ref<boolean>(false)
 const isSelected = (page: Page) => page.href === window.location.pathname
 </script>
@@ -23,7 +19,7 @@ const isSelected = (page: Page) => page.href === window.location.pathname
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12.2545 17.8224V6.2803L15.3847 2.28313C15.731 1.84101 16.4307 2.21751 16.2525 2.75005L13.6885 10.4136C13.6668 10.4784 13.715 10.5453 13.7834 10.5453H16.4935C16.9005 10.5453 17.137 11.0056 16.9 11.3365L12.2545 17.8224Z" fill="#6566C2" />
           </svg>
         </a>
-        <span v-if="pages.length <= 0" class="font-semibold leading-6 text-gray-900">{{ titleRef }}</span>
+        <span v-if="pages.length <= 0" class="font-semibold leading-6 text-gray-900">{{ title }}</span>
         <div v-else class="flex gap-6">
           <a
             v-for="item in pages"

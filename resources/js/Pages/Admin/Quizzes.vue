@@ -12,7 +12,6 @@ import Dropdown from '@/components/Common/Dropdown.vue'
 import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
 import useCurrentTime from '@/Helpers/CurrentTime'
 import { keysWrapper } from '@/Helpers/KeysManager'
-import type Quiz from '@/Types/Quiz'
 
 provide<Ref<number>>('currentTime', useCurrentTime())
 const props = defineProps<{ quizzes:Quiz[] }>()

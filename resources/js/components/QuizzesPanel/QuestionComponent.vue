@@ -5,8 +5,6 @@ import { vAutoAnimate } from '@formkit/auto-animate'
 import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynamicIcon.vue'
 import AnswerComponent from '@/components/QuizzesPanel/AnswerComponent.vue'
 import getKey from '@/Helpers/KeysManager'
-import type Answer from '@/Types/Answer'
-import type Question from '@/Types/Question'
 
 defineProps<{ editing:boolean, index:number, questionsTotal:number }>()
 const emit = defineEmits<{ copy: [question:Question], delete: [question:Question] }>()

@@ -1,6 +1,4 @@
-import type Question from '@/Types/Question'
-
-export default interface Quiz {
+interface Quiz {
   [key: string]
   id: number
   title: string

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import CheckDynamicIcon from '@/components/Icons/CheckDynamicIcon.vue'
-import type Answer from '@/Types/Answer'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 
 defineProps<{ editing:boolean }>()

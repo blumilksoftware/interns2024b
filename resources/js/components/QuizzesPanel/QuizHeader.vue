@@ -4,7 +4,6 @@ import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import CustomDatepicker from '@/components/Common/CustomDatepicker.vue'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 import { formatDate } from '@/Helpers/Format'
-import type Quiz from '@/Types/Quiz'
 
 defineProps<{
   editing:boolean

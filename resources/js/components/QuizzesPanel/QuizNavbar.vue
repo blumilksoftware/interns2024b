@@ -6,9 +6,6 @@ import {type Errors} from '@inertiajs/core'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import MessageBox from '@/components/Common/MessageBox.vue'
 import { formatDate } from '@/Helpers/Format'
-import type Quiz from '@/Types/Quiz'
-import type Question from '@/Types/Question'
-import type Answer from '@/Types/Answer'
 
 const props = defineProps<{
   archived:boolean

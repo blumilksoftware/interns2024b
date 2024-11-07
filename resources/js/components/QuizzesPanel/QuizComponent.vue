@@ -9,8 +9,6 @@ import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynami
 import getKey from '@/Helpers/KeysManager'
 import useRequestResolution from '@/Helpers/RequestResolution'
 import { formatDate } from '@/Helpers/Format'
-import type Quiz from '@/Types/Quiz'
-import type Question from '@/Types/Question'
 
 const currentTime = inject<Ref<number>>('currentTime')
 const props = defineProps<{ quiz:Quiz, showArchivedQuizzes:boolean }>()

@@ -1,4 +1,4 @@
-export default interface Answer {
+interface Answer {
   [key: string]
   id?: number
   text: string

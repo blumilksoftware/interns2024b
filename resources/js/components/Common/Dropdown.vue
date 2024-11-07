@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { onClickOutside } from '@vueuse/core'
-import type Option from '@/Types/Option'
 
 defineProps<{ options:Option[], classBtn?:string, pointerPosition?:'left'|'right'|'center' }>()
 const emit = defineEmits<{ optionClick: [option:Option] }>()
