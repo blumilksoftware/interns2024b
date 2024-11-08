@@ -29,7 +29,7 @@ const quiz = defineModel<Quiz>({ required: true })
         class="w-full outline-none font-bold border-b border-transparent duration-200 transition-colors text-lg bg-transparent focus:border-b-primary"
         :class="{
           'border-b-primary/30 duration-200 transition-colors hover:border-b-primary/60 text-primary' : editing,
-          'border-b-red' : errors.title
+          'border-b-red' : errors.title && editing
         }"
         :disabled="!editing"
       >
