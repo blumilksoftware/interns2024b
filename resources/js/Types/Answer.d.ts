@@ -1,8 +1,6 @@
-export interface Answer {
-  id: number
+interface Answer {
+  [key: string]
+  id?: number
   text: string
-  createdAt: number
-  updatedAt: number
-  locked: boolean
   correct: boolean
 }

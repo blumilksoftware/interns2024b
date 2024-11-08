@@ -3,9 +3,13 @@ import { ref } from 'vue'
 import { type Errors, type VisitOptions } from '@inertiajs/core'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import ButtonFrame from '@/components/Common/ButtonFrame.vue'
-import type ButtonFrameProps from '@/Types/ButtonFrameProps'
+import { type ButtonFrameProps } from '@/Types/ButtonFrameProps'
 
-defineProps<{ href:string, buttonClass?:string } & ButtonFrameProps & VisitOptions>()
+withDefaults(
+  defineProps<{ href:string, buttonClass?:string } & ButtonFrameProps & VisitOptions>(),
+  { buttonClass: undefined, preserveState: true, preserveScroll: true },
+)
+
 const emit = defineEmits<{
   click: []
   processing: [processing:boolean]
@@ -45,6 +49,7 @@ function onProcessing(isProcessing:boolean) {
     @error="onError"
     @processing="onProcessing"
     @errors="errors => emit('errors', errors)"
+    @click="emit('click')"
   >
     <ButtonFrame
       :disabled="disabled || processing"

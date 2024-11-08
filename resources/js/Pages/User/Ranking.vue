@@ -1,35 +1,44 @@
 <script setup lang="ts">
-import {computed, ref} from 'vue'
-import type { QuizRankingProps} from '@/Types/Ranking'
+import {computed} from 'vue'
+import Divider from '@/components/Common/Divider.vue'
+import {groupBy} from '@/Helpers/GroupBy'
+import type {PageProps} from '@/Types/PageProps'
 
-const props = defineProps<QuizRankingProps>()
+const props = defineProps<{
+  quiz: Quiz
+  rankings: Ranking[]
+} & PageProps>()
 
-const quiz = ref(props.quiz)
-const rankings = ref(props.rankings)
+const grouped = computed(() => groupBy('points', props.rankings))
 
-const sortedRankings = computed(() => {
-  return [...rankings.value].sort((a, b) => b.points - a.points)
-})
 </script>
 
 <template>
-  <div>
-    <h1>Ranking Quizu: {{ quiz.name }}</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>ID Użytkownika</th>
-          <th>Szkoła</th>
-          <th>Punkty</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(ranking) in sortedRankings" :key="ranking.user.id">
-          <td>{{ ranking.user.id }}</td>
-          <td>{{ ranking.user.school.name }}</td>
-          <td>{{ ranking.points }}</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="w-full p-2 md:max-w-8xl">
+    <Divider>
+      <h1 class="font-bold text-xl text-primary text-center p-4 whitespace-nowrap">{{ quiz.name }} - Ranking</h1>
+    </Divider>
+
+    <div class="w-full flex justify-between text-sm font-semibold text-gray-900 border shadow bg-white rounded-md px-4 py-2 gap-x-2">
+      <div class="sm:flex-none sm:w-full sm:max-w-56">Imię</div>
+      <div class="flex-1">Nazwisko</div>
+      <div class="flex-1">Szkoła</div>
+      <div class="sm:flex-none sm:w-full max-w-16">Punkty</div>
+    </div>
+
+    <div v-for="(place, index) in grouped" :key="index" class="mt-4">
+      <div class="mt-2 bg-white border shadow rounded-md">
+        <h1 class="text-white font-semibold border-b bg-primary rounded-t-md p-2 text-sm text-left">
+          Miejsce {{ index + 1 }}
+        </h1>
+
+        <div v-for="ranking in place" :key="ranking.user.id" class="w-full flex justify-between text-sm text-gray-900 p-4 gap-x-2">
+          <div class="sm:flex-none sm:w-full sm:max-w-56" :class="[ranking.user.id === user.id ? 'text-black' : 'text-gray-500']">{{ ranking.user.id === user.id ? user.name : ranking.user.name ?? '---' }}</div>
+          <div class="flex-1" :class="[ranking.user.id === user.id ? 'text-black' : 'text-gray-500']">{{ ranking.user.id === user.id ? user.surname : ranking.user.surname ?? '---' }}</div>
+          <div class="flex-1" :class="[ranking.user.id === user.id ? 'text-black' : 'text-gray-500']">{{ ranking.user.school.name }}</div>
+          <div class="sm:flex-none sm:w-full max-w-16 text-center" :class="[ranking.user.id === user.id ? 'text-black' : 'text-gray-500']">{{ ranking.points }}</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

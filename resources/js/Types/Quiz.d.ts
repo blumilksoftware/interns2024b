@@ -1,13 +1,13 @@
-import {type Question} from '@/Types/Question'
-
-export interface Quiz {
+interface Quiz {
+  [key: string]
   id: number
-  name: string
-  createdAt: number
-  updatedAt: number
-  scheduledAt?: number
+  title: string
+  scheduledAt?: string
   duration?: number
+  createdAt: string
+  updatedAt: string
   state:'published' | 'locked' | 'unlocked'
   isUserAssigned: boolean
+  isRankingPublished: boolean
   questions: Question[]
 }

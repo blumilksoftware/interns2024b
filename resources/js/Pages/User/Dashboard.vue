@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import {type QuizSubmission} from '@/Types/QuizSubmission'
-import {type Quiz} from '@/Types/Quiz'
 import {Head} from '@inertiajs/vue3'
 import {computed} from 'vue'
 import dayjs from 'dayjs'
 import FormButton from '@/components/Common/FormButton.vue'
 import Divider from '@/components/Common/Divider.vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
+import {type QuizSubmission} from '@/Types/QuizSubmission'
 
 const props = defineProps<{
   submissions: QuizSubmission[]
@@ -34,7 +33,7 @@ const history = computed(() => props.submissions.filter(submission => submission
     </Divider>
     <div v-for="quiz in started" :key="quiz.id" class="rounded-lg bg-white shadow border px-4 py-2 flex items-center justify-between mb-2">
       <div>
-        <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.name }}</p>
+        <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.title }}</p>
         <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
       </div>
       <FormButton button-class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/start`" preserve-scroll>
@@ -47,7 +46,7 @@ const history = computed(() => props.submissions.filter(submission => submission
     </Divider>
     <div v-for="quiz in scheduled" :key="quiz.id" class="rounded-lg bg-white shadow border px-4 py-2 flex items-center justify-between mb-2">
       <div>
-        <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.name }}</p>
+        <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.title }}</p>
         <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
       </div>
 

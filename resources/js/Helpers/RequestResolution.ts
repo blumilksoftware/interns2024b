@@ -12,7 +12,7 @@ const currentKey = nanoid()
 export default function useRequestResolution() {
   const resolution = { processing:ref(false), errors:ref<Errors>({}) }
 
-  provide<RequestResolutionEmitter>(currentKey, {
+  provide<RequestResolutionEmitter>(currentKey, { 
     emitRequestProcessing: (processing:boolean) => resolution.processing.value = processing,
     emitRequestErrors: (errors:Errors) => resolution.errors.value = errors,
   })

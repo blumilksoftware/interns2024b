@@ -1,4 +1,4 @@
-export default interface ButtonFrameProps {
+export interface ButtonFrameProps {
   small?: boolean
   extraSmall?: boolean
   disabled?: boolean
