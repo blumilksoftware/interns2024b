@@ -37,6 +37,7 @@ class SchoolRequest extends FormRequest
         return [
             "name" => ["required", "string"],
             "city" => ["required", "string"],
+            "regon" => ["required", "string"],
             "street" => ["required", "string"],
             "building_number" => ["required", "string"],
             "apartment_number" => ["string"],

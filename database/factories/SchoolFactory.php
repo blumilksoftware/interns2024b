@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Models\School;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use function str;
 
 /**
  * @extends Factory<School>
@@ -21,6 +22,7 @@ class SchoolFactory extends Factory
     {
         return [
             "name" => fake()->company(),
+            "regon" => str(fake()->randomNumber(9)),
             "city" => fake()->city(),
             "street" => fake()->streetName(),
             "building_number" => fake()->buildingNumber(),

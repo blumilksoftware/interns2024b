@@ -55,7 +55,7 @@ defineProps<{
   </InputWrapper>
 
   <InputWrapper
-    label="Numer mieszkania:"
+    label="Numer lokalu:"
     :has-content="!!address.apartmentNumber || !disabled"
     :error="errors.apartment_number"
     :show-error="!disabled"

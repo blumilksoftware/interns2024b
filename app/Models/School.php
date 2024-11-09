@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
+ * @property string $regon
  * @property string $name
  * @property string $city
  * @property string $street
@@ -28,6 +29,7 @@ class School extends Model
 
     protected $fillable = [
         "name",
+        "regon",
         "city",
         "street",
         "building_number",

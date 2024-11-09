@@ -46,6 +46,7 @@ class TestGetSchoolDataService extends TestCase
                         "numerBudynku" => "13",
                         "numerLokalu" => "1c",
                         "kodPocztowy" => "00-000",
+                        "regon" => "356855674",
                     ],
                     [
                         "id" => 2,
@@ -55,6 +56,7 @@ class TestGetSchoolDataService extends TestCase
                         "numerBudynku" => "20",
                         "numerLokalu" => "2c",
                         "kodPocztowy" => "00-000",
+                        "regon" => "356855675",
                     ],
                 ],
                 "hydra:view" => [],
@@ -71,6 +73,7 @@ class TestGetSchoolDataService extends TestCase
             "building_number" => "13",
             "apartment_number" => "1c",
             "zip_code" => "00-000",
+            "regon" => "356855674",
         ]);
 
         $this->assertDatabaseHas("schools", [
@@ -80,6 +83,7 @@ class TestGetSchoolDataService extends TestCase
             "building_number" => "20",
             "apartment_number" => "2c",
             "zip_code" => "00-000",
+            "regon" => "356855675",
         ]);
     }
 
@@ -96,6 +100,7 @@ class TestGetSchoolDataService extends TestCase
                         "numerBudynku" => "13",
                         "numerLokalu" => "1c",
                         "kodPocztowy" => "00-000",
+                        "regon" => "356855674",
                     ],
                     [
                         "id" => 2,
@@ -105,6 +110,7 @@ class TestGetSchoolDataService extends TestCase
                         "numerBudynku" => "20",
                         "numerLokalu" => "2c",
                         "kodPocztowy" => "00-000",
+                        "regon" => "356855675",
                     ],
                 ],
                 "hydra:view" => [],

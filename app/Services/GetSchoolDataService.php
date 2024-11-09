@@ -11,6 +11,7 @@ use App\Http\Integrations\RSPOConnector\Requests\GetSchoolsRequest;
 use App\Http\Integrations\RSPOConnector\RSPOConnector;
 use App\Models\School;
 use Illuminate\Support\Collection;
+use function dump;
 
 class GetSchoolDataService
 {
@@ -47,15 +48,10 @@ class GetSchoolDataService
      */
     protected function store(Collection $schools): void
     {
-        foreach ($schools as $school) {
-            School::firstOrCreate([
-                "name" => $school->name,
-                "city" => $school->city,
-                "street" => $school->street,
-                "building_number" => $school->buildingNumber,
-                "apartment_number" => $school->apartmentNumber,
-                "zip_code" => $school->zipCode,
-            ]);
+        foreach ($schools as $dto) {
+            $school = School::query()->firstOrNew(["regon" => $dto->regon]);
+            $school->fill($dto->toArray());
+            $school->save();
         }
     }
 }
