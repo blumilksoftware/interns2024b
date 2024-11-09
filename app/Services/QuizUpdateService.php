@@ -38,10 +38,10 @@ class QuizUpdateService
         $question->fill($data);
 
         if (array_key_exists("answers", $data)) {
-            $answers = collect($data["answers"]);
+            $answers = collect($data["answers"])->filter(fn($answer) => isset($answer["text"]) && trim($answer["text"]) !== "");
             $question->answers()->whereNotIn("id", $answers->pluck("id")->whereNotNull())->delete();
 
-            foreach ($data["answers"] as $answerData) {
+            foreach ($answers as $answerData) {
                 $answer = null;
 
                 if (array_key_exists("id", $answerData)) {

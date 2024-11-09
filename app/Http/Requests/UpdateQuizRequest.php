@@ -36,7 +36,7 @@ class UpdateQuizRequest extends FormRequest
             "questions.*.text" => "required|string",
             "questions.*.answers" => "array",
             "questions.*.answers.*.id" => "integer|min:0",
-            "questions.*.answers.*.text" => "required|string",
+            "questions.*.answers.*.text" => "nullable|string",
             "questions.*.answers.*.correct" => "boolean",
         ];
     }

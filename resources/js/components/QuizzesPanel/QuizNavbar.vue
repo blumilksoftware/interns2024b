@@ -51,6 +51,11 @@ function questionsHaveOneCorrectAnswer() {
     },
   )
 }
+
+function sanitizeData() {
+  for (const question of quiz.value.questions)
+    question.answers = question.answers.filter(answer => answer.text && answer.text.trim() !== '')
+}
 </script>
 
 <template>
@@ -98,8 +103,8 @@ function questionsHaveOneCorrectAnswer() {
         title="Zapisz zmiany"
         method="patch"
         :href="`/admin/quizzes/${quiz.id}`"
-        :data="{ ...quiz, scheduledAt: formatDate(quiz.scheduledAt) }"
-        @success="emit('toggleEditing', false)"
+        :data="{ ...quiz, scheduledAt: formatDate(quiz.scheduledAt, false) }"
+        @success="emit('toggleEditing', false); sanitizeData()"
       >
         <CheckIcon class="icon" title="Zapisz edytowany test" />
       </RequestWrapper>
