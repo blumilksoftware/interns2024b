@@ -18,10 +18,13 @@ class QuizUpdateService
             $quiz->questions()->whereNotIn("id", $questions->pluck("id")->whereNotNull())->delete();
 
             foreach ($data["questions"] as $questionData) {
-                $question = $quiz->questions()->updateOrCreate(
-                    ["id" => $questionData["id"] ?? null],
-                    $questionData,
-                );
+                $question = null;
+
+                if (array_key_exists("id", $questionData)) {
+                    $question = $quiz->questions()->findOrFail($questionData["id"]);
+                } else {
+                    $question = $quiz->questions()->create($questionData);
+                }
 
                 $this->updateQuestion($question, $questionData);
             }
@@ -39,10 +42,13 @@ class QuizUpdateService
             $question->answers()->whereNotIn("id", $answers->pluck("id")->whereNotNull())->delete();
 
             foreach ($answers as $answerData) {
-                $answer = $question->answers()->updateOrCreate(
-                    ["id" => $answerData["id"] ?? null],
-                    $answerData,
-                );
+                $answer = null;
+
+                if (array_key_exists("id", $answerData)) {
+                    $answer = $question->answers()->findOrFail($answerData["id"]);
+                } else {
+                    $answer = $question->answers()->create($answerData);
+                }
 
                 if (array_key_exists("correct", $answerData) && $answerData["correct"] === true) {
                     $question->correctAnswer()->associate($answer);
