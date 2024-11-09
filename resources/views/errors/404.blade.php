@@ -36,7 +36,7 @@
   <div class="container">
     <h1>404</h1>
     <p>Strona o podanym adresie nie istnieje.</p>
-    <a href="/" class="">Wróć na stronę główną</a>
+    <a href="/">Wróć na stronę główną</a>
   </div>
 </body>
 </html>
