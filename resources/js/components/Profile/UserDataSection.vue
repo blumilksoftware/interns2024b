@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { type User } from '@/Types/User'
-
 defineProps<{ user: User }>()
 </script>
 

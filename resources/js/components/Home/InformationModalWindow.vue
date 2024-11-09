@@ -9,8 +9,10 @@ function setHidden() {
 
 <template>
   <Transition>
-    <div v-show="props.isVisible"
-         class="inset-0 h-screen w-full bg-black/15 backdrop-blur-md fixed z-20 p-5 flex justify-center items-center" @click="setHidden"
+    <div 
+      v-show="props.isVisible"
+      class="inset-0 h-screen w-full bg-black/15 backdrop-blur-md fixed z-20 p-5 flex justify-center items-center"
+      @click="setHidden"
     >
       <div class="bg-white/85 backdrop-blur-md rounded-xl w-full flex flex-col max-w-2xl" @click.stop>
         <h1 class="p-5 font-bold text-xl outline-none focus:shadow-md duration-200" tabindex="0">Title</h1>

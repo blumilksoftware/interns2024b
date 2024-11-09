@@ -14,6 +14,9 @@ class QuizUpdateService
         $quiz->fill($data);
 
         if (array_key_exists("questions", $data)) {
+            $questions = collect($data["questions"]);
+            $quiz->questions()->whereNotIn("id", $questions->pluck("id")->whereNotNull())->delete();
+
             foreach ($data["questions"] as $questionData) {
                 $question = null;
 
@@ -35,7 +38,10 @@ class QuizUpdateService
         $question->fill($data);
 
         if (array_key_exists("answers", $data)) {
-            foreach ($data["answers"] as $answerData) {
+            $answers = collect($data["answers"])->filter(fn($answer) => isset($answer["text"]) && trim($answer["text"]) !== "");
+            $question->answers()->whereNotIn("id", $answers->pluck("id")->whereNotNull())->delete();
+
+            foreach ($answers as $answerData) {
                 $answer = null;
 
                 if (array_key_exists("id", $answerData)) {
@@ -44,7 +50,7 @@ class QuizUpdateService
                     $answer = $question->answers()->create($answerData);
                 }
 
-                if (array_key_exists("correct", $answerData)) {
+                if (array_key_exists("correct", $answerData) && $answerData["correct"] === true) {
                     $question->correctAnswer()->associate($answer);
                 }
 

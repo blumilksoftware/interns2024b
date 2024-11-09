@@ -128,9 +128,15 @@ return [
             "required" => "Pole :attribute jest wymagane.",
             "max" => "Pole :attribute nie może być dłuższe niż :max znaków.",
         ],
+        "questions.*.text" => [
+            "required" => "Treść pytania jest wymagana.",
+        ],
     ],
     "attributes" => [
         "name" => "imię",
+        "title" => "tytuł",
+        "duration" => "czas trwania",
+        "scheduled_at" => "rozpoczęcie",
         "surname" => "nazwisko",
         "email" => "e-mail",
         "date" => "data",

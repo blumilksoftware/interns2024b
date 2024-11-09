@@ -9,7 +9,6 @@ import GeneralSection from '@/components/Home/GeneralSection.vue'
 import AuthSection from '@/components/Home/AuthSection.vue'
 import BackgroundEffect from '@/components/Common/BackgroundEffect.vue'
 import { type PageProps } from '@/Types/PageProps'
-import { type School } from '@/Types/School'
 
 const authSectiontRef = ref<InstanceType<typeof AuthSection>>()
 const { errors, schools, ...props } = defineProps<{
@@ -37,12 +36,9 @@ function scrollToAuth(isLogin:boolean) {
 </script>
 
 <template>
-  <Head>
-    <title>Strona główna</title>
-  </Head>
-  <Transition>
-    <Banner v-if="status" :text="status" @click="status = ''" />
-  </Transition>
+  <Head title="Strona główna" />
+  
+  <Banner v-model="status" />
 
   <div class="flex flex-col h-screen">
     <BackgroundEffect />

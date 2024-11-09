@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import type {Ranking} from '@/Types/Ranking'
 import Divider from '@/components/Common/Divider.vue'
 import {groupBy} from '@/Helpers/GroupBy'
-import type {Quiz} from '@/Types/Quiz'
 import type {PageProps} from '@/Types/PageProps'
 
 const props = defineProps<{

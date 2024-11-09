@@ -40,12 +40,12 @@ function submit() {
     <form class="p-6 gap-4 flex flex-col size-full sm:rounded-lg sm:max-w-lg sm:h-fit" @submit.prevent="submit">
       <CustomInput v-model="form.password" label="Nowe hasło" :error="errors?.password" name="password" :type="isVisiblePassword ? 'text' : 'password'">
         <div class="cursor-pointer text-primary/70" @click="isVisiblePassword=!isVisiblePassword">
-          <EyeDynamicIcon :is-opened="isVisiblePassword" />
+          <EyeDynamicIcon :opened="isVisiblePassword" />
         </div>
       </CustomInput>
       <CustomInput v-model="form.password_confirmation" label="Powtórz hasło" :error="errors?.password_confirmation" name="password_confirmation" :type="isVisibleConfirmPassword ? 'text' : 'password'">
         <div class="cursor-pointer text-primary/70" @click="isVisibleConfirmPassword=!isVisibleConfirmPassword">
-          <EyeDynamicIcon :is-opened="isVisibleConfirmPassword" />
+          <EyeDynamicIcon :opened="isVisibleConfirmPassword" />
         </div>
       </CustomInput>
       <DisplayError :error="errors?.email" />

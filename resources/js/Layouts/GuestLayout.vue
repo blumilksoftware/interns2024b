@@ -15,7 +15,8 @@ watch(
   () => props.flash,
   flash => {
     status.value = flash.status
-  }, { immediate: true },
+  },
+  { immediate: true },
 )
 </script>
 
@@ -23,11 +24,12 @@ watch(
   <BackgroundEffect />
 
   <div class="flex flex-col items-center h-full min-h-screen">
-    <Transition>
-      <Banner v-if="status" :text="status" @click="status = ''" />
-    </Transition>
+    <Banner v-model="status" />
+
     <Header :title="titleRef" :pages="[]" :user="props.user" :app-name="props.appName" />
+
     <slot />
+
     <Footer />
   </div>
 </template>

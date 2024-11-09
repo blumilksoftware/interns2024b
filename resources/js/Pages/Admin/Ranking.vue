@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import type {Ranking} from '@/Types/Ranking'
 import Divider from '@/components/Common/Divider.vue'
 import FormButton from '@/components/Common/FormButton.vue'
 import {groupBy} from '@/Helpers/GroupBy'
-import type {Quiz} from '@/Types/Quiz'
 
 const props = defineProps<{
   quiz: Quiz

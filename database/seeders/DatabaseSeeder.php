@@ -20,15 +20,19 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
         ]);
 
-        Quiz::factory()->locked()->count(5)->create(["scheduled_at" => Carbon::now()->addMonth()]);
+        Quiz::factory()->count(2)->create(["scheduled_at" => Carbon::now()->addMonth()]);
+        Quiz::factory()->locked()->count(2)->create(["scheduled_at" => Carbon::now()->subMonth(), "duration" => 6]);
 
-        $quiz = Quiz::factory()->locked()->create(["name" => "Test Quiz", "scheduled_at" => Carbon::now(), "duration" => 2]);
-        $questions = Question::factory()->count(10)->create(["quiz_id" => $quiz->id]);
+        $quizzes = Quiz::factory()->count(4)->locked()->create(["scheduled_at" => Carbon::now()->addDay()]);
 
-        foreach ($questions as $question) {
-            $answers = Answer::factory()->count(4)->create(["question_id" => $question->id]);
-            $question->correct_answer_id = $answers[0]->id;
-            $question->save();
+        foreach ($quizzes as $quiz) {
+            $questions = Question::factory()->count(4)->create(["quiz_id" => $quiz->id]);
+
+            foreach ($questions as $question) {
+                $answers = Answer::factory()->count(4)->create(["question_id" => $question->id]);
+                $question->correct_answer_id = $answers[rand(0, 3)]->id;
+                $question->save();
+            }
         }
 
         foreach (User::query()->role("user")->get() as $user) {
