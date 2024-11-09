@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { onMounted, provide, type Ref, ref, watch } from 'vue'
+import { provide, type Ref, ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
-import dayjs from 'dayjs'
 import { vAutoAnimate } from '@formkit/auto-animate'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/outline'
 import { PlusCircleIcon } from '@heroicons/vue/20/solid'
@@ -11,48 +10,21 @@ import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
 import Dropdown from '@/components/Common/Dropdown.vue'
 import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
 import useCurrentTime from '@/Helpers/CurrentTime'
-import { keysWrapper } from '@/Helpers/KeysManager'
+import {useSorter} from '@/Helpers/Sorter'
 
 provide<Ref<number>>('currentTime', useCurrentTime())
 const props = defineProps<{ quizzes:Quiz[] }>()
-const quizzes = ref<Quiz[]>(props.quizzes)
-const sorter = ref<(a:Quiz, b:Quiz) => number>()
-const showArchivedQuizzes = ref<boolean>(true)
-const options = keysWrapper([
-  { text: 'Po nazwie (A–Z)', action: () => setQuizzesSorter('name') },
-  { text: 'Po nazwie (Z–A)', action: () => setQuizzesSorter('name', true) },
-  { text: 'Od najnowszych' , action: () => setQuizzesSorter('creationDate', true) },
-  { text: 'Od najstarszych', action: () => setQuizzesSorter('creationDate') },
-  { text: 'Od najnowszych zmienionych', action: () => setQuizzesSorter('modificationDate', true) },
-  { text: 'Od najstarszych zmienionych', action: () => setQuizzesSorter('modificationDate') },
+
+const [quizzes, options] = useSorter('quizzes', () => props.quizzes, [
+  { text: 'Po nazwie (A–Z)', type: 'title' },
+  { text: 'Po nazwie (Z–A)', type: 'title', desc: true },
+  { text: 'Od najnowszych' , type: 'creationDate' },
+  { text: 'Od najstarszych', type: 'creationDate', desc: true },
+  { text: 'Od najnowszych zmienionych', type: 'modificationDate' },
+  { text: 'Od najstarszych zmienionych', type: 'modificationDate', desc: true },
 ])
 
-onMounted(() => {
-  const savedSorter = sessionStorage.getItem('quizzesSorterPreference')
-  const [type, desc] = savedSorter ? JSON.parse(savedSorter) : ['modificationDate', true]
-  setQuizzesSorter(type, desc)
-})
-
-watch(
-  [() => props.quizzes, sorter],
-  ([newQuizzes, sorter]) => {
-    quizzes.value = newQuizzes
-    quizzes.value.sort(sorter)
-  },
-  { immediate: true },
-)
-
-function setQuizzesSorter(type: 'name' | 'creationDate' | 'modificationDate', desc = false) {
-  sessionStorage.setItem('quizzesSorterPreference', JSON.stringify([type, desc]))
-  sorter.value = (a:Quiz, b:Quiz) => {
-    if (desc) [a, b] = [b, a]
-    return {
-      name: a.title.localeCompare(b.title),
-      creationDate: dayjs(a.createdAt).diff(dayjs(b.createdAt)),
-      modificationDate: dayjs(a.updatedAt).diff(dayjs(b.updatedAt)),
-    }[type]
-  }
-}
+const showArchivedQuizzes = ref<boolean>(true)
 </script>
 
 <template>
