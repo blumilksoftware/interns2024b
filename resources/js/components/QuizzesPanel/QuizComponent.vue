@@ -40,8 +40,12 @@ function copyQuestion(question:Question) {
   quiz.value.questions.push(JSON.parse(JSON.stringify({ ...question, id: undefined })))
 }
 
-function deleteQuestion(question:Question) {
+function deleteQuestion(idx:number, question:Question) {
   quiz.value.questions = quiz.value.questions.filter((q:Question) => q !== question)
+  if (errors.value[`questions.${idx}.text`]) {
+    errors.value[`questions.${idx}.text`] = ''
+  }
+
 }
 
 function toggleSelection(isSelected:boolean) {
