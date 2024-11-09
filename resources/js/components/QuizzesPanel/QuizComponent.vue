@@ -49,7 +49,7 @@ function toggleSelection(isSelected:boolean) {
 
 function toggleEditing(isEditing:boolean){
   editing.value = isEditing
-  toggleSelection(isEditing) 
+  toggleSelection(isEditing)
 }
 </script>
 

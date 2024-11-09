@@ -1,28 +1,36 @@
 <script setup lang="ts">
 import {Head} from '@inertiajs/vue3'
 import { PlusCircleIcon } from '@heroicons/vue/20/solid'
-import { ArrowsUpDownIcon } from '@heroicons/vue/24/outline'
-import { vAutoAnimate } from '@formkit/auto-animate'
 import FormButton from '@/components/Common/FormButton.vue'
-import Expand from '@/components/Common/Expand.vue'
-import Dropdown from '@/components/Common/Dropdown.vue'
+import AddressInput from "@/components/Common/AddressInput.vue";
+import CrudPage from "@/components/Common/CrudPage.vue";
+
+defineProps<{schools: School[]}>()
+
+const sortOptions: SortOptionConstructor[] = [
+  { text: 'Po nazwie (A–Z)', type: 'name' },
+  { text: 'Po nazwie (Z–A)', type: 'name', desc: true },
+  { text: 'Od najnowszych' , type: 'creationDate' },
+  { text: 'Od najstarszych', type: 'creationDate', desc: true },
+  { text: 'Od najnowszych zmienionych', type: 'modificationDate' },
+  { text: 'Od najstarszych zmienionych', type: 'modificationDate', desc: true },
+]
 </script>
 
 <template>
   <Head>
     <title>Szkoły - Panel administracyjny</title>
   </Head>
-  <div class="flex flex-col w-full pb-3">
-    <div data-name="toolbar" class="flex px-4 gap-1 sm:gap-2">
-      <Dropdown class-btn="rounded-lg" :options="options" title="Sortuj">
-        <div class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg">
-          <ArrowsUpDownIcon class="size-6" />
-          <span class="hidden sm:block">Sortuj</span>
-        </div>
-      </Dropdown>
 
-      <Expand />
-
+  <CrudPage
+    :options="sortOptions"
+    :items="schools"
+    resource-name="schools"
+    new-button-text="Dodaj szkołe"
+    :new-item-data="{  }"
+    deletable
+  >
+    <template #actions>
       <FormButton
         class="rounded-xl"
         button-class="pl-3 font-bold"
@@ -32,25 +40,19 @@ import Dropdown from '@/components/Common/Dropdown.vue'
       >
         <PlusCircleIcon class="size-6 text-white" /> Importuj
       </FormButton>
+    </template>
 
-      <FormButton
-        class="rounded-xl"
-        button-class="pl-3 font-bold"
-        method="post"
-        href="/admin/quizzes"
-        :data="{ title: 'Nowy test' }"
-      >
-        <PlusCircleIcon class="size-6 text-white" /> Dodaj szkołe
-      </FormButton>
-    </div>
+    <template #deleteMessage="{item}">
+      <b class="text-[1.1rem] text-gray-900">Czy na pewno chcesz usunąć "{{ item.name }}"?</b>
+      <p class="text-gray-500">Szkoła zostanie usunięta bezpowrotnie.</p>
+    </template>
 
-    <div v-auto-animate class="flex flex-col gap-4 p-4">
-      <QuizComponent
-        v-for="quiz of quizzes"
-        :key="quiz.id"
-        :quiz="quiz"
-        :show-archived-quizzes="showArchivedQuizzes"
-      />
-    </div>
-  </div>
+    <template #itemData="{item, errors, editing}">
+      <div class="flex flex-col duration-200 min-h-6.5 gap-2" :class="{'text-sm text-gray-600': !editing}">
+        <p>Liczba zarejestrowanych uczniów: <b>{{item.numberOfStudents}}</b></p>
+
+        <AddressInput :value="item" :errors="errors" :disabled="!editing" />
+      </div>
+    </template>
+  </CrudPage>
 </template>
