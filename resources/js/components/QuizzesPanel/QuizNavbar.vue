@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { CheckIcon, CloudArrowUpIcon, DocumentDuplicateIcon, PencilIcon, TrashIcon, UserPlusIcon, UsersIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { CheckIcon, CloudArrowUpIcon, DocumentDuplicateIcon, ExclamationTriangleIcon, PencilIcon, TrashIcon, UserPlusIcon, UsersIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { CloudArrowDownIcon } from '@heroicons/vue/20/solid'
 import {type Errors} from '@inertiajs/core'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'

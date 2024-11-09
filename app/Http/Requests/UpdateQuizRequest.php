@@ -47,7 +47,7 @@ class UpdateQuizRequest extends FormRequest
     public function messages(): array
     {
         return [
-            "scheduled_at.after" => "Pole :attribute musi mieć datę późniejszą niż teraz.",
+            "scheduled_at.after" => "Pole :attribute musi być ustawione na datę późniejszą niż obecna.",
         ];
     }
 

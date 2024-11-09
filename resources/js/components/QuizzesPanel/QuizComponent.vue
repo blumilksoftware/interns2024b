@@ -104,7 +104,7 @@ function toggleEditing(isEditing:boolean){
     />
 
     <template v-if="selected">
-      <InputWrapper 
+      <InputWrapper
         v-for="(question, idx) of quiz.questions"
         :key="getKey(question)"
         :error="errors[`questions.${idx}.text`] ?? ''"
