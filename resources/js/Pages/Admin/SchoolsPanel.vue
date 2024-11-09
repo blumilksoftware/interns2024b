@@ -2,8 +2,8 @@
 import {Head} from '@inertiajs/vue3'
 import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 import FormButton from '@/components/Common/FormButton.vue'
-import AddressInput from "@/components/Common/AddressInput.vue";
-import CrudPage from "@/components/Common/CrudPage.vue";
+import AddressInput from '@/components/Common/AddressInput.vue'
+import CrudPage from '@/components/Common/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
 
 defineProps<{schools: School[]}>()
@@ -28,7 +28,7 @@ const sortOptions: SortOptionConstructor[] = [
     :items="schools"
     resource-name="schools"
     new-button-text="Dodaj szkołe"
-    :new-item-data="{  }"
+    :new-item-data="{ }"
     deletable
   >
     <template #actions>
@@ -50,11 +50,11 @@ const sortOptions: SortOptionConstructor[] = [
       <p class="text-gray-500">Szkoła zostanie usunięta bezpowrotnie.</p>
     </template>
 
-    <template #itemData="{item, errors, editing}">
-      <div class="flex flex-col duration-200 min-h-6.5 gap-2" :class="{'text-sm text-gray-600': !editing}">
-        <p>Liczba zarejestrowanych uczniów: <b>{{item.numberOfStudents}}</b></p>
+    <template #itemData="data">
+      <div class="flex flex-col duration-200 min-h-6.5 gap-2" :class="{'text-sm text-gray-600': !data.editing}">
+        <p>Liczba zarejestrowanych uczniów: <b>{{ data.item.numberOfStudents }}</b></p>
 
-        <AddressInput :value="item" :errors="errors" :disabled="!editing" />
+        <AddressInput v-model="data.item" :errors="data.errors" :disabled="!data.editing" />
       </div>
     </template>
   </CrudPage>

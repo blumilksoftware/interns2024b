@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
-import {Errors} from "@inertiajs/core";
+import {type Errors} from '@inertiajs/core'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 
+const address = defineModel<Address>({ required: true })
+
 defineProps<{
-  value: Adress,
-  errors: Errors,
+  errors: Errors
   disabled?: boolean
 }>()
 </script>
@@ -13,12 +14,12 @@ defineProps<{
 <template>
   <InputWrapper
     label="Ulica:"
-    :has-content="!!value.street || !disabled"
+    :has-content="!!address.street || !disabled"
     :error="errors.street"
     :show-error="!disabled"
   >
     <input
-      v-model="value.street"
+      v-model="address.street"
       v-dynamic-input-width
       type="text"
       name="street"
@@ -115,5 +116,4 @@ defineProps<{
       }"
     >
   </InputWrapper>
-
 </template>

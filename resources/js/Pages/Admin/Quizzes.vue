@@ -5,7 +5,7 @@ import Expand from '@/components/Common/Expand.vue'
 import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
 import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
 import useCurrentTime from '@/Helpers/CurrentTime'
-import CrudPage from "@/components/Common/CrudPage.vue";
+import CrudPage from '@/components/Common/CrudPage.vue'
 
 provide<Ref<number>>('currentTime', useCurrentTime())
 

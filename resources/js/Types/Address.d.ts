@@ -1,4 +1,4 @@
-interface Adress {
+interface Address {
   city: string
   street: string
   buildingNumber: string

@@ -5,25 +5,25 @@ import { vAutoAnimate } from '@formkit/auto-animate'
 import FormButton from '@/components/Common/FormButton.vue'
 import Expand from '@/components/Common/Expand.vue'
 import Dropdown from '@/components/Common/Dropdown.vue'
-import {Errors, RequestPayload} from '@inertiajs/core'
-import {useSorter} from "@/Helpers/Sorter";
-import CrudItem from "@/components/Common/CrudItem.vue";
+import {type Errors, type RequestPayload} from '@inertiajs/core'
+import {useSorter} from '@/Helpers/Sorter'
+import CrudItem from '@/components/Common/CrudItem.vue'
 
 const props = defineProps<{
   items: T[]
   options:  SortOptionConstructor[]
-  resourceName: string,
+  resourceName: string
   newButtonText: string
   newItemData: RequestPayload
   deletable?: boolean
 }>()
 
 defineSlots<{
-  actions: () => any,
-  title: (scope: { item: T, editing: boolean, errors: Errors }) => any,
-  deleteMessage: (scope: { item: T }) => any,
-  item: (scope: { item: T }) => any,
-  itemActions: () => any,
+  actions: () => any
+  title: (scope: { item: T, editing: boolean, errors: Errors }) => any
+  deleteMessage: (scope: { item: T }) => any
+  item: (scope: { item: T }) => any
+  itemActions: () => any
   itemData: (scope: { item: T, editing: boolean, errors: Errors }) => any
 }>()
 
@@ -52,27 +52,27 @@ const [items, options] = useSorter(props.resourceName, () => props.items, props.
         :href="`/admin/${resourceName}`"
         :data="newItemData"
       >
-        <PlusCircleIcon class="size-6 text-white" /> {{newButtonText}}
-      </FormButton>
+        <PlusCircleIcon class="size-6 text-white" /> {{ newButtonText }}
+      </FormButton>quizz
     </div>
 
     <div v-auto-animate class="flex flex-col gap-4 p-4">
       <slot v-for="item of items" :key="item.id" name="item" :item="item">
         <CrudItem :item="item" :resource-name="resourceName" :deletable="deletable">
-          <template #deleteMessage="{item}">
-            <slot name="deleteMessage" :item="item" />
+          <template #deleteMessage="data">
+            <slot name="deleteMessage" v-bind="data" />
           </template>
 
-          <template #title="{item, errors, editing}">
-            <slot name="title" :item="item" :errors="errors" :editing="editing" />
+          <template #title="data">
+            <slot name="title" v-bind="data" />
           </template>
 
           <template #actions>
             <slot name="itemActions" />
           </template>
 
-          <template #data="{item, errors, editing}">
-            <slot name="itemData" :item="item" :errors="errors" :editing="editing" />
+          <template #data="data">
+            <slot name="itemData" v-bind="data" />
           </template>
         </CrudItem>
       </slot>
