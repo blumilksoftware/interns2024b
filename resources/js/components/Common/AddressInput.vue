@@ -35,12 +35,12 @@ defineProps<{
 
   <InputWrapper
     label="Numer budynku:"
-    :has-content="!!value.buildingNumber || !disabled"
+    :has-content="!!address.buildingNumber || !disabled"
     :error="errors.building_number"
     :show-error="!disabled"
   >
     <input
-      v-model="value.buildingNumber"
+      v-model="address.buildingNumber"
       v-dynamic-input-width
       type="text"
       name="buildingNumber"
@@ -56,12 +56,12 @@ defineProps<{
 
   <InputWrapper
     label="Numer mieszkania:"
-    :has-content="!!value.apartmentNumber || !disabled"
+    :has-content="!!address.apartmentNumber || !disabled"
     :error="errors.apartment_number"
     :show-error="!disabled"
   >
     <input
-      v-model="value.apartmentNumber"
+      v-model="address.apartmentNumber"
       v-dynamic-input-width
       type="text"
       name="buildingNumber"
@@ -77,12 +77,12 @@ defineProps<{
 
   <InputWrapper
     label="Kod pocztowy:"
-    :has-content="!!value.zipCode || !disabled"
+    :has-content="!!address.zipCode || !disabled"
     :error="errors.zip_code"
     :show-error="!disabled"
   >
     <input
-      v-model="value.zipCode"
+      v-model="address.zipCode"
       v-dynamic-input-width
       type="text"
       name="buildingNumber"
@@ -98,12 +98,12 @@ defineProps<{
 
   <InputWrapper
     label="Miasto:"
-    :has-content="!!value.city || !disabled"
+    :has-content="!!address.city || !disabled"
     :error="errors.city"
     :show-error="!disabled"
   >
     <input
-      v-model="value.city"
+      v-model="address.city"
       v-dynamic-input-width
       type="text"
       name="buildingNumber"
