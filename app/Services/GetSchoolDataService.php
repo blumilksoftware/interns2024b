@@ -11,7 +11,6 @@ use App\Http\Integrations\RSPOConnector\Requests\GetSchoolsRequest;
 use App\Http\Integrations\RSPOConnector\RSPOConnector;
 use App\Models\School;
 use Illuminate\Support\Collection;
-use function dump;
 
 class GetSchoolDataService
 {

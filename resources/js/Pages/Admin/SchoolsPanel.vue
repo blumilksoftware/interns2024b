@@ -4,12 +4,12 @@ import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 import AddressInput from '@/components/Common/AddressInput.vue'
 import CrudPage from '@/components/Common/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
-import InputWrapper from "@/components/QuizzesPanel/InputWrapper.vue";
+import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import {router} from '@inertiajs/vue3'
 import {ref, watch} from 'vue'
-import axios from "axios";
-import ButtonFrame from "@/components/Common/ButtonFrame.vue";
-import vDynamicInputWidth from "@/Helpers/vDynamicInputWidth";
+import axios from 'axios'
+import ButtonFrame from '@/components/Common/ButtonFrame.vue'
+import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 
 defineProps<{schools: School[]}>()
 
@@ -33,7 +33,7 @@ setInterval(() => {
 watch(status, () => router.reload())
 
 function startFetching() {
-  status.value = false;
+  status.value = false
   axios.post('/admin/schools/fetch')
 }
 

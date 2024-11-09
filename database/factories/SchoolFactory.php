@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Models\School;
 use Illuminate\Database\Eloquent\Factories\Factory;
+
 use function str;
 
 /**
