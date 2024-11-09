@@ -53,7 +53,7 @@ const [items, options] = useSorter(props.resourceName, () => props.items, props.
         :data="newItemData"
       >
         <PlusCircleIcon class="size-6 text-white" /> {{ newButtonText }}
-      </FormButton>quizz
+      </FormButton>
     </div>
 
     <div v-auto-animate class="flex flex-col gap-4 p-4">
