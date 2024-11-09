@@ -41,9 +41,9 @@ const [items, options] = useSorter(props.resourceName, () => props.items, props.
         </div>
       </Dropdown>
 
-      <Expand />
-
-      <slot name="actions" />
+      <slot name="actions">
+        <Expand />
+      </slot>
 
       <FormButton
         class="rounded-xl"

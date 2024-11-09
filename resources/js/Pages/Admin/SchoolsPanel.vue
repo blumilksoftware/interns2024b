@@ -4,6 +4,7 @@ import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 import FormButton from '@/components/Common/FormButton.vue'
 import AddressInput from "@/components/Common/AddressInput.vue";
 import CrudPage from "@/components/Common/CrudPage.vue";
+import Expand from '@/components/Common/Expand.vue'
 
 defineProps<{schools: School[]}>()
 
@@ -31,6 +32,8 @@ const sortOptions: SortOptionConstructor[] = [
     deletable
   >
     <template #actions>
+      <Expand />
+
       <FormButton
         class="rounded-xl"
         button-class="pl-3 font-bold"
