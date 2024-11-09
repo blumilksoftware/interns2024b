@@ -37,7 +37,7 @@ function addQuestion() {
 }
 
 function copyQuestion(question:Question) {
-  quiz.value.questions.push(JSON.parse(JSON.stringify(question)))
+  quiz.value.questions.push(JSON.parse(JSON.stringify({ ...question, id: undefined })))
 }
 
 function deleteQuestion(question:Question) {
