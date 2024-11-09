@@ -6,7 +6,7 @@ import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynami
 import AnswerComponent from '@/components/QuizzesPanel/AnswerComponent.vue'
 import getKey from '@/Helpers/KeysManager'
 
-defineProps<{ editing:boolean, index:number, questionsTotal:number }>()
+defineProps<{ editing:boolean, index:number, questionsTotal:number, error:string }>()
 const emit = defineEmits<{ copy: [question:Question], delete: [question:Question] }>()
 const question = defineModel<Question>({ required: true })
 const answersPaneExpanded = ref<boolean>(false)
@@ -33,14 +33,20 @@ function setCorrectAnswer(currentAnswer: Answer) {
 </script>
 
 <template>
-  <div v-auto-animate class="flex flex-col gap-5 p-5 w-full rounded-lg border border-primary/30">
+  <div 
+    v-auto-animate 
+    class="flex flex-col gap-5 p-5 w-full rounded-lg border border-primary/30" 
+    :class="{ 'border-red': error }"
+  >
     <div class="flex flex-col gap-1.5">
       <div class="flex justify-between">
         <b class="text-lg">Pytanie {{ `${index+1}/${questionsTotal}` }}</b>
+        
         <div v-if="editing" class="flex gap-5">
           <button title="Skopiuj pytanie" @click="emit('copy', question)">
             <DocumentDuplicateIcon class="icon slide-up-animation" />
           </button>
+
           <button title="Usuń pytanie" @click="emit('delete', question)">
             <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
           </button>

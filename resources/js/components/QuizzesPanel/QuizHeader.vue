@@ -16,9 +16,8 @@ const quiz = defineModel<Quiz>({ required: true })
 <template>
   <div class="flex flex-col gap-1 w-full px-2">
     <InputWrapper
-      :has-content="!!quiz.title || editing"
       :error="errors.title"
-      :show-error="editing"
+      :hide-error="!editing"
     >
       <input
         v-model="quiz.title"
@@ -41,9 +40,8 @@ const quiz = defineModel<Quiz>({ required: true })
     >
       <InputWrapper
         label="Rozpoczęcie testu:"
-        :has-content="!!quiz.scheduledAt || editing"
         :error="errors.scheduled_at"
-        :show-error="editing"
+        :hide-error="!editing"
       >
         <b v-if="!editing" class="whitespace-nowrap">{{ formatDate(quiz.scheduledAt) }}</b>
         <CustomDatepicker
@@ -61,9 +59,8 @@ const quiz = defineModel<Quiz>({ required: true })
     >
       <InputWrapper
         label="Czas trwania testu (min):"
-        :has-content="!!quiz.duration || editing"
         :error="errors.duration"
-        :show-error="editing"
+        :hide-error="!editing"
       >
         <b v-if="!editing">{{ quiz.duration }}</b>
         <input

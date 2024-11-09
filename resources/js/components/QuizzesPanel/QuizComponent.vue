@@ -9,6 +9,7 @@ import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynami
 import getKey from '@/Helpers/KeysManager'
 import useRequestResolution from '@/Helpers/RequestResolution'
 import { formatDate } from '@/Helpers/Format'
+import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 
 const currentTime = inject<Ref<number>>('currentTime')
 const props = defineProps<{ quiz:Quiz, showArchivedQuizzes:boolean }>()
@@ -86,7 +87,7 @@ function toggleEditing(isEditing:boolean){
         :editing="editing"
         :start-time-reached="startTimeReached"
         @toggle-editing="toggleEditing"
-        @cancel-changes="quiz = JSON.parse(JSON.stringify(props.quiz))"
+        @cancel-changes="quiz = JSON.parse(JSON.stringify(props.quiz)); errors={}"
       />
     </div>
 
@@ -99,16 +100,21 @@ function toggleEditing(isEditing:boolean){
     />
 
     <template v-if="selected">
-      <QuestionComponent
+      <InputWrapper 
         v-for="(question, idx) of quiz.questions"
         :key="getKey(question)"
-        v-model="quiz.questions[idx]"
-        :editing="editing"
-        :index="idx"
-        :questions-total="quiz.questions.length"
-        @copy="copyQuestion"
-        @delete="deleteQuestion"
-      />
+        :error="errors[`questions.${idx}.text`] ?? ''"
+      >
+        <QuestionComponent
+          v-model="quiz.questions[idx]"
+          :error="errors[`questions.${idx}.text`] ?? ''"
+          :editing="editing"
+          :index="idx"
+          :questions-total="quiz.questions.length"
+          @copy="copyQuestion"
+          @delete="deleteQuestion"
+        />
+      </InputWrapper>
     </template>
     <button v-if="editing" class="icon-button px-2" @click="addQuestion">
       <PlusCircleIcon class="icon" /> Dodaj pytanie
