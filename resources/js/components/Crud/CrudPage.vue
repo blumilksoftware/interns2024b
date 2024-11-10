@@ -72,7 +72,7 @@ const newItemMode = ref(false)
             </template>
 
             <template #data="data">
-              <slot name="itemData" v-bind="data as any" />1
+              <slot name="itemData" v-bind="data as any" />
             </template>
           </CrudNewItem>
         </slot>

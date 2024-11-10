@@ -49,7 +49,7 @@ function startFetching() {
     :items="schools"
     resource-name="schools"
     new-button-text="Dodaj szkołę"
-    :new-item-data="{ name: '', regon: '', apartmentNumber: '', street: '', buildingNumber: '', city: '', numberOfStudents: 0, zipCode: '' }"
+    :new-item-data="{ name: 'Nowa szkoła', regon: '', apartmentNumber: '', street: '', buildingNumber: '', city: '', numberOfStudents: 0, zipCode: '' }"
     deletable
     mobile-nav
     creatable

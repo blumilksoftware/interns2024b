@@ -6,6 +6,8 @@ import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
 import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
 import useCurrentTime from '@/Helpers/CurrentTime'
 import CrudPage from '@/components/Crud/CrudPage.vue'
+import FormButton from "@/components/Common/FormButton.vue";
+import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 
 provide<Ref<number>>('currentTime', useCurrentTime())
 
@@ -34,7 +36,6 @@ const showArchivedQuizzes = ref<boolean>(true)
     resource-name="quizzes"
     new-button-text="Dodaj test"
     :new-item-data="{ title: 'Nowy test' }"
-    creatable
   >
     <template #actions>
       <button
@@ -47,6 +48,16 @@ const showArchivedQuizzes = ref<boolean>(true)
       </button>
 
       <Expand />
+
+      <FormButton
+        class="rounded-xl"
+        button-class="pl-3 font-bold"
+        method="post"
+        href="/admin/quizzes"
+        :data="{ title: 'Nowy test' }"
+      >
+        <PlusCircleIcon class="size-6 text-white" /> Dodaj test
+      </FormButton>
     </template>
 
     <template #item="{item}">
