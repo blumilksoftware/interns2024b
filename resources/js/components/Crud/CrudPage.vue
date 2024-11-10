@@ -18,6 +18,7 @@ const props = defineProps<{
   newButtonText: string
   newItemData: N
   deletable?: boolean
+  creatable?: boolean
   mobileNav?: boolean
 }>()
 
@@ -27,7 +28,7 @@ defineSlots<{
   deleteMessage: (scope: { item: T }) => any
   item: (scope: { item: T }) => any
   newItem: (scope: { newItemMode: boolean }) => any
-  itemActions: () => any
+  itemActions: (scope: { item: T }) => any
   itemData: (scope: { item: T, editing: boolean, errors: Errors }) => any
 }>()
 
@@ -51,6 +52,7 @@ const newItemMode = ref(false)
       </slot>
 
       <ButtonFrame
+        v-if="creatable"
         class="rounded-xl"
         :class="{'cursor-pointer': !newItemMode}"
         button-class="pl-3 font-bold"
@@ -88,7 +90,7 @@ const newItemMode = ref(false)
           </template>
 
           <template #actions>
-            <slot name="itemActions" />
+            <slot name="itemActions" :item="item" />
           </template>
 
           <template #data="data">

@@ -10,7 +10,7 @@ import {ref, watch} from 'vue'
 import axios from 'axios'
 import ButtonFrame from '@/components/Common/ButtonFrame.vue'
 import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
-import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
+import CrudInput from "@/components/Crud/CrudInput.vue";
 
 defineProps<{schools: School[]}>()
 
@@ -52,6 +52,7 @@ function startFetching() {
     :new-item-data="{ name: 'Nowa Szkoła', regon: '', apartmentNumber: '', street: '', buildingNumber: '', city: '', numberOfStudents: 0, zipCode: '' }"
     deletable
     mobile-nav
+    creatable
   >
     <template #actions>
       <Expand />
@@ -98,26 +99,13 @@ function startFetching() {
       <div class="flex flex-col duration-200 min-h-6.5 gap-2" :class="{'text-sm text-gray-600': !data.editing}">
         <p>Liczba uczniów: <b>{{ data.item.numberOfStudents }}</b></p>
 
-        <InputWrapper
+        <CrudInput
+          name="regon"
           label="Regon:"
-          :has-content="!!data.item.regon || data.editing"
-          :error="data.errors.item"
-          :show-error="data.editing"
-        >
-          <input
-            v-model="data.item.regon"
-            v-dynamic-input-width
-            type="text"
-            name="buildingNumber"
-            autocomplete="off"
-            :disabled="!data.editing"
-            class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
-            :class="{
-              'border-b-primary/30 hover:border-b-primary/60 text-primary text-center' : data.editing,
-              'border-b-red' : data.errors.item
-            }"
-          >
-        </InputWrapper>
+          :editing="data.editing"
+          :error="data.errors.regon"
+          :model-value="data.item.regon"
+        />
 
         <AddressInput v-model="data.item" :errors="data.errors" :disabled="!data.editing" />
       </div>

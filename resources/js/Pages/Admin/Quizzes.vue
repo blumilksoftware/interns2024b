@@ -34,6 +34,7 @@ const showArchivedQuizzes = ref<boolean>(true)
     resource-name="quizzes"
     new-button-text="Dodaj test"
     :new-item-data="{ title: 'Nowy test' }"
+    creatable
     force-full-screen-nav
   >
     <template #actions>

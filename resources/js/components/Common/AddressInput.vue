@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import {type Errors} from '@inertiajs/core'
-import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
+import CrudInput from "@/components/Crud/CrudInput.vue";
 
 const address = defineModel<Address>({ required: true })
 
@@ -12,113 +11,43 @@ defineProps<{
 </script>
 
 <template>
-  <InputWrapper
+  <CrudInput
+    name="street"
     label="Ulica:"
-    :class="{ 'hidden': !address.street && disabled }"
-    :has-content="!!address.street || !disabled"
     :error="errors.street"
-    :show-error="!disabled"
-  >
-    <input
-      v-model="address.street"
-      v-dynamic-input-width
-      type="text"
-      name="street"
-      autocomplete="off"
-      :disabled="disabled"
-      class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
-      :class="{
-        'border-b-primary/30 hover:border-b-primary/60 text-primary text-center' : !disabled,
-        'border-b-red' : errors.street
-      }"
-    >
-  </InputWrapper>
+    :model-value="address.street"
+    :editing="!disabled"
+  />
 
-  <InputWrapper
+  <CrudInput
+    name="building_number"
     label="Numer budynku:"
-    :class="{ 'hidden': !address.buildingNumber && disabled }"
-    :has-content="!!address.buildingNumber || !disabled"
     :error="errors.building_number"
-    :show-error="!disabled"
-  >
-    <input
-      v-model="address.buildingNumber"
-      v-dynamic-input-width
-      type="text"
-      name="buildingNumber"
-      autocomplete="off"
-      :disabled="disabled"
-      class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
-      :class="{
-        'border-b-primary/30 hover:border-b-primary/60 text-primary text-center' : !disabled,
-        'border-b-red' : errors.building_number
-      }"
-    >
-  </InputWrapper>
+    :model-value="address.buildingNumber"
+    :editing="!disabled"
+  />
 
-  <InputWrapper
+  <CrudInput
+    name="apartment_number"
     label="Numer lokalu:"
-    :class="{ 'hidden': !address.apartmentNumber && disabled }"
-    :has-content="!!address.apartmentNumber || !disabled"
     :error="errors.apartment_number"
-    :show-error="!disabled"
-  >
-    <input
-      v-model="address.apartmentNumber"
-      v-dynamic-input-width
-      type="text"
-      name="buildingNumber"
-      autocomplete="off"
-      :disabled="disabled"
-      class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
-      :class="{
-        'border-b-primary/30 hover:border-b-primary/60 text-primary text-center' : !disabled,
-        'border-b-red' : errors.apartment_number
-      }"
-    >
-  </InputWrapper>
+    :model-value="address.apartmentNumber"
+    :editing="!disabled"
+  />
 
-  <InputWrapper
+  <CrudInput
+    name="zip_code"
     label="Kod pocztowy:"
-    :class="{ 'hidden': !address.zipCode && disabled }"
-    :has-content="!!address.zipCode || !disabled"
     :error="errors.zip_code"
-    :show-error="!disabled"
-  >
-    <input
-      v-model="address.zipCode"
-      v-dynamic-input-width
-      type="text"
-      name="buildingNumber"
-      autocomplete="off"
-      :disabled="disabled"
-      class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
-      :class="{
-        'border-b-primary/30 hover:border-b-primary/60 text-primary text-center' : !disabled,
-        'border-b-red' : errors.zip_code
-      }"
-    >
-  </InputWrapper>
+    :model-value="address.zipCode"
+    :editing="!disabled"
+  />
 
-  <InputWrapper
+  <CrudInput
+    name="city"
     label="Miasto:"
-    :class="{ 'hidden': !address.city && disabled }"
-    :has-content="!!address.city || !disabled"
     :error="errors.city"
-    :show-error="!disabled"
-  >
-    <input
-      v-model="address.city"
-      v-dynamic-input-width
-      type="text"
-      name="buildingNumber"
-      autocomplete="off"
-      :disabled="disabled"
-      class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
-      :class="{
-        'border-b-primary/30 hover:border-b-primary/60 text-primary text-center' : !disabled,
-        'border-b-red' : errors.city
-      }"
-    >
-  </InputWrapper>
+    :model-value="address.city"
+    :editing="!disabled"
+  />
 </template>
