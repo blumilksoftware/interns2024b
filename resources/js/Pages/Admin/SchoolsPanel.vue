@@ -10,7 +10,7 @@ import {ref, watch} from 'vue'
 import axios from 'axios'
 import ButtonFrame from '@/components/Common/ButtonFrame.vue'
 import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
-import CrudInput from "@/components/Crud/CrudInput.vue";
+import CrudInput from '@/components/Crud/CrudInput.vue'
 
 defineProps<{schools: School[]}>()
 

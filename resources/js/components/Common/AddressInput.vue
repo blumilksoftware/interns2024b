@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {type Errors} from '@inertiajs/core'
-import CrudInput from "@/components/Crud/CrudInput.vue";
+import CrudInput from '@/components/Crud/CrudInput.vue'
 
 const address = defineModel<Address>({ required: true })
 

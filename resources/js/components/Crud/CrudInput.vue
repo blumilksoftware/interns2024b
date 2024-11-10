@@ -4,15 +4,15 @@ import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 
 const value = defineModel<T>({ required: true })
 defineProps<{
-  editing: boolean,
-  label?: string,
-  name: string,
-  error?: string,
+  editing: boolean
+  label?: string
+  name: string
+  error?: string
 }>()
 </script>
 
 <template>
-<InputWrapper
+  <InputWrapper
     :error="error"
     :hide-error="!editing"
     :label="label"
