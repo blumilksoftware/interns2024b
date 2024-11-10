@@ -74,10 +74,8 @@ function startFetching() {
 
     <template #title="{item, editing, errors}">
       <InputWrapper
-        :has-content="!!item.name || editing"
         :error="errors.name"
-        :show-error="editing"
-        class="h-full xs:h-auto"
+        :hide-error="!editing"
       >
         <textarea
           v-model="item.name"
@@ -86,7 +84,7 @@ function startFetching() {
           autocomplete="off"
           :disabled="!editing"
           placeholder=""
-          class="size-full xs:h-8 bg-transparent outline-none font-bold text-lg xs:mb-0"
+          class="size-full xs:h-8 bg-transparent outline-none font-bold text-lg xs:mb-0 resize-none"
           :class="{
             'border-b border-b-primary/30 duration-200 transition-colors hover:border-b-primary/60 text-primary' : editing,
             'border-b-red' : errors.name

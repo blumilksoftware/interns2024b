@@ -13,9 +13,8 @@ defineProps<{
 
 <template>
 <InputWrapper
-    :has-content="!!value || editing"
     :error="error"
-    :show-error="editing"
+    :hide-error="!editing"
     :label="label"
     :class="{ 'hidden': !value && !editing }"
   >
