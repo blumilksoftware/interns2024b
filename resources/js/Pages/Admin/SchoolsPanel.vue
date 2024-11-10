@@ -2,13 +2,14 @@
 import {Head} from '@inertiajs/vue3'
 import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 import AddressInput from '@/components/Common/AddressInput.vue'
-import CrudPage from '@/components/Common/CrudPage.vue'
+import CrudPage from '@/components/Crud/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import {router} from '@inertiajs/vue3'
 import {ref, watch} from 'vue'
 import axios from 'axios'
 import ButtonFrame from '@/components/Common/ButtonFrame.vue'
+import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 
 defineProps<{schools: School[]}>()
@@ -36,7 +37,6 @@ function startFetching() {
   status.value = false
   axios.post('/admin/schools/fetch')
 }
-
 </script>
 
 <template>
@@ -49,8 +49,9 @@ function startFetching() {
     :items="schools"
     resource-name="schools"
     new-button-text="Dodaj szkołe"
-    :new-item-data="{ name: 'Nowa Szkoła', city: 'Legnica', regon: '0', street: '', building_number: '', zip_code: '' }"
+    :new-item-data="{ name: 'Nowa Szkoła', regon: '', apartmentNumber: '', street: '', buildingNumber: '', city: '', numberOfStudents: 0, zipCode: '' }"
     deletable
+    mobile-nav
   >
     <template #actions>
       <Expand />
@@ -58,7 +59,7 @@ function startFetching() {
       <ButtonFrame
         :disabled="!status"
         class="rounded-xl"
-        :class="status ? 'cursor-pointer' : 'cursor-text'"
+        :class="{'cursor-pointer': status}"
         @click="startFetching()"
       >
         <PlusCircleIcon class="size-6 text-white" /> Importuj
@@ -70,9 +71,32 @@ function startFetching() {
       <p class="text-gray-500">Szkoła zostanie usunięta bezpowrotnie.</p>
     </template>
 
+    <template #title="{item, editing, errors}">
+      <InputWrapper
+        :has-content="!!item.name || editing"
+        :error="errors.name"
+        :show-error="editing"
+        class="h-full xs:h-auto"
+      >
+        <textarea
+          v-model="item.name"
+          v-dynamic-text-area-height
+          name="name"
+          autocomplete="off"
+          :disabled="!editing"
+          placeholder=""
+          class="size-full xs:h-8 bg-transparent outline-none font-bold text-lg xs:mb-0"
+          :class="{
+            'border-b border-b-primary/30 duration-200 transition-colors hover:border-b-primary/60 text-primary' : editing,
+            'border-b-red' : errors.name
+          }"
+        />
+      </InputWrapper>
+    </template>
+
     <template #itemData="data">
       <div class="flex flex-col duration-200 min-h-6.5 gap-2" :class="{'text-sm text-gray-600': !data.editing}">
-        <p>Liczba zarejestrowanych uczniów: <b>{{ data.item.numberOfStudents }}</b></p>
+        <p>Liczba uczniów: <b>{{ data.item.numberOfStudents }}</b></p>
 
         <InputWrapper
           label="Regon:"

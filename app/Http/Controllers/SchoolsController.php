@@ -26,7 +26,7 @@ class SchoolsController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolResource::collection(School::all())]);
+        return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolResource::collection(School::query()->limit(100)->get())]);
     }
 
     public function store(SchoolRequest $request): RedirectResponse
@@ -34,7 +34,8 @@ class SchoolsController extends Controller
         School::query()->create($request->validated());
 
         return redirect()
-            ->back();
+            ->back()
+            ->with("status", "Szkoła została dodana.");
     }
 
     public function update(SchoolRequest $request, School $school): RedirectResponse

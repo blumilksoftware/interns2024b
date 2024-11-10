@@ -56,7 +56,7 @@ const showDeleteMessage = ref(false)
     </Transition>
 
     <div class="flex justify-between">
-      <div class="w-full px-2">
+      <div class="size-full md:h-auto px-0">
         <slot name="title" :item="item as T" :editing="editing" :errors="errors">
           <InputWrapper
             :has-content="!!item.name || editing"
@@ -79,10 +79,12 @@ const showDeleteMessage = ref(false)
           </InputWrapper>
         </slot>
 
-        <slot name="data" :item="item as T" :editing="editing" :errors="errors" />
+        <div class="h-full md:hidden pt-1">
+          <slot name="data" :item="item as T" :editing="editing" :errors="errors" />
+        </div>
       </div>
 
-      <div class="flex gap-5 pl-5 h-fit">
+      <div class="flex flex-col sm:flex-row pl-5 gap-5 h-fit">
         <button v-if="!editing" title="Edytuj" @click="editing = true">
           <PencilIcon class="icon slide-up-animation" />
         </button>
@@ -116,13 +118,13 @@ const showDeleteMessage = ref(false)
       </div>
     </div>
 
-    <div class="sm:hidden -mt-3">
+    <div class="w-full hidden md:block">
       <slot name="data" :item="item as T" :editing="editing" :errors="errors" />
     </div>
 
     <footer v-if="editing" class="flex flex-col justify-end text-right sm:flex-row gap-x-4">
-      <span class="text-gray-400 text-sm"> Utworzony: {{ formatDate(item.createdAt) }}</span>
-      <span class="text-gray-400 text-sm"> Ostatnio edytowany: {{ formatDate(item.updatedAt) }}</span>
+      <span class="text-gray-400 text-xs"> Utworzony: {{ formatDate(item.createdAt) }}</span>
+      <span class="text-gray-400 text-xs"> Ostatnio edytowany: {{ formatDate(item.updatedAt) }}</span>
     </footer>
   </div>
 </template>

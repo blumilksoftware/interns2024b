@@ -14,6 +14,7 @@ defineProps<{
 <template>
   <InputWrapper
     label="Ulica:"
+    :class="{ 'hidden': !address.street && disabled }"
     :has-content="!!address.street || !disabled"
     :error="errors.street"
     :show-error="!disabled"
@@ -35,6 +36,7 @@ defineProps<{
 
   <InputWrapper
     label="Numer budynku:"
+    :class="{ 'hidden': !address.buildingNumber && disabled }"
     :has-content="!!address.buildingNumber || !disabled"
     :error="errors.building_number"
     :show-error="!disabled"
@@ -56,6 +58,7 @@ defineProps<{
 
   <InputWrapper
     label="Numer lokalu:"
+    :class="{ 'hidden': !address.apartmentNumber && disabled }"
     :has-content="!!address.apartmentNumber || !disabled"
     :error="errors.apartment_number"
     :show-error="!disabled"
@@ -77,6 +80,7 @@ defineProps<{
 
   <InputWrapper
     label="Kod pocztowy:"
+    :class="{ 'hidden': !address.zipCode && disabled }"
     :has-content="!!address.zipCode || !disabled"
     :error="errors.zip_code"
     :show-error="!disabled"
@@ -98,6 +102,7 @@ defineProps<{
 
   <InputWrapper
     label="Miasto:"
+    :class="{ 'hidden': !address.city && disabled }"
     :has-content="!!address.city || !disabled"
     :error="errors.city"
     :show-error="!disabled"

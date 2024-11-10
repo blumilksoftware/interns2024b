@@ -40,7 +40,7 @@ class SchoolRequest extends FormRequest
             "regon" => ["required", "string"],
             "street" => ["required", "string"],
             "building_number" => ["required", "string"],
-            "apartment_number" => ["string"],
+            "apartment_number" => ["string", "nullable"],
             "zip_code" => ["required", "string"],
         ];
     }
