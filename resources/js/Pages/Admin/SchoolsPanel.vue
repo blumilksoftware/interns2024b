@@ -8,7 +8,7 @@ import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import {router} from '@inertiajs/vue3'
 import {ref, watch} from 'vue'
 import axios from 'axios'
-import ButtonFrame from '@/components/Common/ButtonFrame.vue'
+import Button from '@/components/Common/Button.vue'
 import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
 import CrudInput from '@/components/Crud/CrudInput.vue'
 
@@ -57,14 +57,14 @@ function startFetching() {
     <template #actions>
       <Expand />
 
-      <ButtonFrame
+      <Button
         :disabled="!status"
         class="rounded-xl"
         :class="{'cursor-pointer': status}"
         @click="startFetching()"
       >
         <ArrowUpCircleIcon class="size-6 text-white" /> Importuj szkoły
-      </ButtonFrame>
+      </Button>
     </template>
 
     <template #deleteMessage="{item}">

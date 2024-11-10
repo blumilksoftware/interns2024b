@@ -7,7 +7,7 @@ import Dropdown from '@/components/Common/Dropdown.vue'
 import {type Errors} from '@inertiajs/core'
 import {useSorter} from '@/Helpers/Sorter'
 import {ref} from 'vue'
-import ButtonFrame from '@/components/Common/ButtonFrame.vue'
+import Button from '@/components/Common/Button.vue'
 import CrudNewItem from '@/components/Crud/CrudNewItem.vue'
 import CrudItem from '@/components/Crud/CrudItem.vue'
 
@@ -51,7 +51,7 @@ const newItemMode = ref(false)
         <Expand />
       </slot>
 
-      <ButtonFrame
+      <Button
         v-if="creatable"
         class="rounded-xl"
         :class="{'cursor-pointer': !newItemMode}"
@@ -60,7 +60,7 @@ const newItemMode = ref(false)
         @click="newItemMode = true"
       >
         <PlusCircleIcon class="size-6 text-white" /> {{ newButtonText }}
-      </ButtonFrame>
+      </Button>
     </div>
 
     <div v-auto-animate class="flex flex-col gap-4 p-4">
