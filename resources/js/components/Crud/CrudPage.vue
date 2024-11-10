@@ -40,7 +40,7 @@ const newItemMode = ref(false)
 <template>
   <div class="flex flex-col w-full pb-3">
     <div data-name="toolbar" class="flex xs:flex-row px-4 gap-1 sm:gap-2" :class="{ 'flex-col': mobileNav }">
-      <Dropdown class-btn="rounded-lg" class="mr-auto" :options="options" title="Sortuj">
+      <Dropdown pointer-position="left" class-btn="rounded-lg" class="mr-auto" :options="options" title="Sortuj">
         <div class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg">
           <ArrowsUpDownIcon class="size-6" />
           <span class="hidden sm:block">Sortuj</span>
@@ -72,7 +72,7 @@ const newItemMode = ref(false)
             </template>
 
             <template #data="data">
-              <slot name="itemData" v-bind="data as any" />
+              <slot name="itemData" v-bind="data as any" />1
             </template>
           </CrudNewItem>
         </slot>
