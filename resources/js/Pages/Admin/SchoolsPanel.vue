@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {Head} from '@inertiajs/vue3'
-import { PlusCircleIcon } from '@heroicons/vue/20/solid'
+import { ArrowUpCircleIcon } from '@heroicons/vue/20/solid'
 import AddressInput from '@/components/Common/AddressInput.vue'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
@@ -48,8 +48,8 @@ function startFetching() {
     :options="sortOptions"
     :items="schools"
     resource-name="schools"
-    new-button-text="Dodaj szkołe"
-    :new-item-data="{ name: 'Nowa Szkoła', regon: '', apartmentNumber: '', street: '', buildingNumber: '', city: '', numberOfStudents: 0, zipCode: '' }"
+    new-button-text="Dodaj szkołę"
+    :new-item-data="{ name: '', regon: '', apartmentNumber: '', street: '', buildingNumber: '', city: '', numberOfStudents: 0, zipCode: '' }"
     deletable
     mobile-nav
     creatable
@@ -63,7 +63,7 @@ function startFetching() {
         :class="{'cursor-pointer': status}"
         @click="startFetching()"
       >
-        <PlusCircleIcon class="size-6 text-white" /> Importuj
+        <ArrowUpCircleIcon class="size-6 text-white" /> Importuj szkoły
       </ButtonFrame>
     </template>
 
