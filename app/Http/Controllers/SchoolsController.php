@@ -26,7 +26,7 @@ class SchoolsController extends Controller
 {
     public function index(): Response
     {
-        return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolResource::collection(School::query()->limit(100)->get())]);
+        return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolResource::collection(School::all())]);
     }
 
     public function store(SchoolRequest $request): RedirectResponse
