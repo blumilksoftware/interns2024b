@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type ButtonFrameProps } from '@/Types/ButtonFrameProps'
 
-const slots = defineSlots();
+const slots = defineSlots()
 defineProps<ButtonFrameProps>()
 </script>
 

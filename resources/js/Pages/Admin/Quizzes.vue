@@ -6,7 +6,7 @@ import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
 import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
 import useCurrentTime from '@/Helpers/CurrentTime'
 import CrudPage from '@/components/Crud/CrudPage.vue'
-import FormButton from "@/components/Common/FormButton.vue";
+import FormButton from '@/components/Common/FormButton.vue'
 import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 
 provide<Ref<number>>('currentTime', useCurrentTime())
