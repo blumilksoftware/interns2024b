@@ -26,6 +26,7 @@ defineSlots<{
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
   deleteMessage: (scope: { item: T }) => any
   item: (scope: { item: T }) => any
+  newItem: (scope: { newItemMode: boolean }) => any
   itemActions: () => any
   itemData: (scope: { item: T, editing: boolean, errors: Errors }) => any
 }>()
@@ -62,15 +63,17 @@ const newItemMode = ref(false)
 
     <div v-auto-animate class="flex flex-col gap-4 p-4">
       <template v-if="newItemMode">
-        <CrudNewItem :new-item-data="newItemData" :resource-name="resourceName" @done="newItemMode = false">
-          <template #title="data">
-            <slot name="title" v-bind="data as any" />
-          </template>
+        <slot name="newItem" :new-item-mode="newItemMode">
+          <CrudNewItem :new-item-data="newItemData" :resource-name="resourceName" @done="newItemMode = false">
+            <template #title="data">
+              <slot name="title" v-bind="data as any" />
+            </template>
 
-          <template #data="data">
-            <slot name="itemData" v-bind="data as any" />
-          </template>
-        </CrudNewItem>
+            <template #data="data">
+              <slot name="itemData" v-bind="data as any" />
+            </template>
+          </CrudNewItem>
+        </slot>
       </template>
 
 
