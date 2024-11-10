@@ -12,6 +12,8 @@ function calculateDynamicHeight(input:HTMLTextAreaElement, binding?:DirectiveBin
     return
   }
 
+  // Reset the height to a minimal value to refresh scrollHeight.
+  // This ensures the textarea will shrink when text is removed.
   input.style.height = '5px'
   input.style.height = `${input.scrollHeight}px`
 }
