@@ -2,9 +2,12 @@ import { type DirectiveBinding } from 'vue'
 
 function initDynamicHeightCalc(input:HTMLTextAreaElement & { _calculateDynamicHeight:() => void }, binding?:DirectiveBinding<boolean>) {
   input._calculateDynamicHeight = () => calculateDynamicHeight(input, binding)
+
   document.fonts.addEventListener('loadingdone', input._calculateDynamicHeight)
   input.addEventListener('transitionend', input._calculateDynamicHeight)
+
   input._calculateDynamicHeight()
+  input.style.resize = 'none'
 }
 
 function calculateDynamicHeight(input:HTMLTextAreaElement, binding?:DirectiveBinding<boolean>){

@@ -84,7 +84,7 @@ function startFetching() {
           autocomplete="off"
           :disabled="!editing"
           placeholder=""
-          class="size-full xs:h-8 bg-transparent outline-none font-bold text-lg xs:mb-0 resize-none"
+          class="size-full xs:h-8 bg-transparent outline-none font-bold text-lg xs:mb-0"
           :class="{
             'border-b border-b-primary/30 duration-200 transition-colors hover:border-b-primary/60 text-primary' : editing,
             'border-b-red' : errors.name
