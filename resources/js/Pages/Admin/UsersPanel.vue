@@ -147,10 +147,10 @@ const sortOptions: SortOptionConstructor[] = [
 
           <div class="flex flex-col duration-200 min-h-6.5 gap-2" :class="{'text-sm text-gray-600': !data.editing}">
             <CrudInput
+              v-model="data.item.email"
               name="email"
               label="Email:"
               :error="data.errors.email"
-              v-model="data.item.email"
               :editing="data.editing"
             />
 
