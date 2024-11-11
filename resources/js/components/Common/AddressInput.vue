@@ -12,42 +12,42 @@ defineProps<{
 
 <template>
   <CrudInput
+    v-model="address.street"
     name="street"
     label="Ulica:"
     :error="errors.street"
-    :model-value="address.street"
     :editing="!disabled"
   />
 
   <CrudInput
+    v-model="address.buildingNumber"
     name="building_number"
     label="Numer budynku:"
     :error="errors.building_number"
-    :model-value="address.buildingNumber"
     :editing="!disabled"
   />
 
   <CrudInput
+    v-model="address.apartmentNumber"
     name="apartment_number"
     label="Numer lokalu:"
     :error="errors.apartment_number"
-    :model-value="address.apartmentNumber"
     :editing="!disabled"
   />
 
   <CrudInput
+    v-model="address.zipCode"
     name="zip_code"
     label="Kod pocztowy:"
     :error="errors.zip_code"
-    :model-value="address.zipCode"
     :editing="!disabled"
   />
 
   <CrudInput
+    v-model="address.city"
     name="city"
     label="Miasto:"
     :error="errors.city"
-    :model-value="address.city"
     :editing="!disabled"
   />
 </template>

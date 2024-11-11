@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import {Head} from '@inertiajs/vue3'
+import {Head, router} from '@inertiajs/vue3'
 import { ArrowUpCircleIcon } from '@heroicons/vue/20/solid'
 import AddressInput from '@/components/Common/AddressInput.vue'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
-import {router} from '@inertiajs/vue3'
 import {ref, watch} from 'vue'
 import axios from 'axios'
 import Button from '@/components/Common/Button.vue'
@@ -23,19 +22,27 @@ const sortOptions: SortOptionConstructor[] = [
   { text: 'Od najstarszych zmienionych', type: 'modificationDate', desc: true },
 ]
 
-const status = ref(false)
+const status = ref<boolean | null>(null)
 
-setInterval(() => {
-  axios.get('/admin/schools/status')
-    .then(res => status.value = res.data.done)
-    .catch(() => status.value = false)
+async function isImporting(): Promise<boolean> {
+  return await axios.get('/admin/schools/status')
+    .then(res => !res.data.done)
+    .catch(() => true)
+}
+
+setInterval(async () => {
+  if (!status.value) {
+    status.value = !(await isImporting())
+  }
 }, 1000)
 
 watch(status, () => router.reload())
 
 function startFetching() {
-  status.value = false
-  axios.post('/admin/schools/fetch')
+  if (status.value) {
+    status.value = false
+    axios.post('/admin/schools/fetch')
+  }
 }
 </script>
 
@@ -43,6 +50,13 @@ function startFetching() {
   <Head>
     <title>Szkoły - Panel administracyjny</title>
   </Head>
+
+  <Transition>
+    <div v-show="status === false" class="fixed bg-white/50 backdrop-blur-md z-10 size-full left-0 top-0 flex items-center justify-center gap-2">
+      <div class="inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status" />
+      <p>Trwa importowanie szkół.</p>
+    </div>
+  </Transition>
 
   <CrudPage
     :options="sortOptions"
@@ -98,11 +112,11 @@ function startFetching() {
         <p>Liczba uczniów: <b>{{ data.item.numberOfStudents }}</b></p>
 
         <CrudInput
+          v-model="data.item.regon"
           name="regon"
           label="Regon:"
           :editing="data.editing"
           :error="data.errors.regon"
-          :model-value="data.item.regon"
         />
 
         <AddressInput v-model="data.item" :errors="data.errors" :disabled="!data.editing" />
