@@ -19,9 +19,11 @@ class UserController extends Controller
     public function index(Request $request): Response
     {
         $users = User::query()->role("user")->with("school")->orderBy("id")->get();
+        $schools = School::query()->orderBy("id")->get();
 
         return Inertia::render("Admin/UsersPanel", [
             "users" => UserResource::collection($users),
+            "schools" => SchoolResource::collection($schools),
         ]);
     }
 
@@ -43,7 +45,7 @@ class UserController extends Controller
 
         return redirect()
             ->route("admin.users.index")
-            ->with("success", "Użytkownik zaktualizowany pomyślnie.");
+            ->with("status", "Użytkownik zaktualizowany pomyślnie.");
     }
 
     public function anonymize(User $user): RedirectResponse
@@ -58,6 +60,6 @@ class UserController extends Controller
 
         return redirect()
             ->back()
-            ->with("success", "Dane użytkownika zostały zanonimizowane.");
+            ->with("status", "Dane użytkownika zostały zanonimizowane.");
     }
 }

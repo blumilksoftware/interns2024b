@@ -7,4 +7,6 @@ interface User {
   isAnonymized: boolean
   isAdmin: boolean
   isSuperAdmin: boolean
+  createdAt: string
+  updatedAt: string
 }

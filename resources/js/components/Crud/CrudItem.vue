@@ -2,7 +2,7 @@
 import useRequestResolution from '@/Helpers/RequestResolution'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
 import { CheckIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
@@ -16,17 +16,20 @@ const props = defineProps<{
   deletable?: boolean
 }>()
 
-defineSlots<{
+const slots = defineSlots<{
   deleteMessage: (scope: { item: T }) => any
-  actions: () => any
+  actions: (scope: { editMode: (enabled: boolean) => void }) => any
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
   data: (scope: { item: T, editing: boolean, errors: Errors }) => any
 }>()
+
 
 const item = ref<T>(JSON.parse(JSON.stringify(props.item)))
 const editing = ref(false)
 const { processing, errors } = useRequestResolution()
 const showDeleteMessage = ref(false)
+
+watch(() => props.item, () => item.value = JSON.parse(JSON.stringify(props.item)))
 </script>
 
 <template>
@@ -59,6 +62,7 @@ const showDeleteMessage = ref(false)
       <div class="size-full md:h-auto px-0">
         <slot name="title" :item="item as T" :editing="editing" :errors="errors">
           <InputWrapper
+            v-if="!slots.title"
             :has-content="!!item.name || editing"
             :error="errors.name"
             :show-error="editing"
@@ -85,12 +89,12 @@ const showDeleteMessage = ref(false)
       </div>
 
       <div class="flex flex-col sm:flex-row pl-5 gap-5 h-fit">
-        <button v-if="!editing" title="Edytuj" @click="editing = true">
-          <PencilIcon class="icon slide-up-animation" />
-        </button>
-
         <template v-if="!editing">
-          <slot name="actions" />
+          <slot name="actions" :edit-mode="(mode) => editing = mode">
+            <button v-if="!slots.actions" title="Edytuj" @click="editing = true">
+              <PencilIcon class="icon slide-up-animation" />
+            </button>
+          </slot>
         </template>
 
         <template v-if="editing">

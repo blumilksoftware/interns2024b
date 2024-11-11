@@ -23,6 +23,8 @@ class UserResource extends JsonResource
             "isAnonymized" => $this->is_anonymized,
             "isAdmin" => $this->hasRole("admin"),
             "isSuperAdmin" => $this->hasRole("super_admin"),
+            "createdAt" => $this->created_at,
+            "updatedAt" => $this->updated_at,
         ];
     }
 }

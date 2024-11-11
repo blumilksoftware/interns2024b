@@ -22,19 +22,18 @@ const props = defineProps<{
   mobileNav?: boolean
 }>()
 
-defineSlots<{
+const slots = defineSlots<{
   actions: () => any
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
   deleteMessage: (scope: { item: T }) => any
   item: (scope: { item: T }) => any
   newItem: (scope: { newItemMode: boolean }) => any
-  itemActions: (scope: { item: T }) => any
+  itemActions: (scope: { item: T, editMode: (enabled: boolean) => void }) => any
   itemData: (scope: { item: T, editing: boolean, errors: Errors }) => any
 }>()
 
 const [items, options] = useSorter(props.resourceName, () => props.items, props.options)
 const newItemMode = ref(false)
-
 </script>
 
 <template>
@@ -80,17 +79,17 @@ const newItemMode = ref(false)
 
 
       <slot v-for="item of items" :key="item.id" name="item" :item="item">
-        <CrudItem :item="item" :resource-name="resourceName" :deletable="deletable">
+        <CrudItem v-if="!slots.item" :item="item" :resource-name="resourceName" :deletable="deletable">
           <template #deleteMessage="data">
             <slot name="deleteMessage" v-bind="data" />
           </template>
 
-          <template #title="data">
+          <template v-if="!!slots.title" #title="data">
             <slot name="title" v-bind="data" />
           </template>
 
-          <template #actions>
-            <slot name="itemActions" :item="item" />
+          <template v-if="!!slots.itemActions" #actions="{editMode}">
+            <slot name="itemActions" :item="item" :edit-mode="editMode" />
           </template>
 
           <template #data="data">
