@@ -11,12 +11,11 @@ const props = defineProps<{
   unlocked:boolean
   locked:boolean
   editing:boolean
-  startTimeReached:boolean
+  startTimeNotReached:boolean
 }>()
 const quiz = defineModel<Quiz>({ required: true })
 const emit = defineEmits<{ toggleEditing:[editing:boolean], cancelChanges:[] }>()
 const showDeleteMessage = ref(false)
-
 
 const questionsHaveOneCorrectAnswer = computed(
   ()=> quiz.value.questions.every(
@@ -33,7 +32,7 @@ const assertions = computed<Record<string, [boolean, string]>>(()=>({
   hasCorrectAnswers: [questionsHaveOneCorrectAnswer.value, 'Żadne pytanie nie zawiera zaznaczonej prawidłowej odpowiedzi.'],
   hasQuestions: [quiz.value.questions.length > 0, 'Test nie zawiera żadnego pytania.'],
   duration: [!!quiz.value.duration, 'Czas trwania testu nie jest ustawiony.'],
-  startTimeReached: [props.startTimeReached, 'Czas rozpoczęcia testu upłynął.'],
+  startTimeNotReached: [props.startTimeNotReached, 'Czas rozpoczęcia testu upłynął.'],
 }))
 
 const publishValidation = computed(
@@ -41,7 +40,7 @@ const publishValidation = computed(
     assertions.value.hasCorrectAnswers,
     assertions.value.hasQuestions,
     assertions.value.duration,
-    assertions.value.startTimeReached,
+    assertions.value.startTimeNotReached,
   ),
 )
 
@@ -149,7 +148,7 @@ function sanitizeData() {
     </button>
     
     <RequestWrapper
-      v-if="!editing && unlocked"
+      v-if="!editing"
       :href="`/admin/quizzes/${quiz.id}`"
       :title="!quizDemoValidation.validated ? `Nie można wyświetlić demonstracji testu. ${quizDemoValidation.error}` : 'Włącz demonstrację testu'"
       :disabled="!quizDemoValidation.validated"
