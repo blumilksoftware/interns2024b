@@ -1,8 +1,8 @@
 <script setup lang="ts">
 defineProps<{
-  label?:string,
-  error?:string,
-  hideError?:boolean,
+  label?:string
+  error?:string
+  hideError?:boolean
   hideContent?:boolean
 }>()
 </script>
