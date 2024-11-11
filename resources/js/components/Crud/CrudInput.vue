@@ -3,6 +3,7 @@ import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 
 const value = defineModel<T>({ required: true })
+
 defineProps<{
   editing: boolean
   label?: string
