@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import {type QuizSubmission} from '@/Types/QuizSubmission'
 import Divider from '@/components/Common/Divider.vue'
 import {computed, ref, watch} from 'vue'
 import axios from 'axios'
 import FormButton from '@/components/Common/FormButton.vue'
 import Button from '@/components/Common/Button.vue'
-import {type AnswerRecord} from '@/Types/AnswerRecord'
 import MessageBox from '@/components/Common/MessageBox.vue'
 import {Head} from '@inertiajs/vue3'
 import {useTimer} from '@/Helpers/Timer'
@@ -15,7 +13,7 @@ import {calcSecondsLeftToDate} from '@/Helpers/Time'
 
 const props = defineProps<{ submission: QuizSubmission }>()
 const answers = ref(props.submission.answers)
-const allAnswered = computed((() => answers.value.every(answer => answer.selected != null)))
+const allAnswered = computed((() => answers.value.every(answer => answer.selected !== undefined)))
 const timeout = ref(false)
 const emptyAnswerMessage = ref(false)
 const timeoutMessage = ref(false)
@@ -33,7 +31,7 @@ if (durationInMilliseconds > fiveMinutesInMilliseconds) {
   setTimeout(() => timeoutWarningMessage.value = true, durationInMilliseconds - fiveMinutesInMilliseconds)
 }
 
-const timeLeft = useTimer(props.submission.closedAt, () => {
+const timeLeft = useTimer(props.submission.closedAt ?? 0, () => {
   timeout.value = true
   timeoutMessage.value = true
 })
@@ -43,14 +41,14 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
 
   axios.post(`/answers/${answers.id}/${selected}`, { _method: 'patch' }).catch(() => {
     networkErrorMessage.value = true
-    answers.selected = null
+    answers.selected = undefined
   })
 }
 </script>
 
 <template>
   <Head>
-    <title>{{ submission.name }}</title>
+    <title>{{ submission.title }}</title>
   </Head>
   <TransitionRoot
     :show="showDuration"
@@ -70,7 +68,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
   <div class="w-full p-2 md:max-w-5xl">
     <Divider>
       <h1 class="font-bold text-xl text-primary text-center px-4 whitespace-nowrap">
-        {{ submission.name }}
+        {{ submission.title }}
       </h1>
     </Divider>
 
@@ -94,7 +92,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
             :title="timeout ? 'Czas przewidziany na ten test dobiegł końca' : undefined"
           >
             <input
-              :id="answer.id"
+              :id="`${answer.id}`"
               type="radio"
               :disabled="timeout"
               :checked="record.selected === answer.id"

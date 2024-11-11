@@ -13,7 +13,7 @@ class QuizSubmissionResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->quiz->title,
+            "title" => $this->quiz->title,
             "createdAt" => $this->created_at,
             "updatedAt" => $this->updated_at,
             "openedAt" => $this->quiz->scheduled_at,

@@ -5,7 +5,6 @@ import dayjs from 'dayjs'
 import FormButton from '@/components/Common/FormButton.vue'
 import Divider from '@/components/Common/Divider.vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
-import {type QuizSubmission} from '@/Types/QuizSubmission'
 
 const props = defineProps<{
   submissions: QuizSubmission[]

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {type QuizSubmission} from '@/Types/QuizSubmission'
 import Divider from '@/components/Common/Divider.vue'
 import Button from '@/components/Common/Button.vue'
 import {calcSecondsBetweenDates, secondsToHour, timeToString} from '@/Helpers/Time'

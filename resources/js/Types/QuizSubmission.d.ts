@@ -1,8 +1,6 @@
-import {type AnswerRecord} from '@/Types/AnswerRecord'
-
-export interface QuizSubmission {
+interface QuizSubmission {
   id: number
-  name: string
+  title: string
   createdAt: string
   updatedAt: string
   closedAt?: string
