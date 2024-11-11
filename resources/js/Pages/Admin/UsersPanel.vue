@@ -150,7 +150,7 @@ const sortOptions: SortOptionConstructor[] = [
               name="email"
               label="Email:"
               :error="data.errors.email"
-              :model-value="data.item.email"
+              v-model="data.item.email"
               :editing="data.editing"
             />
 
