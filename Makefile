@@ -71,4 +71,4 @@ queue:
 create-test-db:
 	@docker compose --file ${DOCKER_COMPOSE_FILE} exec ${DOCKER_COMPOSE_DATABASE_CONTAINER} bash -c 'createdb --username=${DATABASE_USERNAME} ${TEST_DATABASE_NAME} &> /dev/null && echo "Created database for tests (${TEST_DATABASE_NAME})." || echo "Database for tests (${TEST_DATABASE_NAME}) exists."'
 
-.PHONY: init check-env-file build run stop restart shell shell-root test fix create-test-db queue analyse dev
+.PHONY: init check-env-file build run stop restart shell shell-root test test-specific fix lintf fix-all create-test-db queue analyse dev
