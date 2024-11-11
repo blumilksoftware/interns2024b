@@ -76,6 +76,7 @@ function startFetching() {
       <InputWrapper
         :error="errors.name"
         :hide-error="!editing"
+        :hide-content="!item.name && !editing"
       >
         <textarea
           v-model="item.name"

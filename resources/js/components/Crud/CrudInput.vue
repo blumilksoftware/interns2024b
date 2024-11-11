@@ -15,6 +15,7 @@ defineProps<{
   <InputWrapper
     :error="error"
     :hide-error="!editing"
+    :hide-content="!value && !editing"
     :label="label"
     :class="{ 'hidden': !value && !editing }"
   >

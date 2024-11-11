@@ -18,6 +18,7 @@ const quiz = defineModel<Quiz>({ required: true })
     <InputWrapper
       :error="errors.title"
       :hide-error="!editing"
+      :hide-content="!quiz.title && !editing"
     >
       <input
         v-model="quiz.title"
@@ -42,6 +43,7 @@ const quiz = defineModel<Quiz>({ required: true })
         label="Rozpoczęcie testu:"
         :error="errors.scheduled_at"
         :hide-error="!editing"
+        :hide-content="!quiz.scheduledAt && !editing"
       >
         <b v-if="!editing" class="whitespace-nowrap">{{ formatDate(quiz.scheduledAt) }}</b>
         <CustomDatepicker
@@ -61,6 +63,7 @@ const quiz = defineModel<Quiz>({ required: true })
         label="Czas trwania testu (min):"
         :error="errors.duration"
         :hide-error="!editing"
+        :hide-content="!quiz.duration && !editing"
       >
         <b v-if="!editing">{{ quiz.duration }}</b>
         <input
