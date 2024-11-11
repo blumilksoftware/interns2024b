@@ -41,6 +41,7 @@ Route::post("/auth/password/reset", [PasswordResetLinkController::class, "resetS
 
 Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_admin"]], function (): void {
     Route::get("/quizzes", [QuizController::class, "index"])->name("admin.quizzes.index");
+    Route::get("/quizzes/{quiz}", [QuizController::class, "demo"])->name("admin.quizzes.demo");
     Route::post("/quizzes", [QuizController::class, "store"])->name("admin.quizzes.store");
     Route::patch("/quizzes/{quiz}", [QuizController::class, "update"])->can("update,quiz")->name("admin.quizzes.update");
     Route::delete("/quizzes/{quiz}", [QuizController::class, "destroy"])->can("delete,quiz")->name("admin.quizzes.destroy");

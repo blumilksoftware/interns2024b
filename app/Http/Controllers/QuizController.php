@@ -28,6 +28,14 @@ class QuizController extends Controller
         return Inertia::render("Admin/Quizzes", ["quizzes" => QuizResource::collection($quizzes)]);
     }
 
+    public function demo(Quiz $quiz): Response
+    {
+        return Inertia::render(
+            "Admin/QuizDemo",
+            ["quiz" => $quiz->load("questions.answers")]
+        );
+    }
+
     public function store(QuizRequest $request): RedirectResponse
     {
         Quiz::query()->create($request->validated());
