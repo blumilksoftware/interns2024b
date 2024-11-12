@@ -115,7 +115,7 @@ function startFetching() {
         <CrudInput
           v-model="data.item.regon"
           name="regon"
-          label="Regon:"
+          label="REGON:"
           :editing="data.editing"
           :error="data.errors.regon"
         />
