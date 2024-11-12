@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\AnswerRecord;
+use App\Models\UserQuestion;
 use App\Models\Question;
-use App\Models\QuizSubmission;
+use App\Models\UserQuiz;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<AnswerRecord>
+ * @extends Factory<UserQuestion>
  */
-class AnswerRecordFactory extends Factory
+class UserQuestionFactory extends Factory
 {
     public function definition(): array
     {
         return [
-            "quiz_submission_id" => QuizSubmission::factory(),
+            "user_quiz_id" => UserQuiz::factory(),
             "question_id" => Question::factory(),
         ];
     }

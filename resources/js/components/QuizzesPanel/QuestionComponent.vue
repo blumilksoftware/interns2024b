@@ -22,7 +22,7 @@ function addAnswer() {
 }
 
 function deleteAnswer(currentAnswer: Answer) {
-  question.value.answers = question.value.answers.filter((answer:Answer) => answer !== currentAnswer)
+  question.value.answers = question.value.answers.filter(answer => answer !== currentAnswer)
 }
 
 function setCorrectAnswer(currentAnswer: Answer) {

@@ -28,7 +28,7 @@ class QuizController extends Controller
         return Inertia::render("Admin/Quizzes", ["quizzes" => QuizResource::collection($quizzes)]);
     }
 
-    public function demo(Quiz $quiz): Response
+    public function show(Quiz $quiz): Response
     {
         return Inertia::render(
             "Admin/QuizDemo",
@@ -86,12 +86,12 @@ class QuizController extends Controller
             ->with("status", "Publikacja testu została wycofana");
     }
 
-    public function createSubmission(Request $request, Quiz $quiz): RedirectResponse
+    public function createUserQuiz(Request $request, Quiz $quiz): RedirectResponse
     {
         $user = $request->user();
-        $submission = $quiz->createSubmission($user);
+        $userQuiz = $quiz->createUserQuiz($user);
 
-        return redirect("/submissions/{$submission->id}/");
+        return redirect("/quizzes/{$userQuiz->id}/");
     }
 
     public function assign(Request $request, Quiz $quiz): RedirectResponse

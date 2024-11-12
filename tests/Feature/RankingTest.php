@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\Quiz;
-use App\Models\QuizSubmission;
+use App\Models\UserQuiz;
 use App\Models\User;
 use Database\Seeders\UserQuizSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -33,39 +33,39 @@ class RankingTest extends TestCase
         $this->admin = User::factory()->admin()->create();
 
         $this->quiz = $this->seeder->quiz;
-        $this->seeder->createSubmissionForUser($this->user, 2);
+        $this->seeder->createUserQuizForUser($this->user, 2);
 
         $this->unlockedQuiz = Quiz::factory()->create();
     }
 
     public function testUserHasPointsInAnsweredQuiz(): void
     {
-        $quizSubmission = QuizSubmission::where("user_id", $this->user->id)->first();
+        $userQuiz = UserQuiz::where("user_id", $this->user->id)->first();
 
-        $quizSubmission->refresh();
+        $userQuiz->refresh();
 
-        $this->assertGreaterThanOrEqual(0, $quizSubmission->points);
-        $this->assertLessThanOrEqual($quizSubmission->maxPoints, $quizSubmission->points);
+        $this->assertGreaterThanOrEqual(0, $userQuiz->points);
+        $this->assertLessThanOrEqual($userQuiz->maxPoints, $userQuiz->points);
     }
 
     public function testUserPointsAreCalculatedCorrectly(): void
     {
         $user2 = User::factory()->create();
-        $this->seeder->createSubmissionForUser($user2, 3);
+        $this->seeder->createUserQuizForUser($user2, 3);
 
-        $quizSubmission1 = QuizSubmission::where("user_id", $this->user->id)
+        $userQuiz1 = UserQuiz::where("user_id", $this->user->id)
             ->where("quiz_id", $this->quiz->id)
             ->first();
 
-        $quizSubmission2 = QuizSubmission::where("user_id", $user2->id)
+        $userQuiz2 = UserQuiz::where("user_id", $user2->id)
             ->where("quiz_id", $this->quiz->id)
             ->first();
 
-        $quizSubmission1->refresh();
-        $quizSubmission2->refresh();
+        $userQuiz1->refresh();
+        $userQuiz2->refresh();
 
-        $userScore = $quizSubmission1->points;
-        $user2Score = $quizSubmission2->points;
+        $userScore = $userQuiz1->points;
+        $user2Score = $userQuiz2->points;
 
         $this->assertEquals(2, $userScore);
         $this->assertEquals(3, $user2Score);
@@ -174,12 +174,12 @@ class RankingTest extends TestCase
 
     public function testUserCannotViewPublishedQuizRankingHeDidNotParticipated(): void
     {
-        $userWithoutSubmissions = User::factory()->create();
+        $userWithoutUserQuizzes = User::factory()->create();
 
         $this->quiz->ranking_published_at = now();
         $this->quiz->save();
 
-        $this->actingAs($userWithoutSubmissions)
+        $this->actingAs($userWithoutUserQuizzes)
             ->get("/quizzes/{$this->quiz->id}/ranking")
             ->assertForbidden();
     }

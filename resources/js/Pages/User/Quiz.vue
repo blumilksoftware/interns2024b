@@ -11,9 +11,12 @@ import { useWindowScroll } from '@vueuse/core'
 import { TransitionRoot } from '@headlessui/vue'
 import {calcSecondsLeftToDate} from '@/Helpers/Time'
 
-const props = defineProps<{ submission: QuizSubmission }>()
-const answers = ref(props.submission.answers)
-const allAnswered = computed((() => answers.value.every(answer => answer.selected !== undefined)))
+const props = defineProps<{ userQuiz: UserQuiz }>()
+
+const questions = ref(props.userQuiz.questions)
+const allQuestionsAnswered = computed(
+  () => questions.value.every(question => question.selectedAnswer !== undefined),
+)
 const timeout = ref(false)
 const emptyAnswerMessage = ref(false)
 const timeoutMessage = ref(false)
@@ -22,7 +25,7 @@ const networkErrorMessage = ref(false)
 
 const scroll = useWindowScroll()
 const showDuration = ref(false)
-const durationInMilliseconds = calcSecondsLeftToDate(props.submission.closedAt) * 1000
+const durationInMilliseconds = calcSecondsLeftToDate(props.userQuiz.closedAt) * 1000
 const fiveMinutesInMilliseconds = 300000
 
 watch(scroll.y, v => showDuration.value = v > 150)
@@ -31,24 +34,24 @@ if (durationInMilliseconds > fiveMinutesInMilliseconds) {
   setTimeout(() => timeoutWarningMessage.value = true, durationInMilliseconds - fiveMinutesInMilliseconds)
 }
 
-const timeLeft = useTimer(props.submission.closedAt ?? 0, () => {
+const timeLeft = useTimer(props.userQuiz.closedAt ?? 0, () => {
   timeout.value = true
   timeoutMessage.value = true
 })
 
-function handleAnswer(answers: AnswerRecord, selected: number) {
-  answers.selected = selected
+function handleAnswer(question: UserQuestion, selectedAnswer: number) {
+  question.selectedAnswer = selectedAnswer
 
-  axios.post(`/answers/${answers.id}/${selected}`, { _method: 'patch' }).catch(() => {
+  axios.post(`/questions/${question.id}/${selectedAnswer}`, { _method: 'patch' }).catch(() => {
     networkErrorMessage.value = true
-    answers.selected = undefined
+    question.selectedAnswer = undefined
   })
 }
 </script>
 
 <template>
   <Head>
-    <title>{{ submission.title }}</title>
+    <title>{{ userQuiz.title }}</title>
   </Head>
   <TransitionRoot
     :show="showDuration"
@@ -68,7 +71,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
   <div class="w-full p-2 md:max-w-5xl">
     <Divider>
       <h1 class="font-bold text-xl text-primary text-center px-4 whitespace-nowrap">
-        {{ submission.title }}
+        {{ userQuiz.title }}
       </h1>
     </Divider>
 
@@ -76,16 +79,16 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
       {{ timeLeft }}
     </div>
 
-    <div v-for="(record, index) in answers" :key="record.id" class="rounded-lg bg-white shadow border flex flex-col justify-between px-4 py-2 m-5">
+    <div v-for="(question, index) in questions" :key="question.id" class="rounded-lg bg-white shadow border flex flex-col justify-between px-4 py-2 m-5">
       <div>
-        <p class="pt-2 font-semibold text-primary">Pytanie: {{ index + 1 }}/{{ answers.length }}</p>
-        <p class="py-2 mt-2">{{ record.question }}</p>
+        <p class="pt-2 font-semibold text-primary">Pytanie: {{ index + 1 }}/{{ questions.length }}</p>
+        <p class="py-2 mt-2">{{ question.text }}</p>
       </div>
 
       <div class="mb-3 mt-2">
         <form class="flex flex-col gap-2">
           <label
-            v-for="answer in record.answers"
+            v-for="answer in question.answers"
             :key="answer.id"
             :class="[timeout ? 'cursor-not-allowed' : 'cursor-pointer']"
             class="flex items-center text-sm text-black"
@@ -95,10 +98,10 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
               :id="`${answer.id}`"
               type="radio"
               :disabled="timeout"
-              :checked="record.selected === answer.id"
+              :checked="question.selectedAnswer === answer.id"
               :class="[timeout ? 'cursor-not-allowed' : 'cursor-pointer']"
               class="mr-2 size-6 border-black text-primary accent-primary"
-              @change.prevent="handleAnswer(record, answer.id)"
+              @change.prevent="handleAnswer(question, answer.id!)"
             >
             {{ answer.text }}
           </label>
@@ -108,13 +111,13 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
 
     <div v-if="!timeout" class="h-80 flex flex-col items-center justify-center">
       <p class="font-semibold text-primary text-xl p-5 text-center">To już wszystkie pytania. Czy chcesz oddać test?</p>
-      <FormButton v-if="allAnswered" small :href="`/submissions/${submission.id}/close`" method="post">Oddaj test</FormButton>
+      <FormButton v-if="allQuestionsAnswered" small :href="`/quizzes/${userQuiz.id}/close`" method="post">Oddaj test</FormButton>
       <Button v-else small @click="emptyAnswerMessage = true">Oddaj test</Button>
     </div>
 
     <div v-else class="h-80 flex flex-col items-center justify-center">
       <p class="font-semibold text-primary text-xl p-5 text-center">Czas przewidziany na ten test dobiegł końca. <br> Twój test został przesłany do ocenienia</p>
-      <FormButton small :href="`/submissions/${submission.id}/result`" method="get">Podsumowanie</FormButton>
+      <FormButton small :href="`/quizzes/${userQuiz.id}/result`" method="get">Podsumowanie</FormButton>
     </div>
   </div>
 
@@ -129,7 +132,7 @@ function handleAnswer(answers: AnswerRecord, selected: number) {
 
     <template #buttons>
       <Button small text @click="emptyAnswerMessage = false">Wróć</Button>
-      <FormButton small :href="`/submissions/${submission.id}/close`" method="post">Oddaj mimo to</FormButton>
+      <FormButton small :href="`/quizzes/${userQuiz.id}/close`" method="post">Oddaj mimo to</FormButton>
     </template>
   </MessageBox>
 

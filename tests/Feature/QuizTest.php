@@ -7,7 +7,7 @@ namespace Tests\Feature;
 use App\Models\Answer;
 use App\Models\Question;
 use App\Models\Quiz;
-use App\Models\QuizSubmission;
+use App\Models\UserQuiz;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -479,24 +479,24 @@ class QuizTest extends TestCase
             ->from("/")
             ->post("/quizzes/{$quiz->id}/start");
 
-        $submission = QuizSubmission::query()->where([
+        $userQuiz = UserQuiz::query()->where([
             "user_id" => $this->user->id,
             "quiz_id" => $quiz->id,
         ])->firstOrFail();
 
-        $response->assertRedirect("/submissions/$submission->id/");
+        $response->assertRedirect("/quizzes/$userQuiz->id/");
     }
 
     public function testUserCannotStartAlreadyStartedQuiz(): void
     {
-        $submission = QuizSubmission::factory()->create(["user_id" => $this->user->id]);
+        $userQuiz = UserQuiz::factory()->create(["user_id" => $this->user->id]);
 
         $this->actingAs($this->user)
             ->from("/")
-            ->post("/quizzes/{$submission->quiz->id}/start")
-            ->assertRedirect("/submissions/{$submission->id}/");
+            ->post("/quizzes/{$userQuiz->quiz->id}/start")
+            ->assertRedirect("/quizzes/{$userQuiz->id}/");
 
-        $this->assertDatabaseCount("quiz_submissions", 1);
+        $this->assertDatabaseCount("user_quizzes", 1);
     }
 
     public function testUserCannotStartUnlockedQuiz(): void
@@ -508,7 +508,7 @@ class QuizTest extends TestCase
             ->post("/quizzes/{$quiz->id}/start")
             ->assertStatus(403);
 
-        $this->assertDatabaseCount("quiz_submissions", 0);
+        $this->assertDatabaseCount("user_quizzes", 0);
     }
 
     public function testUserCannotAccessToCrud(): void
@@ -581,7 +581,7 @@ class QuizTest extends TestCase
 
     public function testUserCannotAssignThemselvesToStartedQuiz(): void
     {
-        $quiz = QuizSubmission::factory()->create(["user_id" => $this->user->id])->quiz;
+        $quiz = UserQuiz::factory()->create(["user_id" => $this->user->id])->quiz;
 
         $this->actingAs($this->user)
             ->from("/")

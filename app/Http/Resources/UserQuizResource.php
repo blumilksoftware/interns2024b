@@ -7,7 +7,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class QuizSubmissionResource extends JsonResource
+class UserQuizResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -16,11 +16,10 @@ class QuizSubmissionResource extends JsonResource
             "title" => $this->quiz->title,
             "createdAt" => $this->created_at,
             "updatedAt" => $this->updated_at,
-            "openedAt" => $this->quiz->scheduled_at,
             "closedAt" => $this->closed_at,
             "closed" => $this->isClosed,
             "quiz" => $this->quiz_id,
-            "answers" => AnswerRecordResource::collection($this->answerRecords->shuffle()),
+            "questions" => UserQuestionResource::collection($this->userQuestions->shuffle()),
         ];
     }
 }

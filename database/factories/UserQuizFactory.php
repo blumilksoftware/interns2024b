@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Models\Quiz;
-use App\Models\QuizSubmission;
+use App\Models\UserQuiz;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<QuizSubmission>
+ * @extends Factory<UserQuiz>
  */
-class QuizSubmissionFactory extends Factory
+class UserQuizFactory extends Factory
 {
     public function definition(): array
     {

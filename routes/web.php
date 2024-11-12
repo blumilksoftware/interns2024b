@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AnswerRecordController;
+use App\Http\Controllers\UserQuestionController;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
 use App\Http\Controllers\EmailVerifyController;
@@ -12,7 +12,7 @@ use App\Http\Controllers\ProfileUserController;
 use App\Http\Controllers\QuestionAnswerController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
-use App\Http\Controllers\QuizSubmissionController;
+use App\Http\Controllers\UserQuizController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\SchoolsController;
@@ -41,7 +41,7 @@ Route::post("/auth/password/reset", [PasswordResetLinkController::class, "resetS
 
 Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_admin"]], function (): void {
     Route::get("/quizzes", [QuizController::class, "index"])->name("admin.quizzes.index");
-    Route::get("/quizzes/{quiz}", [QuizController::class, "demo"])->name("admin.quizzes.demo");
+    Route::get("/quizzes/{quiz}", [QuizController::class, "show"])->name("admin.quizzes.demo");
     Route::post("/quizzes", [QuizController::class, "store"])->name("admin.quizzes.store");
     Route::patch("/quizzes/{quiz}", [QuizController::class, "update"])->can("update,quiz")->name("admin.quizzes.update");
     Route::delete("/quizzes/{quiz}", [QuizController::class, "destroy"])->can("delete,quiz")->name("admin.quizzes.destroy");
@@ -90,12 +90,12 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
 
 Route::middleware(["auth", "verified"])->group(function (): void {
     Route::post("/quizzes/{quiz}/assign", [QuizController::class, "assign"])->can("assign,quiz")->name("quizzes.assign");
-    Route::post("/quizzes/{quiz}/start", [QuizController::class, "createSubmission"])->middleware(EnsureQuizIsNotAlreadyStarted::class)->can("submit,quiz")->name("quizzes.start");
+    Route::post("/quizzes/{quiz}/start", [QuizController::class, "createUserQuiz"])->middleware(EnsureQuizIsNotAlreadyStarted::class)->can("submit,quiz")->name("quizzes.start");
     Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "indexUser"])->can("viewUserRanking,quiz")->name("quizzes.ranking");
-    Route::get("/submissions/{quizSubmission}/", [QuizSubmissionController::class, "show"])->can("view,quizSubmission")->name("submissions.show");
-    Route::post("/submissions/{quizSubmission}/close", [QuizSubmissionController::class, "close"])->can("close,quizSubmission")->name("submissions.close");
-    Route::get("/submissions/{quizSubmission}/result", [QuizSubmissionController::class, "result"])->can("result,quizSubmission")->name("submissions.result");
-    Route::patch("/answers/{answerRecord}/{answer}", [AnswerRecordController::class, "answer"])->can("answer,answerRecord,answer")->name("answers.answer");
+    Route::get("/quizzes/{userQuiz}/", [UserQuizController::class, "show"])->can("view,userQuiz")->name("userQuizzes.show");
+    Route::post("/quizzes/{userQuiz}/close", [UserQuizController::class, "close"])->can("close,userQuiz")->name("userQuizzes.close");
+    Route::get("/quizzes/{userQuiz}/result", [UserQuizController::class, "result"])->can("result,userQuiz")->name("userQuizzes.result");
+    Route::patch("/questions/{userQuestion}/{answer}", [UserQuestionController::class, "answer"])->can("answer,userQuestion,answer")->name("questions.answer");
     Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
     Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
     Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update");
