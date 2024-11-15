@@ -14,7 +14,7 @@ interface Quiz {
 
 interface UserQuiz {
   [key: string]
-  id: number
+  id?: number
   title: string
   closedAt?: string
   closed?: boolean

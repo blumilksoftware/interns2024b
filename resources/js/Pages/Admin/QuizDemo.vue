@@ -1,7 +1,10 @@
 <script setup lang="ts">
-defineProps<{quiz: Quiz}>()
+import Quiz from '@/Pages/User/Quiz.vue'
+import { converter } from '@/Helpers/Converter'
+
+defineProps<{ quiz: Quiz }>()
 </script>
 
 <template>
-  Demo page {{ quiz.id }}
+  <Quiz :user-quiz="converter.quiz.adminToUser(quiz)" />
 </template>
