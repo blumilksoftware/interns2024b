@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\Answer;
+use App\Models\QuizSubmission;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,7 +20,7 @@ class AnswerRecordTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
+        QuizSubmission::truncate();
         $this->user = User::factory()->create();
     }
 
