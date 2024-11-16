@@ -9,10 +9,10 @@ defineProps<{
 </script>
 
 <template>
-  <a :href="href">
+  <a :href="href" :class="{ 'w-full flex justify-center' : large }">
     <ButtonFrame
       :class="buttonClass"
-      :disabled :small :extra-small :text
+      :disabled :small :extra-small :large :text
     >
       <slot />
     </ButtonFrame>

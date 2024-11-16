@@ -9,9 +9,9 @@ export function keysWrapper<T extends object & {key?:string}>(objects: T[]): Arr
   return objects as Array<T & {key:string}>
 }
 
-const itemsAsKeys = new WeakMap<any,string>()
+const itemsAsKeys = new WeakMap<object,string>()
 
-export default function getKey(item: any) : string{
+export default function getKey(item: object) : string{
   if (!itemsAsKeys.has(item)) 
     itemsAsKeys.set(item, nanoid())
   return itemsAsKeys.get(item) ?? nanoid()

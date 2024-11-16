@@ -5,11 +5,12 @@ import axios from 'axios'
 import FormButton from '@/components/Common/FormButton.vue'
 import Button from '@/components/Common/Button.vue'
 import MessageBox from '@/components/Common/MessageBox.vue'
+import UserQuestion from '@/components/UserQuiz/UserQuestion.vue'
 import {Head} from '@inertiajs/vue3'
 import {useTimer} from '@/Helpers/Timer'
 import { useWindowScroll } from '@vueuse/core'
-import { TransitionRoot } from '@headlessui/vue'
 import {calcSecondsLeftToDate} from '@/Helpers/Time'
+import Banner from '@/components/Common/Banner.vue'
 
 const props = defineProps<{ userQuiz: UserQuiz }>()
 
@@ -50,85 +51,54 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
 </script>
 
 <template>
-  <Head>
-    <title>{{ userQuiz.title }}</title>
-  </Head>
-  <TransitionRoot
+  <Head :title="userQuiz.title" />
+  <Banner
+    v-model="timeLeft"
+    class="bg-white !text-primary border-b font-semibold"
     :show="showDuration"
-    enter="transition-opacity duration-75"
-    enter-from="opacity-0"
-    enter-to="opacity-100"
-    leave="transition-opacity duration-50"
-    leave-from="opacity-100"
-    leave-to="opacity-0"
-    appear
-  >
-    <div class="fixed top-0 right-0 w-full text-center bg-white border px-6 py-2.5 font-bold text-sm text-black">
-      {{ timeLeft }}
-    </div>
-  </TransitionRoot>
+    hide-close-button
+  />
 
-  <div class="w-full p-2 md:max-w-5xl">
-    <Divider>
-      <h1 class="font-bold text-xl text-primary text-center px-4 whitespace-nowrap">
+  <Divider>
+    <template #default>
+      <h1 class="font-bold text-lg text-primary whitespace-nowrap">
         {{ userQuiz.title }}
       </h1>
-    </Divider>
+    </template>
 
-    <div class="w-full text-sm font-semibold text-right">
-      {{ timeLeft }}
+    <template #right>
+      <p class="text-primary font-semibold whitespace-nowrap">
+        {{ timeLeft }}
+      </p>
+    </template>
+  </Divider>
+
+  <div class="flex flex-col p-5 gap-5 max-w-6xl">
+    <UserQuestion
+      v-for="(question, index) in questions" :key="question.id"
+      :index="index"
+      :question="question"
+      :questions-total="questions.length"
+      :timeout
+      @answer="handleAnswer"
+    />
+
+    <div v-if="!timeout" class="h-80 mx-5 flex flex-col gap-8 items-center justify-center">
+      <p class="font-semibold text-primary text-xl text-center">To już wszystkie pytania. Czy chcesz oddać test?</p>
+      <FormButton v-if="allQuestionsAnswered" large :href="`/quizzes/${userQuiz.id}/close`" method="post">Oddaj test</FormButton>
+      <Button v-else large @click="emptyAnswerMessage = true">Oddaj test</Button>
     </div>
 
-    <div v-for="(question, index) in questions" :key="question.id" class="rounded-lg bg-white shadow border flex flex-col justify-between px-4 py-2 m-5">
-      <div>
-        <p class="pt-2 font-semibold text-primary">Pytanie: {{ index + 1 }}/{{ questions.length }}</p>
-        <p class="py-2 mt-2">{{ question.text }}</p>
-      </div>
-
-      <div class="mb-3 mt-2">
-        <form class="flex flex-col gap-2">
-          <label
-            v-for="answer in question.answers"
-            :key="answer.id"
-            :class="[timeout ? 'cursor-not-allowed' : 'cursor-pointer']"
-            class="flex items-center text-sm text-black"
-            :title="timeout ? 'Czas przewidziany na ten test dobiegł końca' : undefined"
-          >
-            <input
-              :id="`${answer.id}`"
-              type="radio"
-              :disabled="timeout"
-              :checked="question.selectedAnswer === answer.id"
-              :class="[timeout ? 'cursor-not-allowed' : 'cursor-pointer']"
-              class="mr-2 size-6 border-black text-primary accent-primary"
-              @change.prevent="handleAnswer(question, answer.id!)"
-            >
-            {{ answer.text }}
-          </label>
-        </form>
-      </div>
-    </div>
-
-    <div v-if="!timeout" class="h-80 flex flex-col items-center justify-center">
-      <p class="font-semibold text-primary text-xl p-5 text-center">To już wszystkie pytania. Czy chcesz oddać test?</p>
-      <FormButton v-if="allQuestionsAnswered" small :href="`/quizzes/${userQuiz.id}/close`" method="post">Oddaj test</FormButton>
-      <Button v-else small @click="emptyAnswerMessage = true">Oddaj test</Button>
-    </div>
-
-    <div v-else class="h-80 flex flex-col items-center justify-center">
-      <p class="font-semibold text-primary text-xl p-5 text-center">Czas przewidziany na ten test dobiegł końca. <br> Twój test został przesłany do ocenienia</p>
-      <FormButton small :href="`/quizzes/${userQuiz.id}/result`" method="get">Podsumowanie</FormButton>
+    <div v-else class="h-80 mx-5 flex flex-col gap-8 items-center justify-center">
+      <p class="font-semibold text-primary text-xl text-center">Czas przewidziany na ten test dobiegł końca. <br> Twój test został przesłany do ocenienia</p>
+      <FormButton large :href="`/quizzes/${userQuiz.id}/result`" method="get">Podsumowanie</FormButton>
     </div>
   </div>
 
   <MessageBox :open="emptyAnswerMessage" @close="emptyAnswerMessage = false">
-    <template #title>
-      Pytania bez odpowiedzi
-    </template>
+    <template #title>Pytania bez odpowiedzi</template>
 
-    <template #message>
-      Nie udzielono odpowiedzi na wszystkie pytania, czy na pewno chcesz oddać test?
-    </template>
+    <template #message>Nie udzielono odpowiedzi na wszystkie pytania, czy na pewno chcesz oddać test?</template>
 
     <template #buttons>
       <Button small text @click="emptyAnswerMessage = false">Wróć</Button>
@@ -137,13 +107,9 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
   </MessageBox>
 
   <MessageBox :open="timeoutMessage" @close="timeoutMessage = false">
-    <template #title>
-      Koniec czasu
-    </template>
+    <template #title>Koniec czasu</template>
 
-    <template #message>
-      Czas przewidziany na ten test dobiegł końca. Możliwość udzielania dalszych odpowiedzi została zablokowana.
-    </template>
+    <template #message>Czas przewidziany na ten test dobiegł końca. Możliwość udzielania dalszych odpowiedzi została zablokowana.</template>
 
     <template #buttons>
       <Button small @click="timeoutMessage = false">Ok</Button>
@@ -151,13 +117,9 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
   </MessageBox>
 
   <MessageBox :open="networkErrorMessage" @close="networkErrorMessage = false">
-    <template #title>
-      Nie udało się wysłać odpowiedzi
-    </template>
+    <template #title>Nie udało się wysłać odpowiedzi</template>
 
-    <template #message>
-      Wystąpił problem z wysłaniem Twojej odpowiedzi. Sprawdź swoje połączenie internetowe i spróbuj ponownie.
-    </template>
+    <template #message>Wystąpił problem z wysłaniem Twojej odpowiedzi. Sprawdź swoje połączenie internetowe i spróbuj ponownie.</template>
 
     <template #buttons>
       <Button small @click="networkErrorMessage = false">Ok</Button>
@@ -165,13 +127,9 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
   </MessageBox>
 
   <MessageBox :open="timeoutWarningMessage" @close="timeoutWarningMessage = false">
-    <template #title>
-      Zbliża się koniec czasu
-    </template>
+    <template #title>Zbliża się koniec czasu</template>
 
-    <template #message>
-      Pozostało 5 minut do końca testu.
-    </template>
+    <template #message>Pozostało 5 minut do końca testu.</template>
 
     <template #buttons>
       <Button small @click="timeoutWarningMessage = false">Ok</Button>
