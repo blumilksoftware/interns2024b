@@ -2,6 +2,7 @@
 
 @php
   $code = '404';
-  $message = 'Strona o podanym adresie nie istnieje.';
+  $message = 'Strona nie istnieje';
+  $description = 'Przepraszamy, nie mogliśmy znaleźć strony, której szukasz.';
   $link = ['url' => '/', 'text' => 'Wróć na stronę główną'];
 @endphp

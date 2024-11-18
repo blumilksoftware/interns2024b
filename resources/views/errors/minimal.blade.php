@@ -1,6 +1,7 @@
 @php
   $code = $code ?? 'Błąd';
-  $message = $message ?? 'Wystąpił nieoczekiwany błąd. Prosimy spróbować ponownie później.';
+  $message = $message ?? 'Błąd';
+  $description = $description ?? 'Wystąpił nieoczekiwany błąd. Prosimy spróbować ponownie później.';
 @endphp
 
 <!DOCTYPE html>
@@ -14,10 +15,11 @@
 
     * { margin: 0; padding: 0; }
     html, body { height: 100%; }
-    body { display: flex; justify-content: center; align-items: center; font-family: 'Poppins', sans-serif; color: #333; position: relative }
-    h1 { font-size: 6rem; margin-bottom: 1rem; color: #262c89 }
-    p { font-size: 1.2rem; margin-bottom: 2rem }
-    a { text-decoration: none; color: #262c89; font-size: 1rem }
+    body { display: flex; justify-content: center; align-items: center; font-family: 'Poppins', sans-serif; color: #333; position: relative;  max-width: 48rem; margin:auto }
+    h1 { font-size: 3rem; margin-bottom: 1rem; color: #262c89; }
+    p { font-size: 1rem; margin-bottom: 2rem }
+    b { font-size: 1.2rem; margin-bottom: 2rem; font-weight: bold }
+    a { text-decoration: none; background-color: #262c89; color: white; font-size: rem; font-weight: 600; padding: .6rem 1rem; border-radius: .8rem; }
     .container { display: flex; flex-direction: column; align-items: center; text-align: center }
     .bg-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.6); z-index: -10 }
     .blur-background { position: fixed; width: 58.33%; height: 100%; opacity: 0.7; filter: blur(48px); z-index: -10 }
@@ -39,8 +41,9 @@
     <div class="gradient-bg"></div>
   </div>
   <div class="container">
-    <h1>{{ $code ?? 'Error' }}</h1>
-    <p>{{ $message ?? 'An unexpected error occurred.' }}</p>
+    <b>{{ $code }}</b>
+    <h1>{{ $message }}</h1>
+    <p>{{ $description }}</p>
     @isset($link)
       <a href="{{ $link['url'] }}">{{ $link['text'] }}</a>
     @endisset
