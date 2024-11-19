@@ -52,6 +52,7 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
 
 <template>
   <Head :title="userQuiz.title" />
+  
   <Banner
     v-model="timeLeft"
     class="bg-white !text-primary border-b font-semibold"

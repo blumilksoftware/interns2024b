@@ -19,7 +19,7 @@ const grouped = computed(() => groupBy('points', sorted.value))
 <template>
   <div class="w-full p-2 md:max-w-8xl">
     <Divider>
-      <h1 class="font-bold text-xl text-primary text-center p-4 whitespace-nowrap">{{ quiz.name }} - Ranking</h1>
+      <h1 class="font-bold text-xl text-primary text-center py-4 whitespace-nowrap">{{ quiz.name }} - Ranking</h1>
     </Divider>
 
     <div class="w-full flex justify-between text-sm font-semibold text-gray-900 border shadow bg-white rounded-md px-4 py-2 gap-x-1">

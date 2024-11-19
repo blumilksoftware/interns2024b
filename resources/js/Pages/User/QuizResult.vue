@@ -4,12 +4,11 @@ import Button from '@/components/Common/Button.vue'
 import {calcSecondsBetweenDates, secondsToHour, timeToString} from '@/Helpers/Time'
 import {computed} from 'vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
-import AnswerResult from '@/components/Common/AnswerResult.vue'
 import {Head} from '@inertiajs/vue3'
+import QuestionResult from '@/components/QuizResult/QuestionResult.vue'
 
 const props = defineProps<{ userQuiz: UserQuiz, hasRanking: boolean }>()
 const duration = secondsToHour(calcSecondsBetweenDates(props.userQuiz.closedAt, props.userQuiz.createdAt))
-
 const points = computed(() =>
   props.userQuiz.questions.filter(
     question => question.answers.some(answer => question.selected === answer.id && answer.correct),
@@ -18,57 +17,43 @@ const points = computed(() =>
 </script>
 
 <template>
-  <Head>
-    <title>{{ userQuiz.title }} - Wyniki</title>
-  </Head>
-
-  <div class="w-full p-2 md:max-w-7xl">
-    <Divider>
-      <h1 class="font-bold text-xl text-primary text-center px-4 whitespace-nowrap">
+  <Head :title="`${userQuiz.title} - Wyniki`" />
+  
+  <Divider>
+    <template #default>
+      <h1 class="font-bold text-lg text-primary whitespace-nowrap">
         {{ userQuiz.title }}
       </h1>
-    </Divider>
-    <div class="w-full flex justify-between">
-      <div v-if="hasRanking" class="w-full text-left text-sm font-semibold">
-        Zdobyte punkty: {{ points }}/{{ userQuiz.questions.length }}
-      </div>
+    </template>
 
-      <div class="w-full text-right text-sm font-semibold">
+    <template #right>
+      <p class="text-primary font-semibold whitespace-nowrap">
         Twój czas rozwiązania testu: {{ timeToString(duration) }}
-      </div>
+      </p>
+    </template>
+  </Divider>
+
+  <div class="flex flex-col p-5 gap-5 max-w-6xl">
+    <div class="text-primary font-semibold whitespace-nowrap">
+      Zdobyte punkty: {{ points }}/{{ userQuiz.questions.length }}
     </div>
 
-    <div v-for="(question, index) in userQuiz.questions" :key="question.id" class="rounded-lg bg-white shadow border flex flex-col justify-between px-4 py-2 m-5">
-      <div>
-        <p class="pt-2 font-semibold text-primary">Pytanie: {{ index + 1 }}/{{ userQuiz.questions.length }}</p>
-        <p class="py-2 mt-2">{{ question.question }}</p>
-      </div>
-
-      <div class="mb-3 mt-2">
-        <div class="flex flex-col gap-2">
-          <AnswerResult
-            v-for="answer in question.answers"
-            :id="answer.id"
-            :key="answer.id"
-            type="radio"
-            :checked="question.selected == answer.id || answer.correct"
-            :mode="!hasRanking ? 'none' : answer.correct ? 'success' : 'error'"
-            :bold="question.selected == answer.id"
-          >
-            {{ answer.text }}
-          </AnswerResult>
-        </div>
-      </div>
-    </div>
+    <QuestionResult
+      v-for="(question, index) in userQuiz.questions" :key="question.id"
+      :index="index"
+      :question="question"
+      :questions-total="userQuiz.questions.length"
+      :has-ranking="hasRanking"
+    />
 
     <div v-if="hasRanking" class="h-80 flex flex-col items-center justify-center">
       <p class="font-semibold text-primary text-xl p-5 text-center">To już wszystkie pytania</p>
-      <LinkButton small :href="`/quizzes/${userQuiz.quiz}/ranking`">Ranking</LinkButton>
+      <LinkButton large :href="`/quizzes/${userQuiz.quiz}/ranking`">Ranking</LinkButton>
     </div>
 
     <div v-else class="h-80 flex flex-col items-center justify-center">
       <p class="font-semibold text-primary text-xl p-5 text-center">Ranking jest w trakcie przygotowania, wyślemy powiadomienie na Twoją skrzynkę pocztową gdy będzie gotowy!</p>
-      <Button small disabled>Ranking</Button>
+      <Button large disabled>Ranking</Button>
     </div>
   </div>
 </template>

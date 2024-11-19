@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import CustomRadio from '@/components/Common/CustomRadio.vue'
+import UserAnswer from '@/components/UserQuiz/UserAnswer.vue'
 
 defineProps<{ index: number, question: UserQuestion, questionsTotal: number, timeout: boolean }>()
-const emit = defineEmits<{ answer: [question: UserQuestion, answerId: number]}>()
+const emit = defineEmits<{ answer: [question: UserQuestion, answerId: number] }>()
 </script>
 
 <template>
@@ -13,22 +13,14 @@ const emit = defineEmits<{ answer: [question: UserQuestion, answerId: number]}>(
     </div>
 
     <form class="flex flex-col gap-5">
-      <label
-        v-for="answer in question.answers" :key="answer.id"
-        class="flex gap-2.5 text-gray-900"
-        :class="timeout ? 'cursor-not-allowed' : 'cursor-pointer'"
-        :title="timeout ? 'Czas przewidziany na ten test dobiegł końca' : undefined"
-      >
-        <CustomRadio
-          class="mt-[.3rem] text-primary"
-          :class="timeout ? 'cursor-not-allowed' : 'cursor-pointer'"
-          :size="1"
-          :disabled="timeout"
-          :checked="question.selectedAnswer === answer.id"
-          @change="emit('answer', question, answer.id)"
-        />
-        {{ answer.text }}
-      </label>
+      <UserAnswer
+        v-for="answer in question.answers"
+        :key="answer.id"
+        :answer="answer"
+        :checked="question.selectedAnswer === answer.id"
+        :timeout="timeout"
+        @change="(answerId) => emit('answer', question, answerId)"
+      />
     </form>
   </div>
 </template>
