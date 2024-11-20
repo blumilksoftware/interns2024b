@@ -54,10 +54,9 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
   <Head :title="userQuiz.title" />
   
   <Banner
-    v-model="timeLeft"
     class="bg-white !text-primary border-b font-semibold"
+    :message="timeLeft"
     :show="showDuration"
-    hide-close-button
   />
 
   <Divider>
