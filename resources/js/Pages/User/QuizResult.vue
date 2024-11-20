@@ -34,7 +34,7 @@ const points = computed(() =>
   </Divider>
 
   <div class="flex flex-col p-5 gap-5 max-w-6xl">
-    <div class="text-primary font-semibold whitespace-nowrap">
+    <div v-if="hasRanking" class="text-primary font-semibold whitespace-nowrap">
       Zdobyte punkty: {{ points }}/{{ userQuiz.questions.length }}
     </div>
 

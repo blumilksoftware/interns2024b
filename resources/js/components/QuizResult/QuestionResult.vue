@@ -14,9 +14,9 @@ defineProps<{ index: number, question: UserQuestion, questionsTotal: number, has
     <form class="flex flex-col gap-5">
       <AnswerResult
         v-for="answer in question.answers" :key="answer.id"
-        :checked="question.selectedAnswer == answer.id"
-        :mode="!true ? undefined : answer.correct ? 'success' : 'error'"
-        :bold="answer.correct"
+        :checked="question.selectedAnswer === answer.id"
+        :correct="answer.correct"
+        :has-ranking
       >
         {{ answer.text }}
       </AnswerResult>
