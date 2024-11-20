@@ -18,7 +18,7 @@ defineProps<{
     }"
   >
     <CustomRadio
-      class="mt-[.3rem]"
+      class="mt-1"
       disabled
       :checked="checked || bold"
     />

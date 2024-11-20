@@ -18,7 +18,7 @@ const emit = defineEmits<{ change: [] }>()
       :name="name"
       :disabled
       :checked
-      :style="{ width: `${size}rem`, height: `${size}rem`, borderWidth: `${size/10}rem`, '--inner-size': `calc(${size}rem*.6)` }"
+      :style="{ width: `${size}rem`, height: `${size}rem` }"
       @change.prevent="emit('change')"
     >
   </div>
@@ -29,29 +29,19 @@ input[type="radio"] {
   flex-shrink: 0;
   -webkit-appearance: none;
   appearance: none;
-  background-color: #fff;
-  margin: 0;
+  background-color: transparent;
   font: inherit;
   color: currentColor;
   border-style: solid;
   border-color: currentColor;
   border-radius: 50%;
-  transform: translateY(-0.075rem);
   display: grid;
   place-content: center;
+  transition: 120ms border ease-in-out;
+  border-width: .1rem;
 }
 
-input[type="radio"]::before {
-  content: "";
-  width: var(--inner-size);
-  height: var(--inner-size);
-  border-radius: 50%;
-  transform: scale(0);
-  transition: 120ms transform ease-in-out;
-  box-shadow: inset var(--inner-size) var(--inner-size) currentColor;
-}
-
-input[type="radio"]:checked::before {
-  transform: scale(1);
+input[type="radio"]:checked {
+  border-width: .4rem;
 }
 </style>

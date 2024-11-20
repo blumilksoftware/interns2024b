@@ -16,7 +16,7 @@ const emit = defineEmits<{ change: [answerId: number] }>()
     :title="timeout ? 'Czas przewidziany na ten test dobiegł końca' : undefined"
   >
     <CustomRadio
-      class="mt-[.3rem] text-primary"
+      class="mt-1 text-primary"
       :class="timeout ? 'cursor-not-allowed' : 'cursor-pointer'"
       :disabled="timeout"
       :checked
