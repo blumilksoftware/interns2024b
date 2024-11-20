@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use App\Models\Answer;
-use App\Models\UserQuestion;
 use App\Models\User;
+use App\Models\UserQuestion;
 
 class UserQuestionPolicy
 {

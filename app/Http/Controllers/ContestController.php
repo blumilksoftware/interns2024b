@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Resources\QuizResource;
-use App\Http\Resources\UserQuizResource;
 use App\Http\Resources\SchoolResource;
+use App\Http\Resources\UserQuizResource;
 use App\Models\Quiz;
 use App\Models\School;
 use Illuminate\Http\Request;

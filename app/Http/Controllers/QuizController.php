@@ -32,7 +32,7 @@ class QuizController extends Controller
     {
         return Inertia::render(
             "Admin/QuizDemo",
-            ["quiz" => $quiz->load("questions.answers")]
+            ["quiz" => $quiz->load("questions.answers")],
         );
     }
 

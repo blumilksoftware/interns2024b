@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Answer;
-use App\Models\UserQuestion;
 use App\Models\Question;
 use App\Models\Quiz;
-use App\Models\UserQuiz;
 use App\Models\User;
+use App\Models\UserQuestion;
+use App\Models\UserQuiz;
 use Illuminate\Database\Seeder;
 
 class UserQuizSeeder extends Seeder

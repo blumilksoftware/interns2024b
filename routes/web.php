@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\UserQuestionController;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
 use App\Http\Controllers\EmailVerifyController;
@@ -12,11 +11,12 @@ use App\Http\Controllers\ProfileUserController;
 use App\Http\Controllers\QuestionAnswerController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
-use App\Http\Controllers\UserQuizController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\SchoolsController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserQuestionController;
+use App\Http\Controllers\UserQuizController;
 use App\Http\Middleware\EnsureQuizIsNotAlreadyStarted;
 use App\Models\Answer;
 use App\Models\Question;

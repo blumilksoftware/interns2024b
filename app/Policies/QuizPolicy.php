@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use App\Models\Quiz;
-use App\Models\UserQuiz;
 use App\Models\User;
+use App\Models\UserQuiz;
 use Illuminate\Auth\Access\Response;
 
 class QuizPolicy
