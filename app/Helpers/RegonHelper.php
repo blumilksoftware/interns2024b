@@ -1,33 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Helpers;
 
-class RegonHelper {
+class RegonHelper
+{
     public const array WEIGHTS_SHORT = [8, 9, 2, 3, 4, 5, 6, 7];
     public const array WEIGHTS_LONG = [2, 4, 8, 5, 0, 9, 7, 3, 6, 1, 2, 4, 8];
 
-    public static function generateShortRegon() {
-        $digits = '';
+    public static function generateShortRegon()
+    {
+        $digits = "";
 
         for ($i = 0; $i < 8; $i++) {
             $digits .= rand(0, 9);
         }
 
         $checksum = self::calculateChecksum(str_split($digits), self::WEIGHTS_SHORT);
+
         return $digits . $checksum;
     }
 
-    public static function generateLongRegon() {
-        $digits = '';
+    public static function generateLongRegon()
+    {
+        $digits = "";
 
         for ($i = 0; $i < 13; $i++) {
             $digits .= rand(0, 9);
         }
 
         $checksum = self::calculateChecksum(str_split($digits), self::WEIGHTS_LONG);
+
         return $digits . $checksum;
     }
-
 
     /***
      * @param array<string> $number

@@ -8,8 +8,6 @@ use App\Helpers\RegonHelper;
 use App\Models\School;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-use function str;
-
 /**
  * @extends Factory<School>
  */
@@ -29,7 +27,7 @@ class SchoolFactory extends Factory
             "street" => fake()->streetName(),
             "building_number" => fake()->buildingNumber(),
             "apartment_number" => fake()->buildingNumber(),
-            "zip_code" => fake()->randomNumber(2) . '-' . fake()->randomNumber(3),
+            "zip_code" => fake()->randomNumber(2) . "-" . fake()->randomNumber(3),
         ];
     }
 
