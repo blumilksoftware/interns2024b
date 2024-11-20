@@ -35,7 +35,7 @@ if (durationInMilliseconds > fiveMinutesInMilliseconds) {
   setTimeout(() => timeoutWarningMessage.value = true, durationInMilliseconds - fiveMinutesInMilliseconds)
 }
 
-const timeLeft = useTimer(props.userQuiz.closedAt ?? 0, () => {
+const timeLeft = useTimer(props.userQuiz.closedAt, () => {
   timeout.value = true
   timeoutMessage.value = true
 })
