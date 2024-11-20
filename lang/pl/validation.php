@@ -131,6 +131,11 @@ return [
         "questions.*.text" => [
             "required" => "Treść pytania jest wymagana.",
         ],
+        "regon" => [
+            "digits_only" => "Pole :attribute może zawierać tylko cyfry.",
+            "invalid_length" => "Pole :attribute musi mieć dokładnie 9 lub 14 cyfr.",
+            "invalid_checksum" => "Pole :attribute ma nieprawidłową sumę kontrolną.",
+        ],
     ],
     "attributes" => [
         "name" => "imię",
@@ -142,5 +147,11 @@ return [
         "date" => "data",
         "password" => "hasło",
         "school_id" => "szkoła",
+        "regon" => "regon",
+        "street" => "ulica",
+        "building_number" => "numer budynku",
+        "apartment_number" => "numer mieszkania",
+        "zip_code" => "kod pocztowy",
+        "city" => "miasto",
     ],
 ];

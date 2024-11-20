@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Rules\Regon;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -37,11 +38,11 @@ class SchoolRequest extends FormRequest
         return [
             "name" => ["required", "string"],
             "city" => ["required", "string"],
-            "regon" => ["required", "string"],
+            "regon" => ["required", "string", new Regon()],
             "street" => ["required", "string"],
             "building_number" => ["required", "string"],
             "apartment_number" => ["string", "nullable"],
-            "zip_code" => ["required", "string"],
+            "zip_code" => ["required", "string", "regex:/^\d{2}-\d{3}$/"],
         ];
     }
 }
