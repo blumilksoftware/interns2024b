@@ -34,7 +34,9 @@ const fiveMinutesInMilliseconds = 300000
 watch(scroll.y, v => showDuration.value = v > 150)
 
 if (durationInMilliseconds > fiveMinutesInMilliseconds) {
-  setTimeout(() => timeoutWarningMessage.value = true, durationInMilliseconds - fiveMinutesInMilliseconds)
+  const duration = durationInMilliseconds - fiveMinutesInMilliseconds
+  if (duration < 2147483647)
+    setTimeout(() => timeoutWarningMessage.value = true, durationInMilliseconds - fiveMinutesInMilliseconds)
 }
 
 const timeLeft = useTimer(props.userQuiz.closedAt, () => {
