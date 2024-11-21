@@ -19,7 +19,7 @@ const emit = defineEmits<{ answer: [question: UserQuestion, answerId: number] }>
         :answer="answer"
         :checked="question.selectedAnswer === answer.id"
         :timeout="timeout"
-        @change="(answerId) => emit('answer', question, answerId)"
+        @change="answerId => emit('answer', question, answerId)"
       />
     </form>
   </div>

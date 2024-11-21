@@ -2,9 +2,12 @@
 import QuizLayout from '@/Layouts/QuizLayout.vue'
 import { converter } from '@/Helpers/Converter'
 
-defineProps<{ quiz: Quiz }>()
+const props = defineProps<{ quiz: Quiz }>()
 </script>
 
 <template>
-  <QuizLayout :user-quiz="converter.quiz.adminToUser(quiz)" />
+  <QuizLayout
+    :user-quiz="converter.quiz.adminToUser(props.quiz)"
+    :request-close-quiz="{ method: 'get', href: '/admin/quizzes/' }"
+  />
 </template>

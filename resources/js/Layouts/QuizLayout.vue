@@ -4,14 +4,16 @@ import { useTimer } from '@/Helpers/Timer'
 import { useWindowScroll } from '@vueuse/core'
 import { Head } from '@inertiajs/vue3'
 import { calcSecondsLeftToDate } from '@/Helpers/Time'
+import { type Method } from '@inertiajs/core'
 
 import Divider from '@/components/Common/Divider.vue'
 import Banner from '@/components/Common/Banner.vue'
 import Button from '@/components/Common/Button.vue'
 import MessageBox from '@/components/Common/MessageBox.vue'
 import UserQuestion from '@/components/UserQuiz/UserQuestion.vue'
+import FormButton from '@/components/Common/FormButton.vue'
 
-const props = defineProps<{ userQuiz: UserQuiz, emptyAnswerMessage?:boolean, networkErrorMessage?:boolean}>()
+const props = defineProps<{ userQuiz: UserQuiz, requestCloseQuiz: { method:Method, href:string } }>()
 const questions = ref(props.userQuiz.questions)
 const emit = defineEmits<{ answer: [question: UserQuestion, selectedAnswer: number] }>()
 
@@ -22,8 +24,7 @@ const allQuestionsAnswered = computed(
 const timeout = ref(false)
 const timeoutMessage = ref(false)
 const timeoutWarningMessage = ref(false)
-const emptyAnswerMessage = ref(props.emptyAnswerMessage)
-const networkErrorMessage = ref(props.networkErrorMessage)
+const emptyAnswerMessage = ref(false)
 
 const scroll = useWindowScroll()
 const showDuration = ref(false)
@@ -42,8 +43,8 @@ const timeLeft = useTimer(props.userQuiz.closedAt, () => {
 })
 
 function handleAnswer(question: UserQuestion, selectedAnswer: number) {
-  emit('answer', question, selectedAnswer)
   question.selectedAnswer = selectedAnswer
+  emit('answer', question, selectedAnswer)
 }
 </script>
 
@@ -82,17 +83,35 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
 
     <div v-if="!timeout" class="h-80 mx-5 flex flex-col gap-8 items-center justify-center">
       <p class="font-semibold text-primary text-xl text-center">To już wszystkie pytania. Czy chcesz oddać test?</p>
-      <slot name="submitButton" :all-questions-answered="allQuestionsAnswered" :timeout="timeout">
-        <Button v-if="allQuestionsAnswered" large>Oddaj test</Button>
-        <Button v-else large @click="emptyAnswerMessage = true">Oddaj test</Button>
-      </slot>
+      
+      <FormButton
+        v-if="allQuestionsAnswered" 
+        large
+        :href="requestCloseQuiz.href" 
+        :method="requestCloseQuiz.method"
+      >
+        Oddaj test
+      </FormButton>
+      
+      <Button
+        v-else
+        large 
+        @click="emptyAnswerMessage = true"
+      >
+        Oddaj test
+      </Button>
     </div>
 
     <div v-else class="h-80 mx-5 flex flex-col gap-8 items-center justify-center">
       <p class="font-semibold text-primary text-xl text-center">Czas przewidziany na ten test dobiegł końca. <br> Twój test został przesłany do ocenienia</p>
-      <slot name="timeoutButton">
-        <Button large>Podsumowanie</Button>
-      </slot>
+      
+      <FormButton 
+        large
+        :href="requestCloseQuiz.href" 
+        :method="requestCloseQuiz.method"
+      >
+        Podsumowanie
+      </FormButton>
     </div>
   </div>
 
@@ -103,9 +122,14 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
 
     <template #buttons>
       <Button small text @click="emptyAnswerMessage = false">Wróć</Button>
-      <slot name="submitWithoutAllAnswers">
-        <Button small @click="emptyAnswerMessage = false">Oddaj mimo to</Button>
-      </slot>
+
+      <FormButton 
+        small
+        :href="requestCloseQuiz.href" 
+        :method="requestCloseQuiz.method"
+      >
+        Oddaj mimo to
+      </FormButton>
     </template>
   </MessageBox>
 
@@ -116,16 +140,6 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
 
     <template #buttons>
       <Button small @click="timeoutMessage = false">Ok</Button>
-    </template>
-  </MessageBox>
-
-  <MessageBox :open="networkErrorMessage" @close="networkErrorMessage = false">
-    <template #title>Nie udało się wysłać odpowiedzi</template>
-
-    <template #message>Wystąpił problem z wysłaniem Twojej odpowiedzi. Sprawdź swoje połączenie internetowe i spróbuj ponownie.</template>
-
-    <template #buttons>
-      <Button small @click="networkErrorMessage = false">Ok</Button>
     </template>
   </MessageBox>
 
