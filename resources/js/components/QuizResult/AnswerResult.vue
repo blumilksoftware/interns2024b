@@ -4,7 +4,7 @@ import CustomRadio from '@/components/Common/CustomRadio.vue'
 defineProps<{
   checked?: boolean
   correct?: boolean
-  hasRanking?: boolean
+  revealAnswers?: boolean
 }>()
 </script>
 
@@ -12,9 +12,9 @@ defineProps<{
   <label 
     class="flex gap-2.5" 
     :class="{
-      'text-red': !correct && checked && hasRanking,
-      'text-green-700': correct && hasRanking,
-      'text-primary': !correct && !checked || !hasRanking,
+      'text-red': !correct && checked && revealAnswers,
+      'text-green-700': correct && revealAnswers,
+      'text-primary': !correct && !checked || !revealAnswers,
       'font-semibold': checked,
     }"
   >

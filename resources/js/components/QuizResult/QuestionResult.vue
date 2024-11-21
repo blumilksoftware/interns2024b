@@ -16,7 +16,7 @@ defineProps<{ index: number, question: UserQuestion, questionsTotal: number, has
         v-for="answer in question.answers" :key="answer.id"
         :checked="question.selectedAnswer === answer.id"
         :correct="answer.correct"
-        :has-ranking
+        :reveal-answers="hasRanking"
       >
         {{ answer.text }}
       </AnswerResult>
