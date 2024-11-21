@@ -63,7 +63,7 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
       </h1>
     </template>
 
-    <template #right>
+    <template v-if="timeLeft" #right>
       <p class="text-primary font-semibold whitespace-nowrap">
         {{ timeLeft }}
       </p>

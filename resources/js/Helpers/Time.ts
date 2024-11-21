@@ -29,11 +29,9 @@ export function timeToString(time: TimeObject, withLeft = false): string {
     const hours = h ? `${h} ${translateHoursLeft(h)}` : ''
     const minutes = m ? `${m} ${translateMinutesLeft(m)}` : ''
     const seconds =  s ? `${s} ${translateSecondsLeft(s)}` : ''
-
-    const result = `${hours} ${minutes} ${seconds}`
     const leading = h ?? m ?? s
-
-    return (withLeft && leading ? translateLeft(leading) + ' ' : '') + result
+    
+    return `${(withLeft && leading ? translateLeft(leading) : '')} ${hours} ${minutes} ${seconds}`.trimStart()
   }
 
   if (h) {
