@@ -28,7 +28,7 @@ class UpdateQuizRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "title" => ["required", "string"],
+            "title" => ["required", "string", "max:255"],
             "scheduled_at" => ["date", "after:now"],
             "duration" => ["integer", "min:1", "max:2147483647"],
             "questions" => ["array"],

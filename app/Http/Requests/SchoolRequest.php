@@ -36,12 +36,12 @@ class SchoolRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => ["required", "string"],
-            "city" => ["required", "string"],
+            "name" => ["required", "string", "max:255"],
+            "city" => ["required", "string", "max:255"],
             "regon" => ["required", "string", new Regon()],
-            "street" => ["required", "string"],
-            "building_number" => ["required", "string"],
-            "apartment_number" => ["string", "nullable"],
+            "street" => ["required", "string", "max:255"],
+            "building_number" => ["required", "string", "max:255"],
+            "apartment_number" => ["string", "nullable", "max:255"],
             "zip_code" => ["required", "string", "regex:/^\d{2}-\d{3}$/"],
         ];
     }
