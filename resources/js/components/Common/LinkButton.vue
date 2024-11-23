@@ -12,7 +12,7 @@ defineProps<{
   <a :href="href">
     <ButtonFrame
       :class="buttonClass"
-      :disabled :small :extra-small :text
+      :disabled :small :extra-small :text :icon
     >
       <slot />
     </ButtonFrame>

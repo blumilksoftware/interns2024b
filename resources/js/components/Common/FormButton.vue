@@ -54,7 +54,7 @@ function onProcessing(isProcessing:boolean) {
     <ButtonFrame
       :disabled="disabled || processing"
       :class="buttonClass"
-      :small :extra-small :text
+      :small :extra-small :text :icon
     >
       <slot />
     </ButtonFrame>

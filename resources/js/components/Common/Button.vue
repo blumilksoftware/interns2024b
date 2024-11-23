@@ -9,7 +9,7 @@ const emit = defineEmits(['click'])
 
 <template>
   <button :disabled :type="type" @click="emit('click')">
-    <ButtonFrame :disabled :small :extra-small :text>
+    <ButtonFrame :disabled :small :extra-small :text :icon>
       <slot />
     </ButtonFrame>
   </button>
