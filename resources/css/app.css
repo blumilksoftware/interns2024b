@@ -7,6 +7,19 @@
   font-family: 'Poppins', sans-serif;
 }
 
+.theme-witelon {
+  --color-primary: 38 44 137;
+  --color-primary-bright: 37 43 174;
+  --color-primary-dark: 20 22 71;
+}
+
+.theme-tauron {
+  --color-primary: 247 2 121;
+  --color-primary-bright: 182 0 80;
+  --color-primary-dark: 94 0 37;
+}
+
+
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.3s ease;
