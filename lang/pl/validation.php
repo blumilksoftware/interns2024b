@@ -136,6 +136,9 @@ return [
             "invalid_length" => "Pole :attribute musi mieć dokładnie 9 lub 14 cyfr.",
             "invalid_checksum" => "Pole :attribute ma nieprawidłową sumę kontrolną.",
         ],
+        "sorting" => [
+            "unsupported_field" => "Sortowanie po polu :attribute nie jest wspierane.",
+        ],
     ],
     "attributes" => [
         "name" => "imię",
