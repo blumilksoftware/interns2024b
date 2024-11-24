@@ -1,14 +1,18 @@
 <script setup lang="ts">
-function toggleTheme() {
-  const isThemeTauron = document.documentElement.classList.contains('theme-tauron')
-  document.documentElement.classList.remove(isThemeTauron ? 'theme-tauron' : 'theme-witelon')
-  document.documentElement.classList.add(isThemeTauron ? 'theme-witelon' : 'theme-tauron')
+import { computed } from 'vue'
+
+const isThemeTauron = computed(() => localStorage.getItem('theme') === 'theme-tauron')
+
+function toggleTheme(checked?:boolean) {
+  document.documentElement.classList.remove(checked ? 'theme-witelon' : 'theme-tauron')
+  document.documentElement.classList.add(checked ? 'theme-tauron' : 'theme-witelon')
+  localStorage.setItem('theme', checked ? 'theme-tauron' : 'theme-witelon')
 }
 </script>
 
 <template>
   <label class="inline-flex items-center cursor-pointer">
-    <input type="checkbox" class="sr-only peer" @click="toggleTheme">
+    <input type="checkbox" class="sr-only peer" :checked="isThemeTauron" @click="(event: any) => toggleTheme(event.currentTarget.checked)">
     <div class="
       relative
       w-11

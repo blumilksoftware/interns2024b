@@ -14,11 +14,10 @@
 }
 
 .theme-tauron {
-  --color-primary: 247 2 121;
-  --color-primary-bright: 182 0 80;
-  --color-primary-dark: 94 0 37;
+  --color-primary: 228 0 125;
+  --color-primary-bright: 245 13 147;
+  --color-primary-dark: 176 4 96;
 }
-
 
 .v-enter-active,
 .v-leave-active {

@@ -50,8 +50,8 @@ module.exports = {
             colors: {
                 'primary': {
                     'DEFAULT': 'rgb(var(--color-primary))',
-                    '800': 'var(--color-primary-bright)',
-                    '950': 'var(--color-primary-dark)',
+                    'bright': 'rgb(var(--color-primary-bright))',
+                    'dark': 'rgb(var(--color-primary-dark))',
                 },
                 'red': {
                     'DEFAULT': '#ff0000',
@@ -76,13 +76,13 @@ module.exports = {
             });
             addComponents({
                 '.icon': {
-                  '@apply size-6 stroke-2 text-primary hover:text-primary-800 transition-colors duration-200':{},
+                  '@apply size-6 stroke-2 text-primary hover:text-primary-bright transition-colors duration-200':{},
                 },
                 '.slide-up-animation' : {
                     '@apply hover:-translate-y-1 h-full transition-transform ease-in duration-150':{},
                 },
                 '.icon-button': {
-                  '@apply flex gap-2 w-fit font-bold text-primary hover:text-primary-800 text-percentage-105':{},
+                  '@apply flex gap-2 w-fit font-bold text-primary hover:text-primary-bright text-percentage-105':{},
                 }
             })
         }),

@@ -145,7 +145,7 @@ function sanitizeData() {
     >
       <CloudArrowUpIcon
         class="w-7.5 h-7.5 text-primary stroke-2"
-        :class="{ 'opacity-50': !publishValidation.validated, 'hover:text-primary-800': publishValidation.validated }"
+        :class="{ 'opacity-50': !publishValidation.validated, 'hover:text-primary-bright': publishValidation.validated }"
       />
     </RequestWrapper>
 

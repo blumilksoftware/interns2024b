@@ -49,7 +49,7 @@ function gotoLoginSection() {
       <div class="flex justify-end flex-1 gap-6 items-center">
         <b><button class="text-sm text-primary" @click="gotoLoginSection">Logowanie</button></b>
         <button
-          class="flex-none rounded-lg bg-primary px-3.5 py-3 text-sm font-bold text-white shadow-sm hover:bg-primary-950 duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
+          class="flex-none rounded-lg bg-primary px-3.5 py-3 text-sm font-bold text-white shadow-sm hover:bg-primary-dark duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
           @click="gotoRegisterSection"
         >
           Rejestracja

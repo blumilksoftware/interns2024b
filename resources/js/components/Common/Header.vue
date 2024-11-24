@@ -25,7 +25,7 @@ const isSelected = (page: Page) => page.href === window.location.pathname
             v-for="item in pages"
             :key="item.title"
             :href="item.href"
-            class="hidden sm:block font-semibold leading-6 text-gray-900 transition-colors duration-200 hover:text-primary-800"
+            class="hidden sm:block font-semibold leading-6 text-gray-900 transition-colors duration-200 hover:text-primary-bright"
             :class="{ 'text-primary': isSelected(item) }"
           >
             {{ item.title }}

@@ -14,6 +14,9 @@ dayjs.locale('pl')
 
 const appName = import.meta.env.VITE_APP_NAME
 
+const themeClass = localStorage.getItem('theme')
+themeClass && document.documentElement.classList.add(themeClass)
+
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,
   resolve: async (name) => {
