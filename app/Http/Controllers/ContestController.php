@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Resources\QuizResource;
-use App\Http\Resources\QuizSubmissionResource;
 use App\Http\Resources\SchoolResource;
+use App\Http\Resources\UserQuizResource;
 use App\Models\Quiz;
 use App\Models\School;
 use Illuminate\Http\Request;
@@ -25,8 +25,8 @@ class ContestController extends Controller
     public function create(Request $request): Response
     {
         $user = $request->user();
-        $submissions = $user->quizSubmissions()
-            ->with(["answerRecords.question.answers", "quiz"])
+        $userQuizzes = $user->userQuizzes()
+            ->with(["userQuestions.question.answers", "quiz"])
             ->get();
 
         $quizzes = Quiz::query()
@@ -35,7 +35,7 @@ class ContestController extends Controller
             ->get();
 
         return Inertia::render("User/Dashboard", [
-            "submissions" => QuizSubmissionResource::collection($submissions),
+            "userQuizzes" => UserQuizResource::collection($userQuizzes),
             "quizzes" => QuizResource::collection($quizzes),
         ]);
     }

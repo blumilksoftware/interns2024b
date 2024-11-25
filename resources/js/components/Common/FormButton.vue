@@ -26,6 +26,7 @@ function onProcessing(isProcessing:boolean) {
 
 <template>
   <RequestWrapper
+    :class="{ 'w-full flex justify-center' : large }"
     :href="href"
     :method="method"
     :data="data"
@@ -54,7 +55,7 @@ function onProcessing(isProcessing:boolean) {
     <ButtonFrame
       :disabled="disabled || processing"
       :class="buttonClass"
-      :small :extra-small :text
+      :small :extra-small :large :text
     >
       <slot />
     </ButtonFrame>

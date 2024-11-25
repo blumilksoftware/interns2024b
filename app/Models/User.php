@@ -30,7 +30,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon $updated_at
  * @property School $school
  * @property boolean $is_anonymized
- * @property Collection<QuizSubmission> $quizSubmissions
+ * @property Collection<UserQuiz> $userQuizzes
  * @property Collection<Quiz> $assignedQuizzes
  */
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
@@ -65,9 +65,9 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         $this->notify(new ResetPasswordNotification($token));
     }
 
-    public function quizSubmissions(): HasMany
+    public function userQuizzes(): HasMany
     {
-        return $this->hasMany(QuizSubmission::class);
+        return $this->hasMany(UserQuiz::class);
     }
 
     public function assignedQuizzes()

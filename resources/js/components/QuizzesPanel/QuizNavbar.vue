@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { CheckIcon, CloudArrowUpIcon, DocumentDuplicateIcon, ExclamationTriangleIcon, PencilIcon, TrashIcon, UserPlusIcon, UsersIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { CheckIcon, CloudArrowUpIcon, DocumentDuplicateIcon, ExclamationTriangleIcon, PencilIcon, PlayIcon, TrashIcon, UserPlusIcon, UsersIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { CloudArrowDownIcon } from '@heroicons/vue/20/solid'
-import {type Errors} from '@inertiajs/core'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import MessageBox from '@/components/Common/MessageBox.vue'
 import { formatDate } from '@/Helpers/Format'
@@ -12,44 +11,58 @@ const props = defineProps<{
   unlocked:boolean
   locked:boolean
   editing:boolean
-  startTimeReached:boolean
+  startTimeNotReached:boolean
 }>()
 const quiz = defineModel<Quiz>({ required: true })
 const emit = defineEmits<{ toggleEditing:[editing:boolean], cancelChanges:[] }>()
 const showDeleteMessage = ref(false)
-const publishValidation = computed<{ validated: boolean, error: string }>(
-  () => {
-    const validations: Record<string, boolean> = {
-      hasCorrectAnswers: questionsHaveOneCorrectAnswer(),
-      hasQuestions: quiz.value.questions.length > 0,
-      duration: !!quiz.value.duration,
-      startTimeReached: props.startTimeReached,
-    }
-    const errors: Errors = {
-      hasCorrectAnswers: 'Pytanie nie zawiera zaznaczonej prawidłowej odpowiedzi.',
-      hasQuestions: 'Test nie zawiera żadnego pytania.',
-      duration: 'Czas trwania testu nie jest ustawiony.',
-      startTimeReached: 'Czas rozpoczęcia testu upłynął.',
-    }
-    const validationOutcome = { validated: true,  error: ''}
-    for (const key in validations) {
-      validationOutcome.validated &&= validations[key]
-      if (!validations[key])
-        validationOutcome.error = errors[key]
-    }
-    return validationOutcome
-  },
-)
 
-function questionsHaveOneCorrectAnswer() {
-  return quiz.value.questions.every(
+const questionsHaveOneCorrectAnswer = computed(
+  ()=> quiz.value.questions.every(
     (question: Question) => {
       const correctIdx = question.answers.findIndex(answer => answer.correct)
       return correctIdx !== -1 && question.answers.slice(correctIdx+1).every(
         (answer:Answer) => !answer.correct,
       )
     },
-  )
+  ),
+)
+
+const assertions = computed<Record<string, [boolean, string]>>(()=>({
+  hasCorrectAnswers: [questionsHaveOneCorrectAnswer.value, 'Żadne pytanie nie zawiera zaznaczonej prawidłowej odpowiedzi.'],
+  hasQuestions: [quiz.value.questions.length > 0, 'Test nie zawiera żadnego pytania.'],
+  duration: [!!quiz.value.duration, 'Czas trwania testu nie jest ustawiony.'],
+  startTimeNotReached: [props.startTimeNotReached, 'Czas rozpoczęcia testu upłynął.'],
+}))
+
+const publishValidation = computed(
+  () => validation(
+    assertions.value.hasCorrectAnswers,
+    assertions.value.hasQuestions,
+    assertions.value.duration,
+    assertions.value.startTimeNotReached,
+  ),
+)
+
+const quizDemoValidation = computed(
+  () => validation(
+    assertions.value.hasCorrectAnswers,
+    assertions.value.hasQuestions,
+    assertions.value.duration,
+  ),
+)
+
+function validation(...assertionPairs: Array<[boolean, string]>): { validated: boolean, error: string } {
+  const validationOutcome = { validated: true, error: '' }
+
+  for (const [isValid, errorMsg] of assertionPairs) {
+    validationOutcome.validated &&= isValid
+    if (!isValid && !validationOutcome.error) {
+      validationOutcome.error = errorMsg
+    }
+  }
+
+  return validationOutcome
 }
 
 function sanitizeData() {
@@ -135,8 +148,22 @@ function sanitizeData() {
     </button>
     
     <RequestWrapper
+      v-if="!editing"
+      :href="`/admin/quizzes/${quiz.id}`"
+      :title="!quizDemoValidation.validated ? `Nie można wyświetlić demonstracji testu. ${quizDemoValidation.error}` : 'Włącz demonstrację testu'"
+      :disabled="!quizDemoValidation.validated"
+    >
+      <PlayIcon
+        class="w-7.5 h-7.5 text-primary stroke-2"
+        :class="{
+          'opacity-50': !quizDemoValidation.validated,
+          'hover:text-primary-800 slide-up-animation': quizDemoValidation.validated
+        }"
+      />
+    </RequestWrapper>
+
+    <RequestWrapper
       v-if="!editing && unlocked"
-      class="rounded-xl"
       method="post"
       :href="`/admin/quizzes/${quiz.id}/lock`"
       :title="!publishValidation.validated ? `Nie można opublikować testu. ${publishValidation.error}` : 'Udostępnij test publicznie'"
@@ -145,7 +172,10 @@ function sanitizeData() {
     >
       <CloudArrowUpIcon
         class="w-7.5 h-7.5 text-primary stroke-2"
-        :class="{ 'opacity-50': !publishValidation.validated, 'hover:text-primary-800': publishValidation.validated }"
+        :class="{
+          'opacity-50': !publishValidation.validated,
+          'hover:text-primary-800 slide-up-animation': publishValidation.validated
+        }"
       />
     </RequestWrapper>
 
