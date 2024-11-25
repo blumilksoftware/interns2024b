@@ -24,9 +24,9 @@ use Illuminate\Support\Collection;
  * @property bool $isClosed
  * @property Quiz $quiz
  * @property User $user
- * @property Collection<AnswerRecord> $answerRecords
+ * @property Collection<UserQuestion> $userQuestions
  */
-class QuizSubmission extends Model
+class UserQuiz extends Model
 {
     use HasFactory;
 
@@ -40,9 +40,9 @@ class QuizSubmission extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function answerRecords(): HasMany
+    public function userQuestions(): HasMany
     {
-        return $this->hasMany(AnswerRecord::class);
+        return $this->hasMany(UserQuestion::class);
     }
 
     public function isClosed(): Attribute
@@ -53,7 +53,7 @@ class QuizSubmission extends Model
     public function points(): Attribute
     {
         return Attribute::get(function (): int {
-            $correctAnswers = $this->answerRecords->filter(fn(AnswerRecord $record): bool => $record->isCorrect);
+            $correctAnswers = $this->userQuestions->filter(fn(UserQuestion $userQuestion): bool => $userQuestion->isCorrect);
 
             return $correctAnswers->count();
         });

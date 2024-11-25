@@ -36,9 +36,9 @@ class DatabaseSeeder extends Seeder
         }
 
         foreach (User::query()->role("user")->get() as $user) {
-            $submission = $quiz->createSubmission($user);
+            $userQuiz = $quiz->createUserQuiz($user);
 
-            foreach ($submission->answerRecords as $answer) {
+            foreach ($userQuiz->userQuestions as $answer) {
                 $answer->answer()->associate($answer->question->answers->random());
                 $answer->save();
             }

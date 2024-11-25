@@ -4,3 +4,7 @@ interface Answer {
   text: string
   correct: boolean
 }
+
+interface UserAnswer extends Answer {
+  id: number
+}

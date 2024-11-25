@@ -16,6 +16,7 @@ const quiz = defineModel<Quiz>({ required: true })
 <template>
   <div class="flex flex-col gap-1 w-full px-2">
     <InputWrapper
+      :hide-content="!quiz.title && !editing"
       :error="errors.title"
       :hide-error="!editing"
     >
@@ -40,6 +41,7 @@ const quiz = defineModel<Quiz>({ required: true })
     >
       <InputWrapper
         label="Rozpoczęcie testu:"
+        :hide-content="!quiz.scheduledAt && !editing"
         :error="errors.scheduled_at"
         :hide-error="!editing"
       >
@@ -59,6 +61,7 @@ const quiz = defineModel<Quiz>({ required: true })
     >
       <InputWrapper
         label="Czas trwania testu (min):"
+        :hide-content="!quiz.duration && !editing"
         :error="errors.duration"
         :hide-error="!editing"
       >

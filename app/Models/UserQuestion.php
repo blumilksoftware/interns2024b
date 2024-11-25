@@ -14,16 +14,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $id
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property int $quiz_submission_id
+ * @property int $user_quiz_id
  * @property int $question_id
  * @property int $answer_id
  * @property bool $isClosed
  * @property bool $isCorrect
- * @property QuizSubmission $quizSubmission
+ * @property UserQuiz $userQuiz
  * @property Question $question
  * @property ?Answer $answer
  */
-class AnswerRecord extends Model
+class UserQuestion extends Model
 {
     use HasFactory;
 
@@ -31,9 +31,9 @@ class AnswerRecord extends Model
         "text",
     ];
 
-    public function quizSubmission(): BelongsTo
+    public function userQuiz(): BelongsTo
     {
-        return $this->belongsTo(QuizSubmission::class);
+        return $this->belongsTo(UserQuiz::class);
     }
 
     public function answer(): BelongsTo
@@ -48,7 +48,7 @@ class AnswerRecord extends Model
 
     public function isClosed(): Attribute
     {
-        return Attribute::get(fn(): bool => $this->quizSubmission->isClosed);
+        return Attribute::get(fn(): bool => $this->userQuiz->isClosed);
     }
 
     public function isCorrect(): Attribute

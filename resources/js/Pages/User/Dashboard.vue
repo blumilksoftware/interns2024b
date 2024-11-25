@@ -5,75 +5,75 @@ import dayjs from 'dayjs'
 import FormButton from '@/components/Common/FormButton.vue'
 import Divider from '@/components/Common/Divider.vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
-import {type QuizSubmission} from '@/Types/QuizSubmission'
+import QuizItem from '@/components/Dashboard/QuizItem.vue'
 
 const props = defineProps<{
-  submissions: QuizSubmission[]
+  userQuizzes: UserQuiz[]
   quizzes: Quiz[]
 }>()
 
 const isClosed = (quiz: Quiz) => (
   dayjs(quiz.scheduledAt).add(quiz.duration ?? 0, 'm').isBefore(Date.now()) ||
-    props.submissions.find(submission => submission.quiz === quiz.id)?.closed
+    props.userQuizzes.find(userQuiz => userQuiz.quiz === quiz.id)?.closed
 )
 
 const started = computed(() => props.quizzes.filter(quiz => quiz.state == 'published' && !isClosed(quiz)))
 const scheduled = computed(() => props.quizzes.filter(quiz => quiz.state == 'locked'))
-const history = computed(() => props.submissions.filter(submission => submission.closed))
+const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.closed))
 </script>
 
 <template>
-  <Head>
-    <title>Konkursy</title>
-  </Head>
+  <Head title="Konkursy" />
 
-  <div class="w-full p-2 md:max-w-8xl">
+  <div class="flex flex-col w-full p-5 gap-5 max-w-6xl">
     <Divider v-if="started.length > 0">
-      <h1 class="font-bold text-xl text-primary text-center p-4 whitespace-nowrap">Trwające konkursy</h1>
+      <h1 class="font-bold text-lg text-primary whitespace-nowrap">Trwające konkursy</h1>
     </Divider>
-    <div v-for="quiz in started" :key="quiz.id" class="rounded-lg bg-white shadow border px-4 py-2 flex items-center justify-between mb-2">
-      <div>
-        <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.title }}</p>
-        <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
-      </div>
-      <FormButton button-class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/start`" preserve-scroll>
+    <QuizItem 
+      v-for="quiz in started" 
+      :key="quiz.id" 
+      :title="quiz.title"
+      :time="quiz.scheduledAt"
+    >
+      <FormButton button-class="min-w-32 w-full 2xs:w-fit" class="w-full 2xs:w-fit" method="post" :href="`/quizzes/${quiz.id}/start`" preserve-scroll>
         Weź udział
       </FormButton>
-    </div>
+    </QuizItem>
 
     <Divider v-if="scheduled.length > 0 || started.length == 0">
-      <h1 class="font-bold text-xl text-primary text-center p-4 whitespace-nowrap">Nadchodzące konkursy</h1>
+      <h1 class="font-bold text-lg text-primary whitespace-nowrap">Nadchodzące konkursy</h1>
     </Divider>
-    <div v-for="quiz in scheduled" :key="quiz.id" class="rounded-lg bg-white shadow border px-4 py-2 flex items-center justify-between mb-2">
-      <div>
-        <p class="font-semibold text-sm 2xs:text-base text-primary">{{ quiz.title }}</p>
-        <p class="text-xs py-1">{{ dayjs(quiz.scheduledAt).fromNow() }}</p>
-      </div>
-
-      <FormButton v-if="!quiz.isUserAssigned" button-class="min-w-24 text-center" small method="post" :href="`/quizzes/${quiz.id}/assign`" preserve-scroll>
+    <QuizItem 
+      v-for="quiz in scheduled" 
+      :key="quiz.id" 
+      :title="quiz.title"
+      :time="quiz.scheduledAt"
+    >
+      <FormButton v-if="!quiz.isUserAssigned" button-class="min-w-32 w-full 2xs:w-fit" class="w-full 2xs:w-fit" method="post" :href="`/quizzes/${quiz.id}/assign`" preserve-scroll>
         Zapisz się
       </FormButton>
 
-      <FormButton v-else button-class="min-w-24 text-center" disabled small method="post" :href="`/quizzes/${quiz.id}/assign`">
+      <FormButton v-else button-class="min-w-32 w-full 2xs:w-fit" class="w-full 2xs:w-fit" disabled method="post" :href="`/quizzes/${quiz.id}/assign`">
         Zapisano
       </FormButton>
-    </div>
+    </QuizItem>
 
     <div v-if="scheduled.length == 0 && started.length == 0">
       <p>Obecnie nie mamy zaplanowanych żadnych konkursów.</p>
     </div>
 
     <Divider v-if="history.length > 0">
-      <h1 class="font-bold text-xl text-primary text-center p-4 whitespace-nowrap">Historia</h1>
+      <h1 class="font-bold text-lg text-primary whitespace-nowrap">Historia</h1>
     </Divider>
-    <div v-for="submission in history" :key="submission.id" class="rounded-lg bg-white shadow border px-4 py-2 flex items-center justify-between mb-2">
-      <div>
-        <p class="font-semibold text-sm 2xs:text-base text-primary">{{ submission.name }}</p>
-        <p class="text-xs py-1">{{ dayjs(submission.closedAt).fromNow() }}</p>
-      </div>
-      <LinkButton class="min-w-24" button-class="justify-center" small :href="`/submissions/${submission.id}/result`">
+    <QuizItem 
+      v-for="userQuiz in history" 
+      :key="userQuiz.id" 
+      :title="userQuiz.title"
+      :time="userQuiz.closedAt"
+    >
+      <LinkButton class="min-w-32 w-full 2xs:w-fit" button-class="justify-center" :href="`/quizzes/${userQuiz.id}/result`">
         Wyniki
       </LinkButton>
-    </div>
+    </QuizItem>
   </div>
 </template>
