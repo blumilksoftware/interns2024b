@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Lang;
 use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Response as Status;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SortHelperTest extends TestCase
@@ -96,10 +97,12 @@ class SortHelperTest extends TestCase
 
     public function testSortThrowsExceptionForUnsupportedField(): void
     {
-        $this->container->shouldReceive("abort")->andReturnUsing(fn(int $code, mixed $message) => throw HttpException::fromStatusCode($code, $message ?? ""));
+        $this->container->shouldReceive("abort")
+            ->once()
+            ->with(Status::HTTP_BAD_REQUEST, "The field 'invalid_field' is not supported.", [])
+            ->andThrow(HttpException::class, Status::HTTP_BAD_REQUEST, "The field 'invalid_field' is not supported.");
 
         $this->expectException(HttpException::class);
-        $this->expectExceptionMessage("The field 'invalid_field' is not supported.");
 
         Lang::shouldReceive("get")
             ->with("validation.sorting.unsupported_field", ["attribute" => "invalid_field"])
