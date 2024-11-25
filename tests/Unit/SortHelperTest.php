@@ -5,21 +5,35 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Helpers\SortHelper;
+use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Lang;
 use Mockery;
+use Mockery\MockInterface;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Response as Status;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Tests\TestCase;
 
 class SortHelperTest extends TestCase
 {
+    private Container $originalContainer;
+
+    /** @var MockInterface<Container> */
+    private MockInterface $container;
+
+    protected function setUp(): void
+    {
+        $this->originalContainer = Container::getInstance();
+        $this->container = Mockery::mock(Container::class);
+        Container::setInstance($this->container);
+    }
+
     protected function tearDown(): void
     {
         Mockery::close();
-        restore_error_handler();
-        restore_exception_handler();
+        Container::setInstance($this->originalContainer);
     }
 
     public function testGetSortParametersReturnsDefaultValues(): void
@@ -83,8 +97,10 @@ class SortHelperTest extends TestCase
 
     public function testSortThrowsExceptionForUnsupportedField(): void
     {
+        $this->container->shouldReceive("abort")
+            ->with(Status::HTTP_BAD_REQUEST, "The field 'invalid_field' is not supported.", [])->andThrow(HttpException::class, Status::HTTP_BAD_REQUEST);
+
         $this->expectException(HttpException::class);
-        $this->expectExceptionMessage("The field 'invalid_field' is not supported.");
 
         Lang::shouldReceive("get")
             ->with("validation.sorting.unsupported_field", ["attribute" => "invalid_field"])
