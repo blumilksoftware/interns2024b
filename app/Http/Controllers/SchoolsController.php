@@ -76,6 +76,7 @@ class SchoolsController extends Controller
         $jobs = $voivodeships->map(fn(Voivodeship $voivodeships): FetchSchoolsJob => new FetchSchoolsJob($voivodeships, $schoolTypes));
         $batch = Bus::batch($jobs)->finally(fn(): bool => Cache::delete("fetch_schools"))->dispatch();
         Cache::set("fetch_schools", $batch->id);
+        Cache::forget("fetched_schools");
 
         return response()->json(["message" => "Pobieranie rozpoczęte"], Status::HTTP_OK);
     }
@@ -84,6 +85,7 @@ class SchoolsController extends Controller
     {
         return response()->json([
             "done" => !$this->isFetching(),
+            "count" => Cache::get("fetched_schools"),
         ]);
     }
 

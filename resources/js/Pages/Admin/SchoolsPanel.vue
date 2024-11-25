@@ -5,11 +5,13 @@ import AddressInput from '@/components/Common/AddressInput.vue'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
-import {ref, watch} from 'vue'
+import {ref} from 'vue'
 import axios from 'axios'
 import Button from '@/components/Common/Button.vue'
 import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
 import CrudInput from '@/components/Crud/CrudInput.vue'
+import Banner from '@/components/Common/Banner.vue'
+import {usePlurals} from '@/Helpers/Plurals'
 
 defineProps<{schools: Pagination<School>}>()
 
@@ -31,20 +33,37 @@ const sortOptions: SortOption[] = [
 ]
 
 const status = ref<boolean | null>(null)
+const message = ref<string>()
+const schoolTranslation = usePlurals('szkołę', 'szkoły', 'szkół')
 
-async function isImporting(): Promise<boolean> {
-  return await axios.get('/admin/schools/status')
-    .then(res => !res.data.done)
-    .catch(() => true)
+async function isImportingFinished(): Promise<[boolean, number | null]> {
+  try {
+    const response = await axios.get('/admin/schools/status')
+    const { done, count } = response.data
+
+    return [done, count]
+  }
+  catch {
+    return [false, null]
+  }
 }
 
 setInterval(async () => {
   if (!status.value) {
-    status.value = !(await isImporting())
+    const [done, count] = (await isImportingFinished())
+    const isFirstCheck = status.value === null
+
+    if (!isFirstCheck && done && count !== null) {
+      message.value = `Zaimportowano ${count} ${schoolTranslation(count)}.`
+
+      if (count > 0) {
+        router.reload({ only: ['schools'] })
+      }
+    }
+
+    status.value = done
   }
 }, 1000)
-
-watch(status, () => router.reload())
 
 function startFetching() {
   if (status.value) {
@@ -58,6 +77,8 @@ function startFetching() {
   <Head>
     <title>Szkoły - Panel administracyjny</title>
   </Head>
+
+  <Banner v-model="message" />
 
   <Transition>
     <div v-show="status === false" class="fixed bg-white/50 backdrop-blur-md z-10 size-full left-0 top-0 flex items-center justify-center gap-2">

@@ -174,6 +174,7 @@ class SchoolTest extends TestCase
             ->get("/admin/schools/status")
             ->assertJson([
                 "done" => true,
+                "count" => 0,
             ]);
 
         $this->actingAs($this->admin)
@@ -188,6 +189,7 @@ class SchoolTest extends TestCase
             ->get("/admin/schools/status")
             ->assertJson([
                 "done" => false,
+                "count" => 0,
             ]);
     }
 }
