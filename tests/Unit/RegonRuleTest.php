@@ -6,7 +6,7 @@ namespace Tests\Unit;
 
 use App\Rules\Regon;
 use Illuminate\Support\Facades\Lang;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class RegonRuleTest extends TestCase
 {

@@ -29,7 +29,7 @@ function pick(option: Option) {
         <div
           v-if="pointerPosition"
           class="absolute top-0"
-          :class="{ 
+          :class="{
             'left-5': pointerPosition==='left',
             'right-5': pointerPosition==='right',
             'left-1/2': pointerPosition==='center'
@@ -40,7 +40,7 @@ function pick(option: Option) {
         </div>
         <ul class="py-0.5 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
           <li v-for="option of options" :key="option.key">
-            <a 
+            <a
               id="menu-item-0" href="#"
               class="truncate block py-2 px-3 m-1 text-sm text-gray-700 rounded-lg hover-focus:bg-primary/5 hover-focus:text-primary transition-colors outline-none"
               role="menuitem"

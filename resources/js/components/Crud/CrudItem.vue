@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends Sortable & { id: string | number }">
+<script setup lang="ts" generic="T extends { id: string | number }">
 import useRequestResolution from '@/Helpers/RequestResolution'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'

@@ -9,7 +9,7 @@ defineProps<{
 </script>
 
 <template>
-  <a :href="href">
+  <a v-if="!disabled" :href="href">
     <ButtonFrame
       :class="buttonClass"
       :disabled :small :extra-small :text :icon
@@ -17,4 +17,8 @@ defineProps<{
       <slot />
     </ButtonFrame>
   </a>
+
+  <ButtonFrame v-if="disabled" :class="buttonClass" :disabled :small :extra-small :text :icon>
+    <slot />
+  </ButtonFrame>
 </template>

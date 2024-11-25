@@ -12,7 +12,7 @@ import { formatDate } from '@/Helpers/Format'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 
 const currentTime = inject<Ref<number>>('currentTime')
-const props = defineProps<{ quiz:Quiz, showArchivedQuizzes:boolean }>()
+const props = defineProps<{ quiz:Quiz }>()
 const quiz = ref<Quiz>(JSON.parse(JSON.stringify(props.quiz)))
 const selected = ref(false)
 const editing = ref(false)
@@ -60,7 +60,6 @@ function toggleEditing(isEditing:boolean){
 
 <template>
   <div
-    v-if="!(archived && showArchivedQuizzes)"
     v-auto-animate
     class="flex flex-col gap-5 p-5 bg-white/70 border-2 rounded-xl shadow-sm"
   >

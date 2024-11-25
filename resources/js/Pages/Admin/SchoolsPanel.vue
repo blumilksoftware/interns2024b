@@ -11,15 +11,23 @@ import Button from '@/components/Common/Button.vue'
 import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
 import CrudInput from '@/components/Crud/CrudInput.vue'
 
-defineProps<{schools: School[]}>()
+defineProps<{schools: Pagination<School>}>()
 
-const sortOptions: SortOptionConstructor[] = [
-  { text: 'Po nazwie (A–Z)', type: 'name' },
-  { text: 'Po nazwie (Z–A)', type: 'name', desc: true },
-  { text: 'Od najnowszych' , type: 'creationDate' },
-  { text: 'Od najstarszych', type: 'creationDate', desc: true },
-  { text: 'Od najnowszych zmienionych', type: 'modificationDate' },
-  { text: 'Od najstarszych zmienionych', type: 'modificationDate', desc: true },
+const sortOptions: SortOption[] = [
+  { text: 'Po id (rosnąco)', key: 'id' },
+  { text: 'Po id (malejąco)', key: 'id', desc: true },
+  { text: 'Po nazwie (rosnąco)', key: 'name' },
+  { text: 'Po nazwie (malejąco)', key: 'name', desc: true },
+  { text: 'Po liczbie uczniów (rosnąco)', key: 'students' },
+  { text: 'Po liczbie uczniów (malejąco)', key: 'students', desc: true },
+  { text: 'Po REGON (rosnąco)', key: 'regon' },
+  { text: 'Po REGON (malejąco)', key: 'regon', desc: true },
+  { text: 'Po adresie (rosnąco)', key: 'address' },
+  { text: 'Po adresie (malejąco)', key: 'address', desc: true },
+  { text: 'Od najnowszych' , key: 'created_at', desc: true },
+  { text: 'Od najstarszych', key: 'created_at' },
+  { text: 'Od najpóźniej zmienionych', key: 'updated_at' },
+  { text: 'Od najwcześniej zmienionych', key: 'updated_at', desc: true },
 ]
 
 const status = ref<boolean | null>(null)
@@ -61,9 +69,11 @@ function startFetching() {
   <CrudPage
     :options="sortOptions"
     :items="schools"
+    :custom-search="(text) => text?.toLocaleUpperCase()"
     resource-name="schools"
     new-button-text="Dodaj szkołę"
     :new-item-data="{ name: 'Nowa szkoła', regon: '', apartmentNumber: '', street: '', buildingNumber: '', city: '', numberOfStudents: 0, zipCode: '' }"
+    display-search-in-lower-case
     deletable
     mobile-nav
     creatable
