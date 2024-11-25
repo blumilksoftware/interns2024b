@@ -1,6 +1,4 @@
-import type {User} from '@/Types/User'
-
-export interface Ranking {
+interface Ranking {
   id: number
   user: User
   points: number

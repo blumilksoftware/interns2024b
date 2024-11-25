@@ -1,11 +1,13 @@
-import {type Answer} from '@/Types/Answer'
+interface Question {
+  [key: string]
+  text?: string
+  answers: Answer[]
+}
 
-export interface Question {
+interface UserQuestion {
+  [key: string]
   id: number
   text: string
-  createdAt: number
-  updatedAt: number
-  locked: boolean
-  correct?: number
-  answers: Answer[]
+  selectedAnswer?: number
+  answers: UserAnswer[]
 }

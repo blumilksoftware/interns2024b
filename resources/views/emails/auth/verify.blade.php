@@ -1,27 +1,36 @@
 <!DOCTYPE html>
 <html lang="pl">
+<style>
+    * { margin: 0; padding: 0; }
+    a { text-decoration: none; }
+    p { margin: 48px 0; line-height: 24px; }
+    table { width: 100%; border-spacing: 0; }
+    .button { background-color: #262C89; color: white; padding: 16px 80px; border-radius: 12px; }
+</style>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> {{ config('app.name') }}</title>
-</head>
+<div style="font-family: sans-serif; color: #3D4852; padding: 0 48px;">
+    <div style="margin: 40px 0 80px 0;">
+        <img src="{{ asset('logo.png') }}" alt="interns2024b Logo" height="50" width="50">
+    </div>
 
-<header>
-    <img src="" alt="{{ config('app.name') }} Logo" width="150" height="50">
-    <h1>{{ config('app.name') }}</h1>
-</header>
+    <div>
+        <h2>Cześć, {{ $user->name }}!</h2>
 
-<body>
-<h1>Cześć {{ $user->name }},</h1>
+        <p>Otrzymaliśmy prośbę o wysłanie linku aktywacyjnego do Twojego konta. Kliknij poniższy przycisk, aby zweryfikować swój adres e-mail.</p>
 
-<p>Aby zweryfikować swoje konto, kliknij poniższy link:</p>
+        <table style="margin: 24px auto;"><tr><td style="text-align: center;">
+            <b><a class="button" href="{{ $url }}">Zweryfikuj e-mail</a></b>
+        </td></tr></table>
 
-<a href="{{ $url }}">Zweryfikuj e-mail </a>
+        <p>Jeśli prośba nie została zainicjonowana przez Ciebie, możesz zignorować tę wiadomość.</p>
 
-<p>Jeśli to nie Ty wysłałeś/aś tę prośbę, po prostu zignoruj tę wiadomość.</p>
+        <p style="margin-top: 16px; ">Pozdrawiamy,<br><span style="color: #262C89;">{{ config('app.name') }}</span></p>
 
-<p>Pozdrawiamy,<br>{{ config('app.name') }}</p>
-</body>
+        <hr style="border: 1px solid #e8ebf1">
 
+        <table><tr><td style="padding-top: 32px; text-align: center;">
+            © 2024 {{ config('app.name') }}. Wszelkie prawa zastrzeżone.
+        </td></tr></table>
+    </div>
+</div>
 </html>

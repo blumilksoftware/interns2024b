@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import {computed} from 'vue'
-import type {Ranking} from '@/Types/Ranking'
 import Divider from '@/components/Common/Divider.vue'
 import {groupBy} from '@/Helpers/GroupBy'
-import type {Quiz} from '@/Types/Quiz'
 import type {PageProps} from '@/Types/PageProps'
 
 const props = defineProps<{
@@ -18,7 +16,7 @@ const grouped = computed(() => groupBy('points', props.rankings))
 <template>
   <div class="w-full p-2 md:max-w-8xl">
     <Divider>
-      <h1 class="font-bold text-xl text-primary text-center p-4 whitespace-nowrap">{{ quiz.name }} - Ranking</h1>
+      <h1 class="font-bold text-xl text-primary text-center py-4 whitespace-nowrap">{{ quiz.name }} - Ranking</h1>
     </Divider>
 
     <div class="w-full flex justify-between text-sm font-semibold text-gray-900 border shadow bg-white rounded-md px-4 py-2 gap-x-2">

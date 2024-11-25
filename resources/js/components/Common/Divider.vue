@@ -1,7 +1,18 @@
+<script setup lang="ts">
+const slots = defineSlots()
+</script>
+
 <template>
-  <div class="relative w-full flex items-center ">
-    <div class="w-10 border-t border-primary" />
+  <div class="w-full flex flex-col 2xs:flex-row 2xs:items-center px-5 xs:px-0">
+    <div class="xs:mx-4 w-0 xs:w-7 border-t border-primary" />
+
     <slot />
-    <div class="w-full border-t border-primary" />
+    <div v-if="slots.default" class="xs:mx-4 flex-1 w-full border-t border-transparent xs:border-primary" />
+
+    <slot name="center" />
+    <div v-if="slots.center" class="xs:mx-4 flex-1 w-full border-t border-transparent xs:border-primary" />
+
+    <slot name="right" />
+    <div v-if="slots.right" class="xs:mx-4 w-0 xs:w-7 border-t border-primary" />
   </div>
 </template>

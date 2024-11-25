@@ -1,12 +1,12 @@
 <script setup lang="ts">
+import { type Errors } from '@inertiajs/core'
 import PasswordUpdate from '@/components/Profile/PasswordUpdateSection.vue'
 import UserData from '@/components/Profile/UserDataSection.vue'
-import { type User } from '@/Types/User'
 import { Head } from '@inertiajs/vue3'
 
 defineProps<{
   user: User
-  errors: Record<string, string>
+  errors: Errors
   }>()
 </script>
 

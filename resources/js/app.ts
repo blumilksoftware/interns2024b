@@ -12,8 +12,10 @@ import 'dayjs/locale/pl'
 dayjs.extend(relativeTime)
 dayjs.locale('pl')
 
+const appName = import.meta.env.VITE_APP_NAME
+
 createInertiaApp({
-  title: (title) => `${title}`,
+  title: (title) => `${title} - ${appName}`,
   resolve: async (name) => {
     const page = await resolvePageComponent(
       `./Pages/${name}.vue`,

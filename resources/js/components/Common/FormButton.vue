@@ -1,41 +1,63 @@
 <script setup lang="ts">
-import { router } from '@inertiajs/vue3'
-import {ref} from 'vue'
-import Button from '@/components/Common/Button.vue'
+import { ref } from 'vue'
+import { type Errors, type VisitOptions } from '@inertiajs/core'
+import RequestWrapper from '@/components/Common/RequestWrapper.vue'
+import ButtonFrame from '@/components/Common/ButtonFrame.vue'
+import { type ButtonFrameProps } from '@/Types/ButtonFrameProps'
 
-const props = withDefaults(defineProps<{
-  small?: boolean
-  disabled?: boolean
-  text?: boolean
-  buttonClass?: string
-  href: string
-  method?: 'post' | 'get' | 'put' | 'patch' | 'delete'
-  data?: any
-  preserveState?: boolean
-  preserveScroll?: boolean
-  only?: string[]
-}>(), { method: 'get', class: '', options: undefined, data: undefined, only: undefined, buttonClass: undefined })
+withDefaults(
+  defineProps<{ href:string, buttonClass?:string } & ButtonFrameProps & VisitOptions>(),
+  { buttonClass: undefined, preserveState: true, preserveScroll: true },
+)
+
+const emit = defineEmits<{
+  click: []
+  processing: [processing:boolean]
+  errors: [errors:Errors]
+}>()
 
 const processing = ref(false)
-const emit = defineEmits(['click', 'finish'])
 
-function handleSubmit() {
-  processing.value = true
-  emit('click')
-
-  router[props.method](props.href, props.data, {
-    onSuccess: () => { processing.value = false; emit('finish')},
-    only: props.only,
-    preserveState: props.preserveState,
-    preserveScroll: props.preserveScroll,
-  })
+function onProcessing(isProcessing:boolean) {
+  processing.value = isProcessing
+  emit('processing', isProcessing)
 }
 </script>
 
 <template>
-  <form :class="{'cursor-wait' : processing}" @submit.prevent="handleSubmit">
-    <Button :disabled="disabled || processing" type="submit" :class="`${processing ? 'cursor-wait' : ''} ${props.buttonClass}`" :small="small" :text="text">
+  <RequestWrapper
+    :class="{ 'w-full flex justify-center' : large }"
+    :href="href"
+    :method="method"
+    :data="data"
+    :replace="replace"
+    :headers="headers"
+    :only="only"
+    :preserve-scroll="preserveScroll"
+    :preserve-state="preserveState"
+    :query-string-array-format="queryStringArrayFormat"
+    :except="except"
+    :error-bag="errorBag"
+    :force-form-data="forceFormData"
+    :disabled="disabled"
+    @cancel-token="onCancelToken"
+    @before="onBefore"
+    @start="onStart"
+    @progress="onProgress"
+    @cancel="onCancel"
+    @finish="onFinish"
+    @success="onSuccess"
+    @error="onError"
+    @processing="onProcessing"
+    @errors="errors => emit('errors', errors)"
+    @click="emit('click')"
+  >
+    <ButtonFrame
+      :disabled="disabled || processing"
+      :class="buttonClass"
+      :small :extra-small :large :text
+    >
       <slot />
-    </Button>
-  </form>
+    </ButtonFrame>
+  </RequestWrapper>
 </template>

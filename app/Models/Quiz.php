@@ -15,7 +15,7 @@ use Illuminate\Support\Collection;
 
 /**
  * @property int $id
- * @property string $name
+ * @property string $title
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $scheduled_at
@@ -32,18 +32,19 @@ use Illuminate\Support\Collection;
  * @property Collection<Question> $questions
  * @property Collection<Answer> $answers
  * @property Collection<User> $assignedUsers
- * @property Collection<QuizSubmission> $quizSubmissions
+ * @property Collection<UserQuiz> $userQuizzes
  */
 class Quiz extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        "name",
+        "title",
         "scheduled_at",
         "duration",
         "ranking_published_at",
     ];
+    protected $guarded = [];
 
     public function questions(): HasMany
     {
@@ -60,9 +61,9 @@ class Quiz extends Model
         return $this->belongsToMany(User::class, "quiz_assignments");
     }
 
-    public function quizSubmissions(): HasMany
+    public function userQuizzes(): HasMany
     {
-        return $this->hasMany(QuizSubmission::class);
+        return $this->hasMany(UserQuiz::class);
     }
 
     public function isLocked(): Attribute
@@ -110,6 +111,10 @@ class Quiz extends Model
     public function clone(): self
     {
         $quizCopy = $this->replicate();
+        $quizCopy->title = $quizCopy->title . " - kopia";
+        $quizCopy->locked_at = null;
+        $quizCopy->duration = null;
+        $quizCopy->scheduled_at = null;
         $quizCopy->save();
 
         foreach ($this->questions as $question) {
@@ -119,22 +124,22 @@ class Quiz extends Model
         return $quizCopy;
     }
 
-    public function createSubmission(User $user): QuizSubmission
+    public function createUserQuiz(User $user): UserQuiz
     {
-        $submission = new QuizSubmission();
-        $submission->closed_at = $this->closeAt;
-        $submission->quiz()->associate($this);
-        $submission->user()->associate($user);
-        $submission->save();
+        $userQuiz = new UserQuiz();
+        $userQuiz->closed_at = $this->closeAt;
+        $userQuiz->quiz()->associate($this);
+        $userQuiz->user()->associate($user);
+        $userQuiz->save();
 
         foreach ($this->questions as $question) {
-            $answerRecord = new AnswerRecord();
-            $answerRecord->quizSubmission()->associate($submission);
-            $answerRecord->question()->associate($question);
-            $answerRecord->save();
+            $userQuestion = new UserQuestion();
+            $userQuestion->userQuiz()->associate($userQuiz);
+            $userQuestion->question()->associate($question);
+            $userQuestion->save();
         }
 
-        return $submission;
+        return $userQuiz;
     }
 
     public function isReadyToBePublished(): bool
@@ -142,9 +147,9 @@ class Quiz extends Model
         return $this->scheduled_at !== null && $this->duration !== null && $this->allQuestionsHaveCorrectAnswer();
     }
 
-    public function hasSubmissionsFrom(User $user): bool
+    public function hasUserQuizzesFrom(User $user): bool
     {
-        return $this->quizSubmissions->where("user_id", $user->id)->isNotEmpty();
+        return $this->userQuizzes->where("user_id", $user->id)->isNotEmpty();
     }
 
     protected function allQuestionsHaveCorrectAnswer(): bool

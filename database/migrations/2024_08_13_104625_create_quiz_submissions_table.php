@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Schema;
 return new class() extends Migration {
     public function up(): void
     {
-        Schema::create("quiz_submissions", function (Blueprint $table): void {
+        Schema::create("user_quizzes", function (Blueprint $table): void {
             $table->id();
             $table->foreignIdFor(Quiz::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
@@ -22,6 +22,6 @@ return new class() extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists("quiz_submissions");
+        Schema::dropIfExists("user_quizzes");
     }
 };

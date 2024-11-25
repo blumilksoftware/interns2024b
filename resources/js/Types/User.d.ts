@@ -1,6 +1,4 @@
-import {type School} from '@/Types/School'
-
-export interface User {
+interface User {
   id: number
   name: string
   surname: string

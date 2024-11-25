@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use App\Models\Quiz;
-use App\Models\QuizSubmission;
 use App\Models\User;
+use App\Models\UserQuiz;
 use Illuminate\Auth\Access\Response;
 
 class QuizPolicy
@@ -42,7 +42,7 @@ class QuizPolicy
 
     public function assign(User $user, Quiz $quiz): bool
     {
-        return $quiz->isLocked && !$quiz->isPublished && !$quiz->hasSubmissionsFrom($user);
+        return $quiz->isLocked && !$quiz->isPublished && !$quiz->hasUserQuizzesFrom($user);
     }
 
     public function viewAdminRanking(User $user, Quiz $quiz): Response
@@ -56,7 +56,7 @@ class QuizPolicy
             return Response::deny("Ranking nie jest opublikowany.");
         }
 
-        $isUserInRanking = QuizSubmission::where("quiz_id", $quiz->id)
+        $isUserInRanking = UserQuiz::where("quiz_id", $quiz->id)
             ->where("user_id", $user->id)
             ->exists();
 
@@ -65,7 +65,7 @@ class QuizPolicy
 
     public function publish(User $user, Quiz $quiz): bool
     {
-        return $quiz->isLocked && $user->hasRole("admin|super_admin") && $quiz->quizSubmissions->isNotEmpty();
+        return $quiz->isLocked && $user->hasRole("admin|super_admin") && $quiz->userQuizzes->isNotEmpty();
     }
 
     public function invite(User $user, Quiz $quiz): Response
