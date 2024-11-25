@@ -96,7 +96,7 @@ class SortHelperTest extends TestCase
 
     public function testSortThrowsExceptionForUnsupportedField(): void
     {
-        $this->container->shouldReceive("abort")->andReturnUsing(fn(int $code, string $message) => throw HttpException::fromStatusCode($code, $message));
+        $this->container->shouldReceive("abort")->andReturnUsing(fn(int $code, mixed $message) => throw HttpException::fromStatusCode($code, $message ?? ""));
 
         $this->expectException(HttpException::class);
         $this->expectExceptionMessage("The field 'invalid_field' is not supported.");
