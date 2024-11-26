@@ -84,7 +84,7 @@ function customQueries(): string[] {
     </template>
 
     <template #noContent="{search}">
-      <NoContent :description="search ? `Wygląda na to że nie mamy tego czego szukasz.` : undefined">
+      <NoContent :description="search ? `Wygląda na to, że nie mamy tego, czego szukasz.` : undefined">
         <div v-if="!search">
           <FormButton
             class="rounded-xl"
