@@ -97,7 +97,7 @@ class SortHelperTest extends TestCase
     public function testSortThrowsExceptionForUnsupportedField(): void
     {
         Lang::shouldReceive("get")
-            ->with("validation.sorting.unsupported_field", ["attribute" => "invalid_field"]);
+            ->with("validation.custom.sorting.unsupported_field", ["attribute" => "invalid_field"]);
 
         $this->container->shouldReceive("abort")->once()->andThrow(HttpException::class, 400);
         $this->expectException(HttpException::class);

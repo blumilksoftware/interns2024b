@@ -29,7 +29,7 @@ class SortHelper
                 return $query;
             }
 
-            abort(Status::HTTP_BAD_REQUEST, Lang::get("validation.sorting.unsupported_field", ["attribute" => $field]));
+            abort(Status::HTTP_BAD_REQUEST, Lang::get("validation.custom.sorting.unsupported_field", ["attribute" => $field]));
         }
 
         return $query->orderBy($field, $order);
