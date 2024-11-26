@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref} from 'vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
+import { useDebounceFn } from '@vueuse/core'
 
 const props = defineProps<{ defaultValue?: string }>()
 const text = ref(props.defaultValue)
@@ -9,9 +10,13 @@ const input = ref<HTMLInputElement>()
 
 function handleKeyUp(e: KeyboardEvent) {
   if (e.key === 'Enter') {
-    emit('search', text.value )
+    emit('search', text.value)
   }
 }
+
+const handleInput = useDebounceFn(() => {
+  emit('search', text.value)
+}, 500)
 </script>
 
 <template>
@@ -24,6 +29,7 @@ function handleKeyUp(e: KeyboardEvent) {
       placeholder="Szukaj"
       class="pl-2 transition-none size-full outline-none text-primary text-left rounded-xl bg-transparent"
       @keyup="handleKeyUp"
+      @input="handleInput"
     >
 
     <div title="Szukaj" class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-xl" @click="emit('search', text);">

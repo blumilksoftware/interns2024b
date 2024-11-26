@@ -101,7 +101,6 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
         </slot>
       </template>
 
-
       <slot v-for="item of items.data" :key="item.id" name="item" :item="item">
         <CrudItem :item="item" :resource-name="resourceName" :deletable="deletable">
           <template #deleteMessage="data">

@@ -2,7 +2,7 @@ import {computed, type Ref, ref, watch} from 'vue'
 import {router} from '@inertiajs/vue3'
 import {useParams} from '@/Helpers/Params'
 
-export function useSorter(sortOptions: SortOption[], searchText?: Ref<string | undefined>, customQueries?: () => string[]): [query: Ref<string>, Ref<Option[]>, () => void] {
+export function useSorter(sortOptions: SortOption[], searchText?: Ref<string | undefined>, customQueries?: () => string[]): [query: Ref<string>, Ref<Option[]>] {
   const params = useParams()
   const key = ref(params.sort)
   const desc = ref(params.order)
@@ -30,7 +30,14 @@ export function useSorter(sortOptions: SortOption[], searchText?: Ref<string | u
     return query.length > 0 ? '&' + query.join('&') : ''
   })
 
-  watch(query, query => router.visit(`?page=1${query}`))
+  watch(query, query =>
+    router.visit(
+      `/admin/schools/?page=1${query}`, {
+        preserveState: true,
+        replace: true,
+      },
+    ),
+  )
 
-  return [query, options, () => router.visit(`?page=1${query.value}`)]
+  return [query, options]
 }
