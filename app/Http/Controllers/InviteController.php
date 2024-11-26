@@ -9,6 +9,7 @@ use App\Actions\UnassignToQuizAction;
 use App\Helpers\SortHelper;
 use App\Http\Requests\InviteQuizRequest;
 use App\Http\Resources\QuizResource;
+use App\Http\Resources\SchoolResource;
 use App\Http\Resources\UserResource;
 use App\Models\Quiz;
 use App\Models\School;
@@ -23,14 +24,14 @@ class InviteController extends Controller
 {
     public function index(Quiz $quiz, SortHelper $sort, Request $request): Response
     {
-        $this->authorize("invite", $quiz); // TODO
+        $this->authorize("invite", $quiz);
         $query = User::query()->role("user")->with("school")->whereNotNull("email_verified_at");
         $query = $sort->sort($query, ["id"], ["name", "school"]);
         $query = $this->sortByName($query, $sort);
         $query = $this->sortBySchool($query, $sort);
         $query = $this->filterByName($query, $request);
         $query = $this->filterBySchool($query, $request);
-        $schools = School::all(["id", "name", "city"]); // TODO resource
+        $schools = SchoolResource::collection(School::all());
 
         return Inertia::render("Admin/Invite", [
             "users" => UserResource::collection($sort->paginate($query)),
