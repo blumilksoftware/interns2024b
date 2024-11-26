@@ -20,6 +20,7 @@ class UserRequest extends FormRequest
             "name" => ["required", "string", "max:255"],
             "surname" => ["required", "string", "max:255"],
             "school_id" => ["required", "integer", "exists:schools,id"],
+            "theme" => "required|string|max:255",
         ];
     }
 }

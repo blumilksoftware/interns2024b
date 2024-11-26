@@ -1,4 +1,6 @@
-export interface PageProps {
+import { type PageProps as InertiaPageProps } from '@inertiajs/core'
+
+export interface PageProps extends InertiaPageProps {
   appName: string
   flash: {
     status?: string

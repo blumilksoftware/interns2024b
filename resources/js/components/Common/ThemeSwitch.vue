@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { router } from '@inertiajs/vue3'
 
-const isThemeTauron = computed(() => localStorage.getItem('theme') === 'theme-tauron')
+const props = defineProps<{ theme: 'theme-witelon' | 'theme-tauron' }>()
+const isThemeTauron = computed(() => props.theme === 'theme-tauron')
 
 function toggleTheme(checked?:boolean) {
   document.documentElement.classList.remove(checked ? 'theme-witelon' : 'theme-tauron')
   document.documentElement.classList.add(checked ? 'theme-tauron' : 'theme-witelon')
-  localStorage.setItem('theme', checked ? 'theme-tauron' : 'theme-witelon')
+  router.patch('/profile/theme', { theme: checked ? 'theme-tauron' : 'theme-witelon' })
 }
 </script>
 

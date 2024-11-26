@@ -7,4 +7,5 @@ interface User {
   isAnonymized: boolean
   isAdmin: boolean
   isSuperAdmin: boolean
+  theme: 'theme-witelon' | 'theme-tauron'
 }

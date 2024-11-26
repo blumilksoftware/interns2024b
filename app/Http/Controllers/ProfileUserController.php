@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\ProfileUserPasswordResetRequest;
+use App\Http\Requests\Auth\ThemeChangeRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\RedirectResponse;
@@ -36,5 +37,17 @@ class ProfileUserController extends Controller
 
         return redirect()->back()
             ->with("status", "Zaktualizowano hasło");
+    }
+
+    public function updateTheme(ThemeChangeRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        $user = $request->user();
+        $user->theme = $validated["theme"];
+        $user->save();
+
+        return redirect()->back()
+            ->with("status", "Zaktualizowano motyw");
     }
 }

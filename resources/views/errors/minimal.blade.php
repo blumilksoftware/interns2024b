@@ -1,5 +1,5 @@
 @php
-  $code = $code ?? 'Błąd';
+  $code = $code ?? '';
   $message = $message ?? 'Błąd';
   $description = $description ?? 'Wystąpił nieoczekiwany błąd. Prosimy spróbować ponownie później.';
 @endphp

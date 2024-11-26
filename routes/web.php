@@ -99,4 +99,5 @@ Route::middleware(["auth", "verified"])->group(function (): void {
     Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
     Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
     Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update");
+    Route::patch("/profile/theme", [ProfileUserController::class, "updateTheme"])->name("profile.theme.update");
 });
