@@ -132,7 +132,7 @@ function sanitizeData() {
       <DocumentDuplicateIcon class="icon slide-up-animation" />
     </RequestWrapper>
 
-    <button v-if="!archived" title="Usuń test" @click="showDeleteMessage = true">
+    <button v-if="!archived && !locked" title="Usuń test" @click="showDeleteMessage = true">
       <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
     </button>
 
