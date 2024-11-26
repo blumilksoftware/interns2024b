@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\AssignToQuizAction;
+use App\Actions\UnassignToQuizAction;
+use App\Helpers\SortHelper;
 use App\Http\Requests\InviteQuizRequest;
+use App\Http\Resources\QuizResource;
 use App\Http\Resources\UserResource;
-use App\Jobs\SendInviteJob;
 use App\Models\Quiz;
 use App\Models\School;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,119 +21,90 @@ use Inertia\Response;
 
 class InviteController extends Controller
 {
-    public function index(Quiz $quiz, Request $request): Response
+    public function index(Quiz $quiz, SortHelper $sort, Request $request): Response
     {
-        $this->authorize("invite", $quiz);
-
-        $searchText = $request->query("search");
-        $sortField = $request->query("sort", "id");
-        $sortDirection = $request->query("order", "asc");
-        $schoolId = $request->query("schoolId") !== null ? (int)$request->query("schoolId") : null;
-        $limit = $request->query("limit");
-
-        $users = User::query()->role("user")->with("school")->whereNotNull("email_verified_at");
-
-        $schools = School::all(["id", "name", "city"]);
-
-        $this->applyFilters($users, $searchText, $schoolId);
-        $this->applySorting($users, $sortField, $sortDirection);
-
-        if ($limit && $limit > 0) {
-            $users = $users->paginate((int)$limit);
-        } else {
-            $users = $users->paginate(100);
-        }
+        $this->authorize("invite", $quiz); // TODO
+        $query = User::query()->role("user")->with("school")->whereNotNull("email_verified_at");
+        $query = $sort->sort($query, ["id"], ["name", "school"]);
+        $query = $this->sortByName($query, $sort);
+        $query = $this->sortBySchool($query, $sort);
+        $query = $this->filterByName($query, $request);
+        $query = $this->filterBySchool($query, $request);
+        $schools = School::all(["id", "name", "city"]); // TODO resource
 
         return Inertia::render("Admin/Invite", [
-            "users" => UserResource::collection($users),
-            "quiz" => $quiz,
+            "users" => UserResource::collection($sort->paginate($query)),
+            "quiz" => QuizResource::make($quiz),
             "schools" => $schools,
-            "filters" => [
-                "search" => $searchText,
-                "sort" => $sortField,
-                "order" => $sortDirection,
-                "schoolId" => $schoolId,
-                "limit" => $limit,
-            ],
+            "assigned" => $quiz->assignedUsers->pluck("id"),
         ]);
     }
 
-    public function store(Quiz $quiz, InviteQuizRequest $request): RedirectResponse
+    public function assign(Quiz $quiz, InviteQuizRequest $request, AssignToQuizAction $assignAction): RedirectResponse
     {
         $this->authorize("invite", $quiz);
-        $userIds = $request->input("ids", []);
 
-        if (empty($userIds)) {
-            return redirect()->back()->withErrors("Brak użytkowników do zaproszenia.");
-        }
-
-        $users = User::query()->whereIn("id", $userIds)->get();
-
-        $quiz->assignedUsers()->attach($userIds);
-
-        foreach ($users as $user) {
-            SendInviteJob::dispatch($user, $quiz)->delay(now()->addMinutes(5));
-        }
-
-        return redirect()
-            ->back()
-            ->with("status", "Zaproszenia zostały zaplanowane do wysłania.");
-    }
-
-    public function assign(Quiz $quiz, InviteQuizRequest $request): RedirectResponse
-    {
-        $this->authorize("invite", $quiz);
-        $userIds = $request->input("ids", []);
-
-        if (empty($userIds)) {
-            return redirect()->back()->withErrors("Brak użytkowników do przypisania.");
-        }
-
-        $quiz->assignedUsers()->attach($userIds);
+        $assignAction->execute($quiz, collect($request->input("ids")));
 
         return redirect()
             ->back()
             ->with("status", "Użytkownicy zostali przypisani do quizu.");
     }
 
-    private function applySorting($query, string $sortField, string $sortDirection): void
+    public function unassign(Quiz $quiz, InviteQuizRequest $request, UnassignToQuizAction $unassignAction): RedirectResponse
     {
-        $allowedFields = ["id", "name", "surname", "school"];
-        $allowedDirections = ["asc", "desc"];
+        $this->authorize("invite", $quiz);
 
-        if (!in_array($sortField, $allowedFields, true)) {
-            $sortField = "id";
-        }
+        $unassignAction->execute($quiz, collect($request->input("ids")));
 
-        if (!in_array($sortDirection, $allowedDirections, true)) {
-            $sortDirection = "asc";
-        }
-
-        switch ($sortField) {
-            case "school":
-                $query->join("schools", "users.school_id", "=", "schools.id")
-                    ->orderBy("schools.name", $sortDirection)
-                    ->select("users.*");
-
-                break;
-            default:
-                $query->orderBy($sortField, $sortDirection);
-
-                break;
-        }
+        return redirect()
+            ->back()
+            ->with("status", "Użytkownicy zostali wypisani z quizu.");
     }
 
-    private function applyFilters($query, ?string $searchText, ?int $schoolId): void
+    private function filterByName(Builder $query, Request $request): Builder
     {
-        if ($schoolId) {
-            $query->where("school_id", $schoolId);
+        $searchName = $request->query("search");
+
+        if ($searchName) {
+            return $query->where("users.name", "ilike", "%$searchName%")
+                ->orWhere("users.surname", "ilike", "%$searchName%");
         }
 
-        if ($searchText) {
-            $query->where(function ($query) use ($searchText): void {
-                $query->where("users.name", "like", "%$searchText%")
-                    ->orWhere("users.surname", "like", "%$searchText%");
-            });
+        return $query;
+    }
+
+    private function filterBySchool(Builder $query, Request $request): Builder
+    {
+        $searchSchool = $request->query("schoolId");
+
+        if ($searchSchool) {
+            return $query->where("school_id", $searchSchool);
         }
+
+        return $query;
+    }
+
+    private function sortByName(Builder $query, SortHelper $sorter): Builder
+    {
+        [$field, $order] = $sorter->getSortParameters();
+
+        if ($field === "name") {
+            return $query->orderBy("surname", $order)
+                ->orderBy("name", $order);
+        }
+
+        return $query;
+    }
+
+    private function sortBySchool(Builder $query, SortHelper $sorter): Builder
+    {
+        [$field, $order] = $sorter->getSortParameters();
+
+        if ($field === "schoolId") {
+            return $query->orderBy("school.name", $order);
+        }
+
+        return $query;
     }
 }

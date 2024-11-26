@@ -51,8 +51,8 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/quizzes/{quiz}/unlock", [QuizController::class, "unlock"])->can("unlock,quiz")->name("admin.quizzes.unlock");
 
     Route::get("/quizzes/{quiz}/invite", [InviteController::class, "index"])->name("admin.quizzes.invite.index");
-    Route::post("/quizzes/{quiz}/invite", [InviteController::class, "store"])->name("admin.quizzes.invite.store");
     Route::post("/quizzes/{quiz}/invite/assign", [InviteController::class, "assign"])->name("admin.quizzes.invite.assign");
+    Route::post("/quizzes/{quiz}/invite/unassign", [InviteController::class, "unassign"])->name("admin.quizzes.invite.unassign");
 
     Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "index"])->can("viewAdminRanking,quiz")->name("admin.quizzes.ranking");
     Route::post("/quizzes/{quiz}/ranking/publish", [RankingController::class, "publish"])->can("publish,quiz")->name("admin.quizzes.ranking.publish");

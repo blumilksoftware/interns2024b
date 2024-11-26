@@ -131,6 +131,9 @@ return [
         "questions.*.text" => [
             "required" => "Treść pytania jest wymagana.",
         ],
+        "sorting" => [
+            "unsupported_field" => "Sortowanie po polu :attribute nie jest wspierane.",
+        ],
     ],
     "attributes" => [
         "name" => "imię",

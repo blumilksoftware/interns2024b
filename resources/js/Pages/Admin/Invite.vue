@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { defineProps, ref, computed } from 'vue'
-import { type  User } from '@/Types/User'
-import { type Pagination } from '@/Types/Pagination'
 import FormButton from '@/components/Common/FormButton.vue'
-import { type Quiz } from '@/Types/Quiz'
 import { useForm } from '@inertiajs/vue3'
+import { useParams } from '@/Helpers/Params'
 
 const sortOptions = [
   {
@@ -14,10 +12,6 @@ const sortOptions = [
   {
     name: 'Imię',
     value: 'name',
-  },
-  {
-    name: 'Nazwisko',
-    value: 'surname',
   },
   {
     name: 'Szkoła',
@@ -42,23 +36,18 @@ const props = defineProps<{
     name: string
     city: string
   }
-  filters: {
-    search: string
-    sort: string
-    order: string
-    schoolId: number | null
-    limit: number | null
-  }
+  assigned: number[]
 }>()
 
+console.log(props)
+const params = useParams()
 
 const form = useForm({
-  search: props.filters.search ?? '',
-  sort: props.filters.sort ?? 'id',
-  order: props.filters.order ?? 'asc',
-  schoolId: props.filters.schoolId ?? null,
-  limit: props.filters.limit ?? null,
-
+  search: params.name ?? '',
+  sort: params.sort ?? 'id',
+  order: params.order ?? 'asc',
+  schoolId: params.schoolId ?? null,
+  limit: params.limit ?? null,
 })
 
 const selectedUserIds = ref<number[]>([])
@@ -72,12 +61,12 @@ const toggleUserSelection = (userId: number) => {
 }
 
 const showPagination = computed(() => {
-  return props.filters.limit === null
+  return params.limit === null
 })
 </script>
 
 <template>
-  <h1>Quiz: {{ quiz.name }}</h1>
+  <h1>Quiz: {{ quiz.title }}</h1>
   Wyszukiwarka użytkowników do zapraszania do testów
 
   <form @submit.prevent="form.get(`/admin/quizzes/${quiz.id}/invite`, { preserveState: true, replace: true })">
@@ -99,7 +88,7 @@ const showPagination = computed(() => {
         </option>
       </select>
 
-      <label for="school">Grupuj według szkoły:</label>
+      <label for="school">Filtruj po szkołe:</label>
       <select v-model="form.schoolId" class="school-dropdown">
         <option :value="null">Wszystkie szkoły</option>
         <option v-for="school in props.schools" :key="school.id" :value="school.id">
@@ -124,6 +113,7 @@ const showPagination = computed(() => {
           <th>Imię</th>
           <th>Nazwisko</th>
           <th>Szkoła</th>
+          <th>Status</th>
         </tr>
       </thead>
       <tbody>
@@ -139,6 +129,7 @@ const showPagination = computed(() => {
           <td>{{ user.name }}</td>
           <td>{{ user.surname }}</td>
           <td>{{ user.school.name }}</td>
+          <td>{{ assigned.includes(user.id) }}</td>
         </tr>
       </tbody>
     </table>
@@ -147,7 +138,7 @@ const showPagination = computed(() => {
       <FormButton :disabled="!users.links.prev" method="get" :href="users.links.prev" preserve-scroll small>Poprzednia</FormButton>
       <FormButton :disabled="!users.links.next" method="get" :href="users.links.next" preserve-scroll small>Następna</FormButton>
     </div>
-    <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite`" preserve-scroll>Zaproś zaznaczonych użytkowników [MAIL]</FormButton>
-    <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite/assign`" preserve-scroll>Przypisz zaznaczonych użytkowników [NOMAIL]</FormButton>
+    <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite/assign`" preserve-scroll>Przypisz zaznaczonych użytkowników</FormButton>
+    <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite/unassign`" preserve-scroll>Wypisz zaznaczonych użytkowników</FormButton>
   </div>
 </template>
