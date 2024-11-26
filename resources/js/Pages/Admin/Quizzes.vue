@@ -9,6 +9,7 @@ import CrudPage from '@/components/Crud/CrudPage.vue'
 import FormButton from '@/components/Common/FormButton.vue'
 import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 import {useParams} from '@/Helpers/Params'
+import NoContent from '@/components/Common/NoContent.vue'
 
 provide<Ref<number>>('currentTime', useCurrentTime())
 
@@ -79,6 +80,22 @@ function customQueries(): string[] {
       <QuizComponent
         :quiz="item"
       />
+    </template>
+
+    <template #noContent="{search}">
+      <NoContent :description="search ? `Wygląda na to że nie mamy tego czego szukasz.` : undefined">
+        <div v-if="!search">
+          <FormButton
+            class="rounded-xl"
+            button-class="pl-3 font-bold"
+            method="post"
+            href="/admin/quizzes"
+            :data="{ title: 'Nowy test' }"
+          >
+            <PlusCircleIcon class="size-6 text-white" /> Dodaj test
+          </FormButton>
+        </div>
+      </NoContent>
     </template>
   </CrudPage>
 </template>

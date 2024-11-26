@@ -11,7 +11,7 @@ defineProps<{ data: Pagination<T>, query: string }>()
     </LinkButton>
 
     <div class="text-nowrap text-center min-w-20">
-      {{ data.meta.from }} - {{ data.meta.to }}
+      {{ data.meta.from ?? 0 }} - {{ data.meta.to ?? 0 }}
     </div>
 
     <LinkButton :disabled="!data.links.next" :href="data.links.next + query ?? ''" icon>

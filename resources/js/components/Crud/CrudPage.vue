@@ -13,6 +13,7 @@ import {useSorter} from '@/Helpers/Sorter'
 import SearchBar from '@/components/Common/SearchBar.vue'
 import Pagination from '@/components/Common/Pagination.vue'
 import {useParams} from '@/Helpers/Params'
+import NoContent from '@/components/Common/NoContent.vue'
 
 const props = defineProps<{
   items: Pagination<T>
@@ -36,6 +37,7 @@ defineSlots<{
   newItem: (scope: { newItemMode: boolean }) => any
   itemActions: (scope: { item: T }) => any
   itemData: (scope: { item: T, editing: boolean, errors: Errors }) => any
+  noContent: (scope: { search: boolean }) => any
 }>()
 
 const pagination = props.items
@@ -116,10 +118,22 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
           </template>
 
           <template #data="data">
-            <slot name="itemData" v-bind="data" />
+            <slot name="itemData" v-bind="data" />empty
           </template>
         </CrudItem>
       </slot>
+
+      <template v-if="items.data.length === 0">
+        <slot name="noContent" :search="!!searchValue">
+          <NoContent :description="searchValue ? `Wygląda na to że nie mamy tego czego szukasz.` : undefined">
+            <div v-if="!searchValue">
+              <Button class="rounded-xl" button-class="pl-3 font-bold" @click="newItemMode = true">
+                <PlusCircleIcon class="size-6 text-white" /> {{ newButtonText }}
+              </Button>
+            </div>
+          </NoContent>
+        </slot>
+      </template>
     </div>
 
     <div class="flex justify-center">
