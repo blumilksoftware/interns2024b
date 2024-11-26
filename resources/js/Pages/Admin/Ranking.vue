@@ -3,7 +3,7 @@ import {computed} from 'vue'
 import Divider from '@/components/Common/Divider.vue'
 import FormButton from '@/components/Common/FormButton.vue'
 import {groupBy} from '@/Helpers/GroupBy'
-import {PageProps} from "@/Types/PageProps";
+import {type PageProps} from '@/Types/PageProps'
 
 const props = defineProps<{
   quiz: Quiz

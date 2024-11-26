@@ -12,7 +12,7 @@ import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
 import CrudInput from '@/components/Crud/CrudInput.vue'
 import Banner from '@/components/Common/Banner.vue'
 import {usePlurals} from '@/Helpers/Plurals'
-import {PageProps} from "@/Types/PageProps";
+import {type PageProps} from '@/Types/PageProps'
 
 defineProps<{schools: Pagination<School>} & PageProps>()
 
@@ -38,7 +38,7 @@ const message = ref<string>()
 const schoolTranslation = usePlurals('szkołę', 'szkoły', 'szkół')
 
 function hideMessage() {
-  message.value = undefined;
+  message.value = undefined
 }
 
 async function isImportingFinished(): Promise<[boolean, number | null]> {

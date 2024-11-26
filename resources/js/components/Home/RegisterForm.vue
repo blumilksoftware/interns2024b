@@ -44,7 +44,7 @@ function submit() {
     />
 
     <CustomInput v-model="form.email" label="E-mail" :error="errors.email" name="email" type="email" />
-`
+    `
     <PasswordInput v-model="form.password" :error="errors.password" />
 
     <label class="mx-2 mt-4 flex flex-row items-center gap-4">

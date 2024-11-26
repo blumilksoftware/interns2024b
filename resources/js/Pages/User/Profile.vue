@@ -3,12 +3,12 @@ import { type Errors } from '@inertiajs/core'
 import PasswordUpdate from '@/components/Profile/PasswordUpdateSection.vue'
 import UserData from '@/components/Profile/UserDataSection.vue'
 import { Head } from '@inertiajs/vue3'
-import {PageProps} from "@/Types/PageProps";
+import {type PageProps} from '@/Types/PageProps'
 
 defineProps<{
   user: User
   errors: Errors
-} & Omit<PageProps, "user" | "errors">>()
+} & Omit<PageProps, 'user' | 'errors'>>()
 
 </script>
 

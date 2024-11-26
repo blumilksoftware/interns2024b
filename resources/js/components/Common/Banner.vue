@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { XMarkIcon } from '@heroicons/vue/20/solid'
-import { computed, watch } from 'vue'
+import { watch } from 'vue'
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(['close'])
 const props = defineProps<{ show?: boolean, hideCloseButton?: boolean, message?:string }>()
 
 let timeoutId: ReturnType<typeof setTimeout>
@@ -15,7 +15,7 @@ watch(props, props => {
   }
 
   const time = props.message.split(' ').length * 1000
-  timeoutId = setTimeout(() => emit("close"), time)
+  timeoutId = setTimeout(() => emit('close'), time)
 })
 </script>
 

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3'
-import {PageProps} from "@/Types/PageProps";
+import {type PageProps} from '@/Types/PageProps'
 
 const props = defineProps<{
   user: User
   schools?: School[]
-} & Omit<PageProps, "user">>()
+} & Omit<PageProps, 'user'>>()
 
 const form = useForm({
   firstname: props.user.firstname,

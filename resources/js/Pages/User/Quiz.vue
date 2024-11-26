@@ -4,7 +4,7 @@ import axios from 'axios'
 import { ref } from 'vue'
 import Button from '@/components/Common/Button.vue'
 import MessageBox from '@/components/Common/MessageBox.vue'
-import {PageProps} from "@/Types/PageProps";
+import {type PageProps} from '@/Types/PageProps'
 
 defineProps<{ userQuiz: UserQuiz } & PageProps>()
 const networkErrorMessage = ref(false)

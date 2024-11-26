@@ -6,7 +6,7 @@ import {computed} from 'vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
 import {Head} from '@inertiajs/vue3'
 import QuestionResult from '@/components/QuizResult/QuestionResult.vue'
-import {PageProps} from "@/Types/PageProps";
+import {type PageProps} from '@/Types/PageProps'
 
 const props = defineProps<{ userQuiz: UserQuiz, hasRanking: boolean } & PageProps>()
 const duration = secondsToHour(calcSecondsBetweenDates(props.userQuiz.closedAt, props.userQuiz.createdAt))

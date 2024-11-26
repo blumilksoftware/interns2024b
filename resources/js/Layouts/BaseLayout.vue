@@ -14,7 +14,7 @@ watch(() => props.flash, flash => {
 }, { immediate: true })
 
 function hideMessage() {
-  status.value = undefined;
+  status.value = undefined
 }
 
 </script>
