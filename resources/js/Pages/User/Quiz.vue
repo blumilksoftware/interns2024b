@@ -4,8 +4,9 @@ import axios from 'axios'
 import { ref } from 'vue'
 import Button from '@/components/Common/Button.vue'
 import MessageBox from '@/components/Common/MessageBox.vue'
+import {PageProps} from "@/Types/PageProps";
 
-defineProps<{ userQuiz: UserQuiz }>()
+defineProps<{ userQuiz: UserQuiz } & PageProps>()
 const networkErrorMessage = ref(false)
 
 function handleAnswer(question: UserQuestion, selectedAnswer: number) {

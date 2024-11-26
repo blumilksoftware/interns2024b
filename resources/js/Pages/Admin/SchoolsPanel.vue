@@ -12,8 +12,9 @@ import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
 import CrudInput from '@/components/Crud/CrudInput.vue'
 import Banner from '@/components/Common/Banner.vue'
 import {usePlurals} from '@/Helpers/Plurals'
+import {PageProps} from "@/Types/PageProps";
 
-defineProps<{schools: Pagination<School>}>()
+defineProps<{schools: Pagination<School>} & PageProps>()
 
 const sortOptions: SortOption[] = [
   { text: 'Po id (rosnąco)', key: 'id' },
@@ -35,6 +36,10 @@ const sortOptions: SortOption[] = [
 const status = ref<boolean | null>(null)
 const message = ref<string>()
 const schoolTranslation = usePlurals('szkołę', 'szkoły', 'szkół')
+
+function hideMessage() {
+  message.value = undefined;
+}
 
 async function isImportingFinished(): Promise<[boolean, number | null]> {
   try {
@@ -78,7 +83,7 @@ function startFetching() {
     <title>Szkoły - Panel administracyjny</title>
   </Head>
 
-  <Banner v-model="message" />
+  <Banner :show="!!message" :message="message" @close="hideMessage" />
 
   <Transition>
     <div v-show="status === false" class="fixed bg-white/50 backdrop-blur-md z-10 size-full left-0 top-0 flex items-center justify-center gap-2">

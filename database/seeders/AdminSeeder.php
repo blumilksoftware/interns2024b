@@ -18,7 +18,7 @@ class AdminSeeder extends Seeder
         $superAdmin = User::firstOrCreate(
             ["email" => "superadmin@example.com"],
             [
-                "name" => "Example",
+                "firstname" => "Example",
                 "surname" => "Super Admin",
                 "email_verified_at" => Carbon::now(),
                 "password" => Hash::make("password"),
@@ -31,7 +31,7 @@ class AdminSeeder extends Seeder
         $admin = User::firstOrCreate(
             ["email" => "admin@example.com"],
             [
-                "name" => "Example",
+                "firstname" => "Example",
                 "surname" => "Admin",
                 "email_verified_at" => Carbon::now(),
                 "password" => Hash::make("password"),
@@ -44,7 +44,7 @@ class AdminSeeder extends Seeder
         $user = User::firstOrCreate(
             ["email" => "user@example.com"],
             [
-                "name" => "Example",
+                "firstname" => "Example",
                 "surname" => "User",
                 "email_verified_at" => Carbon::now(),
                 "password" => Hash::make("password"),

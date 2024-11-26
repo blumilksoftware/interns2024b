@@ -16,7 +16,7 @@ const filteredSchoolOptions = computed(() =>
   ),
 )
 const form = useForm({
-  name: '',
+  firstname: '',
   surname: '',
   email: '',
   password: '',
@@ -31,7 +31,7 @@ function submit() {
 <template>
   <form class="row-start-1 col-start-1 space-y-6" @submit.prevent="submit">
     <div class="flex flex-col gap-6 sm:flex-row">
-      <CustomInput v-model="form.name" label="Imię" :error="errors.name" name="name" type="name" />
+      <CustomInput v-model="form.firstname" label="Imię" :error="errors.firstname" name="firstname" type="name" />
       <CustomInput v-model="form.surname" label="Nazwisko" :error="errors.surname" name="surname" type="surname" />
     </div>
 
@@ -44,7 +44,7 @@ function submit() {
     />
 
     <CustomInput v-model="form.email" label="E-mail" :error="errors.email" name="email" type="email" />
-
+`
     <PasswordInput v-model="form.password" :error="errors.password" />
 
     <label class="mx-2 mt-4 flex flex-row items-center gap-4">
@@ -57,7 +57,7 @@ function submit() {
     </label>
 
     <div>
-      <button 
+      <button
         :disabled="form.processing"
         type="submit"
         class="rounded-lg text-md flex w-full justify-center bg-primary p-3 font-bold text-white

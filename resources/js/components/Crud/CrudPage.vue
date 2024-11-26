@@ -118,7 +118,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
           </template>
 
           <template #data="data">
-            <slot name="itemData" v-bind="data" />empty
+            <slot name="itemData" v-bind="data" />
           </template>
         </CrudItem>
       </slot>

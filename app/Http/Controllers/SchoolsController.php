@@ -85,7 +85,7 @@ class SchoolsController extends Controller
     {
         return response()->json([
             "done" => !$this->isFetching(),
-            "count" => Cache::get("fetched_schools"),
+            "count" => (int)Cache::get("fetched_schools"),
         ]);
     }
 

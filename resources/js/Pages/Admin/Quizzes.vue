@@ -10,10 +10,11 @@ import FormButton from '@/components/Common/FormButton.vue'
 import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 import {useParams} from '@/Helpers/Params'
 import NoContent from '@/components/Common/NoContent.vue'
+import {PageProps} from "@/Types/PageProps";
 
 provide<Ref<number>>('currentTime', useCurrentTime())
 
-defineProps<{ quizzes: Pagination<Quiz> }>()
+defineProps<{ quizzes: Pagination<Quiz> } & PageProps>()
 
 const sortOptions: SortOption[] = [
   { text: 'Po id (rosnąco)', key: 'id' },

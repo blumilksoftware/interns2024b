@@ -77,7 +77,7 @@ class AdminTest extends TestCase
         $school = School::factory()->create();
         $this->actingAs($this->superAdmin)
             ->post("/admin/admins", [
-                "name" => "Admin Name",
+                "firstname" => "Admin Name",
                 "surname" => "Admin Surname",
                 "email" => "adminexample@admin.com",
                 "password" => "password",
@@ -86,7 +86,7 @@ class AdminTest extends TestCase
             ->assertRedirect("/admin/admins");
 
         $this->assertDatabaseHas("users", [
-            "name" => "Admin Name",
+            "firstname" => "Admin Name",
             "surname" => "Admin Surname",
             "email" => "adminexample@admin.com",
         ]);
@@ -97,7 +97,7 @@ class AdminTest extends TestCase
         $school = School::factory()->create();
         $this->actingAs($this->admin)
             ->post("/admin/admins", [
-                "name" => "Admin Name",
+                "firstname" => "Admin Name",
                 "surname" => "Admin Surname",
                 "email" => "adminexample@admin.com",
                 "password" => "password",
@@ -106,7 +106,7 @@ class AdminTest extends TestCase
             ->assertForbidden();
 
         $this->assertDatabaseMissing("users", [
-            "name" => "Admin Name",
+            "firstname" => "Admin Name",
             "surname" => "Admin Surname",
             "email" => "adminexample@admin.com",
         ]);
@@ -144,7 +144,7 @@ class AdminTest extends TestCase
         $this->actingAs($this->superAdmin)
             ->from("/admin/admins/{$admin->id}/edit")
             ->patch("/admin/admins/{$admin->id}", [
-                "name" => "New Name",
+                "firstname" => "New Name",
                 "surname" => "New Surname",
                 "email" => "new@email.com",
                 "school_id" => $admin->school_id,
@@ -153,7 +153,7 @@ class AdminTest extends TestCase
 
         $this->assertDatabaseHas("users", [
             "id" => $admin->id,
-            "name" => "New Name",
+            "firstname" => "New Name",
             "surname" => "New Surname",
             "email" => "new@email.com",
             "school_id" => $admin->school_id,
@@ -168,7 +168,7 @@ class AdminTest extends TestCase
         $this->actingAs($this->admin)
             ->from("/admin/admins/{$admin->id}/edit")
             ->patch("/admin/admins/{$admin->id}", [
-                "name" => "New Name",
+                "firstname" => "New Name",
                 "surname" => "New Surname",
                 "email" => "new@email.com",
                 "school_id" => $admin->school_id,
@@ -176,7 +176,7 @@ class AdminTest extends TestCase
             ->assertForbidden();
 
         $this->assertDatabaseMissing("users", [
-            "name" => "New Name",
+            "firstname" => "New Name",
         ]);
     }
 
@@ -188,7 +188,7 @@ class AdminTest extends TestCase
         $response = $this->actingAs($this->superAdmin)
             ->from("/admin/admins/{$admin->id}/edit")
             ->patch("/admin/admins/{$admin->id}", [
-                "name" => "",
+                "firstname" => "",
                 "surname" => "",
                 "email" => "invalidMail",
                 "school_id" => 999,
@@ -198,14 +198,14 @@ class AdminTest extends TestCase
 
         $this->assertDatabaseHas("users", [
             "id" => $admin->id,
-            "name" => $admin->name,
+            "firstname" => $admin->firstname,
             "surname" => $admin->surname,
             "email" => $admin->email,
             "school_id" => $admin->school_id,
         ]);
 
         $response->assertSessionHasErrors([
-            "name",
+            "firstname",
             "surname",
             "email",
             "school_id",

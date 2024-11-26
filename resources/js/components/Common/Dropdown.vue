@@ -44,7 +44,7 @@ function pick(option: Option) {
               id="menu-item-0" href="#"
               class="truncate block py-2 px-3 m-1 text-sm text-gray-700 rounded-lg hover-focus:bg-primary/5 hover-focus:text-primary transition-colors outline-none"
               role="menuitem"
-              @click="pick(option)"
+              @click="pick(option); isVisible = false"
             >
               {{ option.text }}
             </a>

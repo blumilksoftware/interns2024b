@@ -19,7 +19,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            "name" => fake()->firstName(),
+            "firstname" => fake()->firstName(),
             "surname" => fake()->lastName(),
             "email" => fake()->unique()->safeEmail(),
             "email_verified_at" => Carbon::now(),
