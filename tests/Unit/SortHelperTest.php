@@ -116,7 +116,7 @@ class SortHelperTest extends TestCase
         $request = Request::create("/?search=test", "GET");
 
         $builderMock = Mockery::mock(Builder::class);
-        $builderMock->shouldReceive("where")->with("name", "like", "%test%")->once()->andReturnSelf();
+        $builderMock->shouldReceive("where")->with("name", "ilike", "%test%")->once()->andReturnSelf();
 
         $helper = new SortHelper($request);
         $result = $helper->search($builderMock, "name");
