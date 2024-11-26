@@ -1,6 +1,13 @@
 interface Question {
   [key: string]
-  id?: number
-  text: string | undefined
+  text?: string
   answers: Answer[]
+}
+
+interface UserQuestion {
+  [key: string]
+  id: number
+  text: string
+  selectedAnswer?: number
+  answers: UserAnswer[]
 }

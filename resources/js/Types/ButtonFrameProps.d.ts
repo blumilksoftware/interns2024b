@@ -1,7 +1,7 @@
 export interface ButtonFrameProps {
   small?: boolean
   extraSmall?: boolean
-  icon?: boolean
+  large?: boolean
   disabled?: boolean
   text?: boolean
 }

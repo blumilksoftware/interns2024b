@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Models\Answer;
-use App\Models\AnswerRecord;
 use App\Models\Question;
 use App\Models\Quiz;
-use App\Models\QuizSubmission;
 use App\Models\User;
+use App\Models\UserQuestion;
+use App\Models\UserQuiz;
 use Illuminate\Database\Seeder;
 
 class UserQuizSeeder extends Seeder
@@ -42,13 +42,13 @@ class UserQuizSeeder extends Seeder
             }
         }
 
-        $this->createSubmissionForUser($user1, null);
-        $this->createSubmissionForUser($user2, null);
+        $this->createUserQuizForUser($user1, null);
+        $this->createUserQuizForUser($user2, null);
     }
 
-    public function createSubmissionForUser(User $user, ?int $correctAnswersCount): void
+    public function createUserQuizForUser(User $user, ?int $correctAnswersCount): void
     {
-        $quizSubmission = QuizSubmission::factory()
+        $userQuiz = UserQuiz::factory()
             ->for($this->quiz)
             ->for($user)
             ->create();
@@ -71,8 +71,8 @@ class UserQuizSeeder extends Seeder
                 ? $answers->where("id", $question->correct_answer_id)->first()
                 : $answers->where("id", "!=", $question->correct_answer_id)->random();
 
-            AnswerRecord::factory()
-                ->for($quizSubmission)
+            UserQuestion::factory()
+                ->for($userQuiz)
                 ->for($question)
                 ->for($selectedAnswer)
                 ->create();

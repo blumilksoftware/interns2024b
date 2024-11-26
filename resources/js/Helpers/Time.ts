@@ -25,21 +25,26 @@ const translateHoursLeft = usePlurals('godzina', 'godziny', 'godzin')
 export function timeToString(time: TimeObject, withLeft = false): string {
   const { s, m, h } = time
 
-  if (h <= 0 && m <= 0) {
-    return `${withLeft ? translateLeft(s) : ''} ${s} ${translateSecondsLeft(s)}`.trimStart()
+  function formatTime(h:number|undefined, m:number|undefined, s:number|undefined) {
+    const hours = h ? `${h} ${translateHoursLeft(h)}` : ''
+    const minutes = m ? `${m} ${translateMinutesLeft(m)}` : ''
+    const seconds =  s ? `${s} ${translateSecondsLeft(s)}` : ''
+    const leading = h ?? m ?? s
+    
+    return `${(withLeft && leading ? translateLeft(leading) : '')} ${hours} ${minutes} ${seconds}`.trimStart()
   }
 
-  if (h <= 0 && m < 10 && s > 0 ) {
-    return `${withLeft ? translateLeft(m) : ''} ${m} ${translateMinutesLeft(m)} i ${s} ${translateSecondsLeft(s)}`.trimStart()
+  if (h) {
+    return formatTime(h,m,undefined)
   }
 
-  if (h <= 0) {
-    return `${withLeft ? translateLeft(m) : ''} ${m} ${translateMinutesLeft(m)}`.trimStart()
+  if (m < 10) {
+    return formatTime(undefined,m,s)
   }
 
-  if (h <= 0 && m > 0) {
-    return `${withLeft ? translateLeft(h) : ''} ${h} ${translateHoursLeft(h)} i ${m} ${translateMinutesLeft(m)}`.trimStart()
+  if (m) {
+    return formatTime(undefined,m,undefined)
   }
 
-  return `${withLeft ? translateLeft(h) : ''} ${h} ${translateHoursLeft(h)}`.trimStart()
+  return formatTime(undefined,undefined,s)
 }

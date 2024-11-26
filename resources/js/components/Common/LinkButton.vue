@@ -9,16 +9,18 @@ defineProps<{
 </script>
 
 <template>
-  <a v-if="!disabled" :href="href">
+  <a v-if="!disabled" :href="href" :class="{ 'w-full flex justify-center' : large }">
     <ButtonFrame
       :class="buttonClass"
-      :disabled :small :extra-small :text :icon
+      :disabled :small :extra-small :large :text
     >
       <slot />
     </ButtonFrame>
   </a>
 
-  <ButtonFrame v-if="disabled" :class="buttonClass" :disabled :small :extra-small :text :icon>
-    <slot />
-  </ButtonFrame>
+  <p v-if="disabled" :class="{ 'w-full flex justify-center' : large }">
+    <ButtonFrame :class="buttonClass" :disabled :small :extra-small :text :icon>
+      <slot />
+    </ButtonFrame>
+  </p>
 </template>

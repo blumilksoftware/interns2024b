@@ -21,7 +21,7 @@ const { processing, errors } = useRequestResolution()
 const startTimeReached = computed<boolean>(() =>
   !!quiz.value.scheduledAt &&
   !!currentTime?.value &&
-  Date.parse(quiz.value.scheduledAt) > currentTime.value,
+  Date.parse(quiz.value.scheduledAt) < currentTime.value,
 )
 
 watch(startTimeReached, quizHasStarted => {
@@ -88,7 +88,7 @@ function toggleEditing(isEditing:boolean){
         :locked="quiz.state === 'locked'"
         :archived="archived"
         :editing="editing"
-        :start-time-reached="startTimeReached"
+        :start-time-not-reached="!startTimeReached"
         @toggle-editing="toggleEditing"
         @cancel-changes="quiz = JSON.parse(JSON.stringify(props.quiz)); errors={}"
       />
