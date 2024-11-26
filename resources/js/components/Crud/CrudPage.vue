@@ -5,12 +5,12 @@ import { vAutoAnimate } from '@formkit/auto-animate'
 import Expand from '@/components/Common/Expand.vue'
 import Dropdown from '@/components/Common/Dropdown.vue'
 import {type Errors} from '@inertiajs/core'
-import {ref} from 'vue'
+import {ref, watch} from 'vue'
 import Button from '@/components/Common/Button.vue'
 import CrudNewItem from '@/components/Crud/CrudNewItem.vue'
 import CrudItem from '@/components/Crud/CrudItem.vue'
 import {useSorter} from '@/Helpers/Sorter'
-import SearchBar from '@/components/Common/SearchBar.vue'
+import SearchBar from '@/components/Crud/SearchBar.vue'
 import Pagination from '@/components/Common/Pagination.vue'
 import {useParams} from '@/Helpers/Params'
 import NoContent from '@/components/Common/NoContent.vue'
@@ -54,6 +54,11 @@ function handleSearch(text: string | undefined) {
   }
 }
 
+const isSearchbarEmpty = ref(!params.search)
+watch(() => props.items.data, () => {
+  isSearchbarEmpty.value = !searchValue.value
+})
+
 const [query, options] = useSorter(props.options, searchValue, props.customQueries)
 </script>
 
@@ -91,7 +96,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
     <div v-auto-animate class="flex flex-col gap-4 p-4">
       <template v-if="newItemMode">
         <slot name="newItem" :new-item-mode="newItemMode">
-          <CrudNewItem :new-item-data="newItemData" :resource-name="resourceName" @done="newItemMode = false">
+          <CrudNewItem :new-item-data="newItemData" :resource-name="resoisSearchbarEmptyurceName" @done="newItemMode = false">
             <template #title="data">
               <slot name="title" v-bind="data as any" />
             </template>
@@ -124,9 +129,9 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
       </slot>
 
       <template v-if="items.data.length === 0">
-        <slot name="noContent" :search="!!searchValue">
-          <NoContent :description="searchValue ? `Wygląda na to że nie mamy tego czego szukasz.` : undefined">
-            <div v-if="!searchValue">
+        <slot name="noContent" :search="!isSearchbarEmpty">
+          <NoContent :description="!isSearchbarEmpty ? `Wygląda na to że nie mamy tego czego szukasz.` : undefined">
+            <div v-if="isSearchbarEmpty">
               <Button class="rounded-xl" button-class="pl-3 font-bold" @click="newItemMode = true">
                 <PlusCircleIcon class="size-6 text-white" /> {{ newButtonText }}
               </Button>
