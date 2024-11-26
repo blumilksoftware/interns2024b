@@ -51,7 +51,7 @@ class SortHelper
         $searchText = $this->request->query("search");
 
         if ($searchText) {
-            return $query->where($field, "like", "%$searchText%");
+            return $query->where($field, "ilike", "%$searchText%");
         }
 
         return $query;
