@@ -32,7 +32,7 @@ export function useSorter(sortOptions: SortOption[], searchText?: Ref<string | u
 
   watch(query, query =>
     router.visit(
-      `/admin/schools/?page=1${query}`, {
+      `?page=1${query}`, {
         preserveState: true,
         replace: true,
       },
