@@ -5,7 +5,7 @@ import { PlusCircleIcon } from '@heroicons/vue/24/outline'
 import QuestionComponent from '@/components/QuizzesPanel/QuestionComponent.vue'
 import QuizHeader from '@/components/QuizzesPanel/QuizHeader.vue'
 import QuizNavbar from '@/components/QuizzesPanel/QuizNavbar.vue'
-import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynamicIcon.vue'
+import ExpansionToggleDynamicIcon from '@/components/Icons/ExpansionToggleDynamicIcon.vue'
 import getKey from '@/Helpers/KeysManager'
 import useRequestResolution from '@/Helpers/RequestResolution'
 import { formatDate } from '@/Helpers/Format'
@@ -45,7 +45,6 @@ function deleteQuestion(idx:number, question:Question) {
   if (errors.value[`questions.${idx}.text`]) {
     errors.value[`questions.${idx}.text`] = ''
   }
-
 }
 
 function toggleSelection(isSelected:boolean) {
@@ -71,7 +70,7 @@ function toggleEditing(isEditing:boolean){
 
     <div class="flex justify-between">
       <button :disabled="editing" class="h-7 disabled:opacity-50" @click="toggleSelection(!selected)">
-        <ExapnsionToggleDynamicIcon class="text-primary stroke-4 w-4" :expanded="selected" />
+        <ExpansionToggleDynamicIcon class="text-primary stroke-4 w-4" :expanded="selected" />
       </button>
 
       <QuizHeader
