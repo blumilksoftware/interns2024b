@@ -2,14 +2,12 @@ import '../css/app.css'
 import { createApp, h, type DefineComponent } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-import { type Errors, type ErrorBag } from '@inertiajs/core'
 import UserLayout from '@/Layouts/UserLayout.vue'
 import AdminLayout from '@/Layouts/AdminLayout.vue'
 import GuestLayout from '@/Layouts/GuestLayout.vue'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'dayjs/locale/pl'
-import { type PageProps } from '@/Types/PageProps'
 
 dayjs.extend(relativeTime)
 dayjs.locale('pl')
@@ -39,12 +37,6 @@ createInertiaApp({
     return page
   },
   setup({ el, App, props, plugin }) {
-    const pageProps = props.initialPage.props as PageProps & { errors: Errors & ErrorBag }
-    const themeClass = pageProps.user?.theme
-    if (themeClass) {
-      document.documentElement.classList.add(themeClass)
-    }
-
     createApp({ render: () => h(App, props) })
       .use(plugin)
       .mount(el)
