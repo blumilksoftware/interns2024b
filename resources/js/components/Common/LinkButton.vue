@@ -12,7 +12,7 @@ defineProps<{
   <a v-if="!disabled" :href="href" :class="{ 'w-full flex justify-center' : large }">
     <ButtonFrame
       :class="buttonClass"
-      :disabled :small :extra-small :large :text
+      :disabled :small :extra-small :large :text :icon
     >
       <slot />
     </ButtonFrame>

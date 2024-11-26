@@ -8,12 +8,13 @@ defineProps<ButtonFrameProps>()
   <div
     class="flex justify-center gap-2 transition-colors-opacity duration-200"
     :class="{
-      'rounded-lg text-xs xs:text-sm': small,
-      'rounded-xl text-xs px-2': extraSmall,
-      'rounded-xl': !small && !extraSmall,
+      'rounded-lg size-6 xs:text-sm items-center': icon,
+      'text-xs xs:text-sm': small,
+      'text-xs px-2': extraSmall,
       'py-3 max-w-96 w-full': large,
       'focus:rounded-xl text-black hover:text-primary-800 p-0 font-semibold': text,
-      'px-4 bg-primary text-white hover:bg-primary-950 py-2.5 font-bold': !text,
+      'bg-primary text-white hover:bg-primary-950 py-2.5 font-bold': !text,
+      'rounded-xl px-4 py-2.5': !text && !icon,
       'opacity-50 pointer-events-none': disabled,
     }"
   >
