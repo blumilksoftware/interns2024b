@@ -96,7 +96,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
     <div v-auto-animate class="flex flex-col gap-4 p-4">
       <template v-if="newItemMode">
         <slot name="newItem" :new-item-mode="newItemMode">
-          <CrudNewItem :new-item-data="newItemData" :resource-name="resoisSearchbarEmptyurceName" @done="newItemMode = false">
+          <CrudNewItem :new-item-data="newItemData" :resource-name="resourceName" @done="newItemMode = false">
             <template #title="data">
               <slot name="title" v-bind="data as any" />
             </template>
