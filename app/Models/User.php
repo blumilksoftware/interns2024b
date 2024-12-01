@@ -45,6 +45,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         "email",
         "school_id",
         "is_anonymized",
+        "theme",
     ];
     protected $hidden = [
         "remember_token",
