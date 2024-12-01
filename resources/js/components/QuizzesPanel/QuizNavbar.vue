@@ -96,6 +96,7 @@ function sanitizeData() {
       v-if="locked"
       title="Zaproś uczestników"
       class="flex items-center"
+      :href="`/admin/quizzes/${quiz.id}/invite`"
     >
       <UserPlusIcon class="icon slide-up-animation" />
     </a>
