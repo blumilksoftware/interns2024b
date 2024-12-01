@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import ThemeSwitch from '@/components/Common/ThemeSwitch.vue'
-
 defineProps<{ user: User }>()
 </script>
 
@@ -25,6 +23,5 @@ defineProps<{ user: User }>()
         <p class="p-4 text-[1.1rem] border-2 border-t-0 h-full rounded-b-lg border-primary/30">{{ user.school.name }}</p>
       </div>
     </div>
-    <ThemeSwitch class="mt-4 mx-2" :theme="user.theme" />
   </div>
 </template>

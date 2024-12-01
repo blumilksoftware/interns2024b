@@ -10,7 +10,7 @@ onMounted(()=>{
     titleRef.value = 'Zweryfikuj e-mail'
 })
 
-function send() {
+function sent() {
   form.post('/email/verification-notification')
 }
 
@@ -26,7 +26,7 @@ function send() {
       <p>Kliknij w link aktywacyjny, aby dokończyć proces rejestracji.</p>
     </div>
     <div class="p-6 gap-6 flex flex-col size-full sm:max-w-lg sm:h-fit">
-      <button :disabled="form.processing" class="bg-primary text-white font-bold py-3 px-4 rounded-lg disabled:bg-primary/70" @click="send">
+      <button :disabled="form.processing" class="bg-primary text-white font-bold py-3 px-4 rounded-lg disabled:bg-primary/70" @click="sent">
         Wyślij ponownie link weryfikacyjny
       </button>
     </div>

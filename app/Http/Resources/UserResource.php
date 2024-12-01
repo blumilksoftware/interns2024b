@@ -23,7 +23,6 @@ class UserResource extends JsonResource
             "isAnonymized" => $this->is_anonymized,
             "isAdmin" => $this->hasRole("admin"),
             "isSuperAdmin" => $this->hasRole("super_admin"),
-            "theme" => $this->theme,
         ];
     }
 }

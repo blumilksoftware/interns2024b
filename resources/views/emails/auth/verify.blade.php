@@ -1,8 +1,3 @@
-@php
-  $theme = $user->theme ?? 'theme-witelon';
-  $color = $theme === 'theme-tauron' ? '#E4007D' : '#262C89';
-@endphp
-
 <!DOCTYPE html>
 <html lang="pl">
 <style>
@@ -10,7 +5,7 @@
     a { text-decoration: none; }
     p { margin: 48px 0; line-height: 24px; }
     table { width: 100%; border-spacing: 0; }
-    .button { background-color: {{ $color }}; color: white; padding: 16px 80px; border-radius: 12px; }
+    .button { background-color: #262C89; color: white; padding: 16px 80px; border-radius: 12px; }
 </style>
 
 <div style="font-family: sans-serif; color: #3D4852; padding: 0 48px;">
@@ -29,7 +24,7 @@
 
         <p>Jeśli prośba nie została zainicjonowana przez Ciebie, możesz zignorować tę wiadomość.</p>
 
-        <p style="margin-top: 16px; ">Pozdrawiamy,<br><span style="color: {{ $color }};">{{ config('app.name') }}</span></p>
+        <p style="margin-top: 16px; ">Pozdrawiamy,<br><span style="color: #262C89;">{{ config('app.name') }}</span></p>
 
         <hr style="border: 1px solid #e8ebf1">
         

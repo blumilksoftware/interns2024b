@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import ThemeSwitch from '@/components/Common/ThemeSwitch.vue'
+</script>
+
 <template>
   <footer class="bg-white/50 shadow w-full mt-auto">
     <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
@@ -10,6 +14,7 @@
           <a href="#" class="hover:underline">Kontakt</a>
         </li>
       </ul>
+      <ThemeSwitch />
     </div>
   </footer>
 </template>
