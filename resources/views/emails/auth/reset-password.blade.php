@@ -14,10 +14,10 @@
     </div>
 
     <div>
-        <h2>Cześć, {{ $user->name }}!</h2>
+        <h2>Cześć, {{ $user->firstname }}!</h2>
 
         <p>Otrzymaliśmy prośbę o zresetowanie hasła do Twojego konta. Kliknij poniższy przycisk, aby zresetować swoje hasło.</p>
-        
+
         <table style="margin: 24px auto;"><tr><td style="text-align: center;">
             <b><a class="button" href="{{ $url }}">Zresetuj hasło</a></b>
         </td></tr></table>
@@ -25,7 +25,7 @@
         <p style="margin-top: 16px; ">Pozdrawiamy,<br><span style="color: #262C89;">{{ config('app.name') }}</span></p>
 
         <hr style="border: 1px solid #e8ebf1">
-        
+
         <table><tr><td style="padding-top: 32px; text-align: center;">
             © 2024 {{ config('app.name') }}. Wszelkie prawa zastrzeżone.
         </td></tr></table>

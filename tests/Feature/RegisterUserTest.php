@@ -19,7 +19,7 @@ class RegisterUserTest extends TestCase
         $school = School::factory()->create();
 
         $this->post("/auth/register", [
-            "name" => "Test",
+            "firstname" => "Test",
             "surname" => "Test",
             "email" => "test@gmail.com",
             "password" => "123456890",
@@ -28,7 +28,7 @@ class RegisterUserTest extends TestCase
             ->assertRedirect("/email/verify");
 
         $this->assertDatabaseHas("users", [
-            "name" => "Test",
+            "firstname" => "Test",
             "surname" => "Test",
             "email" => "test@gmail.com",
             "school_id" => $school->id,
@@ -47,7 +47,7 @@ class RegisterUserTest extends TestCase
         ]);
 
         $this->post("/auth/register", [
-            "name" => "Test",
+            "firstname" => "Test",
             "surname" => "Test",
             "email" => "test@gmail.com",
             "password" => "123456890",
@@ -63,7 +63,7 @@ class RegisterUserTest extends TestCase
         $school = School::factory()->create();
 
         $this->post("/auth/register", [
-            "name" => "Test",
+            "firstname" => "Test",
             "surname" => "Test",
             "email" => "test@gmail.com",
             "password" => "123456890",
@@ -79,7 +79,7 @@ class RegisterUserTest extends TestCase
         $school = School::factory()->create();
 
         $this->post("/auth/register", [
-            "name" => "Test",
+            "firstname" => "Test",
             "surname" => "Test",
             "email" => $longMail . "@gmail.com",
             "password" => "123456890",
@@ -94,7 +94,7 @@ class RegisterUserTest extends TestCase
         $school = School::factory()->create();
 
         $this->post("/auth/register", [
-            "name" => "Test",
+            "firstname" => "Test",
             "surname" => "Test",
             "email" => "test@gmail.pl",
             "password" => "123456890",
@@ -110,14 +110,14 @@ class RegisterUserTest extends TestCase
         $school = School::factory()->create();
 
         $this->post("/auth/register", [
-            "name" => $longName,
+            "firstname" => $longName,
             "surname" => "Test",
             "email" => "test@gmail.com",
             "password" => "123456890",
             "school_id" => $school->id,
         ])
             ->assertRedirect("/")
-            ->assertSessionHasErrors(["name" => "Pole imię nie może być dłuższe niż 255 znaków."]);
+            ->assertSessionHasErrors(["firstname" => "Pole imię nie może być dłuższe niż 255 znaków."]);
     }
 
     public function testUserCanNotRegisterWithTooLongSurname(): void
@@ -126,7 +126,7 @@ class RegisterUserTest extends TestCase
         $school = School::factory()->create();
 
         $this->post("/auth/register", [
-            "name" => "Test",
+            "firstname" => "Test",
             "surname" => $longSurname,
             "email" => "test@gmail.com",
             "password" => "123456890",
@@ -141,7 +141,7 @@ class RegisterUserTest extends TestCase
         $school = School::factory()->create();
 
         $this->post("/auth/register", [
-            "name" => "Test",
+            "firstname" => "Test",
             "surname" => "Test",
             "email" => "test@gmail.com",
             "password" => "123",

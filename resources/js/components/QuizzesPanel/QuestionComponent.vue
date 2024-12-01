@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { DocumentDuplicateIcon, PlusCircleIcon, TrashIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
-import ExapnsionToggleDynamicIcon from '@/components/Icons/ExapnsionToggleDynamicIcon.vue'
+import ExpansionToggleDynamicIcon from '@/components/Icons/ExpansionToggleDynamicIcon.vue'
 import AnswerComponent from '@/components/QuizzesPanel/AnswerComponent.vue'
 import getKey from '@/Helpers/KeysManager'
 
@@ -33,15 +33,15 @@ function setCorrectAnswer(currentAnswer: Answer) {
 </script>
 
 <template>
-  <div 
-    v-auto-animate 
-    class="flex flex-col gap-5 p-5 w-full rounded-lg border border-primary/30" 
+  <div
+    v-auto-animate
+    class="flex flex-col gap-5 p-5 w-full rounded-lg border border-primary/30"
     :class="{ 'border-red': error }"
   >
     <div class="flex flex-col gap-1.5">
       <div class="flex justify-between">
         <b class="text-lg">Pytanie {{ `${index+1}/${questionsTotal}` }}</b>
-        
+
         <div v-if="editing" class="flex gap-5">
           <button title="Skopiuj pytanie" @click="emit('copy', question)">
             <DocumentDuplicateIcon class="icon slide-up-animation" />
@@ -52,18 +52,18 @@ function setCorrectAnswer(currentAnswer: Answer) {
           </button>
         </div>
       </div>
-      
+
       <span v-if="!editing">{{ question.text }}</span>
       <textarea v-else v-model="question.text" placeholder="Wpisz pytanie" class="h-12 w-full bg-transparent outline-none border-b border-primary/30 focus:border-primary/60" />
     </div>
-      
+
     <button
       v-if="hasAnswers"
       class="flex gap-1.5 font-bold text-primary hover:text-primary-800 items-center text-percentage-105"
       @click="answersPaneExpanded = !answersPaneExpanded"
     >
       Odpowiedzi
-      <ExapnsionToggleDynamicIcon class="size-3.5 stroke-[4]" :expanded="answersPaneExpanded" />
+      <ExpansionToggleDynamicIcon class="size-3.5 stroke-[4]" :expanded="answersPaneExpanded" />
     </button>
 
     <template v-if="answersPaneExpanded && hasAnswers">

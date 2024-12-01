@@ -50,9 +50,9 @@ class QuizTest extends TestCase
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Admin/Quizzes")
-                    ->has("quizzes", 2)
-                    ->has("quizzes.0.questions", 5)
-                    ->has("quizzes.1.questions", 5),
+                    ->has("quizzes.data", 2)
+                    ->has("quizzes.data.0.questions", 5)
+                    ->has("quizzes.data.1.questions", 5),
             );
     }
 

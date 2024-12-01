@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import QuizLayout from '@/Layouts/QuizLayout.vue'
+import QuizPage from '@/components/UserQuiz/QuizPage.vue'
 import { converter } from '@/Helpers/Converter'
+import {type PageProps} from '@/Types/PageProps'
 
-const props = defineProps<{ quiz: Quiz }>()
+const props = defineProps<{ quiz: Quiz } & PageProps>()
 </script>
 
 <template>
   <div class="w-full bg-primary text-white text-center font-bold mb-4 p-1">Wersja demonstracyjna</div>
-  <QuizLayout
+  <QuizPage
     :user-quiz="converter.quiz.adminToUser(props.quiz)"
     :request-close-quiz="{ method: 'get', href: '/admin/quizzes/' }"
   />

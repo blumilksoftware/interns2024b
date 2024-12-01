@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SortHelper;
 use App\Http\Requests\QuizRequest;
 use App\Http\Requests\UpdateQuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
 use App\Services\QuizUpdateService;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,11 +21,12 @@ use function redirect;
 
 class QuizController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request, SortHelper $sorter): Response
     {
-        $quizzes = Quiz::query()
-            ->with("questions.answers")
-            ->get();
+        $query = $sorter->sort(Quiz::query()->with("questions.answers"), ["id", "title", "updated_at", "created_at"], []);
+        $query = $this->filterArchivedQuizzes($query, $request);
+        $query = $sorter->search($query, "title");
+        $quizzes = $sorter->paginate($query);
 
         return Inertia::render("Admin/Quizzes", ["quizzes" => QuizResource::collection($quizzes)]);
     }
@@ -103,5 +106,16 @@ class QuizController extends Controller
         return redirect()
             ->back()
             ->with("status", "Przypisano do testu");
+    }
+
+    private function filterArchivedQuizzes(Builder $query, Request $request): Builder
+    {
+        $showArchived = $request->query("archived", "false") === "true";
+
+        if (!$showArchived) {
+            return $query->whereNull("locked_at")->orWhereDate("scheduled_at", ">", Carbon::now());
+        }
+
+        return $query;
     }
 }

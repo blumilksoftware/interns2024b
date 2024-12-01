@@ -43,6 +43,7 @@ class SchoolTest extends TestCase
         $data = [
             "name" => "test",
             "city" => "Moria",
+            "regon" => "743428671",
             "street" => "example",
             "building_number" => "3",
             "zip_code" => "00-120",
@@ -73,6 +74,7 @@ class SchoolTest extends TestCase
             ->patch("/admin/schools/{$school->id}", [
                 "name" => "test",
                 "city" => "Moria",
+                "regon" => "743428671",
                 "street" => "example",
                 "building_number" => "3",
                 "apartment_number" => "2A",
@@ -84,6 +86,7 @@ class SchoolTest extends TestCase
             "id" => $school->id,
             "name" => "test",
             "city" => "Moria",
+            "regon" => "743428671",
             "street" => "example",
             "building_number" => "3",
             "apartment_number" => "2A",
@@ -171,6 +174,7 @@ class SchoolTest extends TestCase
             ->get("/admin/schools/status")
             ->assertJson([
                 "done" => true,
+                "count" => 0,
             ]);
 
         $this->actingAs($this->admin)
@@ -185,6 +189,7 @@ class SchoolTest extends TestCase
             ->get("/admin/schools/status")
             ->assertJson([
                 "done" => false,
+                "count" => 0,
             ]);
     }
 }

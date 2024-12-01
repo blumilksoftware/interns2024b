@@ -20,7 +20,7 @@ use Spatie\Permission\Traits\HasRoles;
 /**
  * @param string $token
  * @property int $id
- * @property string $name
+ * @property string $firstname
  * @property string $surname
  * @property string $email
  * @property string $password
@@ -40,7 +40,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     use HasRoles;
 
     protected $fillable = [
-        "name",
+        "firstname",
         "surname",
         "email",
         "school_id",

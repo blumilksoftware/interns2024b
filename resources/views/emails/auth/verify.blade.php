@@ -14,7 +14,7 @@
     </div>
 
     <div>
-        <h2>Cześć, {{ $user->name }}!</h2>
+        <h2>Cześć, {{ $user->firstname }}!</h2>
 
         <p>Otrzymaliśmy prośbę o wysłanie linku aktywacyjnego do Twojego konta. Kliknij poniższy przycisk, aby zweryfikować swój adres e-mail.</p>
 

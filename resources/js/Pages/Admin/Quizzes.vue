@@ -1,57 +1,43 @@
 <script setup lang="ts">
-import { onMounted, provide, type Ref, ref, watch } from 'vue'
+import { provide, type Ref, ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
-import dayjs from 'dayjs'
-import { vAutoAnimate } from '@formkit/auto-animate'
-import { ArrowsUpDownIcon } from '@heroicons/vue/24/outline'
-import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 import Expand from '@/components/Common/Expand.vue'
-import FormButton from '@/components/Common/FormButton.vue'
 import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
-import Dropdown from '@/components/Common/Dropdown.vue'
 import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
 import useCurrentTime from '@/Helpers/CurrentTime'
-import { keysWrapper } from '@/Helpers/KeysManager'
+import CrudPage from '@/components/Crud/CrudPage.vue'
+import FormButton from '@/components/Common/FormButton.vue'
+import { PlusCircleIcon } from '@heroicons/vue/20/solid'
+import {useParams} from '@/Helpers/Params'
+import NoContent from '@/components/Common/NoContent.vue'
+import {type PageProps} from '@/Types/PageProps'
 
 provide<Ref<number>>('currentTime', useCurrentTime())
-const props = defineProps<{ quizzes:Quiz[] }>()
-const quizzes = ref<Quiz[]>(props.quizzes)
-const sorter = ref<(a:Quiz, b:Quiz) => number>()
-const showArchivedQuizzes = ref<boolean>(true)
-const options = keysWrapper([
-  { text: 'Po nazwie (A–Z)', action: () => setQuizzesSorter('name') },
-  { text: 'Po nazwie (Z–A)', action: () => setQuizzesSorter('name', true) },
-  { text: 'Od najnowszych' , action: () => setQuizzesSorter('creationDate', true) },
-  { text: 'Od najstarszych', action: () => setQuizzesSorter('creationDate') },
-  { text: 'Od najnowszych zmienionych', action: () => setQuizzesSorter('modificationDate', true) },
-  { text: 'Od najstarszych zmienionych', action: () => setQuizzesSorter('modificationDate') },
-])
 
-onMounted(() => {
-  const savedSorter = sessionStorage.getItem('quizzesSorterPreference')
-  const [type, desc] = savedSorter ? JSON.parse(savedSorter) : ['modificationDate', true]
-  setQuizzesSorter(type, desc)
-})
+defineProps<{ quizzes: Pagination<Quiz> } & PageProps>()
 
-watch(
-  [() => props.quizzes, sorter],
-  ([newQuizzes, sorter]) => {
-    quizzes.value = newQuizzes
-    quizzes.value.sort(sorter)
-  },
-  { immediate: true },
-)
+const sortOptions: SortOption[] = [
+  { text: 'Po id (rosnąco)', key: 'id' },
+  { text: 'Po id (malejąco)', key: 'id', desc: true },
+  { text: 'Po nazwie (A–Z)', key: 'title' },
+  { text: 'Po nazwie (Z–A)', key: 'title', desc: true },
+  { text: 'Od najnowszych' , key: 'created_at', desc: true },
+  { text: 'Od najstarszych', key: 'created_at' },
+  { text: 'Od najpóźniej zmienionych', key: 'updated_at' },
+  { text: 'Od najwcześniej zmienionych', key: 'updated_at', desc: true },
+]
 
-function setQuizzesSorter(type: 'name' | 'creationDate' | 'modificationDate', desc = false) {
-  sessionStorage.setItem('quizzesSorterPreference', JSON.stringify([type, desc]))
-  sorter.value = (a:Quiz, b:Quiz) => {
-    if (desc) [a, b] = [b, a]
-    return {
-      name: a.title.localeCompare(b.title),
-      creationDate: dayjs(a.createdAt).diff(dayjs(b.createdAt)),
-      modificationDate: dayjs(a.updatedAt).diff(dayjs(b.updatedAt)),
-    }[type]
+const params = useParams()
+const hideArchivedQuizzes = ref<boolean>(params.archived !== 'true')
+
+function customQueries(): string[] {
+  let query: string[] = []
+
+  if (!hideArchivedQuizzes.value) {
+    query.push(`archived=${true}`)
   }
+
+  return query
 }
 </script>
 
@@ -59,22 +45,23 @@ function setQuizzesSorter(type: 'name' | 'creationDate' | 'modificationDate', de
   <Head>
     <title>Testy - Panel administracyjny</title>
   </Head>
-  <div class="flex flex-col w-full pb-3">
-    <div data-name="toolbar" class="flex px-4 gap-1 sm:gap-2">
-      <Dropdown class-btn="rounded-lg" :options="options" title="Sortuj" pointer-position="left">
-        <div class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg">
-          <ArrowsUpDownIcon class="size-6" />
-          <span class="hidden sm:block">Sortuj</span>
-        </div>
-      </Dropdown>
 
+  <CrudPage
+    :options="sortOptions"
+    :items="quizzes"
+    :custom-queries="customQueries"
+    resource-name="quizzes"
+    new-button-text="Dodaj test"
+    :new-item-data="{ title: 'Nowy test' }"
+  >
+    <template #actions>
       <button
-        :title="`${showArchivedQuizzes ? 'Wyświetl' : 'Schowaj'} zarchiwizowane testy`"
+        :title="`${hideArchivedQuizzes ? 'Wyświetl' : 'Schowaj'} zarchiwizowane testy`"
         class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg"
-        @click="showArchivedQuizzes = !showArchivedQuizzes"
+        @click="hideArchivedQuizzes = !hideArchivedQuizzes"
       >
-        <ArchiveDynamicIcon :active="showArchivedQuizzes" />
-        <span class="hidden sm:block">{{ showArchivedQuizzes ? 'Wyświetl' : 'Schowaj' }} zarchiwizowane testy</span>
+        <ArchiveDynamicIcon :active="hideArchivedQuizzes" />
+        <span class="hidden sm:block">{{ hideArchivedQuizzes ? 'Wyświetl' : 'Schowaj' }} zarchiwizowane testy</span>
       </button>
 
       <Expand />
@@ -88,15 +75,28 @@ function setQuizzesSorter(type: 'name' | 'creationDate' | 'modificationDate', de
       >
         <PlusCircleIcon class="size-6 text-white" /> Dodaj test
       </FormButton>
-    </div>
+    </template>
 
-    <div v-auto-animate class="flex flex-col gap-4 p-4">
+    <template #item="{item}">
       <QuizComponent
-        v-for="quiz of quizzes"
-        :key="quiz.id"
-        :quiz="quiz"
-        :show-archived-quizzes="showArchivedQuizzes"
+        :quiz="item"
       />
-    </div>
-  </div>
+    </template>
+
+    <template #noContent="{search}">
+      <NoContent :description="search ? `Wygląda na to, że nie mamy tego, czego szukasz.` : undefined">
+        <div v-if="!search">
+          <FormButton
+            class="rounded-xl"
+            button-class="pl-3 font-bold"
+            method="post"
+            href="/admin/quizzes"
+            :data="{ title: 'Nowy test' }"
+          >
+            <PlusCircleIcon class="size-6 text-white" /> Dodaj test
+          </FormButton>
+        </div>
+      </NoContent>
+    </template>
+  </CrudPage>
 </template>

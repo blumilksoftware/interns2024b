@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Helpers\RegonHelper;
 use App\Models\School;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,11 +22,12 @@ class SchoolFactory extends Factory
     {
         return [
             "name" => fake()->company(),
+            "regon" => RegonHelper::generateShortRegon(),
             "city" => fake()->city(),
             "street" => fake()->streetName(),
             "building_number" => fake()->buildingNumber(),
             "apartment_number" => fake()->buildingNumber(),
-            "zip_code" => fake()->postcode(),
+            "zip_code" => fake()->randomNumber(2) . "-" . fake()->randomNumber(3),
         ];
     }
 

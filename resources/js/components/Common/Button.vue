@@ -9,7 +9,7 @@ const emit = defineEmits(['click'])
 
 <template>
   <button :class="{ 'w-full flex justify-center' : large }" :disabled :type="type" @click="emit('click')">
-    <ButtonFrame :disabled :small :extra-small :large :text>
+    <ButtonFrame :disabled :small :extra-small :large :text :icon>
       <slot />
     </ButtonFrame>
   </button>
