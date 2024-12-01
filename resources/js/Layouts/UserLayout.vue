@@ -13,9 +13,11 @@ if (!!props.user?.isAdmin || props.user?.isSuperAdmin) {
     { title: 'Uczniowie', href: '/admin/users' },
   )
 }
+else {
+  pages.push({ title: 'Konkursy', href: '/dashboard' })
+}
 
 pages.push(
-  { title: 'Konkursy', href: '/dashboard' },
   { title: 'Profil', href: '/profile' },
 )
 

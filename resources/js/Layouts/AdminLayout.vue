@@ -8,7 +8,6 @@ const pages: Page[] = [
   { title: 'Testy', href: '/admin/quizzes' },
   { title: 'Szkoły', href: '/admin/schools' },
   { title: 'Uczniowie', href: '/admin/users' },
-  { title: 'Konkursy', href: '/dashboard' },
   { title: 'Profil', href: '/profile' },
 ]
 
