@@ -69,9 +69,9 @@ module.exports = {
             addVariant('hover-focus', ['&:hover', '&:focus']);
             addBase({
               ':root': {
-                '--color-primary': '38 44 137',
-                '--color-primary-bright': '37 43 174',
-                '--color-primary-dark': '20 22 71',
+                '--color-primary': '228 0 125',
+                '--color-primary-bright': '245 13 147',
+                '--color-primary-dark': '176 4 96',
               },
             });
             addComponents({

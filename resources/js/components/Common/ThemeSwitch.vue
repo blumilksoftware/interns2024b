@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const isThemeTauron = computed(() => localStorage.getItem('theme') === 'theme-tauron')
+const isThemeTauron = computed(() => localStorage.getItem('theme') !== 'theme-witelon')
 
 function toggleTheme(checked?:boolean) {
   document.documentElement.classList.remove(checked ? 'theme-witelon' : 'theme-tauron')
