@@ -8,6 +8,7 @@ const pages: Page[] = [
   { title: 'Testy', href: '/admin/quizzes' },
   { title: 'Szkoły', href: '/admin/schools' },
   { title: 'Uczniowie', href: '/admin/users' },
+  { title: 'Profil', href: '/profile' },
 ]
 
 if (props.user?.isSuperAdmin) {
