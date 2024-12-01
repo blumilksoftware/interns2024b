@@ -2,12 +2,26 @@
 import BaseLayout from '@/Layouts/BaseLayout.vue'
 import type {PageProps} from '@/Types/PageProps'
 
-defineProps<PageProps>()
+const props = defineProps<PageProps>()
 
-const pages: Page[] = [
+const pages: Page[] = []
+
+if (!!props.user?.isAdmin || props.user?.isSuperAdmin) {
+  pages.push(
+    { title: 'Testy', href: '/admin/quizzes' },
+    { title: 'Szkoły', href: '/admin/schools' },
+    { title: 'Uczniowie', href: '/admin/users' },
+  )
+}
+
+pages.push(
   { title: 'Konkursy', href: '/dashboard' },
   { title: 'Profil', href: '/profile' },
-]
+)
+
+if (props.user?.isSuperAdmin) {
+  pages.push({ title: 'Administratorzy', href: '/admin/admins'})
+}
 </script>
 
 <template>
