@@ -3,7 +3,7 @@ import Header from '@/components/Common/Header.vue'
 import Footer from '@/components/Common/Footer.vue'
 import BackgroundEffect from '@/components/Common/BackgroundEffect.vue'
 import Banner from '@/components/Common/Banner.vue'
-import {onBeforeUnmount, onMounted, ref, watch} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import {type PageProps} from '@/Types/PageProps'
 
 const props = defineProps<{ pages: Page[] } & PageProps>()
@@ -13,13 +13,6 @@ onMounted(()=>{
   const themeClass = props.user?.theme
   if (themeClass) {
     document.documentElement.classList.add(themeClass)
-  }
-})
-
-onBeforeUnmount(()=>{
-  const themeClass = props.user?.theme
-  if (themeClass) {
-    document.documentElement.classList.remove(themeClass)
   }
 })
 
