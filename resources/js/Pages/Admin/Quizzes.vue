@@ -57,7 +57,7 @@ function customQueries(): string[] {
     <template #actions>
       <button
         :title="`${hideArchivedQuizzes ? 'Wyświetl' : 'Schowaj'} zarchiwizowane testy`"
-        class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg"
+        class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg h-fit"
         @click="hideArchivedQuizzes = !hideArchivedQuizzes"
       >
         <ArchiveDynamicIcon :active="hideArchivedQuizzes" />

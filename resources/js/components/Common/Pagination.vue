@@ -5,8 +5,8 @@ defineProps<{ data: Pagination<T>, query: string }>()
 </script>
 
 <template>
-  <div class="flex items-center gap-1 justify-between">
-    <LinkButton :disabled="!data.links.prev" :href="data.links.prev + query ?? ''" icon>
+  <div class="p-2 flex items-center gap-1 justify-between">
+    <LinkButton :disabled="!data.links.prev" :href="data.links.prev + (query ?? '')" icon>
       {{ '<' }}
     </LinkButton>
 
@@ -14,7 +14,7 @@ defineProps<{ data: Pagination<T>, query: string }>()
       {{ data.meta.from ?? 0 }} - {{ data.meta.to ?? 0 }}
     </div>
 
-    <LinkButton :disabled="!data.links.next" :href="data.links.next + query ?? ''" icon>
+    <LinkButton :disabled="!data.links.next" :href="data.links.next + (query ?? '')" icon>
       {{ '>' }}
     </LinkButton>
   </div>

@@ -7,9 +7,8 @@ withDefaults(defineProps<{ title?: string, description?: string }>(), {
 
 <template>
   <div class="flex flex-col gap-1 p-5 bg-white/70 border-2 rounded-xl shadow-sm">
-    <h1 class="text-2xl mb-4 text-primary font-bold">{{ title }}</h1>
-    <p class="mb-8 text-gray-500">{{ description }}</p>
-
+    <h1 class="text-xl text-primary font-bold">{{ title }}</h1>
+    <p class="mb-1 text-gray-500">{{ description }}</p>
     <slot />
   </div>
 </template>
