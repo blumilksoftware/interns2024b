@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import QuizLayout from '@/Layouts/QuizLayout.vue'
+import QuizLayout from '@/components/UserQuiz/QuizLayout.vue'
 import { converter } from '@/Helpers/Converter'
 
 const props = defineProps<{ quiz: Quiz }>()
