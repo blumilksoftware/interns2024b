@@ -39,7 +39,6 @@ const props = defineProps<{
   assigned: number[]
 }>()
 
-console.log(props)
 const params = useParams()
 
 const form = useForm({
@@ -61,7 +60,7 @@ const toggleUserSelection = (userId: number) => {
 }
 
 const showPagination = computed(() => {
-  return params.limit === null
+  return !params.limit
 })
 </script>
 
