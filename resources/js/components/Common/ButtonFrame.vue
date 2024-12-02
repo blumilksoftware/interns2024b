@@ -12,8 +12,8 @@ defineProps<ButtonFrameProps>()
       'rounded text-xs px-2': extraSmall,
       'rounded-xl': !small && !extraSmall,
       'py-3 max-w-96 w-full': large,
-      'focus:rounded-sm text-black hover:text-primary-800 p-0 font-semibold': text,
-      'px-4 bg-primary text-white hover:bg-primary-950 py-2.5 font-bold': !text,
+      'focus:rounded-sm text-black hover:text-primary-bright p-0 font-semibold': text,
+      'px-4 bg-primary text-white hover:bg-primary-dark py-2.5 font-bold': !text,
       'opacity-50 pointer-events-none': disabled,
     }"
   >

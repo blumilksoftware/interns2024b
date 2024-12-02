@@ -19,7 +19,7 @@ onUnmounted(() => window.removeEventListener('scroll', setBannerVisibility))
       size-full
       bg-gradient-to-r
       from-[#ff80b5]
-      to-primary-600
+      to-[#373ff4]
       opacity-30
     " style="
       clip-path: polygon(
