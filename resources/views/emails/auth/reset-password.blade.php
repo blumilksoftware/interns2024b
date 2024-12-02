@@ -5,7 +5,7 @@
     a { text-decoration: none; }
     p { margin: 48px 0; line-height: 24px; }
     table { width: 100%; border-spacing: 0; }
-    .button { background-color: #262C89; color: white; padding: 16px 80px; border-radius: 12px; }
+    .button { background-color: #E4007D; color: white; padding: 16px 80px; border-radius: 12px; }
 </style>
 
 <div style="font-family: sans-serif; color: #3D4852; padding: 0 48px;">
@@ -22,7 +22,7 @@
             <b><a class="button" href="{{ $url }}">Zresetuj hasło</a></b>
         </td></tr></table>
 
-        <p style="margin-top: 16px; ">Pozdrawiamy,<br><span style="color: #262C89;">{{ config('app.name') }}</span></p>
+        <p style="margin-top: 16px; ">Pozdrawiamy,<br><span style="color: #E4007D;">{{ config('app.name') }}</span></p>
 
         <hr style="border: 1px solid #e8ebf1">
 

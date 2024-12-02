@@ -59,7 +59,7 @@ function setCorrectAnswer(currentAnswer: Answer) {
 
     <button
       v-if="hasAnswers"
-      class="flex gap-1.5 font-bold text-primary hover:text-primary-800 items-center text-percentage-105"
+      class="flex gap-1.5 font-bold text-primary hover:text-primary-bright items-center text-percentage-105"
       @click="answersPaneExpanded = !answersPaneExpanded"
     >
       Odpowiedzi

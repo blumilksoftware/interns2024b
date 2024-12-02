@@ -20,7 +20,7 @@ function submit() {
 
     <div class="flex flex-col gap-2">
       <CustomInput v-model="form.password" label="Hasło" :error="errors.password" name="password" type="password" />
-      <a href="/auth/forgot-password" class="duration-200 font-semibold leading-6 text-primary hover:text-primary-950 text-sm">Nie pamiętam hasła</a>
+      <a href="/auth/forgot-password" class="duration-200 font-semibold leading-6 text-primary hover:text-primary-dark text-sm">Nie pamiętam hasła</a>
     </div>
 
     <div>
@@ -28,7 +28,7 @@ function submit() {
         :disabled="form.processing"
         type="submit"
         class="rounded-lg text-md flex w-full justify-center bg-primary p-3 font-bold text-white
-        transition hover:bg-primary-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+        transition hover:bg-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
         disabled:opacity-70"
       >
         Zaloguj się
