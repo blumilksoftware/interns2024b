@@ -34,7 +34,7 @@ const datepickerRef = ref<InstanceType<typeof Datepicker>>()
         <div class="flex gap-4">
           <button class="text-sm font-semibold rounded-md" @click="() => datepickerRef?.toggleMenu()">Anuluj</button>
           <button
-            class="bg-primary text-white text-sm font-bold py-2 px-3 rounded-md duration-200 hover:bg-primary-950"
+            class="bg-primary text-white text-sm font-bold py-2 px-3 rounded-md duration-200 hover:bg-primary-dark"
             @click="() => datepickerRef?.selectDate()"
           >
             Wybierz
@@ -83,7 +83,7 @@ const datepickerRef = ref<InstanceType<typeof Datepicker>>()
 }
 
 .dp__btn:hover {
-  @apply fill-primary-950 text-primary-950 stroke-primary-950
+  @apply fill-primary-dark text-primary-dark stroke-primary-dark
 }
 
 .dp__overlay {
