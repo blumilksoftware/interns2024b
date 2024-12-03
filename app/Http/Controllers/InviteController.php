@@ -102,7 +102,7 @@ class InviteController extends Controller
         [$field, $order] = $sorter->getSortParameters();
 
         if ($field === "schoolId") {
-            return $query->orderBy("school.title", $order);
+            return $query->orderBy("school.name", $order);
         }
 
         return $query;
