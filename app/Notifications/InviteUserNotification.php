@@ -4,17 +4,18 @@ declare(strict_types=1);
 
 namespace App\Notifications;
 
+use App\Models\Quiz;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ResetPasswordNotification extends Notification implements ShouldQueue
+class InviteUserNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     public function __construct(
-        protected string $token,
+        protected Quiz $quiz,
     ) {}
 
     public function via(object $notifiable): array
@@ -24,13 +25,11 @@ class ResetPasswordNotification extends Notification implements ShouldQueue
 
     public function toMail(object $notifiable): MailMessage
     {
-        $resetUrl = url("/auth/password/reset/" . $this->token . "?email=" . urlencode($notifiable->email));
-
         return (new MailMessage())
-            ->subject("Resetowanie hasła")
-            ->view("emails.auth.reset-password", [
+            ->subject("Zaproszenie do Quizu")
+            ->view("emails.auth.invite-user", [
                 "user" => $notifiable,
-                "url" => $resetUrl,
+                "quiz" => $this->quiz,
             ]);
     }
 }

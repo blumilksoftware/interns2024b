@@ -17,7 +17,7 @@
         <h2>Cześć, {{ $user->name }}!</h2>
 
         <p>Otrzymaliśmy prośbę o wysłanie linku aktywacyjnego do Twojego konta. Kliknij poniższy przycisk, aby zweryfikować swój adres e-mail.</p>
-        
+
         <table style="margin: 24px auto;"><tr><td style="text-align: center;">
             <b><a class="button" href="{{ $url }}">Zweryfikuj e-mail</a></b>
         </td></tr></table>
@@ -27,7 +27,7 @@
         <p style="margin-top: 16px; ">Pozdrawiamy,<br><span style="color: #E4007D;">{{ config('app.name') }}</span></p>
 
         <hr style="border: 1px solid #e8ebf1">
-        
+
         <table><tr><td style="padding-top: 32px; text-align: center;">
             © 2024 {{ config('app.name') }}. Wszelkie prawa zastrzeżone.
         </td></tr></table>
