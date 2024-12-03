@@ -164,7 +164,7 @@ function sanitizeData() {
         class="w-7.5 h-7.5 text-primary stroke-2"
         :class="{
           'opacity-50': !publishValidation.validated,
-          'hover:text-primary-800 slide-up-animation': publishValidation.validated
+          'hover:text-primary-bright slide-up-animation': publishValidation.validated
         }"
       />
     </RequestWrapper>

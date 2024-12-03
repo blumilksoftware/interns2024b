@@ -21,9 +21,7 @@ class AuthenticateSessionController extends Controller
         if (auth()->attempt($credentials)) {
             $request->session()->regenerate();
 
-            return $request->user()->hasRole(["admin", "super_admin"])
-                ? Redirect::route("admin.quizzes.index")
-                : Redirect::route("dashboard");
+            return redirect()->route("home");
         }
 
         throw ValidationException::withMessages([

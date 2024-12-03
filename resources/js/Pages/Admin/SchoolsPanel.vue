@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {Head, router} from '@inertiajs/vue3'
-import { ArrowUpCircleIcon } from '@heroicons/vue/20/solid'
+import { ArrowDownCircleIcon } from '@heroicons/vue/20/solid'
 import AddressInput from '@/components/Common/AddressInput.vue'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
@@ -105,7 +105,7 @@ function startFetching() {
     creatable
   >
     <template #actions>
-      <Expand />
+      <Expand class="hidden sm:block" />
 
       <Button
         :disabled="!status"
@@ -113,7 +113,7 @@ function startFetching() {
         :class="{'cursor-pointer': status}"
         @click="startFetching()"
       >
-        <ArrowUpCircleIcon class="size-6 text-white" /> Importuj szkoły
+        <ArrowDownCircleIcon class="size-6 text-white" /> Importuj szkoły
       </Button>
     </template>
 

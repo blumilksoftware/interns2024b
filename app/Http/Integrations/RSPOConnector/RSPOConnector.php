@@ -16,7 +16,7 @@ class RSPOConnector extends Connector implements HasPagination
 
     public function resolveBaseUrl(): string
     {
-        return "https://api-rspo.mein.gov.pl/api";
+        return "https://api-rspo.men.gov.pl/api";
     }
 
     public function paginate(Request $request): Paginator
