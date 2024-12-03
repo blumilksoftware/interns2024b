@@ -31,12 +31,11 @@ class InviteController extends Controller
         $query = $this->sortBySchool($query, $sort);
         $query = $this->filterByName($query, $request);
         $query = $this->filterBySchool($query, $request);
-        $schools = SchoolResource::collection(School::all());
 
         return Inertia::render("Admin/Invite", [
             "users" => UserResource::collection($sort->paginate($query)),
             "quiz" => QuizResource::make($quiz),
-            "schools" => $schools,
+            "schools" => SchoolResource::collection(School::all()),
             "assigned" => $quiz->assignedUsers->pluck("id"),
         ]);
     }
