@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { CheckIcon, CloudArrowUpIcon, DocumentDuplicateIcon, ExclamationTriangleIcon, PencilIcon, PlayIcon, TrashIcon, UserPlusIcon, UsersIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { CheckIcon, CloudArrowUpIcon, DocumentDuplicateIcon, PencilIcon, PlayIcon, TrashIcon, UserPlusIcon, UsersIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { CloudArrowDownIcon } from '@heroicons/vue/20/solid'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
-import MessageBox from '@/components/Common/MessageBox.vue'
 import { formatDate } from '@/Helpers/Format'
+import WarningMessageBox from '@/components/Common/WarningMessageBox.vue'
 
 const props = defineProps<{
   archived:boolean
@@ -72,24 +72,13 @@ function sanitizeData() {
 </script>
 
 <template>
-  <MessageBox :open="showDeleteMessage" @close="showDeleteMessage = false">
+  <WarningMessageBox :open="showDeleteMessage" @close="showDeleteMessage = false">
     <template #message>
-      <div class="flex gap-5">
-        <div class="bg-red/10 p-5 rounded-full h-fit">
-          <ExclamationTriangleIcon class="size-6 text-red" />
-        </div>
-        <div>
-          <b class="text-[1.1rem] text-gray-900">Usunąć test "{{ quiz.title }}"?</b>
-          <p class="text-gray-500">Test zostanie usunięty bezpowrotnie.</p>
-        </div>
-      </div>
+      <b class="text-[1.1rem] text-gray-900">Usunąć test "{{ quiz.title }}"?</b>
+      <p class="text-gray-500">Test zostanie usunięty bezpowrotnie.</p>
     </template>
 
     <template #buttons>
-      <button class="px-2 font-bold" @click="showDeleteMessage = false">
-        Anuluj
-      </button>
-
       <RequestWrapper
         class="bg-red font-bold text-white rounded-lg px-4 py-2"
         title="Usuń test"
@@ -100,8 +89,8 @@ function sanitizeData() {
         Usuń
       </RequestWrapper>
     </template>
-  </MessageBox>
-  
+  </WarningMessageBox>
+
   <div class="flex gap-5 pl-5 h-fit">
     <a
       v-if="locked"
@@ -135,7 +124,7 @@ function sanitizeData() {
     </template>
 
     <RequestWrapper
-      v-if="!editing" 
+      v-if="!editing"
       title="Skopiuj test"
       method="post"
       :href="`/admin/quizzes/${quiz.id}/clone`"
@@ -143,10 +132,10 @@ function sanitizeData() {
       <DocumentDuplicateIcon class="icon slide-up-animation" />
     </RequestWrapper>
 
-    <button v-if="!archived" title="Usuń test" @click="showDeleteMessage = true">
+    <button v-if="!archived && !locked" title="Usuń test" @click="showDeleteMessage = true">
       <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
     </button>
-    
+
     <RequestWrapper
       v-if="!editing"
       :href="`/admin/quizzes/${quiz.id}`"

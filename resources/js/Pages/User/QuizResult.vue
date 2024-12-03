@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import Divider from '@/components/Common/Divider.vue'
 import Button from '@/components/Common/Button.vue'
-import {calcSecondsBetweenDates, secondsToHour, timeToString} from '@/Helpers/Time'
-import {computed} from 'vue'
+import { calcSecondsBetweenDates, secondsToHour, timeToString } from '@/Helpers/Time'
+import { computed } from 'vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
-import {Head} from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
 import QuestionResult from '@/components/QuizResult/QuestionResult.vue'
+import { type PageProps } from '@/Types/PageProps'
 
-const props = defineProps<{ userQuiz: UserQuiz, hasRanking: boolean }>()
+const props = defineProps<{ userQuiz: UserQuiz, hasRanking: boolean } & PageProps>()
 const duration = secondsToHour(calcSecondsBetweenDates(props.userQuiz.closedAt, props.userQuiz.createdAt))
 const points = computed(() =>
   props.userQuiz.questions.filter(
@@ -18,7 +19,7 @@ const points = computed(() =>
 
 <template>
   <Head :title="`${userQuiz.title} - Wyniki`" />
-  
+
   <Divider>
     <template #default>
       <h1 class="font-bold text-lg text-primary whitespace-nowrap">

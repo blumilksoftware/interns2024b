@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\Voivodeship;
+use App\Helpers\SortHelper;
 use App\Http\Requests\SchoolRequest;
 use App\Http\Resources\SchoolResource;
 use App\Jobs\FetchSchoolsJob;
 use App\Models\School;
 use Illuminate\Bus\Batch;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Bus;
@@ -24,9 +26,15 @@ use function config;
 
 class SchoolsController extends Controller
 {
-    public function index(): Response
+    public function index(SortHelper $sorter): Response
     {
-        return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolResource::collection(School::all())]);
+        $query = $sorter->sort(School::query(), ["id", "name", "regon", "updated_at", "created_at"], ["students", "address"]);
+        $query = $this->sortByStudents($query, $sorter);
+        $query = $this->sortByAddress($query, $sorter);
+        $query = $sorter->search($query, "name");
+        $schools = $sorter->paginate($query);
+
+        return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolResource::collection($schools)]);
     }
 
     public function store(SchoolRequest $request): RedirectResponse
@@ -34,7 +42,8 @@ class SchoolsController extends Controller
         School::query()->create($request->validated());
 
         return redirect()
-            ->back();
+            ->back()
+            ->with("status", "Szkoła została dodana.");
     }
 
     public function update(SchoolRequest $request, School $school): RedirectResponse
@@ -67,6 +76,7 @@ class SchoolsController extends Controller
         $jobs = $voivodeships->map(fn(Voivodeship $voivodeships): FetchSchoolsJob => new FetchSchoolsJob($voivodeships, $schoolTypes));
         $batch = Bus::batch($jobs)->finally(fn(): bool => Cache::delete("fetch_schools"))->dispatch();
         Cache::set("fetch_schools", $batch->id);
+        Cache::forget("fetched_schools");
 
         return response()->json(["message" => "Pobieranie rozpoczęte"], Status::HTTP_OK);
     }
@@ -75,6 +85,7 @@ class SchoolsController extends Controller
     {
         return response()->json([
             "done" => !$this->isFetching(),
+            "count" => (int)Cache::get("fetched_schools"),
         ]);
     }
 
@@ -94,5 +105,30 @@ class SchoolsController extends Controller
         }
 
         return Bus::findBatch($batchId);
+    }
+
+    private function sortByStudents(Builder $query, SortHelper $sorter): Builder
+    {
+        [$field, $order] = $sorter->getSortParameters();
+
+        if ($field === "students") {
+            return $query->withCount("users")->orderBy("users_count", $order);
+        }
+
+        return $query;
+    }
+
+    private function sortByAddress(Builder $query, SortHelper $sorter): Builder
+    {
+        [$field, $order] = $sorter->getSortParameters();
+
+        if ($field === "address") {
+            return $query->orderBy("city", $order)
+                ->orderBy("zip_code", $order)
+                ->orderBy("street", $order)
+                ->orderBy("name", $order);
+        }
+
+        return $query;
     }
 }

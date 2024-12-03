@@ -11,6 +11,7 @@ return new class() extends Migration {
     {
         Schema::create("schools", function (Blueprint $table): void {
             $table->bigIncrements("id")->unique();
+            $table->string("regon");
             $table->string("name");
             $table->string("city");
             $table->string("street");

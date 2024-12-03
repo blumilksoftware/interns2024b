@@ -1,16 +1,17 @@
 <script setup lang="ts">
-import {Head} from '@inertiajs/vue3'
-import {computed} from 'vue'
+import { Head } from '@inertiajs/vue3'
+import { computed } from 'vue'
 import dayjs from 'dayjs'
 import FormButton from '@/components/Common/FormButton.vue'
 import Divider from '@/components/Common/Divider.vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
 import QuizItem from '@/components/Dashboard/QuizItem.vue'
+import { type PageProps } from '@/Types/PageProps'
 
 const props = defineProps<{
   userQuizzes: UserQuiz[]
   quizzes: Quiz[]
-}>()
+}& PageProps>()
 
 const isClosed = (quiz: Quiz) => (
   dayjs(quiz.scheduledAt).add(quiz.duration ?? 0, 'm').isBefore(Date.now()) ||
@@ -29,9 +30,9 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
     <Divider v-if="started.length > 0">
       <h1 class="font-bold text-lg text-primary whitespace-nowrap">Trwające konkursy</h1>
     </Divider>
-    <QuizItem 
-      v-for="quiz in started" 
-      :key="quiz.id" 
+    <QuizItem
+      v-for="quiz in started"
+      :key="quiz.id"
       :title="quiz.title"
       :time="quiz.scheduledAt"
     >
@@ -43,9 +44,9 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
     <Divider v-if="scheduled.length > 0 || started.length == 0">
       <h1 class="font-bold text-lg text-primary whitespace-nowrap">Nadchodzące konkursy</h1>
     </Divider>
-    <QuizItem 
-      v-for="quiz in scheduled" 
-      :key="quiz.id" 
+    <QuizItem
+      v-for="quiz in scheduled"
+      :key="quiz.id"
       :title="quiz.title"
       :time="quiz.scheduledAt"
     >
@@ -65,9 +66,9 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
     <Divider v-if="history.length > 0">
       <h1 class="font-bold text-lg text-primary whitespace-nowrap">Historia</h1>
     </Divider>
-    <QuizItem 
-      v-for="userQuiz in history" 
-      :key="userQuiz.id" 
+    <QuizItem
+      v-for="userQuiz in history"
+      :key="userQuiz.id"
       :title="userQuiz.title"
       :time="userQuiz.closedAt"
     >

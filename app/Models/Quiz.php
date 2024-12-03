@@ -18,8 +18,8 @@ use Illuminate\Support\Collection;
  * @property string $title
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property Carbon $scheduled_at
- * @property Carbon $ranking_published_at
+ * @property ?Carbon $scheduled_at
+ * @property ?Carbon $ranking_published_at
  * @property ?Carbon $locked_at
  * @property ?int $duration
  * @property bool $isLocked

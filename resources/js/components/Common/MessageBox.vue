@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {Dialog, DialogPanel, TransitionRoot, TransitionChild} from '@headlessui/vue'
-import {type VNode} from 'vue'
+import { type VNode } from 'vue'
 
 defineSlots<{
   title: Node

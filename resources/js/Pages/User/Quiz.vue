@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import QuizLayout from '@/components/UserQuiz/QuizLayout.vue'
+import QuizPage from '@/components/UserQuiz/QuizPage.vue'
 import axios from 'axios'
 import { ref } from 'vue'
 import Button from '@/components/Common/Button.vue'
 import MessageBox from '@/components/Common/MessageBox.vue'
+import { type PageProps } from '@/Types/PageProps'
 
-defineProps<{ userQuiz: UserQuiz }>()
+defineProps<{ userQuiz: UserQuiz } & PageProps>()
 const networkErrorMessage = ref(false)
 
 function handleAnswer(question: UserQuestion, selectedAnswer: number) {
@@ -17,12 +18,12 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
 </script>
 
 <template>
-  <QuizLayout 
+  <QuizPage
     :user-quiz="userQuiz"
     :request-close-quiz="{ method: 'post', href: `/quizzes/${userQuiz.id}/close` }"
     @answer="handleAnswer"
   />
-  
+
   <MessageBox :open="networkErrorMessage" @close="networkErrorMessage = false">
     <template #title>Nie udało się wysłać odpowiedzi</template>
 

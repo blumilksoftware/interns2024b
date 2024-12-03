@@ -41,7 +41,7 @@ class SortHelper
     public function getSortParameters(): array
     {
         $field = $this->request->query("sort", "id");
-        $ascending = $this->request->query("order", "asc") === "asc";
+        $ascending = $this->request->query("order", "desc") === "asc";
 
         return [$field, $ascending ? "asc" : "desc"];
     }

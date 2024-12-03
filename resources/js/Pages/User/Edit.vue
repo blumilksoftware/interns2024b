@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3'
+import { type PageProps } from '@/Types/PageProps'
 
 const props = defineProps<{
   user: User
   schools?: School[]
-}>()
+} & Omit<PageProps, 'user'>>()
 
 const form = useForm({
-  name: props.user.name,
+  firstname: props.user.firstname,
   surname: props.user.surname,
   email: props.user.email,
   school_id: props.user.school.id,
@@ -23,8 +24,8 @@ function update() {
     <form @submit.prevent="update">
       <div>ID: {{ props.user.id }}</div>
       <div>
-        <label for="name">Imię</label>
-        <input id="name" v-model="form.name" type="text">
+        <label for="firstname">Imię</label>
+        <input id="firstname" v-model="form.firstname" type="text">
       </div>
 
       <div>

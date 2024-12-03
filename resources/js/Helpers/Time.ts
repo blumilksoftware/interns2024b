@@ -1,5 +1,5 @@
 import dayjs, { type Dayjs } from 'dayjs'
-import {usePlurals} from '@/Helpers/Plurals'
+import { usePlurals } from '@/Helpers/Plurals'
 
 export function calcSecondsBetweenDates(from: string | number | Dayjs = 0, to: string | number | Dayjs = 0): number {
   return dayjs(from).diff(dayjs(to), 's')
@@ -30,7 +30,7 @@ export function timeToString(time: TimeObject, withLeft = false): string {
     const minutes = m ? `${m} ${translateMinutesLeft(m)}` : ''
     const seconds =  s ? `${s} ${translateSecondsLeft(s)}` : ''
     const leading = h ?? m ?? s
-    
+
     return `${(withLeft && leading ? translateLeft(leading) : '')} ${hours} ${minutes} ${seconds}`.trimStart()
   }
 

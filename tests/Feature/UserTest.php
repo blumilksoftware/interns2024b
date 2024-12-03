@@ -103,7 +103,7 @@ class UserTest extends TestCase
         $this->actingAs($this->admin)
             ->from("/admin/users/{$user->id}")
             ->patch("/admin/users/{$user->id}", [
-                "name" => "New Name",
+                "firstname" => "New Name",
                 "surname" => "New Surname",
                 "email" => "new@email.com",
                 "school_id" => $user->school_id,
@@ -112,7 +112,7 @@ class UserTest extends TestCase
 
         $this->assertDatabaseHas("users", [
             "id" => $user->id,
-            "name" => "New Name",
+            "firstname" => "New Name",
             "surname" => "New Surname",
             "email" => "new@email.com",
             "school_id" => $user->school_id,
@@ -127,7 +127,7 @@ class UserTest extends TestCase
         $this->actingAs($this->superAdmin)
             ->from("/admin/users/{$user->id}")
             ->patch("/admin/users/{$user->id}", [
-                "name" => "New Name",
+                "firstname" => "New Name",
                 "surname" => "New Surname",
                 "email" => "new@email.com",
                 "school_id" => $user->school_id,
@@ -136,7 +136,7 @@ class UserTest extends TestCase
 
         $this->assertDatabaseHas("users", [
             "id" => $user->id,
-            "name" => "New Name",
+            "firstname" => "New Name",
             "surname" => "New Surname",
             "email" => "new@email.com",
             "school_id" => $user->school_id,
@@ -151,7 +151,7 @@ class UserTest extends TestCase
         $response = $this->actingAs($this->admin)
             ->from("/admin/users/{$user->id}")
             ->patch("/admin/users/{$user->id}", [
-                "name" => "",
+                "firstname" => "",
                 "surname" => "",
                 "email" => "invalidMail",
                 "school_id" => 999,
@@ -161,14 +161,14 @@ class UserTest extends TestCase
 
         $this->assertDatabaseHas("users", [
             "id" => $user->id,
-            "name" => $user->name,
+            "firstname" => $user->firstname,
             "surname" => $user->surname,
             "email" => $user->email,
             "school_id" => $user->school_id,
         ]);
 
         $response->assertSessionHasErrors([
-            "name",
+            "firstname",
             "surname",
             "email",
             "school_id",
@@ -187,7 +187,7 @@ class UserTest extends TestCase
         $response = $this->actingAs($this->admin)
             ->from("/admin/users/{$user->id}")
             ->patch("/admin/users/{$user->id}", [
-                "name" => $user->name,
+                "firstname" => $user->name,
                 "surname" => $user->surname,
                 "email" => "taken@email.com",
                 "school_id" => $user->school_id,
@@ -219,7 +219,7 @@ class UserTest extends TestCase
 
         $this->actingAs($this->admin)
             ->patch("/admin/users/{$anotherAdmin->id}", [
-                "name" => "New Name",
+                "firstname" => "New Name",
                 "surname" => "New Surname",
                 "email" => "new@email.com",
                 "school_id" => $anotherAdmin->school_id,
@@ -234,7 +234,7 @@ class UserTest extends TestCase
 
         $this->actingAs($this->superAdmin)
             ->patch("/admin/users/{$anotherAdmin->id}", [
-                "name" => "New Name",
+                "firstname" => "New Name",
                 "surname" => "New Surname",
                 "email" => "new@email.com",
                 "school_id" => $anotherAdmin->school_id,
@@ -253,7 +253,7 @@ class UserTest extends TestCase
 
         $this->assertDatabaseHas("users", [
             "id" => $user->id,
-            "name" => "Anonymous",
+            "firstname" => "Anonymous",
             "surname" => "User",
             "email" => "anonymous" . $user->id . "@email",
             "is_anonymized" => true,
@@ -284,7 +284,7 @@ class UserTest extends TestCase
         $this->actingAs($this->admin)
             ->from("/admin/users/{$user->id}")
             ->patch("/admin/users/{$user->id}", [
-                "name" => "New Name",
+                "firstname" => "New Name",
                 "surname" => "New Surname",
                 "email" => "new@email.com",
                 "school_id" => $user->school_id,
@@ -292,13 +292,13 @@ class UserTest extends TestCase
             ->assertForbidden();
 
         $this->assertDatabaseMissing("users", [
-            "name" => "New Name",
+            "firstname" => "New Name",
         ]);
 
         $this->actingAs($this->superAdmin)
             ->from("/admin/users/{$user->id}")
             ->patch("/admin/users/{$user->id}", [
-                "name" => "New Name",
+                "firstname" => "New Name",
                 "surname" => "New Surname",
                 "email" => "new@email.com",
                 "school_id" => $user->school_id,
@@ -306,7 +306,7 @@ class UserTest extends TestCase
             ->assertForbidden();
 
         $this->assertDatabaseMissing("users", [
-            "name" => "New Name",
+            "firstname" => "New Name",
         ]);
     }
 
