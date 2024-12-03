@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends { id: string | number }, N">
-import { PlusCircleIcon } from '@heroicons/vue/20/solid'
-import { ArrowsUpDownIcon } from '@heroicons/vue/24/outline'
-import { vAutoAnimate } from '@formkit/auto-animate'
+import {PlusCircleIcon} from '@heroicons/vue/20/solid'
+import {ArrowsUpDownIcon} from '@heroicons/vue/24/outline'
+import {vAutoAnimate} from '@formkit/auto-animate'
 import Expand from '@/components/Common/Expand.vue'
 import Dropdown from '@/components/Common/Dropdown.vue'
 import {type Errors} from '@inertiajs/core'
@@ -43,13 +43,12 @@ defineSlots<{
 const pagination = props.items
 const newItemMode = ref(false)
 const params = useParams()
-const searchValue = ref(params.search)
+const searchValue = ref<string | undefined>(params.search)
 
 function handleSearch(text: string | undefined) {
   if (props.customSearch) {
     searchValue.value = props.customSearch(text)
-  }
-  else {
+  } else {
     searchValue.value = text
   }
 }
@@ -84,12 +83,15 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
         :disabled="newItemMode"
         @click="newItemMode = true"
       >
-        <PlusCircleIcon class="size-6 text-white" /> {{ newButtonText }}
+        <PlusCircleIcon class="size-6 text-white" />
+        {{ newButtonText }}
       </Button>
     </div>
 
     <div class="flex w-full px-4 mt-2 justify-between gap-2">
-      <SearchBar class="w-full" :default-value="displaySearchInLowerCase ? params.search?.toLowerCase() : params.search" @search="handleSearch" />
+      <SearchBar class="w-full" :default-value="displaySearchInLowerCase ? params.search?.toLowerCase() : params.search"
+                 @search="handleSearch"
+      />
       <Pagination v-if="items.data.length > 0" :data="pagination" :query="query" />
     </div>
 
@@ -133,7 +135,8 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
           <NoContent :description="!isSearchbarEmpty ? `Wygląda na to że nie mamy tego czego szukasz.` : undefined">
             <div v-if="isSearchbarEmpty">
               <Button class="rounded-xl" button-class="pl-3 font-bold" @click="newItemMode = true">
-                <PlusCircleIcon class="size-6 text-white" /> {{ newButtonText }}
+                <PlusCircleIcon class="size-6 text-white" />
+                {{ newButtonText }}
               </Button>
             </div>
           </NoContent>
