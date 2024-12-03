@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
-import {nextTick} from 'vue'
+import { nextTick } from 'vue'
 
 const zipCode = defineModel<string>({ required: true })
 

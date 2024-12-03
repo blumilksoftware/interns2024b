@@ -8,9 +8,9 @@ import useCurrentTime from '@/Helpers/CurrentTime'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import FormButton from '@/components/Common/FormButton.vue'
 import { PlusCircleIcon } from '@heroicons/vue/20/solid'
-import {useParams} from '@/Helpers/Params'
+import { useParams } from '@/Helpers/Params'
 import NoContent from '@/components/Common/NoContent.vue'
-import {type PageProps} from '@/Types/PageProps'
+import { type PageProps } from '@/Types/PageProps'
 
 provide<Ref<number>>('currentTime', useCurrentTime())
 

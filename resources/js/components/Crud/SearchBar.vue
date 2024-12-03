@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from 'vue'
+import { ref } from 'vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { useDebounceFn } from '@vueuse/core'
 
@@ -20,7 +20,7 @@ const handleInput = useDebounceFn(() => {
 </script>
 
 <template>
-  <div class="flex gap-1 bg-white/70 text-primary duration-200 p-1 rounded-xl w-full border border-primary/5">
+  <div class="flex gap-1 bg-white/70 text-primary duration-200 p-1 rounded-xl w-full border border-primary/30">
     <input
       ref="input"
       v-model="text"

@@ -6,7 +6,7 @@ import FormButton from '@/components/Common/FormButton.vue'
 import Divider from '@/components/Common/Divider.vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
 import QuizItem from '@/components/Dashboard/QuizItem.vue'
-import {type PageProps} from '@/Types/PageProps'
+import { type PageProps } from '@/Types/PageProps'
 
 const props = defineProps<{
   userQuizzes: UserQuiz[]
