@@ -3,7 +3,7 @@ import {ref} from 'vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { useDebounceFn } from '@vueuse/core'
 
-const props = defineProps<{ defaultValue?: string }>()
+const props = defineProps<{ defaultValue?: string, placeholder?: string }>()
 const text = ref(props.defaultValue)
 const emit = defineEmits<{ search: [value:string|undefined] }>()
 const input = ref<HTMLInputElement>()
@@ -26,13 +26,13 @@ const handleInput = useDebounceFn(() => {
       v-model="text"
       type="text"
       autocomplete="off"
-      placeholder="Szukaj"
+      :placeholder="placeholder ?? 'Szukaj'"
       class="pl-2 transition-none size-full outline-none text-primary text-left rounded-xl bg-transparent"
       @keyup="handleKeyUp"
       @input="handleInput"
     >
 
-    <div title="Szukaj" class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-xl" @click="emit('search', text);">
+    <div :title="placeholder ?? 'Szukaj'" class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-xl" @click="emit('search', text);">
       <MagnifyingGlassIcon class="size-5" />
     </div>
   </div>

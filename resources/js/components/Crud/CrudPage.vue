@@ -22,8 +22,9 @@ const props = defineProps<{
   customSearch?: (text: string | undefined) => string | undefined
   displaySearchInLowerCase?: boolean
   resourceName: string
-  newButtonText: string
-  newItemData: N
+  newButtonText?: string
+  newItemData?: N
+  searchBarPlaceholder?: string
   deletable?: boolean
   creatable?: boolean
   mobileNav?: boolean
@@ -31,6 +32,7 @@ const props = defineProps<{
 
 defineSlots<{
   actions: () => any
+  searchActions: () => any
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
   deleteMessage: (scope: { item: T }) => any
   item: (scope: { item: T }) => any
@@ -89,8 +91,9 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
     </div>
 
     <div class="flex w-full px-4 mt-2 justify-between gap-2">
-      <SearchBar class="w-full max-w-96" :default-value="displaySearchInLowerCase ? params.search?.toLowerCase() : params.search" @search="handleSearch" />
-      <Pagination :data="pagination" :query="query" />
+      <SearchBar class="w-full max-w-96" :placeholder="searchBarPlaceholder" :default-value="displaySearchInLowerCase ? params.search?.toLowerCase() : params.search" @search="handleSearch" />
+      <slot name="searchActions" />
+      <Pagination class="ml-auto" :data="pagination" :query="query" />
     </div>
 
     <div v-auto-animate class="flex flex-col gap-4 p-4">
