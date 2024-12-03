@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref} from 'vue'
+import { ref } from 'vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { useDebounceFn } from '@vueuse/core'
 

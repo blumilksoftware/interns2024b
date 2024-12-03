@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import QuizPage from '@/components/UserQuiz/QuizPage.vue'
 import { converter } from '@/Helpers/Converter'
-import {type PageProps} from '@/Types/PageProps'
+import { type PageProps } from '@/Types/PageProps'
 
 const props = defineProps<{ quiz: Quiz } & PageProps>()
 </script>

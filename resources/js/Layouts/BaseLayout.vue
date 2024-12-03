@@ -3,8 +3,8 @@ import Header from '@/components/Common/Header.vue'
 import Footer from '@/components/Common/Footer.vue'
 import BackgroundEffect from '@/components/Common/BackgroundEffect.vue'
 import Banner from '@/components/Common/Banner.vue'
-import {ref, watch} from 'vue'
-import {type PageProps} from '@/Types/PageProps'
+import { ref, watch } from 'vue'
+import { type PageProps } from '@/Types/PageProps'
 
 const props = defineProps<PageProps>()
 const status = ref<string | undefined>(props.flash.status)

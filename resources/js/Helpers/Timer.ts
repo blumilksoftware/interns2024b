@@ -1,5 +1,5 @@
-import {computed, ref} from 'vue'
-import {calcSecondsLeftToDate, secondsToHour, timeToString} from '@/Helpers/Time'
+import { computed, ref } from 'vue'
+import { calcSecondsLeftToDate, secondsToHour, timeToString } from '@/Helpers/Time'
 
 export function useTimer(to: string | number | undefined, timeout: () => void) {
   const left = ref(calcSecondsLeftToDate(to))

@@ -7,7 +7,7 @@ import { CheckIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/vue/24/o
 import { vAutoAnimate } from '@formkit/auto-animate'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 import WarningMessageBox from '@/components/Common/WarningMessageBox.vue'
-import {type Errors, type RequestPayload} from '@inertiajs/core'
+import { type Errors, type RequestPayload } from '@inertiajs/core'
 import { formatDate } from '@/Helpers/Format'
 
 const props = defineProps<{
