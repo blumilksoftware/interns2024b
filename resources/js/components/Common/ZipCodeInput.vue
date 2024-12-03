@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
+import {nextTick} from 'vue'
 
 const zipCode = defineModel<string>({ required: true })
 
@@ -10,13 +11,15 @@ defineProps<{
 }>()
 
 function handleInput() {
-  let value = zipCode.value.replace(/[^0-9-]/g, '')
+  nextTick(() => {
+    let value = zipCode.value.replace(/[^0-9-]/g, '')
 
-  if (value.length > 2 && value[2] !== '-') {
-    value = value.slice(0, 2) + '-' + value.slice(2).replace('-', '')
-  }
+    if (value.length > 2 && value[2] !== '-') {
+      value = value.slice(0, 2) + '-' + value.slice(2).replace('-', '')
+    }
 
-  zipCode.value = value.substring(0, 6)
+    zipCode.value = value.substring(0, 6)
+  })
 }
 </script>
 
