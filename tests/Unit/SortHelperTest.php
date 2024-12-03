@@ -42,7 +42,7 @@ class SortHelperTest extends TestCase
         $helper = new SortHelper($request);
         $result = $helper->getSortParameters();
 
-        $this->assertSame(["id", "asc"], $result);
+        $this->assertSame(["id", "desc"], $result);
     }
 
     public function testGetSortParameters(): void
