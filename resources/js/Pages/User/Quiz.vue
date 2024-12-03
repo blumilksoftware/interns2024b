@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import QuizLayout from '@/Layouts/QuizLayout.vue'
+import QuizLayout from '@/components/UserQuiz/QuizLayout.vue'
 import axios from 'axios'
 import { ref } from 'vue'
 import Button from '@/components/Common/Button.vue'

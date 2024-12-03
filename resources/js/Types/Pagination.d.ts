@@ -1,11 +1,10 @@
-export interface PaginationLink {
+interface PaginationLink {
   active: boolean
   label: string
   url?: string
 }
 
-
-export interface Pagination<T> {
+interface Pagination<T> {
   data: T[]
   links: {
     first: string
