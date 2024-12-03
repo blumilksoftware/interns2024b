@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {type Errors} from '@inertiajs/core'
 import CrudInput from '@/components/Crud/CrudInput.vue'
+import ZipCodeInput from '@/components/Common/ZipCodeInput.vue'
+import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 
 const address = defineModel<Address>({ required: true })
 
@@ -35,13 +37,20 @@ defineProps<{
     :editing="!disabled"
   />
 
-  <CrudInput
-    v-model="address.zipCode"
-    name="zip_code"
-    label="Kod pocztowy:"
+  <InputWrapper
     :error="errors.zip_code"
-    :editing="!disabled"
-  />
+    :hide-error="disabled"
+    :hide-content="!address.zipCode && disabled"
+    label="Kod pocztowy:"
+    :class="{ 'hidden': !address.zipCode && disabled }"
+  >
+    <ZipCodeInput
+      v-model="address.zipCode"
+      name="zip_code"
+      :error="errors.zip_code"
+      :editing="!disabled"
+    />
+  </InputWrapper>
 
   <CrudInput
     v-model="address.city"

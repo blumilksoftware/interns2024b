@@ -1,48 +1,43 @@
-import {onMounted, ref, type Ref, watch} from 'vue'
-import dayjs from 'dayjs'
-import {keysWrapper} from '@/Helpers/KeysManager'
+import {computed, type Ref, ref, watch} from 'vue'
+import {router} from '@inertiajs/vue3'
+import {useParams} from '@/Helpers/Params'
 
-function setSorter<T extends Sortable>(sorter: Ref<Sorter<T> | undefined>, sorterName: string, type: 'name' | 'title' | 'creationDate' | 'modificationDate', desc = false) {
-  sessionStorage.setItem(`${sorterName}SorterPreference`, JSON.stringify([type, desc]))
+export function useSorter(sortOptions: SortOption[], searchText?: Ref<string | undefined>, customQueries?: () => string[]): [query: Ref<string>, Ref<Option[]>] {
+  const params = useParams()
+  const key = ref(params.sort)
+  const desc = ref(params.order)
 
-  sorter.value = (a: T, b: T) => {
-    if (desc) {
-      [a, b] = [b, a]
+  const options = computed(() => sortOptions.map<Option>((option) => ({
+    ...option, action: () => { key.value = option.key; desc.value = option.desc ? 'desc' : 'asc' },
+  })))
+
+  const query = computed(() => {
+    let query: string[] = []
+
+    if (key.value && desc.value) {
+      query.push(`sort=${key.value}`)
+      query.push(`order=${desc.value}`)
     }
 
-    const comparators = {
-      title: () => ('title' in a && 'title' in b) ? a.title.localeCompare(b.title) : 0,
-      name: () => ('name' in a && 'name' in b) ? a.name.localeCompare(b.name) : 0,
-      creationDate: () => dayjs(a.createdAt).diff(dayjs(b.createdAt)),
-      modificationDate: () => dayjs(a.updatedAt).diff(dayjs(b.updatedAt)),
+    if (searchText?.value) {
+      query.push(`search=${searchText?.value}`)
     }
 
-    return comparators[type]()
-  }
-}
+    if (customQueries) {
+      query.push(...customQueries())
+    }
 
-export function useSorter<T extends Sortable>(sorterName: string, data: () => T[], options: SortOptionConstructor[]): [Ref<T[], T[]>, SortOption[]] {
-  const items = ref<T[]>(data()) as Ref<T[]>
-  const sorter = ref<(a: T, b: T) => number>()
-  const sortOptions = keysWrapper(options.map((option) => ({
-    text: option.text,
-    action: () => setSorter(sorter, sorterName, option.type, option.desc) }
-  )))
-
-  onMounted(() => {
-    const savedSorter = sessionStorage.getItem(`${sorterName}SorterPreference`)
-    const [type, desc] = savedSorter ? JSON.parse(savedSorter) : ['modificationDate', true]
-    setSorter(sorter, sorterName, type, desc)
+    return query.length > 0 ? '&' + query.join('&') : ''
   })
 
-  watch(
-    [data, sorter],
-    ([newData, sorter]) => {
-      items.value = newData
-      items.value.sort(sorter)
-    },
-    { immediate: true },
+  watch(query, query =>
+    router.visit(
+      `?page=1${query}`, {
+        preserveState: true,
+        replace: true,
+      },
+    ),
   )
 
-  return [items, sortOptions]
+  return [query, options]
 }

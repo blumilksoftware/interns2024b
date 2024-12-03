@@ -6,11 +6,12 @@ namespace Tests\Feature;
 
 use App\Models\Answer;
 use App\Models\User;
+use App\Models\UserQuiz;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AnswerRecordTest extends TestCase
+class UserQuestionTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -19,23 +20,23 @@ class AnswerRecordTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
+        UserQuiz::truncate();
         $this->user = User::factory()->create();
     }
 
     public function testUserCanAnswerQuestion(): void
     {
         $answer = Answer::factory()->locked()->create();
-        $submission = $answer->question->quiz->createSubmission($this->user);
-        $record = $submission->answerRecords[0];
+        $userQuiz = $answer->question->quiz->createUserQuiz($this->user);
+        $userQuestion = $userQuiz->userQuestions[0];
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/answers/{$record->id}/{$answer->id}")
+            ->patch("/questions/{$userQuestion->id}/{$answer->id}")
             ->assertRedirect("/");
 
-        $this->assertDatabaseHas("answer_records", [
-            "id" => $record->id,
+        $this->assertDatabaseHas("user_questions", [
+            "id" => $userQuestion->id,
             "answer_id" => $answer->id,
         ]);
     }
@@ -45,7 +46,7 @@ class AnswerRecordTest extends TestCase
         $answer = Answer::factory()->locked()->create();
 
         $this->actingAs($this->user)
-            ->patch("/answers/0/{$answer->id}")
+            ->patch("/questions/0/{$answer->id}")
             ->assertStatus(404);
     }
 
@@ -53,36 +54,36 @@ class AnswerRecordTest extends TestCase
     {
         $user = User::factory()->create();
         $answer = Answer::factory()->locked()->create();
-        $submission = $answer->question->quiz->createSubmission($user);
-        $record = $submission->answerRecords[0];
+        $userQuiz = $answer->question->quiz->createUserQuiz($user);
+        $userQuestion = $userQuiz->userQuestions[0];
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/answers/{$record->id}/{$answer->id}")
+            ->patch("/questions/{$userQuestion->id}/{$answer->id}")
             ->assertStatus(403);
 
-        $this->assertDatabaseMissing("answer_records", [
-            "id" => $record->id,
+        $this->assertDatabaseMissing("user_questions", [
+            "id" => $userQuestion->id,
             "answer_id" => $answer->id,
         ]);
     }
 
-    public function testUserCannotAnswerQuestionThatBelongsToClosedSubmission(): void
+    public function testUserCannotAnswerQuestionThatBelongsToClosedUserQuiz(): void
     {
         $answer = Answer::factory()->locked()->create();
-        $submission = $answer->question->quiz->createSubmission($this->user);
-        $record = $submission->answerRecords[0];
+        $userQuiz = $answer->question->quiz->createUserQuiz($this->user);
+        $userQuestion = $userQuiz->userQuestions[0];
 
-        $submission->closed_at = Carbon::now();
-        $submission->save();
+        $userQuiz->closed_at = Carbon::now();
+        $userQuiz->save();
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/answers/{$record->id}/{$answer->id}")
+            ->patch("/questions/{$userQuestion->id}/{$answer->id}")
             ->assertStatus(403);
 
-        $this->assertDatabaseMissing("answer_records", [
-            "id" => $record->id,
+        $this->assertDatabaseMissing("user_questions", [
+            "id" => $userQuestion->id,
             "answer_id" => $answer->id,
         ]);
     }
@@ -90,16 +91,16 @@ class AnswerRecordTest extends TestCase
     public function testUserCannotAnswerQuestionWithAnswerThatNotExist(): void
     {
         $answer = Answer::factory()->locked()->create();
-        $submission = $answer->question->quiz->createSubmission($this->user);
-        $record = $submission->answerRecords[0];
+        $userQuiz = $answer->question->quiz->createUserQuiz($this->user);
+        $userQuestion = $userQuiz->userQuestions[0];
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/answers/{$submission->id}/4")
+            ->patch("/questions/{$userQuiz->id}/4")
             ->assertStatus(404);
 
-        $this->assertDatabaseMissing("answer_records", [
-            "id" => $record->id,
+        $this->assertDatabaseMissing("user_questions", [
+            "id" => $userQuestion->id,
             "answer_id" => $answer->id,
         ]);
     }
@@ -107,18 +108,18 @@ class AnswerRecordTest extends TestCase
     public function testUserCannotAnswerQuestionWithAnswerNotAssignedToIt(): void
     {
         $answer = Answer::factory()->locked()->create();
-        $submission = $answer->question->quiz->createSubmission($this->user);
-        $record = $submission->answerRecords[0];
+        $userQuiz = $answer->question->quiz->createUserQuiz($this->user);
+        $userQuestion = $userQuiz->userQuestions[0];
 
         $answer1 = Answer::factory()->locked()->create();
 
         $this->actingAs($this->user)
             ->from("/")
-            ->patch("/answers/{$submission->id}/{$answer1->id}")
+            ->patch("/questions/{$userQuiz->id}/{$answer1->id}")
             ->assertStatus(403);
 
-        $this->assertDatabaseMissing("answer_records", [
-            "id" => $record->id,
+        $this->assertDatabaseMissing("user_questions", [
+            "id" => $userQuestion->id,
             "answer_id" => $answer1->id,
         ]);
     }

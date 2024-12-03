@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Rules\Regon;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -35,13 +36,13 @@ class SchoolRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => ["required", "string"],
-            "city" => ["required", "string"],
-            "regon" => ["required", "string"],
-            "street" => ["required", "string"],
-            "building_number" => ["required", "string"],
-            "apartment_number" => ["string", "nullable"],
-            "zip_code" => ["required", "string"],
+            "name" => ["required", "string", "max:255"],
+            "city" => ["required", "string", "max:255"],
+            "regon" => ["required", "string", new Regon()],
+            "street" => ["required", "string", "max:255"],
+            "building_number" => ["required", "string", "max:255"],
+            "apartment_number" => ["string", "nullable", "max:255"],
+            "zip_code" => ["required", "string", "regex:/^\d{2}-\d{3}$/"],
         ];
     }
 }

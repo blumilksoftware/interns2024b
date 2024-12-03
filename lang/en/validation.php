@@ -154,6 +154,11 @@ return [
         "attribute-name" => [
             "rule-name" => "custom-message",
         ],
+        "regon" => [
+            "digits_only" => "The :attribute must contain only digits.",
+            "invalid_length" => "The :attribute must be 9 or 14 digits long.",
+            "invalid_checksum" => "The :attribute checksum is incorrect for a valid REGON.",
+        ],
     ],
     "attributes" => [],
 ];

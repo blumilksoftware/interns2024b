@@ -15,7 +15,7 @@ use Saloon\Http\Faking\MockClient;
 use Saloon\Http\Faking\MockResponse;
 use Tests\TestCase;
 
-class TestGetSchoolDataService extends TestCase
+class GetSchoolDataServiceTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -118,9 +118,11 @@ class TestGetSchoolDataService extends TestCase
         ]);
 
         $this->connector->withMockClient($mockClient);
-        $this->service->getSchools(Voivodeship::LOWER_SILESIA, [SchoolType::TECHNIKUM]);
-        $this->service->getSchools(Voivodeship::LOWER_SILESIA, [SchoolType::TECHNIKUM]);
+        $result1 = $this->service->getSchools(Voivodeship::LOWER_SILESIA, [SchoolType::TECHNIKUM]);
+        $result2 = $this->service->getSchools(Voivodeship::LOWER_SILESIA, [SchoolType::TECHNIKUM]);
 
         $this->assertDatabaseCount("schools", 2);
+        $this->assertSame($result1, 2);
+        $this->assertSame($result2, 0);
     }
 }

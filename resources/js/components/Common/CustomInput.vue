@@ -44,7 +44,7 @@ const model = defineModel<string>()
         @blur="isFocused=false"
       >
 
-      <div v-if="slots.default" class="flex flex-1 items-center justify-center stroke-primary/100">
+      <div v-if="slots.default" class="flex flex-1 items-center justify-center text-primary">
         <slot />
       </div>
     </div>

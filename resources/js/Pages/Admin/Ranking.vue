@@ -3,14 +3,15 @@ import {computed} from 'vue'
 import Divider from '@/components/Common/Divider.vue'
 import FormButton from '@/components/Common/FormButton.vue'
 import {groupBy} from '@/Helpers/GroupBy'
+import {type PageProps} from '@/Types/PageProps'
 
 const props = defineProps<{
   quiz: Quiz
   rankings: Ranking[]
-}>()
+} & PageProps>()
 
 const sorted = computed(() => [...props.rankings].toSorted((a, b) =>
-  `${a.user.name} ${a.user.surname}`.localeCompare(`${b.user.name} ${b.user.surname}`)))
+  `${a.user.firstname} ${a.user.surname}`.localeCompare(`${b.user.firstname} ${b.user.surname}`)))
 
 const grouped = computed(() => groupBy('points', sorted.value))
 
@@ -19,7 +20,7 @@ const grouped = computed(() => groupBy('points', sorted.value))
 <template>
   <div class="w-full p-2 md:max-w-8xl">
     <Divider>
-      <h1 class="font-bold text-xl text-primary text-center p-4 whitespace-nowrap">{{ quiz.name }} - Ranking</h1>
+      <h1 class="font-bold text-xl text-primary text-center py-4 whitespace-nowrap">{{ quiz.name }} - Ranking</h1>
     </Divider>
 
     <div class="w-full flex justify-between text-sm font-semibold text-gray-900 border shadow bg-white rounded-md px-4 py-2 gap-x-1">
@@ -36,7 +37,7 @@ const grouped = computed(() => groupBy('points', sorted.value))
         </h1>
 
         <div v-for="ranking in place" :key="ranking.user.id" class="w-full flex justify-between text-sm text-gray-900 p-4 gap-x-1">
-          <div class="flex-1 sm:flex-none sm:w-full sm:max-w-56">{{ ranking.user.name }}</div>
+          <div class="flex-1 sm:flex-none sm:w-full sm:max-w-56">{{ ranking.user.firstname }}</div>
           <div class="flex-1">{{ ranking.user.surname }}</div>
           <div class="flex-1">{{ ranking.user.school.name }}</div>
           <div class="flex-none w-full max-w-16 text-center">{{ ranking.points }}</div>

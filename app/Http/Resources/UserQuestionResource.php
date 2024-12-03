@@ -10,17 +10,17 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
 
-class AnswerRecordResource extends JsonResource
+class UserQuestionResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
             "id" => $this->id,
-            "question" => $this->question->text,
+            "text" => $this->question->text,
             "createdAt" => $this->created_at,
             "updatedAt" => $this->updated_at,
             "closed" => $this->isClosed,
-            "selected" => $this->answer_id,
+            "selectedAnswer" => $this->answer_id,
             "answers" => $this->questionAnswersToArray($this->question)->shuffle(),
         ];
     }

@@ -8,7 +8,7 @@ defineProps<{ user: User }>()
     <div class="flex flex-col sm:grid sm:grid-cols-2 gap-4">
       <div class="w-full rounded-lg overflow-hidden bg-white/30 flex flex-col">
         <b class="bg-primary w-full text-white p-2 px-3">Imię</b>
-        <p class="p-4 text-[1.1rem] border-2 border-t-0 h-full rounded-b-lg border-primary/30">{{ user.name }}</p>
+        <p class="p-4 text-[1.1rem] border-2 border-t-0 h-full rounded-b-lg border-primary/30">{{ user.firstname }}</p>
       </div>
       <div class="w-full rounded-lg overflow-hidden bg-white/30 flex flex-col">
         <b class="bg-primary w-full text-white p-2 px-3">Nazwisko</b>

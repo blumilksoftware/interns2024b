@@ -19,7 +19,7 @@ class RankingResource extends JsonResource
         return [
             "user" => [
                 "id" => $this->user->id,
-                "name" => $isAdmin ? $this->user->name : null,
+                "firstname" => $isAdmin ? $this->user->firstname : null,
                 "surname" => $isAdmin ? $this->user->surname : null,
                 "school" => $this->user->school,
             ],

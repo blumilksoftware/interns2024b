@@ -20,7 +20,7 @@ class AuthenticateSessionTest extends TestCase
             "email" => "test@example.com",
             "password" => "goodPassword",
         ])
-            ->assertRedirect("/dashboard");
+            ->assertRedirect("/");
     }
 
     public function testUserCanNotLoginWithWrongPassword(): void
@@ -66,7 +66,7 @@ class AuthenticateSessionTest extends TestCase
             "email" => "test@example.com",
             "password" => "goodPassword",
         ])
-            ->assertRedirect("/dashboard");
+            ->assertRedirect("/");
     }
 
     public function testUnverifiedUserIsRedirectedToVerifyEmail(): void

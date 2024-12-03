@@ -10,6 +10,7 @@ use App\Services\GetSchoolDataService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Cache;
 
 class FetchSchoolsJob implements ShouldQueue
 {
@@ -26,6 +27,7 @@ class FetchSchoolsJob implements ShouldQueue
 
     public function handle(GetSchoolDataService $service): void
     {
-        $service->getSchools($this->voivodeship, $this->schoolTypes);
+        $added_schools = $service->getSchools($this->voivodeship, $this->schoolTypes);
+        Cache::set("fetched_schools", $added_schools);
     }
 }

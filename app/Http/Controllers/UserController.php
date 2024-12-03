@@ -52,7 +52,7 @@ class UserController extends Controller
     {
         $this->authorize("anonymize", $user);
         $user->update([
-            "name" => "Anonymous",
+            "firstname" => "Anonymous",
             "surname" => "User",
             "email" => "anonymous" . $user->id . "@email",
             "is_anonymized" => true,

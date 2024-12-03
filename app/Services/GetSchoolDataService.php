@@ -21,9 +21,9 @@ class GetSchoolDataService
     /**
      * @param array<SchoolType> $schoolTypes
      */
-    public function getSchools(Voivodeship $voivodeship, array $schoolTypes): void
+    public function getSchools(Voivodeship $voivodeship, array $schoolTypes): int
     {
-        $this->store($this->fetchSchools($voivodeship, $schoolTypes));
+        return $this->store($this->fetchSchools($voivodeship, $schoolTypes));
     }
 
     /**
@@ -45,12 +45,17 @@ class GetSchoolDataService
     /**
      * @param Collection<SchoolDTO> $schools
      */
-    protected function store(Collection $schools): void
+    protected function store(Collection $schools): int
     {
+        $fetched = 0;
+
         foreach ($schools as $dto) {
-            $school = School::query()->firstOrNew(["regon" => $dto->regon]);
-            $school->fill($dto->toArray());
-            $school->save();
+            if (School::query()->where("regon", "=", $dto->regon)->doesntExist()) {
+                School::query()->create($dto->toArray());
+                ++$fetched;
+            }
         }
+
+        return $fetched;
     }
 }

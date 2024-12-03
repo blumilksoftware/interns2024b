@@ -17,7 +17,7 @@ class UserRequest extends FormRequest
     {
         return [
             "email" => ["required", "string", "email", "max:255", "unique:users,email," . $this->user->id],
-            "name" => ["required", "string", "max:255"],
+            "firstname" => ["required", "string", "max:255"],
             "surname" => ["required", "string", "max:255"],
             "school_id" => ["required", "integer", "exists:schools,id"],
         ];

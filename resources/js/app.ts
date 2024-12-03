@@ -2,8 +2,7 @@ import '../css/app.css'
 import { createApp, h, type DefineComponent } from 'vue'
 import { createInertiaApp } from '@inertiajs/vue3'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
-import UserLayout from '@/Layouts/UserLayout.vue'
-import AdminLayout from '@/Layouts/AdminLayout.vue'
+import BaseLayout from '@/Layouts/BaseLayout.vue'
 import GuestLayout from '@/Layouts/GuestLayout.vue'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -14,6 +13,9 @@ dayjs.locale('pl')
 
 const appName = import.meta.env.VITE_APP_NAME
 
+const themeClass = localStorage.getItem('theme')
+themeClass && document.documentElement.classList.add(themeClass)
+
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,
   resolve: async (name) => {
@@ -22,12 +24,8 @@ createInertiaApp({
       import.meta.glob<DefineComponent>('./Pages/**/*.vue'),
     )
 
-    if (name.startsWith('Admin/')) {
-      page.default.layout ??= AdminLayout
-    }
-
-    if (name.startsWith('User/')) {
-      page.default.layout ??= UserLayout
+    if (name.startsWith('Admin/') || name.startsWith('User/')) {
+      page.default.layout ??= BaseLayout
     }
 
     if (name.startsWith('Guest/')) {

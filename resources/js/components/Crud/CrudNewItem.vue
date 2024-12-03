@@ -38,7 +38,7 @@ const { processing, errors } = useRequestResolution()
       <div class="flex flex-col md:flex-row pl-5 gap-5 h-fit">
         <button
           title="Anuluj"
-          @click="() => { }"
+          @click="emit('done')"
         >
           <XMarkIcon class="icon" />
         </button>

@@ -1,6 +1,6 @@
 interface User {
   id: number
-  name: string
+  firstname: string
   surname: string
   email: string
   school: School

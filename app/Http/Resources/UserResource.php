@@ -16,7 +16,7 @@ class UserResource extends JsonResource
     {
         return [
             "id" => $this->id,
-            "name" => $this->name,
+            "firstname" => $this->firstname,
             "surname" => $this->surname,
             "email" => $this->email,
             "school" => SchoolResource::make($this->school),
