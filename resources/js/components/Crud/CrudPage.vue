@@ -73,7 +73,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
       </Dropdown>
 
       <slot name="actions">
-        <Expand class="hidden" />
+        <Expand class="hidden md:block" />
       </slot>
 
       <Button
@@ -90,7 +90,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
 
     <div class="flex w-full px-4 mt-2 justify-between gap-2">
       <SearchBar class="w-full" :default-value="displaySearchInLowerCase ? params.search?.toLowerCase() : params.search" @search="handleSearch" />
-      <Pagination :data="pagination" :query="query" />
+      <Pagination v-if="items.data.length > 0" :data="pagination" :query="query" />
     </div>
 
     <div v-auto-animate class="flex flex-col gap-4 p-4">
@@ -141,7 +141,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
       </template>
     </div>
 
-    <div class="flex justify-center">
+    <div v-if="items.data.length > 0" class="flex justify-center">
       <Pagination :data="pagination" :query="query" />
     </div>
   </div>
