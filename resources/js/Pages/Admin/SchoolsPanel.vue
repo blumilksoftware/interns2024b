@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import {Head, router} from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 import { ArrowDownCircleIcon } from '@heroicons/vue/20/solid'
 import AddressInput from '@/components/Common/AddressInput.vue'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
-import {ref} from 'vue'
+import { ref } from 'vue'
 import axios from 'axios'
 import Button from '@/components/Common/Button.vue'
 import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
 import CrudInput from '@/components/Crud/CrudInput.vue'
 import Banner from '@/components/Common/Banner.vue'
-import {usePlurals} from '@/Helpers/Plurals'
-import {type PageProps} from '@/Types/PageProps'
+import { usePlurals } from '@/Helpers/Plurals'
+import { type PageProps } from '@/Types/PageProps'
 
 defineProps<{schools: Pagination<School>} & PageProps>()
 
@@ -29,8 +29,8 @@ const sortOptions: SortOption[] = [
   { text: 'Po adresie (malejąco)', key: 'address', desc: true },
   { text: 'Od najnowszych' , key: 'created_at', desc: true },
   { text: 'Od najstarszych', key: 'created_at' },
-  { text: 'Od najpóźniej zmienionych', key: 'updated_at' },
-  { text: 'Od najwcześniej zmienionych', key: 'updated_at', desc: true },
+  { text: 'Po dacie modyfikacji (rosnąco)', key: 'updated_at' },
+  { text: 'Po dacie modyfikacji (malejąco)', key: 'updated_at', desc: true },
 ]
 
 const status = ref<boolean | null>(null)

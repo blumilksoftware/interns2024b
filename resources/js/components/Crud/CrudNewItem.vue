@@ -3,8 +3,8 @@ import useRequestResolution from '@/Helpers/RequestResolution'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import { CheckIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
-import {type Errors, type RequestPayload} from '@inertiajs/core'
-import {ref} from 'vue'
+import { type Errors, type RequestPayload } from '@inertiajs/core'
+import { ref } from 'vue'
 
 const props = defineProps<{ resourceName: string, newItemData: T }>()
 const emit = defineEmits(['done'])

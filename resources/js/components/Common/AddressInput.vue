@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {type Errors} from '@inertiajs/core'
+import { type Errors } from '@inertiajs/core'
 import CrudInput from '@/components/Crud/CrudInput.vue'
 import ZipCodeInput from '@/components/Common/ZipCodeInput.vue'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'

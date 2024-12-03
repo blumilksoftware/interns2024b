@@ -4,15 +4,15 @@ import { ArrowsUpDownIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
 import Expand from '@/components/Common/Expand.vue'
 import Dropdown from '@/components/Common/Dropdown.vue'
-import {type Errors} from '@inertiajs/core'
-import {ref, watch} from 'vue'
+import { type Errors } from '@inertiajs/core'
+import { ref, watch } from 'vue'
 import Button from '@/components/Common/Button.vue'
 import CrudNewItem from '@/components/Crud/CrudNewItem.vue'
 import CrudItem from '@/components/Crud/CrudItem.vue'
-import {useSorter} from '@/Helpers/Sorter'
+import { useSorter } from '@/Helpers/Sorter'
 import SearchBar from '@/components/Crud/SearchBar.vue'
 import Pagination from '@/components/Common/Pagination.vue'
-import {useParams} from '@/Helpers/Params'
+import { useParams } from '@/Helpers/Params'
 import NoContent from '@/components/Common/NoContent.vue'
 
 const props = defineProps<{
@@ -45,7 +45,7 @@ defineSlots<{
 const pagination = props.items
 const newItemMode = ref(false)
 const params = useParams()
-const searchValue = ref(params.search)
+const searchValue = ref<string | undefined>(params.search)
 
 function handleSearch(text: string | undefined) {
   if (props.customSearch) {
@@ -93,7 +93,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
     <div class="flex w-full px-4 mt-2 justify-between gap-2">
       <SearchBar :placeholder="searchBarPlaceholder" class="w-full" :default-value="displaySearchInLowerCase ? params.search?.toLowerCase() : params.search" @search="handleSearch" />
       <slot name="searchActions" />
-      <Pagination class="ml-auto" :data="pagination" :query="query" />
+      <Pagination v-if="items.data.length > 0" :data="pagination" :query="query" />
     </div>
 
     <div v-auto-animate class="flex flex-col gap-4 p-4">
@@ -144,7 +144,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
       </template>
     </div>
 
-    <div class="flex justify-center">
+    <div v-if="items.data.length > 0" class="flex justify-center">
       <Pagination :data="pagination" :query="query" />
     </div>
   </div>

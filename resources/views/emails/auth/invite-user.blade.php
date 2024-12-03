@@ -15,7 +15,7 @@
 <body>
 <h1>Cześć {{ $user->name }},</h1>
 
-<p>Zostałeś zaproszony do udziału w quizie: {{ $quiz->name }}.</p>
+<p>Zapraszamy Cię do udziału w quizie: {{ $quiz->name }}.</p>
 
 <p>Pozdrawiamy,<br>{{ config('app.name') }}</p>
 </body>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 withDefaults(defineProps<{ title?: string, description?: string }>(), {
-  title: 'Brak Danych',
+  title: 'Brak danych',
   description: 'Wygląda na to, że nic tu jeszcze nie ma. Kliknij przycisk poniżej, aby dodać tu trochę treści.',
 })
 </script>

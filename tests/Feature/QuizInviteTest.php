@@ -65,12 +65,12 @@ class QuizInviteTest extends TestCase
         $school = School::factory()->create();
         User::factory()->count(8)->create();
         $user = User::factory()->create([
-            "name" => "Jan",
+            "firstname" => "Jan",
             "school_id" => $school->id,
         ]);
 
         $this->actingAs($this->admin)
-            ->get("/admin/quizzes/{$this->quiz->id}/invite?search={$user->name}&sort=name&order=asc&schoolId={$school->id}")
+            ->get("/admin/quizzes/{$this->quiz->id}/invite?search={$user->firstname}&sort=name&order=asc&schoolId={$school->id}")
             ->assertInertia(fn(Assert $page) => $page
                 ->component("Admin/Invite")
                 ->has("users.data", 1));

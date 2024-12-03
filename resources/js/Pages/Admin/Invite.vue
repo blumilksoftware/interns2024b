@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import {computed, defineProps, ref, watch} from 'vue'
+import { computed, defineProps, ref, watch } from 'vue'
 import FormButton from '@/components/Common/FormButton.vue'
 import CrudPage from "@/components/Crud/CrudPage.vue"
 import Expand from "@/components/Common/Expand.vue"
 import Searchbar from "@/components/Common/Searchbar.vue"
-import {nanoid} from "nanoid"
-import type {Errors} from '@inertiajs/core'
+import { nanoid } from "nanoid"
+import { type Errors } from '@inertiajs/core'
 import ButtonFrame from "@/components/Common/ButtonFrame.vue";
 
 const props = defineProps<{

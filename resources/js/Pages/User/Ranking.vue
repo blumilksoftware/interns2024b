@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {computed} from 'vue'
+import { computed } from 'vue'
 import Divider from '@/components/Common/Divider.vue'
-import {groupBy} from '@/Helpers/GroupBy'
-import type {PageProps} from '@/Types/PageProps'
+import { groupBy } from '@/Helpers/GroupBy'
+import type { PageProps } from '@/Types/PageProps'
 
 const props = defineProps<{
   quiz: Quiz
