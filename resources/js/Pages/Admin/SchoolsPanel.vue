@@ -29,8 +29,8 @@ const sortOptions: SortOption[] = [
   { text: 'Po adresie (malejąco)', key: 'address', desc: true },
   { text: 'Od najnowszych' , key: 'created_at', desc: true },
   { text: 'Od najstarszych', key: 'created_at' },
-  { text: 'Od najpóźniej zmienionych', key: 'updated_at' },
-  { text: 'Od najwcześniej zmienionych', key: 'updated_at', desc: true },
+  { text: 'Po dacie modyfikacji (rosnąco)', key: 'updated_at' },
+  { text: 'Po dacie modyfikacji (malejąco)', key: 'updated_at', desc: true },
 ]
 
 const status = ref<boolean | null>(null)

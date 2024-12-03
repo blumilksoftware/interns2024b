@@ -21,10 +21,10 @@ const sortOptions: SortOption[] = [
   { text: 'Po id (malejąco)', key: 'id', desc: true },
   { text: 'Po nazwie (A–Z)', key: 'title' },
   { text: 'Po nazwie (Z–A)', key: 'title', desc: true },
-  { text: 'Od najnowszych' , key: 'created_at', desc: true },
+  { text: 'Od najnowszych', key: 'created_at', desc: true },
   { text: 'Od najstarszych', key: 'created_at' },
-  { text: 'Od najpóźniej zmienionych', key: 'updated_at' },
-  { text: 'Od najwcześniej zmienionych', key: 'updated_at', desc: true },
+  { text: 'Po dacie modyfikacji (rosnąco)', key: 'updated_at' },
+  { text: 'Po dacie modyfikacji (malejąco)', key: 'updated_at', desc: true },
 ]
 
 const params = useParams()
@@ -64,7 +64,7 @@ function customQueries(): string[] {
         <span class="hidden sm:block">{{ hideArchivedQuizzes ? 'Wyświetl' : 'Schowaj' }} zarchiwizowane testy</span>
       </button>
 
-      <Expand />
+      <Expand class="hidden md:block" />
 
       <FormButton
         class="rounded-xl"
