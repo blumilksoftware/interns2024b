@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { provide, type Ref, ref } from 'vue'
-import { Head } from '@inertiajs/vue3'
+import {provide, type Ref, ref } from 'vue'
+import {Head} from '@inertiajs/vue3'
 import Expand from '@/components/Common/Expand.vue'
 import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
 import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
