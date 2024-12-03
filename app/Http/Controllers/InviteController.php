@@ -67,7 +67,7 @@ class InviteController extends Controller
         $searchName = $request->query("search");
 
         if ($searchName) {
-            return $query->where("users.name", "ilike", "%$searchName%")
+            return $query->where("users.firstname", "ilike", "%$searchName%")
                 ->orWhere("users.surname", "ilike", "%$searchName%");
         }
 
@@ -91,7 +91,7 @@ class InviteController extends Controller
 
         if ($field === "name") {
             return $query->orderBy("surname", $order)
-                ->orderBy("name", $order);
+                ->orderBy("firstname", $order);
         }
 
         return $query;
