@@ -22,8 +22,8 @@ const props = defineProps<{
   customSearch?: (text: string | undefined) => string | undefined
   displaySearchInLowerCase?: boolean
   resourceName: string
-  newButtonText: string
-  newItemData: N
+  newButtonText?: string
+  newItemData?: N
   deletable?: boolean
   creatable?: boolean
   mobileNav?: boolean
@@ -114,7 +114,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
             <slot name="deleteMessage" v-bind="data" />
           </template>
 
-          <template v-if="!!slots.title" #title="data">
+          <template #title="data">
             <slot name="title" v-bind="data" />
           </template>
 

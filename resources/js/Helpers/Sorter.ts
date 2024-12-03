@@ -8,7 +8,7 @@ export function useSorter(sortOptions: SortOption[], searchText?: Ref<string | u
   const desc = ref(params.order)
 
   const options = computed(() => sortOptions.map<Option>((option) => ({
-    ...option, action: () => { key.value = option.key; desc.value = option.desc ? 'desc' : 'asc' },
+    ...option, action: () => { key.value = `${option.key}${desc.value ?? 'asc'}`; desc.value = option.desc ? 'desc' : 'asc' },
   })))
 
   const query = computed(() => {
