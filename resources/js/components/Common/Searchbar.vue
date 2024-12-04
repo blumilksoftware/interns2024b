@@ -40,7 +40,7 @@ function onOptionClick(option:T) {
     >
       <div
         class="flex h-inherit items-center justify-center duration-200 rounded-lg"
-        :class="{ 'ring-inset ring-2 ring-[#7e76b8]' : isFocused, 'ring-red' : error }"
+        :class="{ 'ring-inset ring-2 ring-primary/60' : isFocused, 'ring-red' : error }"
       >
         <div class="h-full items-center justify-center px-3">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-5 text-primary/30" :class="{'!text-primary/60': isFocused}">
