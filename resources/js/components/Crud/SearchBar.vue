@@ -20,7 +20,7 @@ const handleInput = useDebounceFn(() => {
 </script>
 
 <template>
-  <div class="flex gap-1 bg-white/70 text-primary duration-200 p-1 rounded-xl w-full border border-primary/30">
+  <div class="flex items-center gap-1 bg-white/70 text-primary duration-200 p-1 rounded-xl w-full border border-primary/30 h-fit">
     <input
       ref="input"
       v-model="text"
@@ -32,7 +32,11 @@ const handleInput = useDebounceFn(() => {
       @input="handleInput"
     >
 
-    <div title="Szukaj" class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg cursor-pointer" @click="emit('search', text);">
+    <div
+      title="Szukaj"
+      class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg cursor-pointer opacity-50 hover:opacity-70"
+      @click="emit('search', text)"
+    >
       <MagnifyingGlassIcon class="size-5 stroke-2" />
     </div>
   </div>
