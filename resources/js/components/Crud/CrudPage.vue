@@ -4,15 +4,15 @@ import { ArrowsUpDownIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
 import Expand from '@/components/Common/Expand.vue'
 import Dropdown from '@/components/Common/Dropdown.vue'
-import {type Errors} from '@inertiajs/core'
-import {ref, watch} from 'vue'
+import { type Errors } from '@inertiajs/core'
+import { ref, watch } from 'vue'
 import Button from '@/components/Common/Button.vue'
 import CrudNewItem from '@/components/Crud/CrudNewItem.vue'
 import CrudItem from '@/components/Crud/CrudItem.vue'
-import {useSorter} from '@/Helpers/Sorter'
+import { useSorter } from '@/Helpers/Sorter'
 import SearchBar from '@/components/Crud/SearchBar.vue'
 import Pagination from '@/components/Common/Pagination.vue'
-import {useParams} from '@/Helpers/Params'
+import { useParams } from '@/Helpers/Params'
 import NoContent from '@/components/Common/NoContent.vue'
 
 const props = defineProps<{
@@ -24,12 +24,13 @@ const props = defineProps<{
   resourceName: string
   newButtonText?: string
   newItemData?: N
+  disableEditButton?: boolean
   deletable?: boolean
   creatable?: boolean
   mobileNav?: boolean
 }>()
 
-const slots = defineSlots<{
+defineSlots<{
   actions: () => any
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
   deleteMessage: (scope: { item: T }) => any
@@ -43,13 +44,12 @@ const slots = defineSlots<{
 const pagination = props.items
 const newItemMode = ref(false)
 const params = useParams()
-const searchValue = ref(params.search)
+const searchValue = ref<string | undefined>(params.search)
 
 function handleSearch(text: string | undefined) {
   if (props.customSearch) {
     searchValue.value = props.customSearch(text)
-  }
-  else {
+  } else {
     searchValue.value = text
   }
 }
@@ -84,7 +84,8 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
         :disabled="newItemMode"
         @click="newItemMode = true"
       >
-        <PlusCircleIcon class="size-6 text-white" /> {{ newButtonText }}
+        <PlusCircleIcon class="size-6 text-white" />
+        {{ newButtonText }}
       </Button>
     </div>
 
@@ -109,7 +110,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
       </template>
 
       <slot v-for="item of items.data" :key="item.id" name="item" :item="item">
-        <CrudItem :item="item" :resource-name="resourceName" :deletable="deletable">
+        <CrudItem :item="item" :resource-name="resourceName" :deletable="deletable" :disable-edit-button="disableEditButton">
           <template #deleteMessage="data">
             <slot name="deleteMessage" v-bind="data" />
           </template>
@@ -118,22 +119,23 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
             <slot name="title" v-bind="data" />
           </template>
 
-          <template v-if="!!slots.itemActions" #actions="{editMode}">
+          <template #actions="{editMode}">
             <slot name="itemActions" :item="item" :edit-mode="editMode" />
           </template>
 
-          <template v-if="!!slots.itemData" #data="data">
+          <template #data="data">
             <slot name="itemData" v-bind="data" />
           </template>
         </CrudItem>
       </slot>
 
-      <template v-if="items.data.length === 0 && !!slots.noContent">
+      <template v-if="items.data.length === 0">
         <slot name="noContent" :search="!isSearchbarEmpty">
           <NoContent :description="!isSearchbarEmpty ? `Wygląda na to że nie mamy tego czego szukasz.` : undefined">
             <div v-if="isSearchbarEmpty">
               <Button class="rounded-xl" button-class="pl-3 font-bold" @click="newItemMode = true">
-                <PlusCircleIcon class="size-6 text-white" /> {{ newButtonText }}
+                <PlusCircleIcon class="size-6 text-white" />
+                {{ newButtonText }}
               </Button>
             </div>
           </NoContent>

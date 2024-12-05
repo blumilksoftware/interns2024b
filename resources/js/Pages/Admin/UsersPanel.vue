@@ -18,13 +18,23 @@ const showWarning = ref<Record<string, boolean>>({})
 const showAnonymizedUsers = ref<boolean>(true)
 
 const sortOptions: SortOption[] = [
-  { text: 'Po nazwie (A–Z)', key: 'name' },
-  { text: 'Po nazwie (Z–A)', key: 'name', desc: true },
-  { text: 'Od najnowszych' , key: 'creationDate' },
-  { text: 'Od najstarszych', key: 'creationDate', desc: true },
+  { text: 'Po nazwie (A–Z)', key: 'firstname' },
+  { text: 'Po nazwie (Z–A)', key: 'firstname', desc: true },
+  { text: 'Od najnowszych' , key: 'created_at' },
+  { text: 'Od najstarszych', key: 'created_at', desc: true },
   { text: 'Po dacie modyfikacji (rosnąco)', key: 'updated_at' },
   { text: 'Po dacie modyfikacji (malejąco)', key: 'updated_at', desc: true },
 ]
+
+function customQueries(): string[] {
+  let query: string[] = []
+
+  if (!showAnonymizedUsers.value) {
+    query.push(`anonymized=${true}`)
+  }
+
+  return query
+}
 </script>
 
 <template>
@@ -35,7 +45,9 @@ const sortOptions: SortOption[] = [
   <CrudPage
     :options="sortOptions"
     :items="users"
+    :custom-queries="customQueries"
     resource-name="users"
+    disable-edit-button
     mobile-nav
   >
     <template #actions>
@@ -97,12 +109,12 @@ const sortOptions: SortOption[] = [
     </template>
 
     <template #itemActions="{item, editMode}">
-      <button v-if="user?.isSuperAdmin && !item.isAnonymized" title="Anonimizuj" @click="showWarning[item.id] = true">
-        <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
+      <button v-if="!item.isAnonymized" title="Edytuj" @click="() => editMode(true)">
+        <PencilIcon class="icon slide-up-animation" />
       </button>
 
-      <button title="Edytuj" @click="editMode">
-        <PencilIcon class="icon slide-up-animation" />
+      <button v-if="user?.isSuperAdmin && !item.isAnonymized" title="Anonimizuj" @click="showWarning[item.id] = true">
+        <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
       </button>
     </template>
 

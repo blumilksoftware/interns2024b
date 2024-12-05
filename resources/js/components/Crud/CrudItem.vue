@@ -14,6 +14,7 @@ const props = defineProps<{
   item: T
   resourceName: string
   deletable?: boolean
+  disableEditButton?: boolean
 }>()
 
 const slots = defineSlots<{
@@ -90,11 +91,11 @@ watch(() => props.item, () => item.value = JSON.parse(JSON.stringify(props.item)
 
       <div class="flex flex-col sm:flex-row pl-5 gap-5 h-fit">
         <template v-if="!editing">
-          <slot name="actions" :edit-mode="(mode) => editing = mode">
-            <button v-if="!slots.actions" title="Edytuj" @click="editing = true">
-              <PencilIcon class="icon slide-up-animation" />
-            </button>
-          </slot>
+          <button v-if="!disableEditButton" title="Edytuj" @click="editing = true">
+            <PencilIcon class="icon slide-up-animation" />
+          </button>
+
+          <slot name="actions" :edit-mode="(mode) => editing = mode" />
         </template>
 
         <template v-if="editing">

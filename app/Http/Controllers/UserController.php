@@ -12,20 +12,22 @@ use App\Models\School;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class UserController extends Controller
 {
-    public function index(SortHelper $sorter): Response
+    public function index(SortHelper $sorter, Request $request): Response
     {
         $users = User::query()->role("user")->with("school");
         $schools = School::query()->orderBy("id")->get();
 
-        $query = $sorter->sort($users, ["id", "email", "updated_at", "created_at"], ["name", "school"]);
+        $query = $sorter->sort($users, ["id", "email", "updated_at", "created_at"], ["firstname", "school"]);
+        $query = $this->filterAnonymizedUsers($query, $request);
         $query = $this->sortBySchool($query, $sorter);
         $query = $this->sortByName($query, $sorter);
-        $query = $sorter->search($query, "name");
+        $query = $sorter->search($query, "firstname");
 
         return Inertia::render("Admin/UsersPanel", [
             "users" => UserResource::collection($query->paginate()),
@@ -73,9 +75,9 @@ class UserController extends Controller
     {
         [$field, $order] = $sorter->getSortParameters();
 
-        if ($field === "name") {
-            return $query->orderBy("surname", $order)
-                ->orderBy("firstname", $order);
+        if ($field === "firstname") {
+            return $query->orderBy("firstname", $order)
+                ->orderBy("surname", $order);
         }
 
         return $query;
@@ -86,7 +88,18 @@ class UserController extends Controller
         [$field, $order] = $sorter->getSortParameters();
 
         if ($field === "school") {
-            return $query->orderBy("school.name", $order);
+            return $query->orderBy("school.firstname", $order);
+        }
+
+        return $query;
+    }
+
+    private function filterAnonymizedUsers(Builder $query, Request $request): Builder
+    {
+        $showAnonymized = $request->query("anonymized", "false") === "true";
+
+        if (!$showAnonymized) {
+            return $query->where("is_anonymized", false);
         }
 
         return $query;
