@@ -20,7 +20,7 @@ const handleInput = useDebounceFn(() => {
 </script>
 
 <template>
-  <div class="flex items-center gap-1 bg-white/70 text-primary duration-200 p-1 rounded-xl w-full border border-primary/30 h-fit">
+  <div class="flex items-center gap-1 bg-white/70 text-primary duration-200 p-1 rounded-lg w-full border border-primary/30 h-fit text-sm">
     <input
       ref="input"
       v-model="text"

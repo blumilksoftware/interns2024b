@@ -23,7 +23,7 @@ function pick(option: Option) {
     <Transition>
       <div
         v-if="isVisible"
-        class="absolute z-50 w-fit rounded-lg bg-white/70 backdrop-blur-md outline-none shadow border border-primary/30 mt-1" role="menu"
+        class="absolute z-50 w-fit rounded-lg bg-white/70 backdrop-blur-md outline-none shadow border border-primary/30 mt-2" role="menu"
         aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1"
       >
         <div

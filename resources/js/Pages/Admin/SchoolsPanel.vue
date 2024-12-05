@@ -86,9 +86,9 @@ function startFetching() {
   <Banner :show="!!message" :message="message" @close="hideMessage" />
 
   <Transition>
-    <div v-show="status === false" class="fixed bg-white/50 backdrop-blur-md z-10 size-full left-0 top-0 flex items-center justify-center gap-2">
+    <div v-show="status === false" class="fixed bg-white/50 backdrop-blur-md z-10 size-full left-0 top-0 flex items-center justify-center gap-4">
       <div class="inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status" />
-      <p>Trwa importowanie szkół.</p>
+      <p>Trwa importowanie szkół...</p>
     </div>
   </Transition>
 

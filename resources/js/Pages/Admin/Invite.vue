@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { computed, defineProps, ref, watch } from 'vue'
+import { computed, defineProps, ref } from 'vue'
 import FormButton from '@/components/Common/FormButton.vue'
-import CrudPage from "@/components/Crud/CrudPage.vue"
-import Expand from "@/components/Common/Expand.vue"
-import Searchbar from "@/components/Common/Searchbar.vue"
-import { nanoid } from "nanoid"
+import CrudPage from '@/components/Crud/CrudPage.vue'
+import Expand from '@/components/Common/Expand.vue'
+import Searchbar from '@/components/Common/Searchbar.vue'
+import { nanoid } from 'nanoid'
 import { type Errors } from '@inertiajs/core'
-import ButtonFrame from "@/components/Common/ButtonFrame.vue";
+import ButtonFrame from '@/components/Common/ButtonFrame.vue'
 
 const props = defineProps<{
   errors: Errors
@@ -71,13 +71,13 @@ const options: SortOption[] = [
       />
     </template>
 
-    <template #item={item}>
+    <template #item="{item}">
       <div
-        class="flex gap-1 p-4 bg-white/70 border-2 justify-between items-center rounded-xl shadow-sm"
+        class="flex p-5 bg-white/70 border-2 justify-between items-center rounded-xl shadow-sm cursor-pointer"
         :class="{ 'border-primary': selectedUsers.includes(item.id) }"
         @click="selectedUsers.includes(item.id) ? selectedUsers = selectedUsers.filter(id => id !== item.id) : selectedUsers.push(item.id)"
       >
-        <div>
+        <div class="flex flex-col gap-1">
           <div class="w-full font-bold text-lg">
             {{ item.firstname }} {{ item.surname }}
           </div>
