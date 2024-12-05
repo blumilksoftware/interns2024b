@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import {Head} from '@inertiajs/vue3'
-import {computed} from 'vue'
+import { Head } from '@inertiajs/vue3'
+import { computed } from 'vue'
 import dayjs from 'dayjs'
 import FormButton from '@/components/Common/FormButton.vue'
 import Divider from '@/components/Common/Divider.vue'
 import LinkButton from '@/components/Common/LinkButton.vue'
 import QuizItem from '@/components/Dashboard/QuizItem.vue'
-import {type PageProps} from '@/Types/PageProps'
+import { type PageProps } from '@/Types/PageProps'
 
 const props = defineProps<{
   userQuizzes: UserQuiz[]
   quizzes: Quiz[]
-}& PageProps>()
+} & PageProps>()
 
 const isClosed = (quiz: Quiz) => (
   dayjs(quiz.scheduledAt).add(quiz.duration ?? 0, 'm').isBefore(Date.now()) ||

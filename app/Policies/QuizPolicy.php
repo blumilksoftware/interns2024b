@@ -47,7 +47,7 @@ class QuizPolicy
 
     public function viewAdminRanking(User $user, Quiz $quiz): Response
     {
-        return ($quiz->isLocked && $user->hasRole("admin|super_admin")) ? Response::allow() : Response::deny("Nie masz uprawnień do zobaczenia rankingu.");
+        return ($quiz->isPublished && $user->hasRole("admin|super_admin")) ? Response::allow() : Response::deny("Nie masz uprawnień do zobaczenia rankingu.");
     }
 
     public function viewUserRanking(User $user, Quiz $quiz): Response
@@ -66,5 +66,10 @@ class QuizPolicy
     public function publish(User $user, Quiz $quiz): bool
     {
         return $quiz->isLocked && $user->hasRole("admin|super_admin") && $quiz->userQuizzes->isNotEmpty();
+    }
+
+    public function invite(User $user, Quiz $quiz): Response
+    {
+        return $user->hasRole("admin|super_admin") ? (!$quiz->isPublished && $quiz->isLocked) ? Response::allow() : Response::deny("Stan quizu uniemożliwia Ci zaproszenie użytkowników do niego.") : Response::deny("Nie masz uprawnień do zapraszania użytkowników do quizu.");
     }
 }

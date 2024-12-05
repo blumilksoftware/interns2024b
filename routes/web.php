@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
 use App\Http\Controllers\EmailVerifyController;
+use App\Http\Controllers\InviteController;
 use App\Http\Controllers\PasswordResetLinkController;
 use App\Http\Controllers\ProfileUserController;
 use App\Http\Controllers\QuestionAnswerController;
@@ -48,6 +49,10 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/quizzes/{quiz}/clone", [QuizController::class, "clone"])->name("admin.quizzes.clone");
     Route::post("/quizzes/{quiz}/lock", [QuizController::class, "lock"])->name("admin.quizzes.lock");
     Route::post("/quizzes/{quiz}/unlock", [QuizController::class, "unlock"])->can("unlock,quiz")->name("admin.quizzes.unlock");
+
+    Route::get("/quizzes/{quiz}/invite", [InviteController::class, "index"])->name("admin.quizzes.invite.index");
+    Route::post("/quizzes/{quiz}/invite/assign", [InviteController::class, "assign"])->name("admin.quizzes.invite.assign");
+    Route::post("/quizzes/{quiz}/invite/unassign", [InviteController::class, "unassign"])->name("admin.quizzes.invite.unassign");
 
     Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "index"])->can("viewAdminRanking,quiz")->name("admin.quizzes.ranking");
     Route::post("/quizzes/{quiz}/ranking/publish", [RankingController::class, "publish"])->can("publish,quiz")->name("admin.quizzes.ranking.publish");

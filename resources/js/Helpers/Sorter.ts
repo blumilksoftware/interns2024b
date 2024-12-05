@@ -1,6 +1,6 @@
-import {computed, type Ref, ref, watch} from 'vue'
-import {router} from '@inertiajs/vue3'
-import {useParams} from '@/Helpers/Params'
+import { computed, type Ref, ref, watch } from 'vue'
+import { router } from '@inertiajs/vue3'
+import { useParams } from '@/Helpers/Params'
 
 export function useSorter(sortOptions: SortOption[], searchText?: Ref<string | undefined>, customQueries?: () => string[]): [query: Ref<string>, Ref<Option[]>] {
   const params = useParams()
@@ -8,7 +8,7 @@ export function useSorter(sortOptions: SortOption[], searchText?: Ref<string | u
   const desc = ref(params.order)
 
   const options = computed(() => sortOptions.map<Option>((option) => ({
-    ...option, action: () => { key.value = `${option.key}`; desc.value = option.desc ? 'desc' : 'asc' },
+    ...option, action: () => { key.value = option.key; desc.value = option.desc ? 'desc' : 'asc' },
   })))
 
   const query = computed(() => {

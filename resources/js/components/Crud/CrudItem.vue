@@ -2,12 +2,12 @@
 import useRequestResolution from '@/Helpers/RequestResolution'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
-import {ref, watch} from 'vue'
+import { ref, watch } from 'vue'
 import { CheckIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 import WarningMessageBox from '@/components/Common/WarningMessageBox.vue'
-import {type Errors, type RequestPayload} from '@inertiajs/core'
+import { type Errors, type RequestPayload } from '@inertiajs/core'
 import { formatDate } from '@/Helpers/Format'
 
 const props = defineProps<{
@@ -23,7 +23,6 @@ const slots = defineSlots<{
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
   data: (scope: { item: T, editing: boolean, errors: Errors }) => any
 }>()
-
 
 const item = ref<T>(JSON.parse(JSON.stringify(props.item)))
 const editing = ref(false)
