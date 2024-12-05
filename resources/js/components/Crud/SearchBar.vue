@@ -32,12 +32,12 @@ const handleInput = useDebounceFn(() => {
       @input="handleInput"
     >
 
-    <div
+    <button
       title="Szukaj"
-      class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg cursor-pointer opacity-50 hover:opacity-70"
+      class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg opacity-50 hover:opacity-70"
       @click="emit('search', text)"
     >
       <MagnifyingGlassIcon class="size-5 stroke-2" />
-    </div>
+    </button>
   </div>
 </template>
