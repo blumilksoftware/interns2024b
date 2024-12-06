@@ -12,23 +12,23 @@ const input = ref<HTMLInputElement>()
 
 const selectedMode = ref<Mode | undefined>(props.modes ? props.modes[0] : undefined)
 
-function emitParams() {
+function search() {
   emit('search', text.value, selectedMode.value?.name)
 }
 
 function handleKeyUp(e: KeyboardEvent) {
   if (e.key === 'Enter') {
-    emitParams()
+    search()
   }
 }
 
 const handleInput = useDebounceFn(() => {
-  emitParams()
+  search()
 }, 500)
 
 function pickMode(mode: Mode) {
   selectedMode.value = mode
-  emitParams()
+  search()
 }
 </script>
 
@@ -59,7 +59,7 @@ function pickMode(mode: Mode) {
     <button
       title="Szukaj"
       class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg opacity-50 hover:opacity-70"
-      @click="emit('search', text, selectedMode?.name)"
+      @click="search"
     >
       <MagnifyingGlassIcon class="size-5 stroke-2" />
     </button>

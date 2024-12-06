@@ -43,7 +43,7 @@ async function fetchAdditionalSchools(search?:string) {
   
   isSchoolsPageLoadingFinished.value = false
 
-  const link = `/schools?page=${schools.value.current_page+1}` + (search ? `&search=${search}` : '')
+  const link = `/api/schools?page=${schools.value.current_page+1}` + (search ? `&search=${search}` : '')
   
   try {
     const response = await axios.get(link)

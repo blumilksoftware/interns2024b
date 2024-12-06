@@ -9,7 +9,7 @@ use App\Models\School;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 
-class SchoolsDataController extends Controller
+class SchoolsAPIController extends Controller
 {
     public function index(SortHelper $sorter): JsonResponse
     {
