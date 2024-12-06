@@ -4,13 +4,14 @@ import FormButton from '@/components/Common/FormButton.vue'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
 import { type Errors } from '@inertiajs/core'
-import ButtonFrame from '@/components/Common/ButtonFrame.vue'
 import { keysWrapper } from '@/Helpers/KeysManager'
+import Button from '@/components/Common/Button.vue'
+import { CheckIcon } from '@heroicons/vue/24/outline'
 
 defineProps<{
   errors: Errors
   users: Pagination<User>
-  quiz: Quiz
+  quiz: number
   schools: Array<{
     id: number
     name: string
@@ -40,33 +41,37 @@ const options: SortOption[] = [
   {text: 'Po szkole (Z-A)', key: 'school', desc: true},
 ]
 
-const searchBarOptions = keysWrapper([{ text: 'Uczniowie' }, { text: 'Szkoły' }])
+const searchBarModes = keysWrapper([{ text: 'Uczniowie', name: 'user' }, { text: 'Szkoły', name: 'school' }]) as Mode[]
 </script>
 
 <template>
-  <CrudPage :items="users" :options="options" :resource-name="`quizzes/${quiz.id}/invite`" :custom-queries="customQueries" :search-bar-options="searchBarOptions">
+  <CrudPage :items="users" :options="options" :resource-name="`quizzes/${quiz}/invite`" :custom-queries="customQueries" :search-bar-modes="searchBarModes">
     <template #actions>
       <Expand />
 
-      <ButtonFrame @click="selectedUsers = users.data.map(user => user.id)">Zaznacz wszystko</ButtonFrame>
-      <FormButton :data="{ ids: selectedUsers }" method="post" :href="`/admin/quizzes/${quiz.id}/invite/assign`" preserve-scroll>Przypisz zaznaczonych</FormButton>
-      <FormButton :data="{ ids: selectedUsers }" method="post" :href="`/admin/quizzes/${quiz.id}/invite/unassign`" preserve-scroll>Wypisz zaznaczonych</FormButton>
+      <Button @click="selectedUsers = users.data.map(user => user.id)">Zaznacz wszystko</Button>
+      <FormButton :data="{ ids: selectedUsers }" method="post" :href="`/admin/quizzes/${quiz}/invite/assign`" preserve-scroll>Przypisz zaznaczonych</FormButton>
+      <FormButton :data="{ ids: selectedUsers }" method="post" :href="`/admin/quizzes/${quiz}/invite/unassign`" preserve-scroll>Wypisz zaznaczonych</FormButton>
     </template>
 
     <template #item="{item}">
       <div
-        class="flex p-5 bg-white/70 border-2 justify-between items-center rounded-xl shadow-sm cursor-pointer"
+        class="flex p-5 bg-white/70 border-2 justify-between items-center rounded-xl shadow-sm cursor-pointer duration-200 transition-colors"
         :class="{ 'border-primary': selectedUsers.includes(item.id) }"
         @click="selectedUsers.includes(item.id) ? selectedUsers = selectedUsers.filter(id => id !== item.id) : selectedUsers.push(item.id)"
       >
-        <div class="flex flex-col gap-1">
-          <div class="w-full font-bold text-lg">
-            {{ item.firstname }} {{ item.surname }}
+        <div class="flex gap-4">
+          <div class="flex flex-col gap-1">
+            <div class="w-full font-bold text-lg">
+              {{ item.firstname }} {{ item.surname }}
+            </div>
+            <div class="text-gray-500">{{ item.school.name }}</div>
           </div>
-          <div class="text-gray-500">{{ item.school.name }}</div>
         </div>
 
-        <div class="">{{ assigned.includes(item.id) ? "Tak" : "Nie" }}</div>
+        <div v-if="assigned.includes(item.id)">
+          <CheckIcon class="icon" />
+        </div>
       </div>
     </template>
   </CrudPage>

@@ -2,7 +2,7 @@ import { computed, type Ref, ref, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { useParams } from '@/Helpers/Params'
 
-export function useSorter(sortOptions: SortOption[], searchText?: Ref<string | undefined>, customQueries?: () => string[]): [query: Ref<string>, Ref<Option[]>] {
+export function useSorter(sortOptions: SortOption[], searchText?: Ref<string | undefined>, modeValue?: Ref<string | undefined>, customQueries?: () => string[]): [query: Ref<string>, Ref<Option[]>] {
   const params = useParams()
   const key = ref(params.sort)
   const desc = ref(params.order)
@@ -21,6 +21,10 @@ export function useSorter(sortOptions: SortOption[], searchText?: Ref<string | u
 
     if (searchText?.value) {
       query.push(`search=${searchText?.value}`)
+    }
+
+    if (modeValue?.value) {
+      query.push(`mode=${modeValue?.value}`)
     }
 
     if (customQueries) {

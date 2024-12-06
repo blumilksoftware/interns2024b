@@ -4,23 +4,32 @@ import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
 import { useDebounceFn } from '@vueuse/core'
 import Dropdown from '@/components/Common/Dropdown.vue'
 
-const props = defineProps<{ defaultValue?: string, options?: Option[] }>()
+const props = defineProps<{ defaultValue?: string, modes?: Mode[] }>()
 const text = ref(props.defaultValue)
 
-const emit = defineEmits<{ search: [value:string|undefined] }>()
+const emit = defineEmits<{ search: [value:string|undefined, mode?:string] }>()
 const input = ref<HTMLInputElement>()
 
-const selectedOption = ref<Option | undefined>(props.options ? props.options[0] : undefined)
+const selectedMode = ref<Mode | undefined>(props.modes ? props.modes[0] : undefined)
+
+function emitParams() {
+  emit('search', text.value, selectedMode.value?.name)
+}
 
 function handleKeyUp(e: KeyboardEvent) {
   if (e.key === 'Enter') {
-    emit('search', text.value)
+    emitParams()
   }
 }
 
 const handleInput = useDebounceFn(() => {
-  emit('search', text.value)
+  emitParams()
 }, 500)
+
+function pickMode(mode: Mode) {
+  selectedMode.value = mode
+  emitParams()
+}
 </script>
 
 <template>
@@ -36,16 +45,21 @@ const handleInput = useDebounceFn(() => {
       @input="handleInput"
     >
     
-    <Dropdown v-if="options && options.length > 1" pointer-position="left" :options @option-click="option=>selectedOption = option">
+    <Dropdown
+      v-if="modes && modes.length > 1"
+      pointer-position="left"
+      :options="modes"
+      @option-click="(option: any) => pickMode(option)"
+    >
       <div class="flex gap-1 text-gray-800 items-center hover:bg-primary/5 hover:text-primary p-2 pr-1 rounded-lg duration-200">
-        {{ selectedOption?.text }} <ChevronDownIcon class="size-3" />
+        {{ selectedMode?.text }} <ChevronDownIcon class="size-3" />
       </div>
     </Dropdown>
 
     <button
       title="Szukaj"
       class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg opacity-50 hover:opacity-70"
-      @click="emit('search', text)"
+      @click="emit('search', text, selectedMode?.name)"
     >
       <MagnifyingGlassIcon class="size-5 stroke-2" />
     </button>

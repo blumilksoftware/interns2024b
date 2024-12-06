@@ -5,7 +5,7 @@ import { vAutoAnimate } from '@formkit/auto-animate'
 import Expand from '@/components/Common/Expand.vue'
 import Dropdown from '@/components/Common/Dropdown.vue'
 import { type Errors } from '@inertiajs/core'
-import { ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import Button from '@/components/Common/Button.vue'
 import CrudNewItem from '@/components/Crud/CrudNewItem.vue'
 import CrudItem from '@/components/Crud/CrudItem.vue'
@@ -25,7 +25,7 @@ const props = defineProps<{
   newButtonText?: string
   newItemData?: N
   searchBarPlaceholder?: string
-  searchBarOptions?: Option[]
+  searchBarModes?: Mode[]
   deletable?: boolean
   creatable?: boolean
   mobileNav?: boolean
@@ -46,22 +46,16 @@ const pagination = props.items
 const newItemMode = ref(false)
 const params = useParams()
 const searchValue = ref<string | undefined>(params.search)
+const modeValue = ref<string | undefined>(params.mode)
 
-function handleSearch(text: string | undefined) {
-  if (props.customSearch) {
-    searchValue.value = props.customSearch(text)
-  }
-  else {
-    searchValue.value = text
-  }
+function handleSearch(text: string | undefined, mode?:string) {
+  searchValue.value = props.customSearch ? props.customSearch(text) : text
+  modeValue.value = mode?.toUpperCase()
 }
 
-const isSearchbarEmpty = ref(!params.search)
-watch(() => props.items.data, () => {
-  isSearchbarEmpty.value = !searchValue.value
-})
+const isSearchbarEmpty = computed(()=>!params.search)
 
-const [query, options] = useSorter(props.options, searchValue, props.customQueries)
+const [query, options] = useSorter(props.options, searchValue, modeValue, props.customQueries)
 </script>
 
 <template>
@@ -94,7 +88,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
       <SearchBar 
         :placeholder="searchBarPlaceholder" class="w-full" 
         :default-value="displaySearchInLowerCase ? params.search?.toLowerCase() : params.search"
-        :options="searchBarOptions"
+        :modes="searchBarModes"
         @search="handleSearch"
       />
       <Pagination v-if="items.data.length > 0" :data="pagination" :query="query" />

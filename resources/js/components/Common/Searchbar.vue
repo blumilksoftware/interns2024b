@@ -16,6 +16,7 @@ const props = defineProps<{
   noResultsText?:string
   isLoadingFinished?:boolean
   pagesEnded?: boolean
+  noFetchText?:string
   onFetchAdditionalData:(search?:string)=>Promise<void>
 }>()
 const emit = defineEmits<{ change: [option:T] }>()
@@ -36,8 +37,6 @@ onMounted(() => {
       async function loadNewContent() {
         if (!contentElement.value) return
         const scrollOffset = contentElement.value.scrollTop
-        console.log('scrollOffset', `${contentElement.value.scrollHeight} - ${contentElement.value.scrollTop}`)
-        
         await props.onFetchAdditionalData()
         contentElement.value.scrollTop = scrollOffset
       }
@@ -99,7 +98,7 @@ const showLoading = computed(()=>!searchQuery.value && !props.pagesEnded || sear
           :value="isFocused ? searchQuery : selectedOption?.text"
           :class="{'cursor-pointer' : !isFocused}"
           :placeholder="selectedOption?.text"
-          @input="event=>{console.log('astarst') ;updateQuery(event); handleInput()}"
+          @input="event=>{updateQuery(event); handleInput()}"
           @focus="isFocused=true"
         >
       </div>
@@ -121,7 +120,7 @@ const showLoading = computed(()=>!searchQuery.value && !props.pagesEnded || sear
           </div>
           <div v-show="!searchQuery && !pagesEnded" ref="loadingElement" />
           <span v-show="options.length <= 0 && !showLoading" class="block px-4 py-2 text-sm">
-            {{ noResultsText }}
+            {{ noFetchText ? noFetchText : noResultsText }}
           </span>
         </div>
       </Transition>

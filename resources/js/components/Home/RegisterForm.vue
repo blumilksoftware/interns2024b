@@ -11,7 +11,6 @@ import PasswordInput from '@/components/Common/PasswordInput.vue'
 
 
 const props = defineProps<{ errors:Errors, schools:Pagination<School> }>()
-console.log(props.schools)
 const schools = ref(props.schools)
 const filteredSchoolOptions = computed(() =>
   schools.value.data.map((school:School):Option & School =>
@@ -33,8 +32,10 @@ function submit() {
 const isSchoolsPageLoadingFinished = ref(false)
 const pagesEnded = ref(false)
 const currentShoolPage = ref(1)
+const searchErrorMessage = ref('')
 
 async function fetchAdditionalSchools(search?:string) {
+  searchErrorMessage.value = ''
   if (currentShoolPage.value >= props.schools.meta.last_page) {
     pagesEnded.value = true
     return
@@ -46,12 +47,10 @@ async function fetchAdditionalSchools(search?:string) {
   
   try {
     const response = await axios.get(link)
-    console.log(response.data)
-    
     schools.value = { ...response.data, data: [...schools.value.data, ...response.data.data] }
     currentShoolPage.value++
-  } catch (error) {
-    console.error('Failed to fetch schools:', error)
+  } catch {
+    searchErrorMessage.value = 'Nie udało się pobrać więcej szkół'
   }
 
   isSchoolsPageLoadingFinished.value = true
@@ -73,6 +72,7 @@ async function fetchAdditionalSchools(search?:string) {
       :error="errors.school_id"
       :is-loading-finished="isSchoolsPageLoadingFinished"
       :pages-ended="pagesEnded"
+      :no-fetch-text="searchErrorMessage"
       @fetch-additional-data="fetchAdditionalSchools"
       @change="school => form.school_id = school.id.toString()"
     />
