@@ -60,7 +60,7 @@ const [query, options] = useSorter(props.options, searchValue, modeValue, props.
 
 <template>
   <div class="flex flex-col w-full pb-3">
-    <div data-name="toolbar" class="flex xs:flex-row px-4 gap-2" :class="{ 'flex-col': mobileNav }">
+    <div data-name="toolbar" class="flex flex-col sm:flex-row px-4 gap-2" :class="{ 'flex-col': mobileNav }">
       <Dropdown pointer-position="left" class-btn="rounded-lg" class="mr-auto" :options="options" title="Sortuj">
         <div class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg h-fit">
           <ArrowsUpDownIcon class="size-6" />

@@ -47,7 +47,7 @@ const searchBarModes = keysWrapper([{ text: 'Uczniowie', name: 'user' }, { text:
 <template>
   <CrudPage :items="users" :options="options" :resource-name="`quizzes/${quiz}/invite`" :custom-queries="customQueries" :search-bar-modes="searchBarModes">
     <template #actions>
-      <Expand />
+      <Expand class="hidden sm:block" />
 
       <Button @click="selectedUsers = users.data.map(user => user.id)">Zaznacz wszystko</Button>
       <FormButton :data="{ ids: selectedUsers }" method="post" :href="`/admin/quizzes/${quiz}/invite/assign`" preserve-scroll>Przypisz zaznaczonych</FormButton>
