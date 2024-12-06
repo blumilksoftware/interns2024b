@@ -11,9 +11,9 @@ import BackgroundEffect from '@/components/Common/BackgroundEffect.vue'
 import { type PageProps } from '@/Types/PageProps'
 
 const authSectionRef = ref<InstanceType<typeof AuthSection>>()
-const { errors, schools, ...props } = defineProps<{
+const props = defineProps<{
   errors:Errors
-  schools:School[]
+  schools:Pagination<School>
 } & PageProps>()
 const status = ref<string | undefined>(props.flash.status)
 

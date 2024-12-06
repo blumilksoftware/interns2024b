@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { computed, defineProps, ref } from 'vue'
+import { defineProps, ref } from 'vue'
 import FormButton from '@/components/Common/FormButton.vue'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
-import Searchbar from '@/components/Common/Searchbar.vue'
-import { nanoid } from 'nanoid'
 import { type Errors } from '@inertiajs/core'
 import ButtonFrame from '@/components/Common/ButtonFrame.vue'
+import { keysWrapper } from '@/Helpers/KeysManager'
 
-const props = defineProps<{
+defineProps<{
   errors: Errors
   users: Pagination<User>
   quiz: Quiz
@@ -23,15 +22,6 @@ const props = defineProps<{
 const selectedUsers = ref<number[]>([])
 
 const schoolId = ref<number>()
-const filteredSchools = computed(() => props.schools.toSorted((a, b) => (a.city + a.name).localeCompare(b.city + b.name)))
-const filteredSchoolOptions = computed(() =>
-  [
-    { id: -1, key: nanoid(), title: 'Nie filtruj', text: '' },
-    ...filteredSchools.value.map((school): Option & { id: number } =>
-      ({ id: school.id, key: nanoid(), title: school.city, text: school.name }),
-    ),
-  ],
-)
 
 function customQueries(): string[] {
   if (schoolId.value && schoolId.value !== -1) {
@@ -49,26 +39,18 @@ const options: SortOption[] = [
   {text: 'Po szkole (A-Z)', key: 'school'},
   {text: 'Po szkole (Z-A)', key: 'school', desc: true},
 ]
+
+const searchBarOptions = keysWrapper([{ text: 'Uczniowie' }, { text: 'Szkoły' }])
 </script>
 
 <template>
-  <CrudPage :items="users" :options="options" :resource-name="`quizzes/${quiz.id}/invite`" :custom-queries="customQueries">
+  <CrudPage :items="users" :options="options" :resource-name="`quizzes/${quiz.id}/invite`" :custom-queries="customQueries" :search-bar-options="searchBarOptions">
     <template #actions>
       <Expand />
 
       <ButtonFrame @click="selectedUsers = users.data.map(user => user.id)">Zaznacz wszystko</ButtonFrame>
       <FormButton :data="{ ids: selectedUsers }" method="post" :href="`/admin/quizzes/${quiz.id}/invite/assign`" preserve-scroll>Przypisz zaznaczonych</FormButton>
       <FormButton :data="{ ids: selectedUsers }" method="post" :href="`/admin/quizzes/${quiz.id}/invite/unassign`" preserve-scroll>Wypisz zaznaczonych</FormButton>
-    </template>
-
-    <template #searchActions>
-      <Searchbar
-        label="Szkoła"
-        aria-label="Poszukiwanie szkół. Otwiera listę szkół"
-        :options="filteredSchoolOptions"
-        :error="errors.school_id"
-        @change="schoolId = $event.id"
-      />
     </template>
 
     <template #item="{item}">

@@ -15,6 +15,7 @@ use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\RegisterUserController;
 use App\Http\Controllers\SchoolsController;
+use App\Http\Controllers\SchoolsDataController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserQuestionController;
 use App\Http\Controllers\UserQuizController;
@@ -39,6 +40,7 @@ Route::middleware(["guest"])->group(function (): void {
 
 Route::get("/auth/password/reset/{token}", [PasswordResetLinkController::class, "resetCreate"])->name("password.reset");
 Route::post("/auth/password/reset", [PasswordResetLinkController::class, "resetStore"])->name("password.update");
+Route::get("/schools", [SchoolsDataController::class, "index"])->name("schools.api");
 
 Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_admin"]], function (): void {
     Route::get("/quizzes", [QuizController::class, "index"])->name("admin.quizzes.index");

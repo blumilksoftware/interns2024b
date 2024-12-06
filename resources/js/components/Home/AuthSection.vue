@@ -10,7 +10,7 @@ const authSectionElement = ref<HTMLElement | undefined>()
 defineExpose({ isLogin, authSectionElement})
 const { errors, schools } = defineProps<{
   errors: Record<string, string>
-  schools: School[]
+  schools: Pagination<School>
 }>()
 
 onMounted(()=>{

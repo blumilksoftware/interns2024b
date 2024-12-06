@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { nanoid } from 'nanoid'
+import axios from 'axios'
 import { useForm } from '@inertiajs/vue3'
 import { type Errors } from '@inertiajs/core'
 import Checkbox from '@/components/Common/Checkbox.vue'
@@ -8,10 +9,12 @@ import Searchbar from '@/components/Common/Searchbar.vue'
 import CustomInput from '@/components/Common/CustomInput.vue'
 import PasswordInput from '@/components/Common/PasswordInput.vue'
 
-const props = defineProps<{ errors:Errors, schools:School[] }>()
-const filteredSchools = computed(() => props.schools.toSorted((a, b) => (a.city + a.name).localeCompare(b.city + b.name)))
+
+const props = defineProps<{ errors:Errors, schools:Pagination<School> }>()
+console.log(props.schools)
+const schools = ref(props.schools)
 const filteredSchoolOptions = computed(() =>
-  filteredSchools.value.map((school:School):Option & School =>
+  schools.value.data.map((school:School):Option & School =>
     ({...school, key: nanoid(), title: school.city, text: school.name }),
   ),
 )
@@ -26,6 +29,33 @@ const form = useForm({
 function submit() {
   form.post('/auth/register', { preserveScroll: true, preserveState: true })
 }
+
+const isSchoolsPageLoadingFinished = ref(false)
+const pagesEnded = ref(false)
+const currentShoolPage = ref(1)
+
+async function fetchAdditionalSchools(search?:string) {
+  if (currentShoolPage.value >= props.schools.meta.last_page) {
+    pagesEnded.value = true
+    return
+  }
+  
+  isSchoolsPageLoadingFinished.value = false
+
+  const link = `/schools?page=${schools.value.current_page+1}` + (search ? `&search=${search}` : '')
+  
+  try {
+    const response = await axios.get(link)
+    console.log(response.data)
+    
+    schools.value = { ...response.data, data: [...schools.value.data, ...response.data.data] }
+    currentShoolPage.value++
+  } catch (error) {
+    console.error('Failed to fetch schools:', error)
+  }
+
+  isSchoolsPageLoadingFinished.value = true
+}
 </script>
 
 <template>
@@ -38,13 +68,17 @@ function submit() {
     <Searchbar
       label="Szkoła"
       aria-label="Poszukiwanie szkół. Otwiera listę szkół"
+      no-results-text="Nie znaleziono szkoły"
       :options="filteredSchoolOptions"
       :error="errors.school_id"
+      :is-loading-finished="isSchoolsPageLoadingFinished"
+      :pages-ended="pagesEnded"
+      @fetch-additional-data="fetchAdditionalSchools"
       @change="school => form.school_id = school.id.toString()"
     />
 
     <CustomInput v-model="form.email" label="E-mail" :error="errors.email" name="email" type="email" />
-    `
+    
     <PasswordInput v-model="form.password" :error="errors.password" />
 
     <label class="mx-2 mt-4 flex flex-row items-center gap-4">

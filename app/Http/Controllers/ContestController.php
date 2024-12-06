@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SortHelper;
 use App\Http\Resources\QuizResource;
 use App\Http\Resources\SchoolResource;
 use App\Http\Resources\UserQuizResource;
@@ -16,9 +17,11 @@ use Inertia\Response;
 
 class ContestController extends Controller
 {
-    public function index(): Response
+    public function index(SortHelper $sorter): Response
     {
-        $schools = School::all()->sortBy("name");
+        $query = $sorter->sort(School::query(), ["id", "name", "regon", "updated_at", "created_at"], ["students", "address"]);
+        $query = $sorter->search($query, "name");
+        $schools = $sorter->paginate($query);
 
         return Inertia::render("Home", ["schools" => SchoolResource::collection($schools)]);
     }

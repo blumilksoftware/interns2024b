@@ -25,6 +25,7 @@ const props = defineProps<{
   newButtonText?: string
   newItemData?: N
   searchBarPlaceholder?: string
+  searchBarOptions?: Option[]
   deletable?: boolean
   creatable?: boolean
   mobileNav?: boolean
@@ -32,7 +33,6 @@ const props = defineProps<{
 
 defineSlots<{
   actions: () => any
-  searchActions: () => any
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
   deleteMessage: (scope: { item: T }) => any
   item: (scope: { item: T }) => any
@@ -91,8 +91,12 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
     </div>
 
     <div class="flex w-full px-4 mt-2 justify-between gap-2">
-      <SearchBar :placeholder="searchBarPlaceholder" class="w-full" :default-value="displaySearchInLowerCase ? params.search?.toLowerCase() : params.search" @search="handleSearch" />
-      <slot name="searchActions" />
+      <SearchBar 
+        :placeholder="searchBarPlaceholder" class="w-full" 
+        :default-value="displaySearchInLowerCase ? params.search?.toLowerCase() : params.search"
+        :options="searchBarOptions"
+        @search="handleSearch"
+      />
       <Pagination v-if="items.data.length > 0" :data="pagination" :query="query" />
     </div>
 
@@ -101,11 +105,11 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
         <slot name="newItem" :new-item-mode="newItemMode">
           <CrudNewItem :new-item-data="newItemData" :resource-name="resourceName" @done="newItemMode = false">
             <template #title="data">
-              <slot name="title" v-bind="data as any" />
+              <slot name="title" v-bind="(data as any)" />
             </template>
 
             <template #data="data">
-              <slot name="itemData" v-bind="data as any" />
+              <slot name="itemData" v-bind="(data as any)" />
             </template>
           </CrudNewItem>
         </slot>
