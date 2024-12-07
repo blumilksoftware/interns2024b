@@ -54,16 +54,16 @@ const sortOptions: SortOption[] = [
 
     <template #title="{item, editing, errors: editErrors}">
       <div class="flex gap-1">
-        <label v-if="editing" for="name">
+        <label v-if="editing" for="firstname">
           Imie:
         </label>
 
         <input
-          id="name"
+          id="firstname"
           v-model="item.firstname"
           v-dynamic-input-width
           type="text"
-          name="name"
+          name="firstname"
           autocomplete="off"
           class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
           :class="{
