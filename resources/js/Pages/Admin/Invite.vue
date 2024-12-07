@@ -1,143 +1,97 @@
 <script setup lang="ts">
-import { defineProps, ref, computed } from 'vue'
+import { ref } from 'vue'
 import FormButton from '@/components/Common/FormButton.vue'
-import { useForm } from '@inertiajs/vue3'
-import { useParams } from '@/Helpers/Params'
+import CrudPage from '@/components/Crud/CrudPage.vue'
+import Expand from '@/components/Common/Expand.vue'
+import { type Errors } from '@inertiajs/core'
+import { keysWrapper } from '@/Helpers/KeysManager'
+import Button from '@/components/Common/Button.vue'
+import { CheckIcon } from '@heroicons/vue/24/outline'
 
-const sortOptions = [
-  {
-    name: 'ID',
-    value: 'id',
-  },
-  {
-    name: 'Imię',
-    value: 'name',
-  },
-  {
-    name: 'Szkoła',
-    value: 'school',
-  },
-]
-
-const orderOptions = [
-  { name: 'Rosnąco',
-    value: 'asc',
-  },
-  { name: 'Malejąco',
-    value: 'desc',
-  },
-]
-
-const props = defineProps<{
+defineProps<{
+  errors: Errors
   users: Pagination<User>
-  quiz: Quiz
-  schools: {
+  quiz: number
+  schools: Array<{
     id: number
     name: string
     city: string
-  }
+  }>
   assigned: number[]
 }>()
 
-const params = useParams()
+const selectedUsers = ref<number[]>([])
 
-const form = useForm({
-  search: params.name ?? '',
-  sort: params.sort ?? 'id',
-  order: params.order ?? 'asc',
-  schoolId: params.schoolId ?? null,
-  limit: params.limit ?? null,
-})
+const options: SortOption[] = [
+  { text: 'Po id (rosnąco)', key: 'id' },
+  { text: 'Po id (malejąco)', key: 'id', desc: true },
+  { text: 'Po nazwie (A–Z)', key: 'name' },
+  { text: 'Po nazwie (Z–A)', key: 'name', desc: true },
+  { text: 'Po szkole (A-Z)', key: 'school' },
+  { text: 'Po szkole (Z-A)', key: 'school', desc: true },
+]
 
-const selectedUserIds = ref<number[]>([])
-
-const toggleUserSelection = (userId: number) => {
-  if (selectedUserIds.value.includes(userId)) {
-    selectedUserIds.value = selectedUserIds.value.filter(id => id !== userId)
-  } else {
-    selectedUserIds.value.push(userId)
-  }
-}
-
-const showPagination = computed(() => {
-  return !params.limit
-})
+const searchBarModes = keysWrapper([
+  { text: 'Uczniowie', name: 'user' },
+  { text: 'Szkoły', name: 'school' },
+]) as Mode[]
 </script>
 
 <template>
-  <h1>Quiz: {{ quiz.title }}</h1>
-  Wyszukiwarka użytkowników do zapraszania do testów
+  <CrudPage
+    :items="users"
+    :options="options"
+    :resource-name="`quizzes/${quiz}/invite`"
+    :search-bar-modes="searchBarModes"
+  >
+    <template #actions>
+      <Expand class="hidden sm:block" />
 
-  <form @submit.prevent="form.get(`/admin/quizzes/${quiz.id}/invite`, { preserveState: true, replace: true })">
-    <div>
-      <label for="search">Wyszukaj użytkownika:</label>
-      <input v-model="form.search" type="text" placeholder="Wpisz nazwę użytkownika">
+      <Button @click="selectedUsers = users.data.map(user => user.id)">
+        Zaznacz wszystko
+      </Button>
 
-      <label for="sort">Sortowanie:</label>
-      <select v-model="form.sort" class="sorting-dropdown">
-        <option v-for="option in sortOptions" :key="option.value" :value="option.value">
-          {{ option.name }}
-        </option>
-      </select>
+      <FormButton
+        :data="{ ids: selectedUsers }"
+        method="post"
+        :href="`/admin/quizzes/${quiz}/invite/assign`"
+        preserve-scroll
+      >
+        Przypisz zaznaczonych
+      </FormButton>
 
-      <label for="order">Kierunek:</label>
-      <select v-model="form.order" class="order-dropdown">
-        <option v-for="option in orderOptions" :key="option.value" :value="option.value">
-          {{ option.name }}
-        </option>
-      </select>
+      <FormButton
+        :data="{ ids: selectedUsers }"
+        method="post"
+        :href="`/admin/quizzes/${quiz}/invite/unassign`"
+        preserve-scroll
+      >
+        Wypisz zaznaczonych
+      </FormButton>
+    </template>
 
-      <label for="school">Filtruj po szkołe:</label>
-      <select v-model="form.schoolId" class="school-dropdown">
-        <option :value="null">Wszystkie szkoły</option>
-        <option v-for="school in props.schools" :key="school.id" :value="school.id">
-          {{ school.name }}, {{ school.city }}
-        </option>
-      </select>
+    <template #item="{item}">
+      <div
+        class="flex p-5 bg-white/70 border-2 justify-between items-center rounded-xl shadow-sm cursor-pointer duration-200 transition-colors"
+        :class="{ 'border-primary': selectedUsers.includes(item.id) }"
+        @click="selectedUsers.includes(item.id) ? selectedUsers = selectedUsers.filter(id => id !== item.id) : selectedUsers.push(item.id)"
+      >
+        <div class="flex gap-4">
+          <div class="flex flex-col gap-1">
+            <div class="w-full font-bold text-lg">
+              {{ item.firstname }} {{ item.surname }}
+            </div>
 
-      <label for="limit">Liczba wyników:</label>
-      <input v-model.number="form.limit" type="number" min="1" placeholder="Wpisz liczbę wyników">
+            <div class="text-gray-500">
+              {{ item.school.name }}
+            </div>
+          </div>
+        </div>
 
-
-      <button type="submit">Apply Filters</button>
-    </div>
-  </form>
-
-  <div>
-    <table>
-      <thead>
-        <tr>
-          <th />
-          <th>ID Użytkownika</th>
-          <th>Imię</th>
-          <th>Nazwisko</th>
-          <th>Szkoła</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in users.data" :key="user.id">
-          <td>
-            <input
-              type="checkbox"
-              :value="user.id"
-              @change="toggleUserSelection(user.id)"
-            >
-          </td>
-          <td>{{ user.id }}</td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.surname }}</td>
-          <td>{{ user.school.name }}</td>
-          <td>{{ assigned.includes(user.id) }}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div v-if="showPagination">
-      <FormButton :disabled="!users.links.prev" method="get" :href="users.links.prev" preserve-scroll small>Poprzednia</FormButton>
-      <FormButton :disabled="!users.links.next" method="get" :href="users.links.next" preserve-scroll small>Następna</FormButton>
-    </div>
-    <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite/assign`" preserve-scroll>Przypisz zaznaczonych użytkowników</FormButton>
-    <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite/unassign`" preserve-scroll>Wypisz zaznaczonych użytkowników</FormButton>
-  </div>
+        <div v-if="assigned.includes(item.id)">
+          <CheckIcon class="icon" />
+        </div>
+      </div>
+    </template>
+  </CrudPage>
 </template>

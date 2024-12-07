@@ -6,6 +6,7 @@ interface PaginationLink {
 
 interface Pagination<T> {
   data: T[]
+  current_page: number
   links: {
     first: string
     last: string
@@ -15,7 +16,7 @@ interface Pagination<T> {
   meta: {
     current_page: number
     from: number
-    last_pag: number
+    last_page: number
     path: string
     per_page: number
     to: number

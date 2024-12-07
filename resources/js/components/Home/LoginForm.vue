@@ -15,7 +15,7 @@ function submit() {
 </script>
 
 <template>
-  <form class="row-start-1 col-start-1 space-y-6 sm:min-h-512 min-h-616" @submit.prevent="submit">
+  <form class="row-start-1 col-start-1 space-y-6" @submit.prevent="submit">
     <CustomInput v-model="form.email" label="E-mail" :error="errors.email" name="email" type="email" />
 
     <div class="flex flex-col gap-2">

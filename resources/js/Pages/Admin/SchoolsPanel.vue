@@ -27,7 +27,7 @@ const sortOptions: SortOption[] = [
   { text: 'Po REGON (malejąco)', key: 'regon', desc: true },
   { text: 'Po adresie (rosnąco)', key: 'address' },
   { text: 'Po adresie (malejąco)', key: 'address', desc: true },
-  { text: 'Od najnowszych' , key: 'created_at', desc: true },
+  { text: 'Od najnowszych', key: 'created_at', desc: true },
   { text: 'Od najstarszych', key: 'created_at' },
   { text: 'Po dacie modyfikacji (rosnąco)', key: 'updated_at' },
   { text: 'Po dacie modyfikacji (malejąco)', key: 'updated_at', desc: true },
@@ -53,22 +53,25 @@ async function isImportingFinished(): Promise<[boolean, number | null]> {
   }
 }
 
-setInterval(async () => {
-  if (!status.value) {
-    const [done, count] = (await isImportingFinished())
-    const isFirstCheck = status.value === null
+setInterval(
+  async () => {
+    if (!status.value) {
+      const [done, count] = (await isImportingFinished())
+      const isFirstCheck = status.value === null
 
-    if (!isFirstCheck && done && count !== null) {
-      message.value = `Zaimportowano ${count} ${schoolTranslation(count)}.`
+      if (!isFirstCheck && done && count !== null) {
+        message.value = `Zaimportowano ${count} ${schoolTranslation(count)}.`
 
-      if (count > 0) {
-        router.reload({ only: ['schools'] })
+        if (count > 0) {
+          router.reload({ only: ['schools'] })
+        }
       }
-    }
 
-    status.value = done
-  }
-}, 1000)
+      status.value = done
+    }
+  }, 
+  1000,
+)
 
 function startFetching() {
   if (status.value) {
@@ -79,23 +82,31 @@ function startFetching() {
 </script>
 
 <template>
-  <Head>
-    <title>Szkoły - Panel administracyjny</title>
-  </Head>
+  <Head title="Szkoły - Panel administracyjny" />
 
-  <Banner :show="!!message" :message="message" @close="hideMessage" />
+  <Banner
+    :show="!!message"
+    :message="message"
+    @close="hideMessage"
+  />
 
   <Transition>
-    <div v-show="status === false" class="fixed bg-white/50 backdrop-blur-md z-10 size-full left-0 top-0 flex items-center justify-center gap-2">
-      <div class="inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status" />
-      <p>Trwa importowanie szkół.</p>
+    <div
+      v-show="status === false"
+      class="fixed bg-white/50 backdrop-blur-md z-10 size-full left-0 top-0 flex items-center justify-center gap-4"
+    >
+      <div
+        class="inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
+        role="status"
+      />
+
+      <p>Trwa importowanie szkół...</p>
     </div>
   </Transition>
 
   <CrudPage
     :options="sortOptions"
     :items="schools"
-    :custom-search="(text) => text?.toLocaleUpperCase()"
     resource-name="schools"
     new-button-text="Dodaj szkołę"
     :new-item-data="{ name: 'Nowa szkoła', regon: '', apartmentNumber: '', street: '', buildingNumber: '', city: '', numberOfStudents: 0, zipCode: '' }"
@@ -118,8 +129,13 @@ function startFetching() {
     </template>
 
     <template #deleteMessage="{item}">
-      <b class="text-[1.1rem] text-gray-900">Czy na pewno chcesz usunąć "{{ item.name }}"?</b>
-      <p class="text-gray-500">Szkoła zostanie usunięta bezpowrotnie.</p>
+      <b class="text-[1.1rem] text-gray-900">
+        Czy na pewno chcesz usunąć "{{ item.name }}"?
+      </b>
+
+      <p class="text-gray-500">
+        Szkoła zostanie usunięta bezpowrotnie.
+      </p>
     </template>
 
     <template #title="{item, editing, errors}">
@@ -145,7 +161,10 @@ function startFetching() {
     </template>
 
     <template #itemData="data">
-      <div class="flex flex-col duration-200 min-h-6.5 gap-2" :class="{'text-sm text-gray-600': !data.editing}">
+      <div
+        class="flex flex-col duration-200 min-h-6.5 gap-2"
+        :class="{'text-sm text-gray-600': !data.editing}"
+      >
         <p>Liczba uczniów: <b>{{ data.item.numberOfStudents }}</b></p>
 
         <CrudInput
@@ -156,7 +175,11 @@ function startFetching() {
           :error="data.errors.regon"
         />
 
-        <AddressInput v-model="data.item" :errors="data.errors" :disabled="!data.editing" />
+        <AddressInput
+          v-model="data.item"
+          :errors="data.errors"
+          :disabled="!data.editing"
+        />
       </div>
     </template>
   </CrudPage>
