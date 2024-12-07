@@ -20,6 +20,8 @@ const showAnonymizedUsers = ref<boolean>(true)
 const sortOptions: SortOption[] = [
   { text: 'Po nazwie (A–Z)', key: 'firstname' },
   { text: 'Po nazwie (Z–A)', key: 'firstname', desc: true },
+  { text: 'Po szkole (A-Z)', key: 'school' },
+  { text: 'Po szkole (Z-A)', key: 'school',  desc: true },
   { text: 'Od najnowszych' , key: 'created_at' },
   { text: 'Od najstarszych', key: 'created_at', desc: true },
   { text: 'Po dacie modyfikacji (rosnąco)', key: 'updated_at' },

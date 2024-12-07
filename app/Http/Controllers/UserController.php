@@ -88,7 +88,10 @@ class UserController extends Controller
         [$field, $order] = $sorter->getSortParameters();
 
         if ($field === "school") {
-            return $query->orderBy("school.firstname", $order);
+            return $query->join("schools", "users.school_id", "=", "schools.id")
+                ->orderBy("schools.city", $order)
+                ->orderBy("schools.name", $order)
+                ->select("users.*");
         }
 
         return $query;
