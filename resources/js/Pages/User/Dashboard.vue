@@ -11,7 +11,7 @@ import { type PageProps } from '@/Types/PageProps'
 const props = defineProps<{
   userQuizzes: UserQuiz[]
   quizzes: Quiz[]
-}& PageProps>()
+} & PageProps>()
 
 const isClosed = (quiz: Quiz) => (
   dayjs(quiz.scheduledAt).add(quiz.duration ?? 0, 'm').isBefore(Date.now()) ||

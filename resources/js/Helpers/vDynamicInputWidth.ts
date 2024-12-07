@@ -10,12 +10,20 @@ function initDynamicWidthCalc(input:HTMLInputElement & { _calculateDynamicWidth:
 }
 
 function calculateDynamicWidth(input:HTMLInputElement, binding?:DirectiveBinding<boolean>){
-  if (binding?.value === false) return
+  if (binding?.value === false) {
+    return
+  }
+
   const context = canvas.getContext('2d')
-  if (!context) return
+
+  if (!context) {
+    return
+  }
+
   const { fontWeight, fontSize, fontFamily } = window.getComputedStyle(input)
   context.font = `${fontWeight} ${fontSize} ${fontFamily}`
-  const width = `${context.measureText(input.value).width}px`
+  const width = `${context.measureText(input.value || input.placeholder).width}px`
+
   input.style.width = `clamp(1.1rem,${width},100%)`
 }
 

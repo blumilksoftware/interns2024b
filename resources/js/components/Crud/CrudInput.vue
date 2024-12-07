@@ -9,6 +9,7 @@ defineProps<{
   label?: string
   name: string
   error?: string
+  password?: boolean
 }>()
 </script>
 
@@ -23,7 +24,7 @@ defineProps<{
     <input
       v-model="value"
       v-dynamic-input-width
-      type="text"
+      :type="password ? 'password' : 'text'"
       :name="name"
       autocomplete="off"
       class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"

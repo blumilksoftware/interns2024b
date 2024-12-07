@@ -35,7 +35,22 @@ class AdminTest extends TestCase
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Admin/AdminsPanel")
-                    ->has("users", 1),
+                    ->has("users.data", 1),
+            );
+    }
+
+    public function testAdminCanSearchAdmins(): void
+    {
+        User::factory()->count(10)->create();
+        User::factory(["firstname" => "test"])->admin()->create();
+        $this->assertDatabaseCount("users", 13);
+
+        $this->actingAs($this->superAdmin)
+            ->get("/admin/admins?search=test")
+            ->assertInertia(
+                fn(Assert $page) => $page
+                    ->component("Admin/AdminsPanel")
+                    ->has("users.data", 1),
             );
     }
 

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SortHelper;
 use App\Http\Requests\Auth\RegisterUserRequest;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\School;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
@@ -17,12 +19,16 @@ use Inertia\Response;
 
 class AdminController extends Controller
 {
-    public function index(): Response
+    public function index(SortHelper $sorter): Response
     {
-        $users = User::query()->role("admin")->with("school")->orderBy("id")->get();
+        $users = User::query()->role("admin")->with("school");
+
+        $query = $sorter->sort($users, ["id", "email", "updated_at", "created_at"], ["firstname"]);
+        $query = $this->sortByName($query, $sorter);
+        $query = $sorter->search($query, "firstname");
 
         return Inertia::render("Admin/AdminsPanel", [
-            "users" => UserResource::collection($users),
+            "users" => UserResource::collection($query->paginate()),
         ]);
     }
 
@@ -75,5 +81,17 @@ class AdminController extends Controller
         $user->delete();
 
         return redirect()->back();
+    }
+
+    private function sortByName(Builder $query, SortHelper $sorter): Builder
+    {
+        [$field, $order] = $sorter->getSortParameters();
+
+        if ($field === "firstname") {
+            return $query->orderBy("firstname", $order)
+                ->orderBy("surname", $order);
+        }
+
+        return $query;
     }
 }
