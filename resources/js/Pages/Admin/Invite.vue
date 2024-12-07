@@ -22,36 +22,52 @@ defineProps<{
 
 const selectedUsers = ref<number[]>([])
 
-const schoolId = ref<number>()
-
-function customQueries(): string[] {
-  if (schoolId.value && schoolId.value !== -1) {
-    return [`schoolId=${schoolId.value}`]
-  }
-
-  return []
-}
-
 const options: SortOption[] = [
-  {text: 'Po id (rosnąco)', key: 'id'},
-  {text: 'Po id (malejąco)', key: 'id', desc: true},
-  {text: 'Po nazwie (A–Z)', key: 'name'},
-  {text: 'Po nazwie (Z–A)', key: 'name', desc: true},
-  {text: 'Po szkole (A-Z)', key: 'school'},
-  {text: 'Po szkole (Z-A)', key: 'school', desc: true},
+  { text: 'Po id (rosnąco)', key: 'id' },
+  { text: 'Po id (malejąco)', key: 'id', desc: true },
+  { text: 'Po nazwie (A–Z)', key: 'name' },
+  { text: 'Po nazwie (Z–A)', key: 'name', desc: true },
+  { text: 'Po szkole (A-Z)', key: 'school' },
+  { text: 'Po szkole (Z-A)', key: 'school', desc: true },
 ]
 
-const searchBarModes = keysWrapper([{ text: 'Uczniowie', name: 'user' }, { text: 'Szkoły', name: 'school' }]) as Mode[]
+const searchBarModes = keysWrapper([
+  { text: 'Uczniowie', name: 'user' },
+  { text: 'Szkoły', name: 'school' },
+]) as Mode[]
 </script>
 
 <template>
-  <CrudPage :items="users" :options="options" :resource-name="`quizzes/${quiz}/invite`" :custom-queries="customQueries" :search-bar-modes="searchBarModes">
+  <CrudPage
+    :items="users"
+    :options="options"
+    :resource-name="`quizzes/${quiz}/invite`"
+    :search-bar-modes="searchBarModes"
+  >
     <template #actions>
       <Expand class="hidden sm:block" />
 
-      <Button @click="selectedUsers = users.data.map(user => user.id)">Zaznacz wszystko</Button>
-      <FormButton :data="{ ids: selectedUsers }" method="post" :href="`/admin/quizzes/${quiz}/invite/assign`" preserve-scroll>Przypisz zaznaczonych</FormButton>
-      <FormButton :data="{ ids: selectedUsers }" method="post" :href="`/admin/quizzes/${quiz}/invite/unassign`" preserve-scroll>Wypisz zaznaczonych</FormButton>
+      <Button @click="selectedUsers = users.data.map(user => user.id)">
+        Zaznacz wszystko
+      </Button>
+
+      <FormButton
+        :data="{ ids: selectedUsers }"
+        method="post"
+        :href="`/admin/quizzes/${quiz}/invite/assign`"
+        preserve-scroll
+      >
+        Przypisz zaznaczonych
+      </FormButton>
+
+      <FormButton
+        :data="{ ids: selectedUsers }"
+        method="post"
+        :href="`/admin/quizzes/${quiz}/invite/unassign`"
+        preserve-scroll
+      >
+        Wypisz zaznaczonych
+      </FormButton>
     </template>
 
     <template #item="{item}">
@@ -65,7 +81,10 @@ const searchBarModes = keysWrapper([{ text: 'Uczniowie', name: 'user' }, { text:
             <div class="w-full font-bold text-lg">
               {{ item.firstname }} {{ item.surname }}
             </div>
-            <div class="text-gray-500">{{ item.school.name }}</div>
+
+            <div class="text-gray-500">
+              {{ item.school.name }}
+            </div>
           </div>
         </div>
 
