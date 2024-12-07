@@ -30,7 +30,7 @@ const sortOptions: SortOption[] = [
 const params = useParams()
 const hideArchivedQuizzes = ref<boolean>(params.archived !== 'true')
 
-const customQueries = computed(() => ({ archived: hideArchivedQuizzes.value }))
+const customQueries = computed(() => ({ archived: !hideArchivedQuizzes.value }))
 </script>
 
 <template>

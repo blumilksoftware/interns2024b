@@ -44,7 +44,7 @@ defineSlots<{
 const pagination = computed(() => props.items)
 const newItemMode = ref(false)
 
-const { queryParams } = useQuery<Record<string, any>>({ page: 1, ...props.customQueries })
+const queryParams = useQuery<Record<string, any>>(() => ({ page: 1, ...props.customQueries }))
 
 const isSearchbarEmpty = computed(() => !queryParams.search)
 
