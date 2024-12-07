@@ -35,7 +35,7 @@ class UserTest extends TestCase
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Admin/UsersPanel")
-                    ->has("users", 10),
+                    ->has("users.data", 10),
             );
     }
 
@@ -49,7 +49,47 @@ class UserTest extends TestCase
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Admin/UsersPanel")
-                    ->has("users", 10),
+                    ->has("users.data", 10),
+            );
+    }
+
+    public function testAdminCanViewAnonymousUsers(): void
+    {
+        User::factory()->count(10)->create();
+        User::factory()->anonymized()->count(3)->create();
+
+        $this->assertDatabaseCount("users", 15);
+
+        $this->actingAs($this->superAdmin)
+            ->get("/admin/users?anonymized=false")
+            ->assertInertia(
+                fn(Assert $page) => $page
+                    ->component("Admin/UsersPanel")
+                    ->has("users.data", 10),
+            );
+
+        $this->actingAs($this->superAdmin)
+            ->get("/admin/users?anonymized=true")
+            ->assertInertia(
+                fn(Assert $page) => $page
+                    ->component("Admin/UsersPanel")
+                    ->has("users.data", 13),
+            );
+    }
+
+    public function testAdminCanSearchUsers(): void
+    {
+        User::factory()->count(10)->create();
+        User::factory(["firstname" => "test"])->create();
+
+        $this->assertDatabaseCount("users", 13);
+
+        $this->actingAs($this->superAdmin)
+            ->get("/admin/users?search=test")
+            ->assertInertia(
+                fn(Assert $page) => $page
+                    ->component("Admin/UsersPanel")
+                    ->has("users.data", 1),
             );
     }
 
@@ -249,7 +289,7 @@ class UserTest extends TestCase
         $this->actingAs($this->superAdmin)
             ->patch("/admin/users/{$user->id}/anonymize")
             ->assertRedirect()
-            ->assertSessionHas("success");
+            ->assertSessionHas("status", "Dane użytkownika zostały zanonimizowane.");
 
         $this->assertDatabaseHas("users", [
             "id" => $user->id,

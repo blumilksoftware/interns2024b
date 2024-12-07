@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use function fake;
 
 /**
  * @extends Factory<User>
@@ -55,6 +56,18 @@ class UserFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 "email_verified_at" => null,
+            ];
+        });
+    }
+
+    public function anonymized(): static
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                "firstname" => "Anonymous",
+                "surname" => "User",
+                "email" => "anonymous" . fake()->unique()->randomNumber() . "@email",
+                "is_anonymized" => true,
             ];
         });
     }
