@@ -22,9 +22,7 @@ function handleKeyUp(e: KeyboardEvent) {
   }
 }
 
-const handleInput = useDebounceFn(() => {
-  search()
-}, 500)
+const handleInput = useDebounceFn(search, 500)
 
 function pickMode(mode: Mode) {
   selectedMode.value = mode

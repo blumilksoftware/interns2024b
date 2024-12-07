@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref } from 'vue'
+import { ref } from 'vue'
 import FormButton from '@/components/Common/FormButton.vue'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'

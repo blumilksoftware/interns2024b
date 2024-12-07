@@ -107,7 +107,6 @@ function startFetching() {
   <CrudPage
     :options="sortOptions"
     :items="schools"
-    :custom-search="(text) => text?.toLocaleUpperCase()"
     resource-name="schools"
     new-button-text="Dodaj szkołę"
     :new-item-data="{ name: 'Nowa szkoła', regon: '', apartmentNumber: '', street: '', buildingNumber: '', city: '', numberOfStudents: 0, zipCode: '' }"

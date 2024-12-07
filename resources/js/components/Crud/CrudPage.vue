@@ -49,7 +49,7 @@ const queryParams = useQuery<Record<string, any>>(() => ({ page: 1, ...props.cus
 const isSearchbarEmpty = computed(() => !queryParams.search)
 
 function handleSearch(text: string | undefined, mode?: string) {
-  queryParams.search = props.customSearch ? props.customSearch(text) : text
+  queryParams.search = props.customSearch ? props.customSearch(text) : text?.toLocaleUpperCase()
   queryParams.mode = mode?.toUpperCase()
 }
 
