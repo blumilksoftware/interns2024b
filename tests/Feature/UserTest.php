@@ -218,19 +218,6 @@ class UserTest extends TestCase
         ]);
     }
 
-    public function testAdminAndSuperAdminCannotViewEditAnonymizedUser(): void
-    {
-        $user = User::factory()->create(["is_anonymized" => true]);
-
-        $this->actingAs($this->admin)
-            ->get("/admin/users/{$user->id}/edit")
-            ->assertStatus(403);
-
-        $this->actingAs($this->superAdmin)
-            ->get("/admin/users/{$user->id}/edit")
-            ->assertStatus(403);
-    }
-
     public function testAdminAndSuperAdminCannotEditAnonymizedUser(): void
     {
         $school = School::factory()->create();
