@@ -151,6 +151,20 @@ class SchoolTest extends TestCase
         ]);
     }
 
+    public function testAdminCannotDeleteDisabledSchool(): void
+    {
+        $school = School::factory()->disabled()->create();
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->delete("/admin/schools/{$school->id}")
+            ->assertStatus(403);
+
+        $this->assertDatabaseHas("schools", [
+            "id" => $school->id,
+        ]);
+    }
+
     public function testAdminCannotDeleteSchoolWithStudents(): void
     {
         $school = School::factory()->create();
@@ -179,6 +193,21 @@ class SchoolTest extends TestCase
         $this->assertDatabaseHas("schools", [
             "id" => $school->id,
             "is_disabled" => true,
+        ]);
+    }
+
+    public function testAdminCanEnableSchool(): void
+    {
+        $school = School::factory()->disabled()->create();
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->post("/admin/schools/{$school->id}/enable")
+            ->assertRedirect("/");
+
+        $this->assertDatabaseHas("schools", [
+            "id" => $school->id,
+            "is_disabled" => false,
         ]);
     }
 

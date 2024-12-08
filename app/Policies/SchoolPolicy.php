@@ -16,11 +16,16 @@ class SchoolPolicy
 
     public function delete(User $user, School $school): bool
     {
-        return $school->users()->count() === 0;
+        return $school->users()->count() === 0 && !$school->is_disabled;
     }
 
     public function disable(User $user, School $school): bool
     {
         return !$school->is_disabled;
+    }
+
+    public function enable(User $user, School $school): bool
+    {
+        return $school->is_disabled;
     }
 }

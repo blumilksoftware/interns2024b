@@ -75,6 +75,16 @@ class SchoolsController extends Controller
             ->with("status", "Szkoła została zablokowa.");
     }
 
+    public function enable(School $school): RedirectResponse
+    {
+        $school->is_disabled = false;
+        $school->save();
+
+        return redirect()
+            ->back()
+            ->with("status", "Szkoła została odblokowana.");
+    }
+
     /**
      * @throws Throwable
      */

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3'
-import { ArrowDownCircleIcon } from '@heroicons/vue/20/solid'
+import { ArrowDownCircleIcon, ArchiveBoxXMarkIcon } from '@heroicons/vue/20/solid'
+import { TrashIcon, ArchiveBoxIcon } from '@heroicons/vue/24/outline'
 import AddressInput from '@/components/Common/AddressInput.vue'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
@@ -13,6 +14,9 @@ import CrudInput from '@/components/Crud/CrudInput.vue'
 import Banner from '@/components/Common/Banner.vue'
 import { usePlurals } from '@/Helpers/Plurals'
 import { type PageProps } from '@/Types/PageProps'
+import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
+import LinkButton from "@/components/Common/LinkButton.vue";
+import RequestWrapper from "@/components/Common/RequestWrapper.vue";
 
 defineProps<{schools: Pagination<School>} & PageProps>()
 
@@ -36,6 +40,7 @@ const sortOptions: SortOption[] = [
 const status = ref<boolean | null>(null)
 const message = ref<string>()
 const schoolTranslation = usePlurals('szkołę', 'szkoły', 'szkół')
+const showDisabledSchools = ref<boolean>(true)
 
 function hideMessage() {
   message.value = undefined
@@ -76,6 +81,16 @@ function startFetching() {
     axios.post('/admin/schools/fetch')
   }
 }
+
+function customQueries(): string[] {
+  let query: string[] = []
+
+  if (!showDisabledSchools.value) {
+    query.push(`disabled=${true}`)
+  }
+
+  return query
+}
 </script>
 
 <template>
@@ -96,15 +111,24 @@ function startFetching() {
     :options="sortOptions"
     :items="schools"
     :custom-search="(text) => text?.toLocaleUpperCase()"
+    :custom-queries="customQueries"
     resource-name="schools"
     new-button-text="Dodaj szkołę"
     :new-item-data="{ name: 'Nowa szkoła', regon: '', apartmentNumber: '', street: '', buildingNumber: '', city: '', numberOfStudents: 0, zipCode: '' }"
     display-search-in-lower-case
-    deletable
     mobile-nav
     creatable
   >
     <template #actions>
+      <button
+        :title="`${showDisabledSchools ? 'Wyświetl' : 'Schowaj'} zablokowane szkoły`"
+        class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg"
+        @click="showDisabledSchools = !showDisabledSchools"
+      >
+        <ArchiveDynamicIcon :active="showDisabledSchools" />
+        <span class="hidden sm:block">{{ showDisabledSchools ? 'Wyświetl' : 'Schowaj' }} zablokowane szkoły</span>
+      </button>
+
       <Expand class="hidden sm:block" />
 
       <Button
@@ -142,6 +166,30 @@ function startFetching() {
           }"
         />
       </InputWrapper>
+    </template>
+
+    <template #itemActions="{item, showDeleteMsg}">
+      <RequestWrapper
+        v-if="!item.isDisabled"
+        title="Zablokuj"
+        method="post"
+        :href="`/admin/schools/${item.id}/disable`"
+      >
+        <ArchiveBoxIcon class="icon slide-up-animation" />
+      </RequestWrapper>
+
+      <RequestWrapper
+        v-if="item.isDisabled"
+        title="Odblokuj"
+        method="post"
+        :href="`/admin/schools/${item.id}/enable`"
+      >
+        <ArchiveBoxXMarkIcon class="icon slide-up-animation" />
+      </RequestWrapper>
+
+      <button v-if="!item.isDisabled && item.numberOfStudents === 0" title="Usuń" @click="showDeleteMsg">
+        <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
+      </button>
     </template>
 
     <template #itemData="data">

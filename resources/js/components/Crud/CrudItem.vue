@@ -18,7 +18,7 @@ const props = defineProps<{
 
 defineSlots<{
   deleteMessage: (scope: { item: T }) => any
-  actions: () => any
+  actions: (scope: { showDeleteMsg: () => void }) => any
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
   data: (scope: { item: T, editing: boolean, errors: Errors }) => any
 }>()
@@ -90,7 +90,7 @@ const showDeleteMessage = ref(false)
         </button>
 
         <template v-if="!editing">
-          <slot name="actions" />
+          <slot name="actions" :show-delete-msg="() => showDeleteMessage = true" />
         </template>
 
         <template v-if="editing">
