@@ -53,48 +53,6 @@ class UserTest extends TestCase
             );
     }
 
-    public function testAdminCanViewEditUser(): void
-    {
-        $user = User::factory()->create();
-
-        $this->actingAs($this->admin)
-            ->from("/admin/users")
-            ->get("/admin/users/{$user->id}/edit")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Admin/EditUser")
-                    ->where("user.id", $user->id),
-            );
-    }
-
-    public function testSuperAdminCanViewEditUser(): void
-    {
-        $user = User::factory()->create();
-
-        $this->actingAs($this->superAdmin)
-            ->from("/admin/users")
-            ->get("/admin/users/{$user->id}/edit")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Admin/EditUser")
-                    ->where("user.id", $user->id),
-            );
-    }
-
-    public function testAdminCannotViewEditUserThatDoesNotExist(): void
-    {
-        $this->actingAs($this->admin)
-            ->get("/admin/users/999/edit")
-            ->assertStatus(404);
-    }
-
-    public function testSuperAdminCannotViewEditUserThatDoesNotExist(): void
-    {
-        $this->actingAs($this->superAdmin)
-            ->get("/admin/users/999/edit")
-            ->assertStatus(404);
-    }
-
     public function testAdminCanEditUser(): void
     {
         $school = School::factory()->create();
@@ -357,11 +315,6 @@ class UserTest extends TestCase
 
         $this->actingAs($user)
             ->from("/dashboard")
-            ->get("/admin/users/{$user->id}/edit")
-            ->assertStatus(403);
-
-        $this->actingAs($user)
-            ->from("/dashboard")
             ->patch("/admin/users/{$user->id}", ["name" => "New Name"])
             ->assertStatus(403);
 
@@ -382,11 +335,6 @@ class UserTest extends TestCase
 
         $this->from("/")
             ->get("/admin/users/{$user->id}")
-            ->assertStatus(403)
-            ->assertRedirect("/");
-
-        $this->from("/")
-            ->get("/admin/users/{$user->id}/edit")
             ->assertStatus(403)
             ->assertRedirect("/");
 
