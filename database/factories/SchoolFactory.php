@@ -28,7 +28,15 @@ class SchoolFactory extends Factory
             "building_number" => fake()->buildingNumber(),
             "apartment_number" => fake()->buildingNumber(),
             "zip_code" => fake()->randomNumber(2) . "-" . fake()->randomNumber(3),
+            "is_disabled" => false,
         ];
+    }
+
+    public function disabled()
+    {
+        return $this->state(fn(array $attributes): array => [
+            "is_disabled" => true,
+        ]);
     }
 
     public function withoutApartment(): static
