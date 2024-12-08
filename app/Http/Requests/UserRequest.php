@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
+use App\Rules\IsSchoolValidForRegularUsers;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest
@@ -19,7 +20,7 @@ class UserRequest extends FormRequest
             "email" => ["required", "string", "email", "max:255", "unique:users,email," . $this->user->id],
             "firstname" => ["required", "string", "max:255"],
             "surname" => ["required", "string", "max:255"],
-            "school_id" => ["required", "integer", "exists:schools,id"],
+            "school_id" => ["required", "integer", "exists:schools,id", new IsSchoolValidForRegularUsers()],
         ];
     }
 }

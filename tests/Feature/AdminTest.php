@@ -49,29 +49,6 @@ class AdminTest extends TestCase
             ->assertStatus(403);
     }
 
-    public function testSuperAdminCanViewAddAdminPanel(): void
-    {
-        User::factory()->count(10)->create();
-        $this->assertDatabaseCount("users", 12);
-
-        $this->actingAs($this->superAdmin)
-            ->get("/admin/admins/create")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Admin/CreateAdmin"),
-            );
-    }
-
-    public function testAdminCannotViewAddAdminPanel(): void
-    {
-        User::factory()->count(10)->create();
-        $this->assertDatabaseCount("users", 12);
-
-        $this->actingAs($this->admin)
-            ->get("/admin/admins/create")
-            ->assertStatus(403);
-    }
-
     public function testSuperAdminCanAddAdmin(): void
     {
         $school = School::factory()->create();
@@ -110,30 +87,6 @@ class AdminTest extends TestCase
             "surname" => "Admin Surname",
             "email" => "adminexample@admin.com",
         ]);
-    }
-
-    public function testSuperAdminCanViewEditAdmin(): void
-    {
-        $admin = User::factory()->admin()->create();
-
-        $this->actingAs($this->superAdmin)
-            ->from("/admin/admins")
-            ->get("/admin/admins/{$admin->id}/edit")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Admin/EditAdmin")
-                    ->where("user.id", $admin->id),
-            );
-    }
-
-    public function testAdminCannotViewEditAdmin(): void
-    {
-        $admin = User::factory()->admin()->create();
-
-        $this->actingAs($this->admin)
-            ->from("/admin/admins")
-            ->get("/admin/admins/{$admin->id}/edit")
-            ->assertStatus(403);
     }
 
     public function testSuperAdminCanEditAdmin(): void
@@ -249,16 +202,6 @@ class AdminTest extends TestCase
 
         $this->actingAs($user)
             ->from("/dashboard")
-            ->get("/admin/admins/create")
-            ->assertStatus(403);
-
-        $this->actingAs($user)
-            ->from("/dashboard")
-            ->get("/admin/admins/{$this->admin->id}/edit")
-            ->assertStatus(403);
-
-        $this->actingAs($user)
-            ->from("/dashboard")
             ->post("/admin/admins", ["name" => "new Name"])
             ->assertForbidden();
 
@@ -279,14 +222,6 @@ class AdminTest extends TestCase
 
         $this->from("/dashboard")
             ->get("/admin/admins")
-            ->assertStatus(403);
-
-        $this->from("/dashboard")
-            ->get("/admin/admins/create")
-            ->assertStatus(403);
-
-        $this->from("/dashboard")
-            ->get("/admin/admins/{$this->admin->id}/edit")
             ->assertStatus(403);
 
         $this->from("/dashboard")

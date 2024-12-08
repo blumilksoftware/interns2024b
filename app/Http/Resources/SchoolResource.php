@@ -20,6 +20,7 @@ class SchoolResource extends JsonResource
             "regon" => $this->regon,
             "city" => $this->city,
             "street" => $this->street,
+            "isDisabled" => $this->is_disabled,
             "buildingNumber" => $this->building_number,
             "apartmentNumber" => $this->apartment_number,
             "zipCode" => $this->zip_code,

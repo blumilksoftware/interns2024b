@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\SchoolResource;
 use App\Http\Resources\UserResource;
-use App\Models\School;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,16 +20,6 @@ class UserController extends Controller
 
         return Inertia::render("Admin/UsersPanel", [
             "users" => UserResource::collection($users),
-        ]);
-    }
-
-    public function edit(User $user): Response
-    {
-        $this->authorize("update", $user);
-
-        return Inertia::render("Admin/EditUser", [
-            "user" => UserResource::make($user),
-            "schools" => SchoolResource::collection(School::all()),
         ]);
     }
 

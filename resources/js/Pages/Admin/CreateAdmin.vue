@@ -1,3 +1,0 @@
-<template>
-  Create Admin
-</template>

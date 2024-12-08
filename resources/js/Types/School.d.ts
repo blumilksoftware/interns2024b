@@ -7,6 +7,7 @@ interface School {
   street: string
   buildingNumber: string
   apartmentNumber?: string
+  isDisabled: boolean
   zipCode: string
   createdAt: string
   updatedAt: string
