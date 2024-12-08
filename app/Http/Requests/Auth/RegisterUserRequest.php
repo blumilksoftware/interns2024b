@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Auth;
 
+use App\Rules\IsSchoolValidForRegularUsers;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterUserRequest extends FormRequest
@@ -20,7 +21,7 @@ class RegisterUserRequest extends FormRequest
             "firstname" => ["required", "string", "max:255"],
             "surname" => ["required", "string", "max:255"],
             "password" => ["required", "string", "min:8"],
-            "school_id" => ["required", "integer", "exists:schools,id"],
+            "school_id" => ["required", "integer", "exists:schools,id", new IsSchoolValidForRegularUsers()],
         ];
     }
 }

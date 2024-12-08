@@ -18,7 +18,11 @@ class ContestController extends Controller
 {
     public function index(): Response
     {
-        $schools = School::query()->where("is_disabled", false)->orderBy("name")->get();
+        $schools = School::query()
+            ->where("is_disabled", false)
+            ->where("is_admin_school", false)
+            ->orderBy("name")
+            ->get();
 
         return Inertia::render("Home", ["schools" => SchoolResource::collection($schools)]);
     }

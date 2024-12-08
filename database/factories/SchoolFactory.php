@@ -29,6 +29,7 @@ class SchoolFactory extends Factory
             "apartment_number" => fake()->buildingNumber(),
             "zip_code" => fake()->randomNumber(2) . "-" . fake()->randomNumber(3),
             "is_disabled" => false,
+            "is_admin_school" => false,
         ];
     }
 
@@ -36,6 +37,13 @@ class SchoolFactory extends Factory
     {
         return $this->state(fn(array $attributes): array => [
             "is_disabled" => true,
+        ]);
+    }
+
+    public function adminSchool()
+    {
+        return $this->state(fn(array $attributes): array => [
+            "is_admin_school" => true,
         ]);
     }
 

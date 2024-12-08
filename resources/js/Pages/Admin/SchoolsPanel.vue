@@ -15,8 +15,7 @@ import Banner from '@/components/Common/Banner.vue'
 import { usePlurals } from '@/Helpers/Plurals'
 import { type PageProps } from '@/Types/PageProps'
 import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
-import LinkButton from "@/components/Common/LinkButton.vue";
-import RequestWrapper from "@/components/Common/RequestWrapper.vue";
+import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 
 defineProps<{schools: Pagination<School>} & PageProps>()
 

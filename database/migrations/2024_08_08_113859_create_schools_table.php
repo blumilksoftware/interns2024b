@@ -19,6 +19,7 @@ return new class() extends Migration {
             $table->string("apartment_number")->nullable();
             $table->string("zip_code");
             $table->boolean("is_disabled")->default(false);
+            $table->boolean("is_admin_school")->default(false);
             $table->timestamps();
         });
     }

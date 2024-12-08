@@ -29,14 +29,16 @@ class SchoolsController extends Controller
 {
     public function index(SortHelper $sorter, Request $request): Response
     {
-        $query = $sorter->sort(School::query(), ["id", "name", "regon", "updated_at", "created_at"], ["students", "address"]);
+        $query = School::query()->where("is_admin_school", false);
+        $query = $sorter->sort($query, ["id", "name", "regon", "updated_at", "created_at"], ["students", "address"]);
         $query = $this->sortByStudents($query, $sorter);
         $query = $this->sortByAddress($query, $sorter);
         $query = $this->filterDisabledSchools($query, $request);
         $query = $sorter->search($query, "name");
-        $schools = $sorter->paginate($query);
 
-        return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolResource::collection($schools)]);
+        return Inertia::render("Admin/SchoolsPanel", [
+            "schools" => SchoolResource::collection($sorter->paginate($query)),
+        ]);
     }
 
     public function store(SchoolRequest $request): RedirectResponse

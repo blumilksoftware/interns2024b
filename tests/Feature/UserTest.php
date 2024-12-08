@@ -133,6 +133,62 @@ class UserTest extends TestCase
         ]);
     }
 
+    public function testAdminCannotEditUserWithDisabledSchool(): void
+    {
+        $school = School::factory()->create();
+        $invalidSchool = School::factory()->disabled()->create();
+
+        $user = User::factory()->create(["school_id" => $school->id]);
+
+        $response = $this->actingAs($this->admin)
+            ->from("/admin/users/{$user->id}")
+            ->patch("/admin/users/{$user->id}", [
+                "school_id" => $invalidSchool->id,
+            ]);
+
+        $response->assertRedirect("/admin/users/{$user->id}");
+
+        $this->assertDatabaseHas("users", [
+            "id" => $user->id,
+            "firstname" => $user->firstname,
+            "surname" => $user->surname,
+            "email" => $user->email,
+            "school_id" => $user->school_id,
+        ]);
+
+        $response->assertSessionHasErrors([
+            "school_id",
+        ]);
+    }
+
+    public function testAdminCannotEditUserWithAdminSchool(): void
+    {
+        $school = School::factory()->create();
+        $invalidSchool = School::factory()->adminSchool()->create();
+
+        $user = User::factory()->create(["school_id" => $school->id]);
+
+        $response = $this->actingAs($this->admin)
+            ->from("/admin/users/{$user->id}")
+            ->patch("/admin/users/{$user->id}", [
+                "school_id" => $invalidSchool->id,
+            ]);
+
+        $response->assertRedirect("/admin/users/{$user->id}");
+
+        $this->assertDatabaseHas("users", [
+            "id" => $user->id,
+            "firstname" => $user->firstname,
+            "surname" => $user->surname,
+            "email" => $user->email,
+            "school_id" => $user->school_id,
+        ]);
+
+        $response->assertSessionHasErrors([
+            "school_id",
+        ]);
+    }
+
     public function testAdminCannotEditUserMailThatHasBeenTaken(): void
     {
         $school = School::factory()->create();

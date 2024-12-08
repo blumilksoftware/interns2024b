@@ -22,7 +22,8 @@ class SchoolTest extends TestCase
     {
         parent::setUp();
 
-        $this->admin = User::factory()->admin()->create();
+        $admin_school = School::factory()->disabled()->adminSchool()->create();
+        $this->admin = User::factory(["school_id" => $admin_school->id])->admin()->create();
     }
 
     public function testAdminCanViewSchools(): void
@@ -34,7 +35,7 @@ class SchoolTest extends TestCase
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Admin/SchoolsPanel")
-                    ->has("schools", 3),
+                    ->has("schools.data", 2),
             );
     }
 
@@ -48,23 +49,23 @@ class SchoolTest extends TestCase
             ->get("/admin/schools?sort=name&order=asc&disabled=true")
             ->assertInertia(fn(Assert $page) => $page
                 ->component("Admin/SchoolsPanel")
-                ->has("schools.data", 11)
+                ->has("schools.data", 10)
                 ->where("schools.data.0.name", "AAAAAA")
-                ->where("schools.data.10.name", "ZZZZZZ"));
+                ->where("schools.data.9.name", "ZZZZZZ"));
 
         $this->actingAs($this->admin)
             ->get("/admin/schools?sort=name&order=desc&disabled=true")
             ->assertInertia(fn(Assert $page) => $page
                 ->component("Admin/SchoolsPanel")
-                ->has("schools.data", 11)
+                ->has("schools.data", 10)
                 ->where("schools.data.0.name", "ZZZZZZ")
-                ->where("schools.data.10.name", "AAAAAA"));
+                ->where("schools.data.9.name", "AAAAAA"));
 
         $this->actingAs($this->admin)
             ->get("/admin/schools?sort=name&order=asc&disabled=false")
             ->assertInertia(fn(Assert $page) => $page
                 ->component("Admin/SchoolsPanel")
-                ->has("schools.data", 9));
+                ->has("schools.data", 8));
 
         $this->actingAs($this->admin)
             ->get("/admin/schools?search=AAAAAA&order=asc&disabled=true")

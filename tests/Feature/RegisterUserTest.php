@@ -73,6 +73,36 @@ class RegisterUserTest extends TestCase
             ->assertSessionHasErrors(["school_id" => "Szkoła nie istnieje. Sprawdź ponownie."]);
     }
 
+    public function testUserCanNotRegisterWithDisabledSchool(): void
+    {
+        $school = School::factory()->disabled()->create();
+
+        $this->post("/auth/register", [
+            "firstname" => "Test",
+            "surname" => "Test",
+            "email" => "test@gmail.com",
+            "password" => "123456890",
+            "school_id" => $school->id,
+        ])
+            ->assertRedirect("/")
+            ->assertSessionHasErrors(["school_id" => "Szkoła nie istnieje. Sprawdź ponownie."]);
+    }
+
+    public function testUserCanNotRegisterWithAdminSchool(): void
+    {
+        $school = School::factory()->adminSchool()->create();
+
+        $this->post("/auth/register", [
+            "firstname" => "Test",
+            "surname" => "Test",
+            "email" => "test@gmail.com",
+            "password" => "123456890",
+            "school_id" => $school->id,
+        ])
+            ->assertRedirect("/")
+            ->assertSessionHasErrors(["school_id" => "Szkoła nie istnieje. Sprawdź ponownie."]);
+    }
+
     public function testUserCanNotRegisterWithTooLongEmail(): void
     {
         $longMail = Str::random(250);
