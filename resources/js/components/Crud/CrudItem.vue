@@ -110,7 +110,7 @@ const showDeleteMessage = ref(false)
             preserve-scroll
             :href="`/admin/${resourceName}/${item.id}`"
             :data="{ ...item as RequestPayload }"
-            @success="editing = false"
+            @success="item = JSON.parse(JSON.stringify(props.item)); editing = false"
           >
             <CheckIcon class="icon" title="Zapisz zmiany" />
           </RequestWrapper>
