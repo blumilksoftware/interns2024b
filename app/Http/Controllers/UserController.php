@@ -6,7 +6,9 @@ namespace App\Http\Controllers;
 
 use App\Helpers\SortHelper;
 use App\Http\Requests\UserRequest;
+use App\Http\Resources\SchoolResource;
 use App\Http\Resources\UserResource;
+use App\Models\School;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
