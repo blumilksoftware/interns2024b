@@ -87,7 +87,7 @@ function customQueries(): string[] {
         >
 
         <p v-if="!editing" class="font-bold">
-          {{item.surname}}
+          {{ item.surname }}
         </p>
       </div>
 

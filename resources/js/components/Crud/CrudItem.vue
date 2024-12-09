@@ -2,7 +2,7 @@
 import useRequestResolution from '@/Helpers/RequestResolution'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { CheckIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
