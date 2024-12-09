@@ -21,7 +21,10 @@ class UserController extends Controller
     public function index(SortHelper $sorter, Request $request): Response
     {
         $users = User::query()->role("user")->with("school");
-        $schools = School::query()->orderBy("id")->get();
+        $schools = School::query()
+            ->where("is_admin_school", false)
+            ->orderBy("name")
+            ->get();
 
         $query = $sorter->sort($users, ["id", "email", "updated_at", "created_at"], ["firstname", "school"]);
         $query = $this->filterAnonymizedUsers($query, $request);

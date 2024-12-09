@@ -22,8 +22,10 @@ const selected = ref<School | undefined>(props.schools.find(({ id }) => id === p
 
 const searchResult = computed(() =>
   props.schools.filter(school =>
-    school.city.toLowerCase().includes(searchQuery.value) ||
-    school.name?.toLowerCase().includes(searchQuery.value),
+    !school.isDisabled && (
+      school.city.toLowerCase().includes(searchQuery.value) ||
+      school.name?.toLowerCase().includes(searchQuery.value)
+    ),
   ),
 )
 
