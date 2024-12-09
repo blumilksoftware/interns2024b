@@ -74,8 +74,8 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/schools", [SchoolsController::class, "store"])->name("admin.schools.store");
     Route::patch("/schools/{school}", [SchoolsController::class, "update"])->name("admin.schools.update")->can("update,school");
     Route::delete("/schools/{school}", [SchoolsController::class, "destroy"])->name("admin.schools.destroy")->can("delete,school");
-    Route::post("/schools/{school}/disable", [SchoolsController::class, "toggleDisable"])->name("admin.schools.disable")->can("disable,school");
-    Route::post("/schools/{school}/enable", [SchoolsController::class, "toggleDisable"])->name("admin.schools.enable")->can("enable,school");
+    Route::post("/schools/{school}/disable", [SchoolsController::class, "disable"])->name("admin.schools.disable")->can("disable,school");
+    Route::post("/schools/{school}/enable", [SchoolsController::class, "enable"])->name("admin.schools.enable")->can("enable,school");
 
     Route::post("/schools/fetch", [SchoolsController::class, "fetch"])->name("admin.schools.fetch");
     Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");
