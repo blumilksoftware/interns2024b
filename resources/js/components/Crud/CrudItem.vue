@@ -28,8 +28,6 @@ const item = ref<T>(JSON.parse(JSON.stringify(props.item)))
 const editing = ref(false)
 const { processing, errors } = useRequestResolution()
 const showDeleteMessage = ref(false)
-
-watch(() => props.item, () => item.value = JSON.parse(JSON.stringify(props.item)))
 </script>
 
 <template>
@@ -108,6 +106,8 @@ watch(() => props.item, () => item.value = JSON.parse(JSON.stringify(props.item)
           <RequestWrapper
             title="Zapisz zmiany"
             method="patch"
+            preserve-state
+            preserve-scroll
             :href="`/admin/${resourceName}/${item.id}`"
             :data="{ ...item as RequestPayload }"
             @success="editing = false"
