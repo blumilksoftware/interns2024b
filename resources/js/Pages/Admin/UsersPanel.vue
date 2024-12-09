@@ -68,7 +68,7 @@ function customQueries(): string[] {
     <template #title="{item, editing, errors: editErrors}">
       <div class="flex gap-1">
         <label v-if="editing" for="name">
-          Imie:
+          Imię:
         </label>
 
         <input
@@ -125,7 +125,7 @@ function customQueries(): string[] {
         <CrudInput
           v-model="item.email"
           name="email"
-          label="Email:"
+          label="E-mail:"
           :error="errors.email"
           :editing="editing"
         />

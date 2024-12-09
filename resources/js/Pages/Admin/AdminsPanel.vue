@@ -55,7 +55,7 @@ const sortOptions: SortOption[] = [
     <template #title="{item, editing, errors: editErrors}">
       <div class="flex gap-1">
         <label v-if="editing" for="firstname">
-          Imie:
+          Imię:
         </label>
 
         <input
@@ -102,7 +102,7 @@ const sortOptions: SortOption[] = [
         <CrudInput
           v-model="data.item.email"
           name="email"
-          label="Email:"
+          label="E-mail:"
           :error="data.errors.email"
           :editing="data.editing"
         />
