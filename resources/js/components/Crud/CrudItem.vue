@@ -14,11 +14,12 @@ const props = defineProps<{
   item: T
   resourceName: string
   deletable?: boolean
+  disableEditButton?: boolean
 }>()
 
-defineSlots<{
+const slots = defineSlots<{
   deleteMessage: (scope: { item: T }) => any
-  actions: (scope: { showDeleteMsg: () => void }) => any
+  actions: (scope: { showDeleteMsg: () => void, editMode: (enabled: boolean) => void }) => any
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
   data: (scope: { item: T, editing: boolean, errors: Errors }) => any
 }>()
@@ -59,6 +60,7 @@ const showDeleteMessage = ref(false)
       <div class="size-full md:h-auto px-0">
         <slot name="title" :item="item as T" :editing="editing" :errors="errors">
           <InputWrapper
+            v-if="!slots.title"
             :has-content="!!item.name || editing"
             :error="errors.name"
             :show-error="editing"
@@ -85,12 +87,12 @@ const showDeleteMessage = ref(false)
       </div>
 
       <div class="flex flex-col sm:flex-row pl-5 gap-5 h-fit">
-        <button v-if="!editing" title="Edytuj" @click="editing = true">
-          <PencilIcon class="icon slide-up-animation" />
-        </button>
-
         <template v-if="!editing">
-          <slot name="actions" :show-delete-msg="() => showDeleteMessage = true" />
+          <button v-if="!disableEditButton" title="Edytuj" @click="editing = true">
+            <PencilIcon class="icon slide-up-animation" />
+          </button>
+
+          <slot name="actions" :show-delete-msg="() => showDeleteMessage = true" :edit-mode="(mode) => editing = mode" />
         </template>
 
         <template v-if="editing">
@@ -104,9 +106,11 @@ const showDeleteMessage = ref(false)
           <RequestWrapper
             title="Zapisz zmiany"
             method="patch"
+            preserve-state
+            preserve-scroll
             :href="`/admin/${resourceName}/${item.id}`"
             :data="{ ...item as RequestPayload }"
-            @success="editing = false"
+            @success="item = JSON.parse(JSON.stringify(props.item)); editing = false"
           >
             <CheckIcon class="icon" title="Zapisz zmiany" />
           </RequestWrapper>
