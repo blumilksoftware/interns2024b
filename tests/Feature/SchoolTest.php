@@ -41,31 +41,34 @@ class SchoolTest extends TestCase
 
     public function testFilteringAndSortingSchools(): void
     {
-        School::factory()->count(8)->create();
         School::factory()->disabled()->create(["name" => "AAAAAA"]);
+        School::factory()->create(["name" => "BB"]);
+        School::factory()->create(["name" => "CC"]);
+        School::factory()->create(["name" => "DD"]);
+        School::factory()->create(["name" => "EE"]);
         School::factory()->disabled()->create(["name" => "ZZZZZZ"]);
 
         $this->actingAs($this->admin)
             ->get("/admin/schools?sort=name&order=asc&disabled=true")
             ->assertInertia(fn(Assert $page) => $page
                 ->component("Admin/SchoolsPanel")
-                ->has("schools.data", 10)
+                ->has("schools.data", 6)
                 ->where("schools.data.0.name", "AAAAAA")
-                ->where("schools.data.9.name", "ZZZZZZ"));
+                ->where("schools.data.5.name", "ZZZZZZ"));
 
         $this->actingAs($this->admin)
             ->get("/admin/schools?sort=name&order=desc&disabled=true")
             ->assertInertia(fn(Assert $page) => $page
                 ->component("Admin/SchoolsPanel")
-                ->has("schools.data", 10)
+                ->has("schools.data", 6)
                 ->where("schools.data.0.name", "ZZZZZZ")
-                ->where("schools.data.9.name", "AAAAAA"));
+                ->where("schools.data.5.name", "AAAAAA"));
 
         $this->actingAs($this->admin)
             ->get("/admin/schools?sort=name&order=asc&disabled=false")
             ->assertInertia(fn(Assert $page) => $page
                 ->component("Admin/SchoolsPanel")
-                ->has("schools.data", 8));
+                ->has("schools.data", 4));
 
         $this->actingAs($this->admin)
             ->get("/admin/schools?search=AAAAAA&order=asc&disabled=true")
