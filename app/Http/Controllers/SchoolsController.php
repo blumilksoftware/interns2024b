@@ -67,24 +67,16 @@ class SchoolsController extends Controller
             ->with("status", "Szkoła została usunięta.");
     }
 
-    public function disable(School $school): RedirectResponse
+    public function toggleDisable(School $school): RedirectResponse
     {
-        $school->is_disabled = true;
+        $school->is_disabled = !$school->is_disabled;
         $school->save();
+
+        $message = $school->is_disabled ? "Szkoła została zablokowana." : "Szkoła została odblokowana.";
 
         return redirect()
             ->back()
-            ->with("status", "Szkoła została zablokowa.");
-    }
-
-    public function enable(School $school): RedirectResponse
-    {
-        $school->is_disabled = false;
-        $school->save();
-
-        return redirect()
-            ->back()
-            ->with("status", "Szkoła została odblokowana.");
+            ->with("status", $message);
     }
 
     /**
