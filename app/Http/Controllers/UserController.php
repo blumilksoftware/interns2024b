@@ -6,9 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\SortHelper;
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\SchoolResource;
 use App\Http\Resources\UserResource;
-use App\Models\School;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -32,16 +30,6 @@ class UserController extends Controller
         return Inertia::render("Admin/UsersPanel", [
             "users" => UserResource::collection($query->paginate()),
             "schools" => SchoolResource::collection($schools),
-        ]);
-    }
-
-    public function edit(User $user): Response
-    {
-        $this->authorize("update", $user);
-
-        return Inertia::render("Admin/EditUser", [
-            "user" => UserResource::make($user),
-            "schools" => SchoolResource::collection(School::all()),
         ]);
     }
 

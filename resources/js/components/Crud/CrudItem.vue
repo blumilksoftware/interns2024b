@@ -19,7 +19,7 @@ const props = defineProps<{
 
 const slots = defineSlots<{
   deleteMessage: (scope: { item: T }) => any
-  actions: (scope: { editMode: (enabled: boolean) => void }) => any
+  actions: (scope: { showDeleteMsg: () => void, editMode: (enabled: boolean) => void }) => any
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
   data: (scope: { item: T, editing: boolean, errors: Errors }) => any
 }>()
@@ -94,7 +94,7 @@ watch(() => props.item, () => item.value = JSON.parse(JSON.stringify(props.item)
             <PencilIcon class="icon slide-up-animation" />
           </button>
 
-          <slot name="actions" :edit-mode="(mode) => editing = mode" />
+          <slot name="actions" :show-delete-msg="() => showDeleteMessage = true" :edit-mode="(mode) => editing = mode" />
         </template>
 
         <template v-if="editing">
