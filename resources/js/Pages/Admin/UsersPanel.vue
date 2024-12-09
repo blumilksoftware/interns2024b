@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import {Head} from '@inertiajs/vue3'
+import { Head } from '@inertiajs/vue3'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import CrudInput from '@/components/Crud/CrudInput.vue'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 import CrudSchoolInput from '@/components/Crud/CrudSchoolInput.vue'
 import WarningMessageBox from '@/components/Common/WarningMessageBox.vue'
-import {ref} from 'vue'
+import { ref } from 'vue'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
-import {type PageProps} from '@/Types/PageProps'
+import { type PageProps } from '@/Types/PageProps'
 import { TrashIcon, PencilIcon } from '@heroicons/vue/24/outline'
 import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
 import Expand from '@/components/Common/Expand.vue'
@@ -86,27 +86,13 @@ function customQueries(): string[] {
           :disabled="!editing"
         >
 
-        <label v-if="editing" for="surname">
-          Nazwisko:
-        </label>
-
-        <input
-          v-model="item.surname"
-          v-dynamic-input-width
-          type="text"
-          name="surname"
-          autocomplete="off"
-          class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
-          :class="{
-            'border-b-primary/30 hover:border-b-primary/60 text-primary text-center' : editing,
-            'border-b-red' : !!editErrors.surname,
-          }"
-          :disabled="!editing"
-        >
+        <p v-if="!editing" class="font-bold">
+          {{item.surname}}
+        </p>
       </div>
 
-      <span v-if="editErrors.name || editErrors.surname" class="text-red text-sm truncate">
-        {{ editErrors.name ?? editErrors.surname }}
+      <span v-if="editErrors.firstname" class="text-red text-sm truncate">
+        {{ editErrors.firstname }}
       </span>
     </template>
 
@@ -122,6 +108,15 @@ function customQueries(): string[] {
 
     <template #itemData="{ item, errors, editing }">
       <div class="flex flex-col duration-200 min-h-6.5" :class="{'text-sm text-gray-600': !editing}">
+        <CrudInput
+          v-if="editing"
+          v-model="item.surname"
+          name="surname"
+          label="Nazwisko:"
+          :error="errors.surname"
+          :editing="editing"
+        />
+
         <CrudInput
           v-model="item.email"
           name="email"
