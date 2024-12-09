@@ -20,7 +20,7 @@ class RegisterUserRequest extends FormRequest
             "email" => ["required", "string", "email:rfc,dns", "max:255"],
             "firstname" => ["required", "string", "max:255"],
             "surname" => ["required", "string", "max:255"],
-            "password" => ["required", "string", "min:8"],
+            "password" => ["required", "string", "min:8", "max:255"],
             "school_id" => ["required", "integer", "exists:schools,id", new IsSchoolValidForRegularUsers()],
         ];
     }
