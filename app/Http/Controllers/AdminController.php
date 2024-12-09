@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Helpers\SortHelper;
-use App\Http\Requests\Auth\RegisterUserRequest;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\AdminRequest;
+use App\Http\Requests\Auth\RegisterAdminRequest;
 use App\Http\Resources\UserResource;
 use App\Models\School;
 use App\Models\User;
@@ -32,18 +32,15 @@ class AdminController extends Controller
         ]);
     }
 
-    public function create(): Response
+    public function store(RegisterAdminRequest $request): RedirectResponse
     {
-        return Inertia::render("Admin/CreateAdmin");
-    }
-
-    public function store(RegisterUserRequest $request): RedirectResponse
-    {
+        $school = School::query()->where(["is_admin_school" => true])->firstOrFail();
         $userExists = User::query()->where("email", $request->email)->exists();
 
         if (!$userExists) {
             $user = new User($request->validated());
             $user->password = Hash::make($request->password);
+            $user->school()->associate($school);
             $user->save();
             $user->syncRoles("admin");
             event(new Registered($user));
@@ -54,21 +51,21 @@ class AdminController extends Controller
             ->with("success", "Administrator został utworzony pomyślnie.");
     }
 
-    public function edit(User $user): Response
-    {
-        $this->authorize("update", $user);
-
-        return Inertia::render("Admin/EditAdmin", [
-            "user" => new UserResource($user),
-            "schools" => School::all(),
-        ]);
-    }
-
-    public function update(UserRequest $request, User $user): RedirectResponse
+    public function update(AdminRequest $request, User $user): RedirectResponse
     {
         $this->authorize("update", $user);
         $data = $request->validated();
+
+        if (!$request->has("password")) {
+            unset($data["password"]);
+        }
+
         $user->update($data);
+
+        if ($request->has("password")) {
+            $user->password = Hash::make($request->validated("password"));
+            $user->save();
+        }
 
         return redirect()
             ->route("admin.admins.index")

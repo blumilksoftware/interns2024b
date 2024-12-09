@@ -7,6 +7,7 @@ namespace Tests\Feature;
 use App\Models\School;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -14,6 +15,7 @@ class AdminTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected School $school;
     protected User $superAdmin;
     protected User $admin;
     protected User $user;
@@ -21,8 +23,9 @@ class AdminTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->superAdmin = User::factory()->superAdmin()->create();
-        $this->admin = User::factory()->admin()->create();
+        $this->school = School::factory()->disabled()->adminSchool()->create();
+        $this->superAdmin = User::factory()->superAdmin()->create(["school_id" => $this->school->id]);
+        $this->admin = User::factory()->admin()->create(["school_id" => $this->school->id]);
     }
 
     public function testSuperAdminCanViewAdmins(): void
@@ -66,14 +69,12 @@ class AdminTest extends TestCase
 
     public function testSuperAdminCanAddAdmin(): void
     {
-        $school = School::factory()->create();
         $this->actingAs($this->superAdmin)
             ->post("/admin/admins", [
                 "firstname" => "Admin Name",
                 "surname" => "Admin Surname",
                 "email" => "adminexample@admin.com",
                 "password" => "password",
-                "school_id" => $school->id,
             ])
             ->assertRedirect("/admin/admins");
 
@@ -86,14 +87,12 @@ class AdminTest extends TestCase
 
     public function testAdminCannotAddAdmin(): void
     {
-        $school = School::factory()->create();
         $this->actingAs($this->admin)
             ->post("/admin/admins", [
                 "firstname" => "Admin Name",
                 "surname" => "Admin Surname",
                 "email" => "adminexample@admin.com",
                 "password" => "password",
-                "school_id" => $school->id,
             ])
             ->assertForbidden();
 
@@ -106,16 +105,15 @@ class AdminTest extends TestCase
 
     public function testSuperAdminCanEditAdmin(): void
     {
-        $school = School::factory()->create();
-        $admin = User::factory()->admin()->create(["school_id" => $school->id]);
+        $admin = User::factory()->admin()->create(["school_id" => $this->school->id]);
 
         $this->actingAs($this->superAdmin)
             ->from("/admin/admins/{$admin->id}/edit")
             ->patch("/admin/admins/{$admin->id}", [
                 "firstname" => "New Name",
                 "surname" => "New Surname",
+                "password" => "new @ password",
                 "email" => "new@email.com",
-                "school_id" => $admin->school_id,
             ])
             ->assertRedirect("/admin/admins");
 
@@ -124,7 +122,32 @@ class AdminTest extends TestCase
             "firstname" => "New Name",
             "surname" => "New Surname",
             "email" => "new@email.com",
-            "school_id" => $admin->school_id,
+        ]);
+
+        $admin->refresh();
+        $this->assertTrue(Hash::check("new @ password", $admin->password));
+    }
+
+    public function testSuperAdminCanEditAdminWithoutChangingPassword(): void
+    {
+        $admin = User::factory()->admin()->create(["school_id" => $this->school->id]);
+        $oldPassword = $admin->password;
+
+        $this->actingAs($this->superAdmin)
+            ->from("/admin/admins/{$admin->id}/edit")
+            ->patch("/admin/admins/{$admin->id}", [
+                "firstname" => "New Name",
+                "surname" => "New Surname",
+                "email" => "new@email.com",
+            ])
+            ->assertRedirect("/admin/admins");
+
+        $this->assertDatabaseHas("users", [
+            "id" => $admin->id,
+            "firstname" => "New Name",
+            "surname" => "New Surname",
+            "email" => "new@email.com",
+            "password" => $oldPassword,
         ]);
     }
 
@@ -139,7 +162,6 @@ class AdminTest extends TestCase
                 "firstname" => "New Name",
                 "surname" => "New Surname",
                 "email" => "new@email.com",
-                "school_id" => $admin->school_id,
             ])
             ->assertForbidden();
 
@@ -158,8 +180,8 @@ class AdminTest extends TestCase
             ->patch("/admin/admins/{$admin->id}", [
                 "firstname" => "",
                 "surname" => "",
+                "password" => "asd",
                 "email" => "invalidMail",
-                "school_id" => 999,
             ]);
 
         $response->assertRedirect("/admin/admins/{$admin->id}/edit");
@@ -169,14 +191,14 @@ class AdminTest extends TestCase
             "firstname" => $admin->firstname,
             "surname" => $admin->surname,
             "email" => $admin->email,
-            "school_id" => $admin->school_id,
+            "password" => $admin->password,
         ]);
 
         $response->assertSessionHasErrors([
             "firstname",
             "surname",
             "email",
-            "school_id",
+            "password",
         ]);
     }
 
