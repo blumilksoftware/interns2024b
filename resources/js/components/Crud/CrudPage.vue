@@ -35,7 +35,7 @@ defineSlots<{
   deleteMessage: (scope: { item: T }) => any
   item: (scope: { item: T }) => any
   newItem: (scope: { newItemMode: boolean }) => any
-  itemActions: (scope: { item: T }) => any
+  itemActions: (scope: { item: T, showDeleteMsg: () => void }) => any
   itemData: (scope: { item: T, editing: boolean, errors: Errors }) => any
   noContent: (scope: { search: boolean }) => any
 }>()
@@ -120,8 +120,8 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
             <slot name="title" v-bind="data" />
           </template>
 
-          <template #actions>
-            <slot name="itemActions" :item="item" />
+          <template #actions="{showDeleteMsg}">
+            <slot name="itemActions" :item="item" :show-delete-msg="showDeleteMsg" />
           </template>
 
           <template #data="data">

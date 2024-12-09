@@ -53,48 +53,6 @@ class UserTest extends TestCase
             );
     }
 
-    public function testAdminCanViewEditUser(): void
-    {
-        $user = User::factory()->create();
-
-        $this->actingAs($this->admin)
-            ->from("/admin/users")
-            ->get("/admin/users/{$user->id}/edit")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Admin/EditUser")
-                    ->where("user.id", $user->id),
-            );
-    }
-
-    public function testSuperAdminCanViewEditUser(): void
-    {
-        $user = User::factory()->create();
-
-        $this->actingAs($this->superAdmin)
-            ->from("/admin/users")
-            ->get("/admin/users/{$user->id}/edit")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Admin/EditUser")
-                    ->where("user.id", $user->id),
-            );
-    }
-
-    public function testAdminCannotViewEditUserThatDoesNotExist(): void
-    {
-        $this->actingAs($this->admin)
-            ->get("/admin/users/999/edit")
-            ->assertStatus(404);
-    }
-
-    public function testSuperAdminCannotViewEditUserThatDoesNotExist(): void
-    {
-        $this->actingAs($this->superAdmin)
-            ->get("/admin/users/999/edit")
-            ->assertStatus(404);
-    }
-
     public function testAdminCanEditUser(): void
     {
         $school = School::factory()->create();
@@ -171,6 +129,62 @@ class UserTest extends TestCase
             "firstname",
             "surname",
             "email",
+            "school_id",
+        ]);
+    }
+
+    public function testAdminCannotEditUserWithDisabledSchool(): void
+    {
+        $school = School::factory()->create();
+        $invalidSchool = School::factory()->disabled()->create();
+
+        $user = User::factory()->create(["school_id" => $school->id]);
+
+        $response = $this->actingAs($this->admin)
+            ->from("/admin/users/{$user->id}")
+            ->patch("/admin/users/{$user->id}", [
+                "school_id" => $invalidSchool->id,
+            ]);
+
+        $response->assertRedirect("/admin/users/{$user->id}");
+
+        $this->assertDatabaseHas("users", [
+            "id" => $user->id,
+            "firstname" => $user->firstname,
+            "surname" => $user->surname,
+            "email" => $user->email,
+            "school_id" => $user->school_id,
+        ]);
+
+        $response->assertSessionHasErrors([
+            "school_id",
+        ]);
+    }
+
+    public function testAdminCannotEditUserWithAdminSchool(): void
+    {
+        $school = School::factory()->create();
+        $invalidSchool = School::factory()->adminSchool()->create();
+
+        $user = User::factory()->create(["school_id" => $school->id]);
+
+        $response = $this->actingAs($this->admin)
+            ->from("/admin/users/{$user->id}")
+            ->patch("/admin/users/{$user->id}", [
+                "school_id" => $invalidSchool->id,
+            ]);
+
+        $response->assertRedirect("/admin/users/{$user->id}");
+
+        $this->assertDatabaseHas("users", [
+            "id" => $user->id,
+            "firstname" => $user->firstname,
+            "surname" => $user->surname,
+            "email" => $user->email,
+            "school_id" => $user->school_id,
+        ]);
+
+        $response->assertSessionHasErrors([
             "school_id",
         ]);
     }
@@ -260,19 +274,6 @@ class UserTest extends TestCase
         ]);
     }
 
-    public function testAdminAndSuperAdminCannotViewEditAnonymizedUser(): void
-    {
-        $user = User::factory()->create(["is_anonymized" => true]);
-
-        $this->actingAs($this->admin)
-            ->get("/admin/users/{$user->id}/edit")
-            ->assertStatus(403);
-
-        $this->actingAs($this->superAdmin)
-            ->get("/admin/users/{$user->id}/edit")
-            ->assertStatus(403);
-    }
-
     public function testAdminAndSuperAdminCannotEditAnonymizedUser(): void
     {
         $school = School::factory()->create();
@@ -357,11 +358,6 @@ class UserTest extends TestCase
 
         $this->actingAs($user)
             ->from("/dashboard")
-            ->get("/admin/users/{$user->id}/edit")
-            ->assertStatus(403);
-
-        $this->actingAs($user)
-            ->from("/dashboard")
             ->patch("/admin/users/{$user->id}", ["name" => "New Name"])
             ->assertStatus(403);
 
@@ -382,11 +378,6 @@ class UserTest extends TestCase
 
         $this->from("/")
             ->get("/admin/users/{$user->id}")
-            ->assertStatus(403)
-            ->assertRedirect("/");
-
-        $this->from("/")
-            ->get("/admin/users/{$user->id}/edit")
             ->assertStatus(403)
             ->assertRedirect("/");
 
