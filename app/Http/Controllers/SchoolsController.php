@@ -69,12 +69,12 @@ class SchoolsController extends Controller
 
     public function disable(School $school): RedirectResponse
     {
-        return $this->toggleDisable($school, false);
+        return $this->toggleDisable($school, true);
     }
 
     public function enable(School $school): RedirectResponse
     {
-        return $this->toggleDisable($school, true);
+        return $this->toggleDisable($school, false);
     }
 
     public function toggleDisable(School $school, bool $value): RedirectResponse
