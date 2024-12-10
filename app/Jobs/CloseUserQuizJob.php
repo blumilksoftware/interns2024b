@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Jobs;
 
+use App\Events\AssignedQuizClosed;
 use App\Events\UserQuizClosed;
 use App\Models\Quiz;
 use Illuminate\Bus\Batchable;
@@ -27,6 +28,17 @@ class CloseUserQuizJob implements ShouldQueue
 
     public function handle(): void
     {
+        if (!$this->quiz->isPublished) {
+            return;
+        }
+
+        $participants = $this->quiz->userQuizzes->pluck("user_id")->toArray();
+        $absent = $this->quiz->assignedUsers()->whereNotIn("user_id", $participants)->get();
+
+        foreach ($absent as $user) {
+            event(new AssignedQuizClosed($this->quiz, $user));
+        }
+
         foreach ($this->quiz->userQuizzes as $userQuiz) {
             if (!$userQuiz->wasClosedManually()) {
                 event(new UserQuizClosed($userQuiz));

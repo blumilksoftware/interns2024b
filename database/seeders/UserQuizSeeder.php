@@ -24,7 +24,7 @@ class UserQuizSeeder extends Seeder
         self::createUserQuizForUser($quiz, $user2, null);
     }
 
-    public static function createUserQuizForUser(Quiz $quiz, User $user, ?int $correctAnswersCount): void
+    public static function createUserQuizForUser(Quiz $quiz, User $user, ?int $correctAnswersCount): UserQuiz
     {
         $userQuiz = UserQuiz::factory()
             ->for($quiz)
@@ -55,5 +55,7 @@ class UserQuizSeeder extends Seeder
                 ->for($selectedAnswer)
                 ->create();
         }
+
+        return $userQuiz;
     }
 }
