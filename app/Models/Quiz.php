@@ -95,12 +95,12 @@ class Quiz extends Model
 
     public function canBeUnlocked(): Attribute
     {
-        return Attribute::get(fn(): bool => $this->isLocked && $this->scheduled_at > Carbon::now());
+        return Attribute::get(fn(): bool => $this->isLocked && $this->scheduled_at->isFuture());
     }
 
     public function canBeLocked(): Attribute
     {
-        return Attribute::get(fn(): bool => !$this->isLocked && $this->isReadyToBePublished() && $this->scheduled_at > Carbon::now());
+        return Attribute::get(fn(): bool => !$this->isLocked && $this->isReadyToBePublished() && $this->scheduled_at->isFuture());
     }
 
     public function closeAt(): Attribute
@@ -110,7 +110,7 @@ class Quiz extends Model
 
     public function isReadyToBePublished(): bool
     {
-        return $this->scheduled_at !== null && $this->duration !== null && $this->allQuestionsHaveCorrectAnswer();
+        return $this->scheduled_at !== null && $this->duration !== null && $this->questions->count() > 0 && $this->allQuestionsHaveCorrectAnswer();
     }
 
     public function hasUserQuizzesFrom(User $user): bool
