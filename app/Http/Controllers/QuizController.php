@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\AssignToQuizAction;
+use App\Actions\CreateUserQuizAction;
+use App\Actions\LockQuizAction;
+use App\Actions\UnlockQuizAction;
 use App\Helpers\SortHelper;
 use App\Http\Requests\QuizRequest;
 use App\Http\Requests\UpdateQuizRequest;
 use App\Http\Resources\QuizResource;
 use App\Models\Quiz;
+use App\Services\QuizCloneService;
 use App\Services\QuizUpdateService;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,6 +22,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
+use function collect;
 use function redirect;
 
 class QuizController extends Controller
@@ -60,48 +66,43 @@ class QuizController extends Controller
         return redirect()->back();
     }
 
-    public function clone(Quiz $quiz): RedirectResponse
+    public function clone(QuizCloneService $service, Quiz $quiz): RedirectResponse
     {
-        $quiz->clone();
+        $service->cloneQuiz($quiz);
 
         return redirect()
             ->back()
             ->with("status", "Test został skopiowany");
     }
 
-    public function lock(Quiz $quiz): RedirectResponse
+    public function lock(LockQuizAction $action, Quiz $quiz): RedirectResponse
     {
-        $quiz->locked_at = Carbon::now();
-        $quiz->save();
+        $action->execute($quiz);
 
         return redirect()
             ->back()
             ->with("status", "Test oznaczony jako gotowy do publikacji");
     }
 
-    public function unlock(Quiz $quiz): RedirectResponse
+    public function unlock(UnlockQuizAction $action, Quiz $quiz): RedirectResponse
     {
-        $quiz->locked_at = null;
-        $quiz->save();
+        $action->execute($quiz);
 
         return redirect()
             ->back()
             ->with("status", "Publikacja testu została wycofana");
     }
 
-    public function createUserQuiz(Request $request, Quiz $quiz): RedirectResponse
+    public function createUserQuiz(CreateUserQuizAction $action, Request $request, Quiz $quiz): RedirectResponse
     {
-        $user = $request->user();
-        $userQuiz = $quiz->createUserQuiz($user);
+        $userQuiz = $action->execute($quiz, $request->user());
 
         return redirect("/quizzes/{$userQuiz->id}/");
     }
 
-    public function assign(Request $request, Quiz $quiz): RedirectResponse
+    public function assign(AssignToQuizAction $action, Request $request, Quiz $quiz): RedirectResponse
     {
-        $user = $request->user();
-        $quiz->assignedUsers()->attach($user);
-        $quiz->save();
+        $action->execute($quiz, collect([$request->user()->id]));
 
         return redirect()
             ->back()

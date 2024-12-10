@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Listeners;
 
 use App\Events\UserQuizClosed;
-use App\Mail\QuizClosedMail;
+use App\Mail\UserQuizClosedMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
 
@@ -15,6 +15,6 @@ class SendQuizClosedNotification implements ShouldQueue
     {
         $quiz = $event->userQuiz;
 
-        Mail::to($quiz->user->email)->send(new QuizClosedMail($quiz));
+        Mail::to($quiz->user->email)->send(new UserQuizClosedMail($quiz));
     }
 }
