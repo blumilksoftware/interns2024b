@@ -63,7 +63,7 @@ class QuizInviteTest extends TestCase
     public function testFilteringAndSortingUsers(): void
     {
         $school = School::factory()->create();
-        User::factory()->count(8)->create();
+        User::factory()->count(8)->create(["firstname" => "test"]);
         $user = User::factory()->create([
             "firstname" => "Jan",
             "school_id" => $school->id,
