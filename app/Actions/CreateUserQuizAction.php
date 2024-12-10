@@ -7,11 +7,14 @@ namespace App\Actions;
 use App\Jobs\CloseUserQuizJob;
 use App\Models\Quiz;
 use App\Models\User;
-use App\Models\UserQuestion;
 use App\Models\UserQuiz;
 
 class CreateUserQuizAction
 {
+    public function __construct(
+        protected CreateUserQuestionAction $action,
+    ) {}
+
     public function execute(Quiz $quiz, User $user): UserQuiz
     {
         $userQuiz = new UserQuiz();
@@ -21,10 +24,7 @@ class CreateUserQuizAction
         $userQuiz->save();
 
         foreach ($quiz->questions as $question) {
-            $userQuestion = new UserQuestion();
-            $userQuestion->userQuiz()->associate($userQuiz);
-            $userQuestion->question()->associate($question);
-            $userQuestion->save();
+            $this->action->execute($question, $userQuiz);
         }
 
         if ($quiz->isClosingToday()) {

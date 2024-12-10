@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Actions\CreateUserQuestionAction;
 use App\Actions\CreateUserQuizAction;
 use App\Models\Answer;
 use App\Models\Question;
@@ -26,7 +27,7 @@ class UserQuizTest extends TestCase
     {
         parent::setUp();
 
-        $this->createUserQuiz = new CreateUserQuizAction();
+        $this->createUserQuiz = new CreateUserQuizAction(new CreateUserQuestionAction());
         $this->user = User::factory()->create();
     }
 

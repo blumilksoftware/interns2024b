@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Models\Answer;
-use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\User;
 use App\Models\UserQuestion;
@@ -14,46 +12,26 @@ use Illuminate\Database\Seeder;
 
 class UserQuizSeeder extends Seeder
 {
-    public Quiz $quiz;
-
     public function run(): void
     {
         $user1 = User::factory()->create();
         $user2 = User::factory()->create();
 
-        $this->quiz = Quiz::factory()
-            ->has(
-                Question::factory()
-                    ->count(5)
-                    ->has(
-                        Answer::factory()->count(4),
-                    ),
-            )
-            ->published()
-            ->create();
+        $this->call([PublishedQuizSeeder::class]);
+        $quiz = Quiz::query()->firstOrFail();
 
-        foreach ($this->quiz->questions as $question) {
-            $answers = $question->answers;
-
-            if ($answers->isNotEmpty()) {
-                $correctAnswer = $answers->random();
-                $question->correct_answer_id = $correctAnswer->id;
-                $question->save();
-            }
-        }
-
-        $this->createUserQuizForUser($user1, null);
-        $this->createUserQuizForUser($user2, null);
+        self::createUserQuizForUser($quiz, $user1, null);
+        self::createUserQuizForUser($quiz, $user2, null);
     }
 
-    public function createUserQuizForUser(User $user, ?int $correctAnswersCount): void
+    public static function createUserQuizForUser(Quiz $quiz, User $user, ?int $correctAnswersCount): void
     {
         $userQuiz = UserQuiz::factory()
-            ->for($this->quiz)
+            ->for($quiz)
             ->for($user)
             ->create();
 
-        $questions = $this->quiz->questions;
+        $questions = $quiz->questions;
 
         if ($correctAnswersCount === null) {
             $correctAnswersCount = rand(0, $questions->count());

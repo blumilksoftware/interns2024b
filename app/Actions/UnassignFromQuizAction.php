@@ -8,7 +8,7 @@ use App\Models\Quiz;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
-class UnassignToQuizAction
+class UnassignFromQuizAction
 {
     /**
      * @param Collection<User> $users
@@ -17,6 +17,7 @@ class UnassignToQuizAction
     {
         $assignedUsers = $quiz->assignedUsers;
         $users = User::query()->whereIn("id", $users)->get();
+
         $users = $users->filter(fn(User $user) => $assignedUsers->contains($user));
         $quiz->assignedUsers()->detach($users);
     }
