@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Actions\CreateUserQuestionAction;
+use App\Actions\CreateUserQuizAction;
 use App\Models\Answer;
 use App\Models\Question;
 use App\Models\Quiz;
@@ -19,11 +21,13 @@ class UserQuizTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+    protected CreateUserQuizAction $createUserQuiz;
 
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->createUserQuiz = new CreateUserQuizAction(new CreateUserQuestionAction());
         $this->user = User::factory()->create();
     }
 
@@ -38,7 +42,7 @@ class UserQuizTest extends TestCase
             $question->save();
         }
 
-        $userQuiz = $quiz->createUserQuiz($this->user);
+        $userQuiz = $this->createUserQuiz->execute($quiz, $this->user);
 
         $this->assertDatabaseCount("quizzes", 1);
         $this->assertDatabaseCount("questions", 2);
@@ -76,7 +80,8 @@ class UserQuizTest extends TestCase
         $quiz->save();
 
         Question::factory()->count(2)->create(["quiz_id" => $quiz->id]);
-        $userQuiz = $quiz->createUserQuiz($this->user);
+
+        $userQuiz = $this->createUserQuiz->execute($quiz, $this->user);
         $userQuiz->closed_at = Carbon::now();
         $userQuiz->save();
 

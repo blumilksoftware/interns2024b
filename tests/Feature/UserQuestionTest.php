@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
+use App\Actions\CreateUserQuestionAction;
+use App\Actions\CreateUserQuizAction;
 use App\Models\Answer;
 use App\Models\User;
 use App\Models\UserQuiz;
@@ -16,18 +18,21 @@ class UserQuestionTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
+    protected CreateUserQuizAction $createUserQuiz;
 
     protected function setUp(): void
     {
         parent::setUp();
-        UserQuiz::truncate();
+        UserQuiz::query()->truncate();
+
+        $this->createUserQuiz = new CreateUserQuizAction(new CreateUserQuestionAction());
         $this->user = User::factory()->create();
     }
 
     public function testUserCanAnswerQuestion(): void
     {
         $answer = Answer::factory()->locked()->create();
-        $userQuiz = $answer->question->quiz->createUserQuiz($this->user);
+        $userQuiz = $this->createUserQuiz->execute($answer->question->quiz, $this->user);
         $userQuestion = $userQuiz->userQuestions[0];
 
         $this->actingAs($this->user)
@@ -54,7 +59,7 @@ class UserQuestionTest extends TestCase
     {
         $user = User::factory()->create();
         $answer = Answer::factory()->locked()->create();
-        $userQuiz = $answer->question->quiz->createUserQuiz($user);
+        $userQuiz = $this->createUserQuiz->execute($answer->question->quiz, $user);
         $userQuestion = $userQuiz->userQuestions[0];
 
         $this->actingAs($this->user)
@@ -71,7 +76,7 @@ class UserQuestionTest extends TestCase
     public function testUserCannotAnswerQuestionThatBelongsToClosedUserQuiz(): void
     {
         $answer = Answer::factory()->locked()->create();
-        $userQuiz = $answer->question->quiz->createUserQuiz($this->user);
+        $userQuiz = $this->createUserQuiz->execute($answer->question->quiz, $this->user);
         $userQuestion = $userQuiz->userQuestions[0];
 
         $userQuiz->closed_at = Carbon::now();
@@ -91,7 +96,7 @@ class UserQuestionTest extends TestCase
     public function testUserCannotAnswerQuestionWithAnswerThatNotExist(): void
     {
         $answer = Answer::factory()->locked()->create();
-        $userQuiz = $answer->question->quiz->createUserQuiz($this->user);
+        $userQuiz = $this->createUserQuiz->execute($answer->question->quiz, $this->user);
         $userQuestion = $userQuiz->userQuestions[0];
 
         $this->actingAs($this->user)
@@ -108,7 +113,7 @@ class UserQuestionTest extends TestCase
     public function testUserCannotAnswerQuestionWithAnswerNotAssignedToIt(): void
     {
         $answer = Answer::factory()->locked()->create();
-        $userQuiz = $answer->question->quiz->createUserQuiz($this->user);
+        $userQuiz = $this->createUserQuiz->execute($answer->question->quiz, $this->user);
         $userQuestion = $userQuiz->userQuestions[0];
 
         $answer1 = Answer::factory()->locked()->create();

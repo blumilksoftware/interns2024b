@@ -42,12 +42,4 @@ class Answer extends Model
     {
         return Attribute::get(fn(): bool => $this->question->correctAnswer()->is($this));
     }
-
-    public function cloneTo(Question $question): self
-    {
-        $clone = $this->replicate();
-        $clone->question()->associate($question)->save();
-
-        return $clone;
-    }
 }

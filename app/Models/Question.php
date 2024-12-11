@@ -60,19 +60,5 @@ class Question extends Model
 
     public function cloneTo(Quiz $quiz): self
     {
-        $questionCopy = $this->replicate();
-        $questionCopy->quiz()->associate($quiz)->save();
-
-        foreach ($this->answers as $answer) {
-            $answerCopy = $answer->cloneTo($questionCopy);
-
-            if ($answer->isCorrect) {
-                $questionCopy->correctAnswer()->associate($answerCopy);
-            }
-        }
-
-        $questionCopy->save();
-
-        return $questionCopy;
     }
 }
