@@ -47,8 +47,16 @@ function fetchSchoolsPortion(search?: string) {
     uri: `/schools/search?${paramsString}`,
     onStart: () => searchErrorMessage.value = '',
     onPendingStateChange: isPending => isFetchingSchools.value = isPending,
-    onSuccess: data => schools.value = { ...data, data: [...schools.value.data, ...data.data] },
     onError: () => searchErrorMessage.value = 'Nie udało się pobrać więcej szkół',
+    onSuccess: data => schools.value = {
+      ...data,
+      data: [
+        ...schools.value.data, 
+        ...data.data.filter(
+          x => !schools.value.data.some(y => y.id === x.id),
+        ),
+      ], 
+    },
   })
 }
 
