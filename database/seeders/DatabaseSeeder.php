@@ -9,7 +9,6 @@ use App\Models\Question;
 use App\Models\Quiz;
 use App\Models\School;
 use App\Models\User;
-use App\Models\UserQuiz;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
