@@ -192,4 +192,26 @@ class SchoolTest extends TestCase
                 "count" => 0,
             ]);
     }
+
+    public function testAdminCanSearchForSchools(): void
+    {
+        School::factory(["name" => "TEST"])->create();
+
+        $this->actingAs($this->admin)->get("/admin/schools/search?search=TEST")
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertJsonPath("0.name", "TEST");
+    }
+
+    public function testGuestCanSearchForSchools(): void
+    {
+        School::factory(["name" => "TEST"])->create();
+
+        $this->get("/admin/schools/search")->assertRedirect();
+
+        $this->get("/schools/search?search=TEST")
+            ->assertStatus(200)
+            ->assertJsonCount(1)
+            ->assertJsonPath("0.name", "TEST");
+    }
 }

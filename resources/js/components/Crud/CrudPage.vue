@@ -5,7 +5,7 @@ import { vAutoAnimate } from '@formkit/auto-animate'
 import Expand from '@/components/Common/Expand.vue'
 import Dropdown from '@/components/Common/Dropdown.vue'
 import { type Errors } from '@inertiajs/core'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Button from '@/components/Common/Button.vue'
 import CrudNewItem from '@/components/Crud/CrudNewItem.vue'
 import CrudItem from '@/components/Crud/CrudItem.vue'
@@ -46,7 +46,8 @@ const newItemMode = ref(false)
 
 const queryParams = useQuery<Record<string, any>>(() => ({ page: 1, ...props.customQueries }))
 
-const isSearchbarEmpty = computed(() => !queryParams.search)
+const isSearchbarEmpty = ref(!queryParams.search)
+watch(() => props.items.data, () => isSearchbarEmpty.value = !queryParams.search)
 
 function handleSearch(text: string | undefined, mode?: string) {
   queryParams.search = props.customSearch ? props.customSearch(text) : text?.toLocaleUpperCase()
@@ -54,7 +55,7 @@ function handleSearch(text: string | undefined, mode?: string) {
 }
 
 function pageSwitch(isLeftSwitch: boolean) {
-  const currentPage = pagination.value.current_page ?? queryParams.page
+  const currentPage = pagination.value.meta.current_page ?? queryParams.page
   queryParams.page = isLeftSwitch ? currentPage -1 : currentPage + 1
 }
 </script>
@@ -115,8 +116,8 @@ function pageSwitch(isLeftSwitch: boolean) {
         v-if="items.data.length > 0"
         :disabled-left="!pagination.links.prev"
         :disabled-right="!pagination.links.next"
-        :from="pagination.meta.from ?? 0"
-        :to="pagination.meta.to ?? 0"
+        :from="pagination.meta.from"
+        :to="pagination.meta.to"
         @switch="pageSwitch"
       />
     </div>
@@ -221,8 +222,8 @@ function pageSwitch(isLeftSwitch: boolean) {
         v-if="items.data.length > 0"
         :disabled-left="!pagination.links.prev"
         :disabled-right="!pagination.links.next"
-        :from="pagination.meta.from ?? 0"
-        :to="pagination.meta.to ?? 0"
+        :from="pagination.meta.from"
+        :to="pagination.meta.to"
         @switch="pageSwitch"
       />
     </div>

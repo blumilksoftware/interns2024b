@@ -1,18 +1,28 @@
 <script setup lang="ts">
-defineProps<{ label?:string, error?:string, hideError?:boolean, hideContent?:boolean }>()
+defineProps<{ label?: string, error?: string, hideError?: boolean, hideContent?: boolean, column?: boolean, row?: boolean }>()
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col min-h-6.5">
-    <label v-if="label" class="flex flex-1 flex-col 2xs:flex-row 2xs:gap-1">
+  <div class="flex flex-1 flex-col">
+    <label
+      class="flex flex-1"
+      :class="{
+        'flex-col': column,
+        'flex-row': row,
+        'flex-col 2xs:flex-row 2xs:gap-1': column === row,
+      }"
+    >
       {{ label }}
-      <b v-if="hideContent" aria-label="brak danych">-</b>
+      <b
+        v-if="hideContent"
+        aria-label="brak danych"
+      >
+        -
+      </b>
+
       <slot v-else />
     </label>
-    <template v-else>
-      <b v-if="hideContent" aria-label="brak danych">-</b>
-      <slot v-else />
-    </template>
+
     <span
       v-if="!hideError && error"
       :title="error"

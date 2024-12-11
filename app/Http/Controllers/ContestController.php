@@ -6,10 +6,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\SortHelper;
 use App\Http\Resources\QuizResource;
-use App\Http\Resources\SchoolResource;
 use App\Http\Resources\UserQuizResource;
 use App\Models\Quiz;
-use App\Models\School;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,11 +17,7 @@ class ContestController extends Controller
 {
     public function index(SortHelper $sorter): Response
     {
-        $query = $sorter->sort(School::query(), ["id", "name", "regon", "updated_at", "created_at"], ["students", "address"]);
-        $query = $sorter->search($query, "name");
-        $schools = $sorter->paginate($query);
-
-        return Inertia::render("Home", ["schools" => SchoolResource::collection($schools)]);
+        return Inertia::render("Home");
     }
 
     public function create(Request $request): RedirectResponse|Response

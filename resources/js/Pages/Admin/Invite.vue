@@ -12,11 +12,6 @@ defineProps<{
   errors: Errors
   users: Pagination<User>
   quiz: number
-  schools: Array<{
-    id: number
-    name: string
-    city: string
-  }>
   assigned: number[]
 }>()
 

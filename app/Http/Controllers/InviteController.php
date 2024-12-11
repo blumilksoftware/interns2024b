@@ -8,10 +8,8 @@ use App\Actions\AssignToQuizAction;
 use App\Actions\UnassignToQuizAction;
 use App\Helpers\SortHelper;
 use App\Http\Requests\InviteQuizRequest;
-use App\Http\Resources\SchoolResource;
 use App\Http\Resources\UserResource;
 use App\Models\Quiz;
-use App\Models\School;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -30,21 +28,12 @@ class InviteController extends Controller
         $query = $sort->sort($query, ["id"], ["name", "school"]);
         $query = $this->sortByName($query, $sort);
         $query = $this->sortBySchool($query, $sort);
-
-        $mode = $request->query("mode");
-
-        if ($mode === "USER") {
-            $query = $this->filterByName($query, $request);
-        } elseif ($mode === "SCHOOL") {
-            $query = $this->filterBySchoolName($query, $request);
-        }
-
+        $query = $this->filterByMode($query, $request);
         $query = $this->filterBySchool($query, $request);
 
         return Inertia::render("Admin/Invite", [
             "users" => UserResource::collection($sort->paginate($query)),
             "quiz" => $quiz->id,
-            "schools" => SchoolResource::collection(School::all()),
             "assigned" => $quiz->assignedUsers->pluck("id"),
         ]);
     }
@@ -69,6 +58,17 @@ class InviteController extends Controller
         return redirect()
             ->back()
             ->with("status", "Użytkownicy zostali wypisani z quizu.");
+    }
+
+    private function filterByMode(Builder $query, Request $request)
+    {
+        $mode = $request->query("mode", "user");
+
+        if ($mode === "school") {
+            return $this->filterBySchoolName($query, $request);
+        }
+
+        return $this->filterByName($query, $request);
     }
 
     private function filterByName(Builder $query, Request $request): Builder

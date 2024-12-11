@@ -1,25 +1,17 @@
 <script lang="ts" setup>
 import qs from 'query-string'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { nanoid } from 'nanoid'
-import axios from 'axios'
 import { useForm } from '@inertiajs/vue3'
 import { type Errors } from '@inertiajs/core'
 import Checkbox from '@/components/Common/Checkbox.vue'
 import Searchbar from '@/components/Common/Searchbar.vue'
 import CustomInput from '@/components/Common/CustomInput.vue'
 import PasswordInput from '@/components/Common/PasswordInput.vue'
+import { axiosRequest } from '@/Helpers/AxiosRequest'
 
-const props = defineProps<{ errors: Errors, schools: Pagination<School> }>()
-const schools = ref(props.schools)
-const filteredSchoolOptions = computed(() => schools.value.data.map(
-  (school: School): Option & School => ({
-    ...school,
-    key: nanoid(), 
-    title: school.city,
-    text: school.name, 
-  }),
-))
+defineProps<{ errors: Errors }>()
+
 const form = useForm({
   firstname: '',
   surname: '',
@@ -28,26 +20,36 @@ const form = useForm({
   school_id: '',
 })
 
-const isSchoolsPageLoadingFinished = ref(false)
+const schools = ref<Pagination<School>>({ data: [] } as any)
+const filteredSchoolOptions = computed(() => schools.value.data.map(
+  (school: School): Option & School => ({
+    ...school,
+    key: nanoid(), 
+    title: school.city,
+    text: school.name, 
+  }),
+))
+
+const isFetchingSchools = ref(false)
 const searchErrorMessage = ref('')
 
-async function fetchAdditionalSchools(search?: string) {
-  searchErrorMessage.value = ''
-  if (!props.schools.links.next) return
-  
-  isSchoolsPageLoadingFinished.value = false
+onMounted(fetchSchoolsPortion)
+
+function fetchSchoolsPortion(search?: string) {
+  const page = schools.value.meta?.current_page ?? 0
+
   const paramsString = qs.stringify({
     search: search,
-    page: search ? undefined : schools.value.current_page+1,
+    page: search ? undefined : page + 1,
   })
-  try {
-    const response = await axios.get(`/api/schools?${paramsString}`)
-    schools.value = { ...response.data, data: [...schools.value.data, ...response.data.data] }
-  }
-  catch {
-    searchErrorMessage.value = 'Nie udało się pobrać więcej szkół'
-  }
-  isSchoolsPageLoadingFinished.value = true
+
+  axiosRequest<Pagination<School>>({
+    uri: `/schools/search?${paramsString}`,
+    onStart: () => searchErrorMessage.value = '',
+    onPendingStateChange: isPending => isFetchingSchools.value = isPending,
+    onSuccess: data => schools.value = { ...data, data: [...schools.value.data, ...data.data] },
+    onError: () => searchErrorMessage.value = 'Nie udało się pobrać więcej szkół',
+  })
 }
 
 function submit() {
@@ -84,10 +86,9 @@ function submit() {
       no-results-text="Nie znaleziono szkoły"
       :options="filteredSchoolOptions"
       :error="errors.school_id"
-      :is-loading-finished="isSchoolsPageLoadingFinished"
-      :pages-ended="!props.schools.links.next"
+      :is-fetching="isFetchingSchools"
       :no-fetch-text="searchErrorMessage"
-      @fetch-additional-data="fetchAdditionalSchools"
+      @request-data="fetchSchoolsPortion"
       @change="school => form.school_id = school.id.toString()"
     />
 

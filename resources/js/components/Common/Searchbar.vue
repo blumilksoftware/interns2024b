@@ -1,184 +1,95 @@
-<script lang="ts" setup generic="T extends Option">
-import { ref, computed, onMounted } from 'vue'
-import { onClickOutside, useDebounceFn } from '@vueuse/core'
-import { nanoid } from 'nanoid'
-
-const id = nanoid()
+<script lang="ts" setup>
+import { ref, computed, watch } from 'vue'
+import { useDebounceFn } from '@vueuse/core'
+import { MagnifyingGlassIcon } from '@heroicons/vue/24/outline'
+import CustomInput from '@/components/Common/CustomInput.vue'
+import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
+import vClickOutside from '@/Helpers/vClickOutside'
+import List from '@/components/Common/List.vue'
 
 const props = defineProps<{
-  options: T[]
+  options: Array<Option|any>
   label: string
   ariaLabel?: string
   error?: string
+  isFetching: boolean
   noResultsText?: string
-  isLoadingFinished?: boolean
-  pagesEnded?: boolean
   noFetchText?: string
-  onFetchAdditionalData: (search?: string) => Promise<void>
 }>()
-const emit = defineEmits<{ change: [option:T] }>()
+const emit = defineEmits<{ change: [option:Option|any], requestData: [search?: string] }>()
 
-const searchbar = ref<HTMLElement>()
-const loadingElement = ref<HTMLElement>()
-const contentElement = ref<HTMLElement>()
-
-const selectedOption = ref<T>()
+const selectedOption = ref<Option|any>()
 const searchQuery = ref('')
 
-const queryPending = ref(false)
+const isDebouncing = ref(false)
 const isFocused = ref(false)
-const showLoading = computed(() => !searchQuery.value && !props.pagesEnded || searchQuery.value && !props.isLoadingFinished)
 
-const options = computed(
-  () => props.options.filter(
-    option => option.text.toLocaleUpperCase().includes(searchQuery.value.toLocaleUpperCase()) ||
-    option.title?.toLocaleUpperCase().includes(searchQuery.value.toLocaleUpperCase()),
-  ),
+const options = computed<Option|any>(() => props.options.filter(
+  option => option.text.toLocaleUpperCase().includes(searchQuery.value.toLocaleUpperCase()) ||
+      option.title?.toLocaleUpperCase().includes(searchQuery.value.toLocaleUpperCase()),
+))
+
+const debouncedRequest = useDebounceFn(
+  () => {
+    emit('requestData', searchQuery.value.toLocaleUpperCase())
+    isDebouncing.value = false
+  }, 
+  500,
 )
 
-onClickOutside(searchbar, () => isFocused.value = false)
+function handleInput(value: string) {
+  searchQuery.value = value
+  isDebouncing.value = true
+  debouncedRequest()
+}
 
-onMounted(() => {
-  const observer = new IntersectionObserver(
-    entries => {
-      async function loadNewContent() {
-        if (!contentElement.value) return
-        const scrollOffset = contentElement.value.scrollTop
-        await props.onFetchAdditionalData()
-        contentElement.value.scrollTop = scrollOffset
-      }
-      if (entries[0].isIntersecting) {
-        loadNewContent()
-      }
-    },
-    { threshold: .0 },
-  )
-
-  if (loadingElement.value) {
-    observer.observe(loadingElement.value)
-  }
-})
-
-function onOptionClick(option: T) {
+function onOptionClick(option: Option|any) {
   selectedOption.value = option
   isFocused.value = false
   emit('change', option)
 }
 
-function updateQuery(event: any) {
-  searchQuery.value = event.currentTarget.value
-  queryPending.value = true
-}
-
-const handleInput = useDebounceFn(
-  () => {
-    props.onFetchAdditionalData(searchQuery.value.toLocaleUpperCase())
-    queryPending.value = false
-  }, 
-  500,
+watch(
+  () => isFocused.value ? '' : selectedOption.value?.text ?? '', 
+  search => searchQuery.value = search,
 )
 </script>
 
 <template>
-  <div class="block w-full text-sm font-medium leading-6 text-gray-900 duration-200">
-    <label :for="id">
-      {{ label }}
-    </label>
-
-    <div
-      ref="searchbar"
-      class="mt-2 font-medium text-sm leading-6 text-gray-900 overflow-hidden duration-200 max-h-12 flex flex-col bg-white/30 placeholder:text-gray-400 rounded-lg ring-2 ring-primary/30 ring-inset"
-      :class="{'scale-y-100 max-h-80': isFocused, 'ring-red' : error }"
+  <InputWrapper
+    v-click-outside="() => isFocused = false"
+    class="text-sm font-medium leading-6"
+    :label="label"
+    :error="error"
+    column
+  >
+    <List
+      class="mt-2"
+      :options
+      :opened="isFocused"
+      :use-lazy-loading="!searchQuery"
+      :fetching="isFetching || isDebouncing"
+      :no-fetch-text
+      :no-results-text
+      @option-click="onOptionClick"
+      @lazyload="emit('requestData')"
     >
-      <div
-        class="flex h-inherit items-center justify-center duration-200 rounded-lg"
-        :class="{ 'ring-inset ring-2 ring-primary/60' : isFocused, 'ring-red' : error }"
+      <CustomInput
+        v-model="searchQuery"
+        name="search"
+        :aria-label="ariaLabel"
+        :class="{'cursor-pointer' : !isFocused}"
+        :placeholder="selectedOption?.text"
+        @input="handleInput"
+        @focus="isFocused = true"
       >
-        <div class="h-full items-center justify-center px-3">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            stroke="currentColor"
-            class="size-5 text-primary/30"
+        <template #left>
+          <MagnifyingGlassIcon
+            class="stroke-2 size-5 text-primary/30"
             :class="{'!text-primary/60': isFocused}"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-            />
-          </svg>
-        </div>
-
-        <input
-          :id="id"
-          ref="searchElement"
-          class="outline-none py-3 bg-transparent w-full text-gray-900"
-          autocomplete="off"
-          name="search"
-          type="text"
-          required
-          :aria-label="ariaLabel"
-          :value="isFocused ? searchQuery : selectedOption?.text"
-          :class="{'cursor-pointer' : !isFocused}"
-          :placeholder="selectedOption?.text"
-          @input="event=>{updateQuery(event); handleInput()}"
-          @focus="isFocused=true"
-        >
-      </div>
-
-      <Transition>
-        <div
-          v-show="isFocused"
-          ref="contentElement"
-          class="m-0.5 mt-0 py-2 overflow-auto"
-        >
-          <button
-            v-for="obj in options"
-            :key="obj.key"
-            class="cursor-pointer block px-4 py-2 hover:bg-primary/10 outline-none focus:bg-primary/10 text-[0.9rem] w-full text-left"
-            @click="onOptionClick(obj)"
-            @focus="isFocused=true"
-          >
-            <b v-if="obj.title">
-              {{ obj.title.toUpperCase() }}
-            </b>
-
-            <p>{{ obj.text }}</p>
-          </button>
-
-          <div
-            v-show="showLoading"
-            class="bg-white/50 z-10 w-full h-fit left-0 flex items-center justify-center p-2"
-          >
-            <div
-              class="inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
-              role="status"
-            />
-          </div>
-
-          <div
-            v-show="!searchQuery && !pagesEnded"
-            ref="loadingElement"
           />
-
-          <span
-            v-show="options.length <= 0 && !showLoading && !queryPending"
-            class="block px-4 py-2 text-sm"
-          >
-            {{ noFetchText ? noFetchText : noResultsText }}
-          </span>
-        </div>
-      </Transition>
-    </div>
-
-    <div
-      v-if="error"
-      class="text-red"
-    >
-      {{ error }}
-    </div>
-  </div>
+        </template>
+      </CustomInput>
+    </List>
+  </InputWrapper>
 </template>

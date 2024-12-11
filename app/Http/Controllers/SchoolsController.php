@@ -8,6 +8,7 @@ use App\Enums\Voivodeship;
 use App\Helpers\SortHelper;
 use App\Http\Requests\SchoolRequest;
 use App\Http\Resources\SchoolResource;
+use App\Http\Resources\SchoolSearchResource;
 use App\Jobs\FetchSchoolsJob;
 use App\Models\School;
 use Illuminate\Bus\Batch;
@@ -28,13 +29,16 @@ class SchoolsController extends Controller
 {
     public function index(SortHelper $sorter): Response
     {
-        $query = $sorter->sort(School::query(), ["id", "name", "regon", "updated_at", "created_at"], ["students", "address"]);
-        $query = $this->sortByStudents($query, $sorter);
-        $query = $this->sortByAddress($query, $sorter);
-        $query = $sorter->search($query, "name");
-        $schools = $sorter->paginate($query);
+        $schools = $this->searchQuery($sorter);
 
         return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolResource::collection($schools)]);
+    }
+
+    public function search(SortHelper $sorter): JsonResponse
+    {
+        $schools = $this->searchQuery($sorter);
+
+        return SchoolSearchResource::collection($schools)->response();
     }
 
     public function store(SchoolRequest $request): RedirectResponse
@@ -105,6 +109,17 @@ class SchoolsController extends Controller
         }
 
         return Bus::findBatch($batchId);
+    }
+
+    private function searchQuery(SortHelper $sorter)
+    {
+        $query = $sorter->sort(School::query(), ["id", "name", "regon", "updated_at", "created_at"], ["students", "address"]);
+        $query = $this->sortByStudents($query, $sorter);
+        $query = $this->sortByAddress($query, $sorter);
+        $query = $sorter->search($query, "name");
+        $query = $sorter->paginate($query);
+
+        return $query;
     }
 
     private function sortByStudents(Builder $query, SortHelper $sorter): Builder

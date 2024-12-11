@@ -76,7 +76,7 @@ module.exports = {
             });
             addComponents({
                 '.icon': {
-                  '@apply size-6 stroke-2 text-primary hover:text-primary-bright transition-colors duration-200':{},
+                  '@apply size-6 stroke-2 text-primary hover:text-primary-bright transition-colors duration-200 flex-none':{},
                 },
                 '.slide-up-animation' : {
                     '@apply hover:-translate-y-1 h-full transition-transform ease-in duration-150':{},

@@ -14,7 +14,6 @@ use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuizQuestionController;
 use App\Http\Controllers\RankingController;
 use App\Http\Controllers\RegisterUserController;
-use App\Http\Controllers\SchoolsAPIController;
 use App\Http\Controllers\SchoolsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserQuestionController;
@@ -24,16 +23,13 @@ use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Support\Facades\Route;
 
-Route::group(["prefix" => "api"], function (): void {
-    Route::get("schools", [SchoolsAPIController::class, "index"])->name("api.schools");
-});
-
 Route::get("/email/verify", [EmailVerifyController::class, "create"])->name("verification.notice");
 Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["auth", "throttle:6,1"])->name("verification.verify");
 Route::post("/email/verification-notification", [EmailVerifyController::class, "send"])->middleware("throttle:3,60")->name("verification.send");
 Route::post("/auth/logout", [AuthenticateSessionController::class, "logout"])->middleware("auth")->name("logout");
 
 Route::middleware(["guest"])->group(function (): void {
+    Route::get("/schools/search", [SchoolsController::class, "search"])->name("schools.search");
     Route::get("/", [ContestController::class, "index"])->name("home");
     Route::post("/auth/register", [RegisterUserController::class, "store"])->name("register");
     Route::get("/auth/login", fn() => redirect("/"))->name("login");
@@ -79,6 +75,7 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/schools", [SchoolsController::class, "store"])->name("admin.schools.store");
     Route::patch("/schools/{school}", [SchoolsController::class, "update"])->name("admin.schools.update");
     Route::delete("/schools/{school}", [SchoolsController::class, "destroy"])->name("admin.schools.destroy");
+    Route::get("/schools/search", [SchoolsController::class, "search"])->name("admin.schools.search");
 
     Route::post("/schools/fetch", [SchoolsController::class, "fetch"])->name("admin.schools.fetch");
     Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");
