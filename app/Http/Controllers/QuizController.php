@@ -114,7 +114,7 @@ class QuizController extends Controller
         $showArchived = $request->query("archived", "false") === "true";
 
         if (!$showArchived) {
-            return $query->orWhere(fn(Builder $query) => $query->whereNull("locked_at")->orWhereDate("scheduled_at", ">", Carbon::now()));
+            return $query->orWhere(fn(Builder $query) => $query->whereNull("locked_at")->orWhere("scheduled_at", ">", Carbon::now()));
         }
 
         return $query;
