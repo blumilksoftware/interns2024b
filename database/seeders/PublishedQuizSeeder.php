@@ -14,14 +14,15 @@ class PublishedQuizSeeder extends Seeder
     public function run(): void
     {
         $quiz = Quiz::factory()
-            ->has(
-                Question::factory()
-                    ->count(5)
-                    ->has(Answer::factory()->count(4)),
-            )
+            ->has(Question::factory()->count(5)->has(Answer::factory()->count(4)))
             ->published()
             ->create();
 
+        self::selectRandomCorrectAnswer($quiz);
+    }
+
+    public static function selectRandomCorrectAnswer(Quiz $quiz): void
+    {
         foreach ($quiz->questions as $question) {
             $answers = $question->answers;
 

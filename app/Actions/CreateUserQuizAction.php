@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Jobs\CloseUserQuizJob;
 use App\Models\Quiz;
 use App\Models\User;
 use App\Models\UserQuiz;
@@ -25,10 +24,6 @@ class CreateUserQuizAction
 
         foreach ($quiz->questions as $question) {
             $this->action->execute($question, $userQuiz);
-        }
-
-        if ($quiz->isClosingToday()) {
-            CloseUserQuizJob::dispatch($quiz)->delay($quiz->closeAt);
         }
 
         return $userQuiz;
