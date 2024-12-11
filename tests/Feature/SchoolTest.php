@@ -22,7 +22,8 @@ class SchoolTest extends TestCase
     {
         parent::setUp();
 
-        $this->admin = User::factory()->admin()->create();
+        $admin_school = School::factory()->disabled()->adminSchool()->create();
+        $this->admin = User::factory(["school_id" => $admin_school->id])->admin()->create();
     }
 
     public function testAdminCanViewSchools(): void
@@ -34,8 +35,46 @@ class SchoolTest extends TestCase
             ->assertInertia(
                 fn(Assert $page) => $page
                     ->component("Admin/SchoolsPanel")
-                    ->has("schools", 3),
+                    ->has("schools.data", 2),
             );
+    }
+
+    public function testFilteringAndSortingSchools(): void
+    {
+        School::factory()->disabled()->create(["name" => "AAAAAA"]);
+        School::factory()->create(["name" => "BB"]);
+        School::factory()->create(["name" => "CC"]);
+        School::factory()->create(["name" => "DD"]);
+        School::factory()->create(["name" => "EE"]);
+        School::factory()->disabled()->create(["name" => "ZZZZZZ"]);
+
+        $this->actingAs($this->admin)
+            ->get("/admin/schools?sort=name&order=asc&disabled=true")
+            ->assertInertia(fn(Assert $page) => $page
+                ->component("Admin/SchoolsPanel")
+                ->has("schools.data", 6)
+                ->where("schools.data.0.name", "AAAAAA")
+                ->where("schools.data.5.name", "ZZZZZZ"));
+
+        $this->actingAs($this->admin)
+            ->get("/admin/schools?sort=name&order=desc&disabled=true")
+            ->assertInertia(fn(Assert $page) => $page
+                ->component("Admin/SchoolsPanel")
+                ->has("schools.data", 6)
+                ->where("schools.data.0.name", "ZZZZZZ")
+                ->where("schools.data.5.name", "AAAAAA"));
+
+        $this->actingAs($this->admin)
+            ->get("/admin/schools?sort=name&order=asc&disabled=false")
+            ->assertInertia(fn(Assert $page) => $page
+                ->component("Admin/SchoolsPanel")
+                ->has("schools.data", 4));
+
+        $this->actingAs($this->admin)
+            ->get("/admin/schools?search=AAAAAA&order=asc&disabled=true")
+            ->assertInertia(fn(Assert $page) => $page
+                ->component("Admin/SchoolsPanel")
+                ->has("schools.data", 1));
     }
 
     public function testAdminCanCreateSchool(): void
@@ -102,7 +141,7 @@ class SchoolTest extends TestCase
             ->assertStatus(404);
     }
 
-    public function testAdminCanDeleteSchool(): void
+    public function testAdminCanDeleteEmptySchool(): void
     {
         $school = School::factory()->create();
 
@@ -113,6 +152,66 @@ class SchoolTest extends TestCase
 
         $this->assertDatabaseMissing("schools", [
             "id" => $school->id,
+        ]);
+    }
+
+    public function testAdminCannotDeleteDisabledSchool(): void
+    {
+        $school = School::factory()->disabled()->create();
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->delete("/admin/schools/{$school->id}")
+            ->assertStatus(403);
+
+        $this->assertDatabaseHas("schools", [
+            "id" => $school->id,
+        ]);
+    }
+
+    public function testAdminCannotDeleteSchoolWithStudents(): void
+    {
+        $school = School::factory()->create();
+        $user = User::factory()->create();
+        $user->school()->associate($school)->save();
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->delete("/admin/schools/{$school->id}")
+            ->assertStatus(403);
+
+        $this->assertDatabaseHas("schools", [
+            "id" => $school->id,
+        ]);
+    }
+
+    public function testAdminCanDisableSchool(): void
+    {
+        $school = School::factory()->create();
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->post("/admin/schools/{$school->id}/disable")
+            ->assertRedirect("/");
+
+        $this->assertDatabaseHas("schools", [
+            "id" => $school->id,
+            "is_disabled" => true,
+        ]);
+    }
+
+    public function testAdminCanEnableSchool(): void
+    {
+        $school = School::factory()->disabled()->create();
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->post("/admin/schools/{$school->id}/enable")
+            ->assertRedirect("/");
+
+        $this->assertDatabaseHas("schools", [
+            "id" => $school->id,
+            "is_disabled" => false,
         ]);
     }
 
@@ -199,8 +298,8 @@ class SchoolTest extends TestCase
 
         $this->actingAs($this->admin)->get("/admin/schools/search?search=TEST")
             ->assertStatus(200)
-            ->assertJsonCount(1)
-            ->assertJsonPath("0.name", "TEST");
+            ->assertJsonCount(1, "data")
+            ->assertJsonPath("data.0.name", "TEST");
     }
 
     public function testGuestCanSearchForSchools(): void
@@ -211,7 +310,7 @@ class SchoolTest extends TestCase
 
         $this->get("/schools/search?search=TEST")
             ->assertStatus(200)
-            ->assertJsonCount(1)
-            ->assertJsonPath("0.name", "TEST");
+            ->assertJsonCount(1, "data")
+            ->assertJsonPath("data.0.name", "TEST");
     }
 }

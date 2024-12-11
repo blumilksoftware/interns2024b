@@ -15,6 +15,20 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
+        $school = School::firstOrCreate(
+            ["is_admin_school" => true],
+            [
+                "name" => "Admin school",
+                "regon" => "",
+                "city" => "",
+                "street" => "",
+                "building_number" => "",
+                "zip_code" => "",
+                "is_disabled" => true,
+                "is_admin_school" => true,
+            ],
+        );
+
         $superAdmin = User::firstOrCreate(
             ["email" => "superadmin@example.com"],
             [
@@ -23,7 +37,7 @@ class AdminSeeder extends Seeder
                 "email_verified_at" => Carbon::now(),
                 "password" => Hash::make("interns2024b"),
                 "remember_token" => Str::random(10),
-                "school_id" => School::factory()->create()->id,
+                "school_id" => $school->id,
             ],
         );
         $superAdmin->syncRoles("super_admin");
@@ -36,7 +50,7 @@ class AdminSeeder extends Seeder
                 "email_verified_at" => Carbon::now(),
                 "password" => Hash::make("interns2024b"),
                 "remember_token" => Str::random(10),
-                "school_id" => School::factory()->create()->id,
+                "school_id" => $school->id,
             ],
         );
         $admin->syncRoles("admin");

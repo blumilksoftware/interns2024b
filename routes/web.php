@@ -73,21 +73,20 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
 
     Route::get("/schools", [SchoolsController::class, "index"])->name("admin.schools.index");
     Route::post("/schools", [SchoolsController::class, "store"])->name("admin.schools.store");
-    Route::patch("/schools/{school}", [SchoolsController::class, "update"])->name("admin.schools.update");
-    Route::delete("/schools/{school}", [SchoolsController::class, "destroy"])->name("admin.schools.destroy");
+    Route::patch("/schools/{school}", [SchoolsController::class, "update"])->name("admin.schools.update")->can("update,school");
+    Route::delete("/schools/{school}", [SchoolsController::class, "destroy"])->name("admin.schools.destroy")->can("delete,school");
+    Route::post("/schools/{school}/disable", [SchoolsController::class, "disable"])->name("admin.schools.disable")->can("disable,school");
+    Route::post("/schools/{school}/enable", [SchoolsController::class, "enable"])->name("admin.schools.enable")->can("enable,school");
     Route::get("/schools/search", [SchoolsController::class, "search"])->name("admin.schools.search");
 
     Route::post("/schools/fetch", [SchoolsController::class, "fetch"])->name("admin.schools.fetch");
     Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");
 
     Route::get("/users", [UserController::class, "index"])->name("admin.users.index");
-    Route::get("/users/{user}/edit", [UserController::class, "edit"])->name("admin.users.edit");
     Route::patch("/users/{user}", [UserController::class, "update"])->name("admin.users.update");
 
     Route::middleware(["role:super_admin"])->group(function (): void {
         Route::get("/admins", [AdminController::class, "index"])->name("admin.admins.index");
-        Route::get("/admins/create", [AdminController::class, "create"])->name("admin.admins.create");
-        Route::get("/admins/{user}/edit", [AdminController::class, "edit"])->name("admin.admins.edit");
         Route::post("/admins", [AdminController::class, "store"])->name("admin.admins.store");
         Route::patch("/admins/{user}", [AdminController::class, "update"])->name("admin.admins.update");
         Route::delete("/admins/{user}", [AdminController::class, "destroy"])->name("admin.admins.destroy");

@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $building_number
  * @property string $apartment_number
  * @property string $zip_code
+ * @property boolean $is_disabled
+ * @property boolean $is_admin_school
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Collection<User> $users

@@ -15,6 +15,7 @@ use Illuminate\Bus\Batch;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
@@ -27,16 +28,16 @@ use function config;
 
 class SchoolsController extends Controller
 {
-    public function index(SortHelper $sorter): Response
+    public function index(SortHelper $sorter, Request $request): Response
     {
-        $schools = $this->searchQuery($sorter);
+        $schools = $this->searchQuery($sorter, $request);
 
         return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolResource::collection($schools)]);
     }
 
-    public function search(SortHelper $sorter): JsonResponse
+    public function search(SortHelper $sorter, Request $request): JsonResponse
     {
-        $schools = $this->searchQuery($sorter);
+        $schools = $this->searchQuery($sorter, $request);
 
         return SchoolSearchResource::collection($schools)->response();
     }
@@ -63,7 +64,30 @@ class SchoolsController extends Controller
         $school->delete();
 
         return redirect()
-            ->back();
+            ->back()
+            ->with("status", "Szkoła została usunięta.");
+    }
+
+    public function disable(School $school): RedirectResponse
+    {
+        return $this->toggleDisable($school, true);
+    }
+
+    public function enable(School $school): RedirectResponse
+    {
+        return $this->toggleDisable($school, false);
+    }
+
+    public function toggleDisable(School $school, bool $value): RedirectResponse
+    {
+        $school->is_disabled = $value;
+        $school->save();
+
+        $message = $value ? "Szkoła została zablokowana." : "Szkoła została odblokowana.";
+
+        return redirect()
+            ->back()
+            ->with("status", $message);
     }
 
     /**
@@ -111,11 +135,13 @@ class SchoolsController extends Controller
         return Bus::findBatch($batchId);
     }
 
-    private function searchQuery(SortHelper $sorter)
+    private function searchQuery(SortHelper $sorter, Request $request)
     {
-        $query = $sorter->sort(School::query(), ["id", "name", "regon", "updated_at", "created_at"], ["students", "address"]);
+        $query = School::query()->where("is_admin_school", false);
+        $query = $sorter->sort($query, ["id", "name", "regon", "updated_at", "created_at"], ["students", "address"]);
         $query = $this->sortByStudents($query, $sorter);
         $query = $this->sortByAddress($query, $sorter);
+        $query = $this->filterDisabledSchools($query, $request);
         $query = $sorter->search($query, "name");
         $query = $sorter->paginate($query);
 
@@ -142,6 +168,17 @@ class SchoolsController extends Controller
                 ->orderBy("zip_code", $order)
                 ->orderBy("street", $order)
                 ->orderBy("name", $order);
+        }
+
+        return $query;
+    }
+
+    private function filterDisabledSchools(Builder $query, Request $request): Builder
+    {
+        $showDisabled = $request->query("disabled", "false") === "true";
+
+        if (!$showDisabled) {
+            return $query->where("is_disabled", false);
         }
 
         return $query;

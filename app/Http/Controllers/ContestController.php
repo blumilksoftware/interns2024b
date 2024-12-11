@@ -15,7 +15,7 @@ use Inertia\Response;
 
 class ContestController extends Controller
 {
-    public function index(SortHelper $sorter): Response
+    public function index(): Response
     {
         return Inertia::render("Home");
     }

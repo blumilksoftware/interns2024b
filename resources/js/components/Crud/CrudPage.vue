@@ -36,7 +36,7 @@ defineSlots<{
   deleteMessage: (scope: { item: T }) => any
   item: (scope: { item: T }) => any
   newItem: (scope: { newItemMode: boolean }) => any
-  itemActions: (scope: { item: T }) => any
+  itemActions: (scope: { item: T, showDeleteMsg: () => void }) => any
   itemData: (scope: { item: T, editing: boolean, errors: Errors }) => any
   noContent: (scope: { search: boolean }) => any
 }>()
@@ -178,10 +178,11 @@ function pageSwitch(isLeftSwitch: boolean) {
             />
           </template>
 
-          <template #actions>
+          <template #actions="{showDeleteMsg}">
             <slot
               name="itemActions"
               :item="item"
+              :show-delete-msg="showDeleteMsg"
             />
           </template>
 
