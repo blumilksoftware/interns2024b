@@ -52,7 +52,7 @@ class UserQuiz extends Model
 
     public function wasClosedManually(): bool
     {
-        return $this->closed_at !== null;
+        return $this->closed_at->ne($this->quiz->closeAt);
     }
 
     public function points(): Attribute
