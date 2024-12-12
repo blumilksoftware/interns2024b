@@ -73,7 +73,7 @@ function onOptionClick(option: School) {
       :class="{'scale-y-100 max-h-80': isFocused }"
     >
       <Transition>
-        <div v-if="editing" v-show="isFocused" class="m-0.5 -mt-px py-2 overflow-auto border rounded-lg border-primary/30">
+        <div v-if="editing" v-show="isFocused" class="m-0.5 -mt-px py-2 overflow-auto border rounded-lg border-primary/60">
           <div v-if="searchResult.length > 0">
             <div
               v-for="school in searchResult"
