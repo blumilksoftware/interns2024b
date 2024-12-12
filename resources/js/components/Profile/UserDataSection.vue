@@ -16,26 +16,21 @@ defineProps<{ user: User }>()
 
     <div class="flex flex-col gap-4 sm:max-w-96 w-full sm:min-w-96">
       <CustomOutput
-        :value="user.firstname"
-        label="Imię"
+        label="Imię i Nazwisko"
+        :value="`${user.firstname}  ${user.surname}`"
       />
 
       <CustomOutput
-        :value="user.surname"
-        label="Nazwisko"
-      />
-
-      <CustomOutput
-        :value="user.email"
         label="E-mail"
+        :value="user.email"
       />
 
       <CustomOutput
-        :value="user.school.name"
         label="Szkoła"
+        :value="user.school.name"
       />
 
-      <ThemeSwitch />
+      <ThemeSwitch class="mx-4 my-3" />
     </div>
   </div>
 </template>
