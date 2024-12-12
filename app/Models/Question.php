@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $id
  * @property string $text
  * @property int $test_id
- * @property int $correct_answer_id
+ * @property ?int $correct_answer_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property bool $isLocked
@@ -56,9 +56,5 @@ class Question extends Model
     public function hasCorrectAnswer(): Attribute
     {
         return Attribute::get(fn(): bool => $this->correct_answer_id !== null);
-    }
-
-    public function cloneTo(Quiz $quiz): self
-    {
     }
 }
