@@ -29,7 +29,7 @@ const props = defineProps<{
   creatable?: boolean
 }>()
 
-defineSlots<{
+const slots = defineSlots<{
   actions: () => any
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
   deleteMessage: (scope: { item: T }) => any
@@ -51,7 +51,7 @@ watch(() => props.items.data, () => isSearchbarEmpty.value = !queryParams.search
 
 function handleSearch(text: string | undefined, mode?: string) {
   queryParams.search = props.customSearch ? props.customSearch(text) : text?.toLocaleUpperCase()
-  queryParams.mode = mode?.toUpperCase()
+  queryParams.mode = mode?.toLocaleLowerCase()
 }
 
 function pageSwitch(isLeftSwitch: boolean) {
@@ -120,7 +120,10 @@ function pageSwitch(isLeftSwitch: boolean) {
       />
     </div>
 
-    <div class="flex gap-4 pt-4 px-9 justify-between items-center">
+    <div
+      v-if="!!slots.itemsActions"
+      class="flex gap-4 pt-4 px-9 justify-between items-center"
+    >
       <slot name="itemsActions" />
     </div>
 

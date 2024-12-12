@@ -50,7 +50,7 @@ const searchBarModes = keysWrapper([
     <template #itemsActions>
       <label class="flex gap-4 font-medium border-2 border-transparent">
         <CustomCheckbox
-          :checked="users.data.every(user=>selectedUsers.includes(user.id))"
+          :checked="selectedUsers.length > 0 && users.data.every(user=>selectedUsers.includes(user.id))"
           :some-checked="selectedUsers.length > 0"
           @check="checked => checked ? selectedUsers = users.data.map(user => user.id) : selectedUsers = []"
         />
