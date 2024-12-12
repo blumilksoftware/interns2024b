@@ -18,7 +18,7 @@ class UnassignFromQuizAction
         $assignedUsers = $quiz->assignedUsers;
         $users = User::query()->whereIn("id", $users)->get();
 
-        $users = $users->filter(fn(User $user) => $assignedUsers->contains($user));
+        $users = $users->filter(fn(User $user): bool => $assignedUsers->contains($user));
         $quiz->assignedUsers()->detach($users);
     }
 }
