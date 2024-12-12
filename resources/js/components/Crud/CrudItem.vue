@@ -1,11 +1,9 @@
 <script setup lang="ts" generic="T extends { id: string | number, createdAt: string, updatedAt: string }">
 import useRequestResolution from '@/Helpers/RequestResolution'
-import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import { ref } from 'vue'
 import { CheckIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
-import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 import WarningMessageBox from '@/components/Common/WarningMessageBox.vue'
 import { type Errors, type RequestPayload } from '@inertiajs/core'
 import { formatDate } from '@/Helpers/Format'
@@ -17,7 +15,7 @@ const props = defineProps<{
   disableEditButton?: boolean
 }>()
 
-const slots = defineSlots<{
+defineSlots<{
   deleteMessage: (scope: { item: T }) => any
   actions: (scope: { showDeleteMsg: () => void, editMode: (enabled: boolean) => void }) => any
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
