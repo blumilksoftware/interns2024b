@@ -124,8 +124,8 @@ class InviteController extends Controller
         [$field, $order] = $sorter->getSortParameters();
 
         if ($field === "school") {
-            return $query->join("schools", "users.school_id", "=", "schools.id")
-                ->orderBy("schools.city", $order)
+            return $query
+                ->leftJoin("schools", "users.school_id", "=", "schools.id")
                 ->orderBy("schools.name", $order)
                 ->select("users.*");
         }

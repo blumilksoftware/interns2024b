@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends { id: string | number }, N">
+<script setup lang="ts" generic="T extends { id: string | number, createdAt: string, updatedAt: string }, N">
 import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
@@ -22,12 +22,12 @@ const props = defineProps<{
   displaySearchInLowerCase?: boolean
   resourceName: string
   newButtonText?: string
-  newItemData?: N
+  newItemData?: Partial<N>
+  disableEditButton?: boolean
   searchBarPlaceholder?: string
   searchBarModes?: Mode[]
   deletable?: boolean
   creatable?: boolean
-  mobileNav?: boolean
 }>()
 
 defineSlots<{
@@ -36,7 +36,7 @@ defineSlots<{
   deleteMessage: (scope: { item: T }) => any
   item: (scope: { item: T }) => any
   newItem: (scope: { newItemMode: boolean }) => any
-  itemActions: (scope: { item: T, showDeleteMsg: () => void }) => any
+  itemActions: (scope: { item: T, showDeleteMsg: () => void, editMode: (enabled: boolean) => void }) => any
   itemData: (scope: { item: T, editing: boolean, errors: Errors }) => any
   noContent: (scope: { search: boolean }) => any
   itemsActions: () => any
@@ -65,8 +65,7 @@ function pageSwitch(isLeftSwitch: boolean) {
   <div class="flex flex-col w-full pb-3">
     <div
       data-name="toolbar"
-      class="flex flex-col sm:flex-row px-4 gap-2"
-      :class="{ 'flex-col': mobileNav }"
+      class="flex flex-col xs:flex-row px-4 gap-2"
     >
       <Dropdown
         pointer-position="left"
@@ -168,6 +167,7 @@ function pageSwitch(isLeftSwitch: boolean) {
           :item="item"
           :resource-name="resourceName"
           :deletable="deletable"
+          :disable-edit-button="disableEditButton"
         >
           <template #deleteMessage="data">
             <slot
@@ -183,12 +183,8 @@ function pageSwitch(isLeftSwitch: boolean) {
             />
           </template>
 
-          <template #actions="{showDeleteMsg}">
-            <slot
-              name="itemActions"
-              :item="item"
-              :show-delete-msg="showDeleteMsg"
-            />
+          <template #actions="{editMode, showDeleteMsg}">
+            <slot name="itemActions" :item="item" :show-delete-msg="showDeleteMsg" :edit-mode="editMode" />
           </template>
 
           <template #data="data">

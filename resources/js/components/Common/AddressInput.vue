@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { type Errors } from '@inertiajs/core'
 import CrudInput from '@/components/Crud/CrudInput.vue'
-import ZipCodeInput from '@/components/Common/ZipCodeInput.vue'
-import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 
 const address = defineModel<Address>({ required: true })
 
@@ -10,6 +8,16 @@ defineProps<{
   errors: Errors
   disabled?: boolean
 }>()
+
+function formatZipCode(zipCode: string) {
+  let value = zipCode.replace(/[^0-9-]/g, '')
+
+  if (value.length > 2 && value[2] !== '-') {
+    value = value.slice(0, 2) + '-' + value.slice(2).replace('-', '')
+  }
+
+  return value.substring(0, 6)
+}
 </script>
 
 <template>
@@ -37,20 +45,14 @@ defineProps<{
     :editing="!disabled"
   />
 
-  <InputWrapper
-    :error="errors.zip_code"
-    :hide-error="disabled"
-    :hide-content="!address.zipCode && disabled"
+  <CrudInput
+    v-model="address.zipCode"
+    name="zip_code"
     label="Kod pocztowy:"
-    :class="{ 'hidden': !address.zipCode && disabled }"
-  >
-    <ZipCodeInput
-      v-model="address.zipCode"
-      name="zip_code"
-      :error="errors.zip_code"
-      :editing="!disabled"
-    />
-  </InputWrapper>
+    :error="errors.zip_code"
+    :editing="!disabled"
+    :format="formatZipCode"
+  />
 
   <CrudInput
     v-model="address.city"
