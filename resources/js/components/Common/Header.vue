@@ -11,7 +11,7 @@ const isSelected = (page: Page) => page.href === window.location.pathname
 </script>
 
 <template>
-  <header class="w-full">
+  <header class="w-full z-30">
     <nav class="flex w-full items-center justify-between p-4">
       <div class="flex gap-x-6 items-center">
         <a href="/">
