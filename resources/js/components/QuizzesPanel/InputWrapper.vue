@@ -1,18 +1,41 @@
 <script setup lang="ts">
-defineProps<{ label?: string, error?: string, hideError?: boolean, hideContent?: boolean, column?: boolean, row?: boolean }>()
+import { ref } from 'vue'
+
+defineProps<{
+  label?: string
+  error?: string
+  hideError?: boolean
+  hideContent?: boolean
+  column?: boolean
+  row?: boolean
+  wrapperClass?: string
+}>()
+
+const wrapper = ref<HTMLElement>()
 </script>
 
 <template>
   <div class="flex flex-1 flex-col">
-    <label
+    <div
+      ref="wrapper"
       class="flex flex-1"
-      :class="{
-        'flex-col': column,
-        'flex-row': row,
-        'flex-col 2xs:flex-row 2xs:gap-1': column === row,
-      }"
+      :class="[
+        wrapperClass,
+        {
+          'flex-col': column,
+          'flex-row': row,
+          'flex-col 2xs:flex-row 2xs:gap-1': column === row,
+        }
+      ]"
     >
-      {{ label }}
+      <label
+        v-if="label"
+        class="w-fit"
+        @click="wrapper?.querySelector('input')?.focus()"
+      >
+        {{ label }}
+      </label>
+    
       <b
         v-if="hideContent"
         aria-label="brak danych"
@@ -21,7 +44,7 @@ defineProps<{ label?: string, error?: string, hideError?: boolean, hideContent?:
       </b>
 
       <slot v-else />
-    </label>
+    </div>
 
     <span
       v-if="!hideError && error"

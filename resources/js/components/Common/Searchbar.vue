@@ -59,12 +59,12 @@ watch(
   <InputWrapper
     v-click-outside="() => isFocused = false"
     class="text-sm font-medium leading-6"
+    wrapper-class="gap-2"
     :label="label"
     :error="error"
     column
   >
     <List
-      class="mt-2"
       :options
       :opened="isFocused"
       :use-lazy-loading="!searchQuery"

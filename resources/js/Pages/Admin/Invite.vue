@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { Head } from '@inertiajs/vue3'
+import { type Errors } from '@inertiajs/core'
+import { CheckIcon } from '@heroicons/vue/20/solid'
+import { CheckCircleIcon, MinusCircleIcon } from '@heroicons/vue/24/outline'
 import FormButton from '@/components/Common/FormButton.vue'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
-import { type Errors } from '@inertiajs/core'
+import CustomCheckbox from '@/components/Common/CustomCheckbox.vue'
 import { keysWrapper } from '@/Helpers/KeysManager'
-import Button from '@/components/Common/Button.vue'
-import { CheckIcon } from '@heroicons/vue/24/outline'
 
 defineProps<{
   errors: Errors
@@ -27,12 +29,14 @@ const options: SortOption[] = [
 ]
 
 const searchBarModes = keysWrapper([
-  { text: 'Uczniowie', name: 'user' },
-  { text: 'Szkoły', name: 'school' },
+  { text: 'Według uczniów', name: 'user' },
+  { text: 'Według szkół', name: 'school' },
 ]) as Mode[]
 </script>
 
 <template>
+  <Head title="Zaproszenia - Panel administracyjny" />
+  
   <CrudPage
     :items="users"
     :options="options"
@@ -41,37 +45,65 @@ const searchBarModes = keysWrapper([
   >
     <template #actions>
       <Expand class="hidden sm:block" />
+    </template>
 
-      <Button @click="selectedUsers = users.data.map(user => user.id)">
-        Zaznacz wszystko
-      </Button>
+    <template #itemsActions>
+      <label class="flex gap-4 font-medium border-2 border-transparent">
+        <CustomCheckbox
+          :checked="users.data.every(user=>selectedUsers.includes(user.id))"
+          :some-checked="selectedUsers.length > 0"
+          @check="checked => checked ? selectedUsers = users.data.map(user => user.id) : selectedUsers = []"
+        />
 
-      <FormButton
-        :data="{ ids: selectedUsers }"
-        method="post"
-        :href="`/admin/quizzes/${quiz}/invite/assign`"
-        preserve-scroll
-      >
-        Przypisz zaznaczonych
-      </FormButton>
+        <span class="hidden md:block">
+          Wybierz wszystkich
+        </span>
+      </label>
 
-      <FormButton
-        :data="{ ids: selectedUsers }"
-        method="post"
-        :href="`/admin/quizzes/${quiz}/invite/unassign`"
-        preserve-scroll
-      >
-        Wypisz zaznaczonych
-      </FormButton>
+      <div class="flex gap-4">
+        <FormButton
+          button-class="!font-medium"
+          text
+          title="Przypisz zaznaczonych"
+          method="post"
+          :data="{ ids: selectedUsers }"
+          :href="`/admin/quizzes/${quiz}/invite/assign`"
+        >
+          <CheckCircleIcon class="icon size-7 md:size-6" />
+
+          <span class="hidden md:block">
+            Przypisz zaznaczonych
+          </span>
+        </FormButton>
+  
+        <FormButton
+          button-class="!font-medium"
+          text
+          title="Wypisz zaznaczonych"
+          method="post"
+          :data="{ ids: selectedUsers }"
+          :href="`/admin/quizzes/${quiz}/invite/unassign`"
+        >
+          <MinusCircleIcon class="icon size-7 md:size-6" />
+
+          <span class="hidden md:block">
+            Wypisz zaznaczonych
+          </span>
+        </FormButton>
+      </div>
     </template>
 
     <template #item="{item}">
       <div
-        class="flex p-5 bg-white/70 border-2 justify-between items-center rounded-xl shadow-sm cursor-pointer duration-200 transition-colors"
+        class="flex p-5 bg-white/70 border-2 justify-between items-center rounded-xl shadow-sm duration-200 transition-colors relative"
         :class="{ 'border-primary': selectedUsers.includes(item.id) }"
-        @click="selectedUsers.includes(item.id) ? selectedUsers = selectedUsers.filter(id => id !== item.id) : selectedUsers.push(item.id)"
       >
         <div class="flex gap-4">
+          <CustomCheckbox
+            :checked="selectedUsers.includes(item.id)" 
+            @check="selectedUsers.includes(item.id) ? selectedUsers = selectedUsers.filter(id => id !== item.id) : selectedUsers.push(item.id)"
+          />
+
           <div class="flex flex-col gap-1">
             <div class="w-full font-bold text-lg">
               {{ item.firstname }} {{ item.surname }}
@@ -83,8 +115,15 @@ const searchBarModes = keysWrapper([
           </div>
         </div>
 
-        <div v-if="assigned.includes(item.id)">
-          <CheckIcon class="icon" />
+        <div class="flex justify-end items-center">
+          <Transition>
+            <div
+              v-if="assigned.includes(item.id)"
+              class="flex justify-center bg-primary size-full max-w-16 absolute items-center right-0 rounded-r-xl ring-2 ring-primary"
+            >
+              <CheckIcon class="size-6 text-white stroke-[3.5] rotate-6" />
+            </div>
+          </Transition>
         </div>
       </div>
     </template>

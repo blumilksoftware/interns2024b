@@ -39,6 +39,7 @@ defineSlots<{
   itemActions: (scope: { item: T, showDeleteMsg: () => void }) => any
   itemData: (scope: { item: T, editing: boolean, errors: Errors }) => any
   noContent: (scope: { search: boolean }) => any
+  itemsActions: () => any
 }>()
 
 const pagination = computed(() => props.items)
@@ -120,6 +121,10 @@ function pageSwitch(isLeftSwitch: boolean) {
         :to="pagination.meta.to"
         @switch="pageSwitch"
       />
+    </div>
+
+    <div class="flex gap-4 pt-4 px-9 justify-between items-center">
+      <slot name="itemsActions" />
     </div>
 
     <div

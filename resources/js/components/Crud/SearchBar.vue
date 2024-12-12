@@ -49,8 +49,12 @@ function pickMode(mode: Mode) {
       :options="modes"
       @option-click="(option: any) => pickMode(option)"
     >
-      <div class="flex gap-1 text-gray-800 items-center hover:bg-primary/5 hover:text-primary p-2 pr-1 rounded-lg duration-200">
-        {{ selectedMode?.text }} <ChevronDownIcon class="size-3" />
+      <div class="flex gap-2 p-2 text-gray-800 items-center hover:bg-primary/5 hover:text-primary rounded-lg duration-200 whitespace-nowrap">
+        <ChevronDownIcon class="size-3" />
+
+        <span class="nowrap">
+          {{ selectedMode?.text }}
+        </span>
       </div>
     </Dropdown>
 

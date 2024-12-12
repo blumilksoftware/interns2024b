@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
 import vScrollPreserver from '@/Helpers/vScrollPreserver'
 import vIntersectionEvent from '@/Helpers/vIntersectionEvent'
-import { vAutoAnimate } from '@formkit/auto-animate'
 
 defineProps<{
   options: Array<Option|any>
@@ -19,9 +17,8 @@ const emit = defineEmits<{ lazyload: [], optionClick: [option:Option|any] }>()
 
 <template>
   <div
-    v-auto-animate
-    class="flex flex-col overflow-hidden max-h-12 font-medium text-sm leading-6 text-gray-900 bg-white/30 placeholder:text-gray-400 rounded-lg ring-2 ring-primary/30 ring-inset duration-200"
-    :class="{ 'max-h-80': opened }"
+    class="flex flex-col overflow-hidden max-h-12 font-medium text-sm leading-6 text-gray-900 bg-white/30 placeholder:text-gray-400 rounded-lg ring-inset duration-200"
+    :class="{ 'max-h-80 ring-2 ring-primary/30': opened }"
   >
     <slot />
     
@@ -31,10 +28,10 @@ const emit = defineEmits<{ lazyload: [], optionClick: [option:Option|any] }>()
         v-scroll-preserver
         class="m-0.5 mt-0 py-2 overflow-y-scroll relative"
       >
-        <button
+        <a
           v-for="option of options"
           :key="option.key"
-          class="cursor-pointer block px-4 py-2 hover:bg-primary/10 outline-none focus:bg-primary/10 text-[0.9rem] w-full text-left"
+          class="block cursor-pointer px-4 py-2 hover:bg-primary/10 outline-none focus:bg-primary/10 text-[0.9rem] w-full text-left"
           @click="emit('optionClick', option)"
         >
           <b v-if="option.title">
@@ -42,7 +39,7 @@ const emit = defineEmits<{ lazyload: [], optionClick: [option:Option|any] }>()
           </b>
 
           <p>{{ option.text }}</p>
-        </button>
+        </a>
 
         <div
           v-if="useLazyLoading"

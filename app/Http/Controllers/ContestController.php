@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Helpers\SortHelper;
 use App\Http\Resources\QuizResource;
 use App\Http\Resources\UserQuizResource;
 use App\Models\Quiz;

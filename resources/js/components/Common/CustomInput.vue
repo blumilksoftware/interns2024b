@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, type VNode } from 'vue'
+import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import vClickOutside from '@/Helpers/vClickOutside'
 
 const slots = defineSlots<{ default: VNode, left: VNode }>()
@@ -34,13 +35,16 @@ const isFocused = ref<boolean>(false)
 </script>
 
 <template>
-  <label
+  <InputWrapper
     v-click-outside="() => isFocused = false"
-    class="flex flex-col gap-2 w-full text-sm font-medium leading-6 text-gray-900 duration-200"
+    class="text-sm font-medium leading-6 text-gray-900 duration-200"
+    wrapper-class="gap-2"
+    :label="label"
+    :error="error"
+    column
   >
-    {{ label }}
     <div
-      class=" w-full duration-200 max-h-12 flex bg-white/30 rounded-lg border-2 border-primary/30 overflow-hidden px-3 gap-3"
+      class="w-full duration-200 max-h-12 flex bg-white/30 rounded-lg border-2 border-primary/30 overflow-hidden px-3 gap-3"
       :class="{'border-3 border-primary/60':isFocused, 'border-red' : error}"
     >
       <div
@@ -71,12 +75,5 @@ const isFocused = ref<boolean>(false)
         <slot />
       </div>
     </div>
-
-    <div
-      v-if="error"
-      class="text-red"
-    >
-      {{ error }}
-    </div>
-  </label>
+  </InputWrapper>
 </template>

@@ -4,7 +4,7 @@ import { computed, onMounted, ref } from 'vue'
 import { nanoid } from 'nanoid'
 import { useForm } from '@inertiajs/vue3'
 import { type Errors } from '@inertiajs/core'
-import Checkbox from '@/components/Common/Checkbox.vue'
+import CustomCheckbox from '@/components/Common/CustomCheckbox.vue'
 import Searchbar from '@/components/Common/Searchbar.vue'
 import CustomInput from '@/components/Common/CustomInput.vue'
 import PasswordInput from '@/components/Common/PasswordInput.vue'
@@ -48,13 +48,13 @@ function fetchSchoolsPortion(search?: string) {
     onStart: () => searchErrorMessage.value = '',
     onPendingStateChange: isPending => isFetchingSchools.value = isPending,
     onError: () => searchErrorMessage.value = 'Nie udało się pobrać więcej szkół',
-    onSuccess: data => schools.value = {
-      ...data,
+    onSuccess: pagination => schools.value = {
+      ...pagination,
       data: [
         ...schools.value.data, 
-        ...data.data.filter(
+        ...(!search ? pagination.data : pagination.data.filter(
           x => !schools.value.data.some(y => y.id === x.id),
-        ),
+        )),
       ], 
     },
   })
@@ -114,7 +114,7 @@ function submit() {
     />
 
     <label class="mx-2 mt-4 flex flex-row items-center gap-4">
-      <Checkbox />
+      <CustomCheckbox required />
 
       <p class="w-fit text-sm text-gray-500">
         Akceptuję

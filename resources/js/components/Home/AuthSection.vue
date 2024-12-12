@@ -33,13 +33,11 @@ onMounted(() => {
         <Transition :name="isLogin ? 'slide-right' : 'slide-left'">
           <LoginForm
             v-if="isLogin"
-            key="on"
             :errors="props.errors"
           />
 
           <RegisterForm
             v-else
-            key="off"
             :errors="props.errors"
           />
         </Transition>
@@ -47,25 +45,3 @@ onMounted(() => {
     </div>
   </section>
 </template>
-
-<style>
-.slide-left-enter-active,
-.slide-right-enter-active,
-.slide-left-leave-active,
-.slide-right-leave-active {
-  transition: all .3s;
-  transition-timing-function: cubic-bezier(0,.5,.5,1);
-}
-
-.slide-left-enter-from,
-.slide-right-leave-to {
-    transform: translateX(-100%);
-    opacity: 0;
-}
-
-.slide-left-leave-to,
-.slide-right-enter-from {
-    transform: translateX(100%);
-    opacity: 0;
-}
-</style>

@@ -46,7 +46,7 @@ class InviteController extends Controller
 
         return redirect()
             ->back()
-            ->with("status", "Użytkownicy zostali przypisani do quizu.");
+            ->with("status", "Użytkownicy zostali przypisani do testu.");
     }
 
     public function unassign(Quiz $quiz, InviteQuizRequest $request, UnassignToQuizAction $unassignAction): RedirectResponse
@@ -57,7 +57,7 @@ class InviteController extends Controller
 
         return redirect()
             ->back()
-            ->with("status", "Użytkownicy zostali wypisani z quizu.");
+            ->with("status", "Użytkownicy zostali wypisani z testu.");
     }
 
     private function filterByMode(Builder $query, Request $request)

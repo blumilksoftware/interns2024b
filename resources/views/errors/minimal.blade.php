@@ -19,7 +19,7 @@
     h1 { font-size: 3rem; margin-bottom: 1rem; color: #E4007D; }
     p { font-size: 1rem; margin-bottom: 2rem }
     b { font-size: 1.2rem; margin-bottom: 2rem; font-weight: bold }
-    a { text-decoration: none; background-color: #E4007D; color: white; font-size: rem; font-weight: 600; padding: .6rem 1rem; border-radius: .8rem; }
+    a { text-decoration: none; background-color: #E4007D; color: white; font-weight: 700; padding: .6rem 1rem; border-radius: .8rem; }
     .container { display: flex; flex-direction: column; align-items: center; text-align: center }
     .bg-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255, 255, 255, 0.6); z-index: -10 }
     .blur-background { position: fixed; width: 58.33%; height: 100%; opacity: 0.7; filter: blur(48px); z-index: -10 }
