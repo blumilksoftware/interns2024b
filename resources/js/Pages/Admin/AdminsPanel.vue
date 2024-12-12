@@ -23,9 +23,7 @@ const sortOptions: SortOption[] = [
 </script>
 
 <template>
-  <Head>
-    <title>Administratorzy - Panel administracyjny</title>
-  </Head>
+  <Head title="Administratorzy - Panel administracyjny" />
 
   <CrudPage
     :options="sortOptions"
