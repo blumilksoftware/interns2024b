@@ -52,7 +52,7 @@ function onOptionClick(option: School) {
           :value="isFocused ? searchQuery : selected ? `${selected?.city} - ${selected?.name}` : ''"
           class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
           :class="{
-            'border-b-primary/30 hover:border-b-primary/60 text-primary text-center duration-200 transition-colors' : editing,
+            'border-b-primary/30 hover:border-b-primary/60 text-primary duration-200 transition-colors' : editing,
             'border-b-red' : !!errors.school_id,
             'cursor-pointer' : !isFocused && editing
           }"
