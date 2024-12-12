@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends { id: string | number, createdAt: string, updatedAt: string }">
 import useRequestResolution from '@/Helpers/RequestResolution'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
-import { ref } from 'vue'
+import {computed, ref} from 'vue'
 import { CheckIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
 import WarningMessageBox from '@/components/Common/WarningMessageBox.vue'
@@ -87,7 +87,7 @@ const showDeleteMessage = ref(false)
             preserve-scroll
             :href="`/admin/${resourceName}/${item.id}`"
             :data="{ ...item as RequestPayload }"
-            @success="item = JSON.parse(JSON.stringify(props.item)); editing = false"
+            @success="editing = false"
           >
             <CheckIcon class="icon" title="Zapisz zmiany" />
           </RequestWrapper>
