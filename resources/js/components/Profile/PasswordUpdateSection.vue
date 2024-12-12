@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CustomInput from '@/components/Common/CustomInput.vue'
 import { useForm } from '@inertiajs/vue3'
+import Divider from '@/components/Common/Divider.vue'
 
 defineProps< { errors: Record<string, string> }>()
 
@@ -25,13 +26,15 @@ function updatePassword() {
 
 <template>
   <div class="flex flex-col gap-4">
-    <b class="text-[1.2rem] sm:text-center lg:text-left">
-      Zmień hasło
-    </b>
+    <Divider>
+      <b class="text-lg text-primary duration-200 transition-colors">
+        Zmień hasło
+      </b>
+    </Divider>
 
-    <div class="flex lg:justify-center sm:min-w-80 justify-center">
+    <div class="flex lg:justify-center sm:min-w-96 justify-center">
       <form
-        class="flex flex-col gap-4 w-full sm:max-w-80"
+        class="flex flex-col gap-4 w-full sm:max-w-96"
         @submit.prevent="updatePassword"
       >
         <CustomInput
@@ -60,7 +63,7 @@ function updatePassword() {
 
         <button
           type="submit"
-          class="bg-primary text-white font-bold py-3 rounded-lg mt-4"
+          class="bg-primary text-white font-bold py-3 rounded-lg mt-4 duration-200 transition-colors"
         >
           Zmień hasło
         </button>
