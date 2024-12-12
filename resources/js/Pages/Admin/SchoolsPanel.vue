@@ -6,7 +6,7 @@ import AddressInput from '@/components/Common/AddressInput.vue'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import axios from 'axios'
 import Button from '@/components/Common/Button.vue'
 import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
@@ -40,6 +40,7 @@ const status = ref<boolean | null>(null)
 const message = ref<string>()
 const schoolTranslation = usePlurals('szkołę', 'szkoły', 'szkół')
 const showDisabledSchools = ref<boolean>(true)
+const customQueries = computed(() => ({ disabled: !showDisabledSchools.value }))
 
 function hideMessage() {
   message.value = undefined
@@ -82,16 +83,6 @@ function startFetching() {
     status.value = false
     axios.post('/admin/schools/fetch')
   }
-}
-
-function customQueries(): string[] {
-  let query: string[] = []
-
-  if (!showDisabledSchools.value) {
-    query.push(`disabled=${true}`)
-  }
-
-  return query
 }
 </script>
 
