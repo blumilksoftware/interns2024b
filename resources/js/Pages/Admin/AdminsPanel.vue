@@ -41,7 +41,6 @@ const sortOptions: SortOption[] = [
       isAdmin: false,
       isSuperAdmin: false
     }"
-    mobile-nav
     deletable
     creatable
   >

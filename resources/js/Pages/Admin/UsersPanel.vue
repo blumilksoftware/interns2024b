@@ -52,7 +52,6 @@ function customQueries(): string[] {
     :custom-queries="customQueries"
     resource-name="users"
     disable-edit-button
-    mobile-nav
   >
     <template #actions>
       <button
