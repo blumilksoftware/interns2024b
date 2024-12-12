@@ -7,7 +7,6 @@ namespace App\Console\Commands;
 use App\Jobs\CloseUserQuizJob;
 use App\Models\Quiz;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Collection;
 
 class DispatchUserQuizClosedEvent extends Command
 {
@@ -16,20 +15,10 @@ class DispatchUserQuizClosedEvent extends Command
 
     public function handle(): void
     {
-        foreach ($this->getClosingTodayQuizzes() as $quiz) {
-            CloseUserQuizJob::dispatch($quiz)->delay($quiz->closeAt);
+        foreach (Quiz::all() as $quiz) {
+            if ($quiz->isClosingToday()) {
+                CloseUserQuizJob::dispatch($quiz)->delay($quiz->closeAt);
+            }
         }
-    }
-
-    /**
-     * @return Collection<Quiz>
-     */
-    public function getClosingTodayQuizzes(): Collection
-    {
-        return Quiz::query()
-            ->whereNotNull("locked_at")
-            ->whereRaw("(scheduled_at + INTERVAL '1 minute' * duration) >= ?", [now()])
-            ->whereRaw("DATE(scheduled_at + INTERVAL '1 minute' * duration) = ?", [today()])
-            ->get();
     }
 }
