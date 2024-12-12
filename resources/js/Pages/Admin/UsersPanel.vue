@@ -40,7 +40,7 @@ function customQueries(): string[] {
 </script>
 
 <template>
-  <Head title="Szkoły - Panel administracyjny" />
+  <Head title="Uczniowie - Panel administracyjny" />
 
   <CrudPage
     :options="sortOptions"
