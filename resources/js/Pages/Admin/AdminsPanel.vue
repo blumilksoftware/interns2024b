@@ -9,7 +9,7 @@ import { computed } from 'vue'
 const props = defineProps<{ users: Pagination<User> } & PageProps>()
 const admins = computed(() => ({
   ...props.users,
-  data: props.users.data.map(admin => ({...admin, password: ''})),
+  data: props.users.data.map(admin => ({...admin, school_id: admin.school.id, password: ''})),
 }))
 
 const sortOptions: SortOption[] = [

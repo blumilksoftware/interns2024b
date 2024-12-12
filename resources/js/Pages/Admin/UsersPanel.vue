@@ -5,14 +5,18 @@ import CrudInput from '@/components/Crud/CrudInput.vue'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 import CrudSchoolInput from '@/components/Crud/CrudSchoolInput.vue'
 import WarningMessageBox from '@/components/Common/WarningMessageBox.vue'
-import { ref } from 'vue'
+import {computed, ref} from 'vue'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import { type PageProps } from '@/Types/PageProps'
 import { UserMinusIcon, PencilIcon } from '@heroicons/vue/24/outline'
 import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
 import Expand from '@/components/Common/Expand.vue'
 
-defineProps<{ users: Pagination<User>, schools: School[] } & PageProps>()
+const props = defineProps<{ users: Pagination<User>, schools: School[] } & PageProps>()
+const users = computed(() => ({
+  ...props.users,
+  data: props.users.data.map(user => ({...user, school_id: user.school.id })),
+}))
 
 const showWarning = ref<Record<string, boolean>>({})
 const showAnonymizedUsers = ref<boolean>(true)

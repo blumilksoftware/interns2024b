@@ -20,7 +20,6 @@ class UserResource extends JsonResource
             "surname" => $this->surname,
             "email" => $this->email,
             "school" => SchoolResource::make($this->school),
-            "school_id" => $this->school->id,
             "isAnonymized" => $this->is_anonymized,
             "isAdmin" => $this->hasRole("admin"),
             "isSuperAdmin" => $this->hasRole("super_admin"),
