@@ -24,7 +24,6 @@ const props = defineProps<{
   newButtonText?: string
   newItemData?: Partial<N>
   disableEditButton?: boolean
-  searchBarPlaceholder?: string
   searchBarModes?: Mode[]
   deletable?: boolean
   creatable?: boolean
@@ -105,7 +104,6 @@ function pageSwitch(isLeftSwitch: boolean) {
 
     <div class="flex w-full px-4 mt-2 justify-between gap-2">
       <SearchBar 
-        :placeholder="searchBarPlaceholder"
         class="w-full" 
         :default-value="displaySearchInLowerCase ? queryParams.search?.toLowerCase() : queryParams.search"
         :modes="searchBarModes"
@@ -184,7 +182,12 @@ function pageSwitch(isLeftSwitch: boolean) {
           </template>
 
           <template #actions="{editMode, showDeleteMsg}">
-            <slot name="itemActions" :item="item" :show-delete-msg="showDeleteMsg" :edit-mode="editMode" />
+            <slot
+              name="itemActions"
+              :item="item"
+              :show-delete-msg="showDeleteMsg"
+              :edit-mode="editMode"
+            />
           </template>
 
           <template #data="data">
