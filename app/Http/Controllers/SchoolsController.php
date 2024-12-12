@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
@@ -135,7 +136,7 @@ class SchoolsController extends Controller
         return Bus::findBatch($batchId);
     }
 
-    private function searchQuery(SortHelper $sorter, Request $request)
+    private function searchQuery(SortHelper $sorter, Request $request): LengthAwarePaginator
     {
         $query = School::query()->where("is_admin_school", false);
         $query = $sorter->sort($query, ["id", "name", "regon", "updated_at", "created_at"], ["students", "address"]);
@@ -143,9 +144,8 @@ class SchoolsController extends Controller
         $query = $this->sortByAddress($query, $sorter);
         $query = $this->filterDisabledSchools($query, $request);
         $query = $sorter->search($query, "name");
-        $query = $sorter->paginate($query);
 
-        return $query;
+        return $sorter->paginate($query);
     }
 
     private function sortByStudents(Builder $query, SortHelper $sorter): Builder
