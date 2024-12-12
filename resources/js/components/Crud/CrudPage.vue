@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends { id: string | number }, N">
+<script setup lang="ts" generic="T extends { id: string | number, createdAt: string, updatedAt: string }, N">
 import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
@@ -22,11 +22,11 @@ const props = defineProps<{
   customSearch?: (text: string | undefined) => string | undefined
   displaySearchInLowerCase?: boolean
   resourceName: string
-  newButtonText: string
-  newItemData: N
+  newButtonText?: string
+  newItemData?: Partial<N>
+  disableEditButton?: boolean
   deletable?: boolean
   creatable?: boolean
-  mobileNav?: boolean
 }>()
 
 defineSlots<{
@@ -35,7 +35,7 @@ defineSlots<{
   deleteMessage: (scope: { item: T }) => any
   item: (scope: { item: T }) => any
   newItem: (scope: { newItemMode: boolean }) => any
-  itemActions: (scope: { item: T, showDeleteMsg: () => void }) => any
+  itemActions: (scope: { item: T, showDeleteMsg: () => void, editMode: (enabled: boolean) => void }) => any
   itemData: (scope: { item: T, editing: boolean, errors: Errors }) => any
   noContent: (scope: { search: boolean }) => any
 }>()
@@ -63,7 +63,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
 
 <template>
   <div class="flex flex-col w-full pb-3">
-    <div data-name="toolbar" class="flex xs:flex-row px-4 gap-2" :class="{ 'flex-col': mobileNav }">
+    <div data-name="toolbar" class="flex flex-col xs:flex-row px-4 gap-2">
       <Dropdown pointer-position="left" class-btn="rounded-lg" class="mr-auto" :options="options" title="Sortuj">
         <div class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg h-fit">
           <ArrowsUpDownIcon class="size-6" />
@@ -89,9 +89,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
     </div>
 
     <div class="flex w-full px-4 mt-2 justify-between gap-2">
-      <SearchBar class="w-full" :default-value="displaySearchInLowerCase ? params.search?.toLowerCase() : params.search"
-                 @search="handleSearch"
-      />
+      <SearchBar class="w-full" :default-value="displaySearchInLowerCase ? params.search?.toLowerCase() : params.search" @search="handleSearch" />
       <Pagination v-if="items.data.length > 0" :data="pagination" :query="query" />
     </div>
 
@@ -111,7 +109,7 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
       </template>
 
       <slot v-for="item of items.data" :key="item.id" name="item" :item="item">
-        <CrudItem :item="item" :resource-name="resourceName" :deletable="deletable">
+        <CrudItem :item="item" :resource-name="resourceName" :deletable="deletable" :disable-edit-button="disableEditButton">
           <template #deleteMessage="data">
             <slot name="deleteMessage" v-bind="data" />
           </template>
@@ -120,8 +118,8 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
             <slot name="title" v-bind="data" />
           </template>
 
-          <template #actions="{showDeleteMsg}">
-            <slot name="itemActions" :item="item" :show-delete-msg="showDeleteMsg" />
+          <template #actions="{editMode, showDeleteMsg}">
+            <slot name="itemActions" :item="item" :show-delete-msg="showDeleteMsg" :edit-mode="editMode" />
           </template>
 
           <template #data="data">

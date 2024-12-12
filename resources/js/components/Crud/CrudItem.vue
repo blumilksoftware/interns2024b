@@ -1,11 +1,9 @@
-<script setup lang="ts" generic="T extends { id: string | number }">
+<script setup lang="ts" generic="T extends { id: string | number, createdAt: string, updatedAt: string }">
 import useRequestResolution from '@/Helpers/RequestResolution'
-import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import { ref } from 'vue'
 import { CheckIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
-import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 import WarningMessageBox from '@/components/Common/WarningMessageBox.vue'
 import { type Errors, type RequestPayload } from '@inertiajs/core'
 import { formatDate } from '@/Helpers/Format'
@@ -14,11 +12,12 @@ const props = defineProps<{
   item: T
   resourceName: string
   deletable?: boolean
+  disableEditButton?: boolean
 }>()
 
 defineSlots<{
   deleteMessage: (scope: { item: T }) => any
-  actions: (scope: { showDeleteMsg: () => void }) => any
+  actions: (scope: { showDeleteMsg: () => void, editMode: (enabled: boolean) => void }) => any
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
   data: (scope: { item: T, editing: boolean, errors: Errors }) => any
 }>()
@@ -57,27 +56,7 @@ const showDeleteMessage = ref(false)
 
     <div class="flex justify-between">
       <div class="size-full md:h-auto px-0">
-        <slot name="title" :item="item as T" :editing="editing" :errors="errors">
-          <InputWrapper
-            :has-content="!!item.name || editing"
-            :error="errors.name"
-            :show-error="editing"
-          >
-            <input
-              v-model="item.name"
-              v-dynamic-input-width
-              type="text"
-              name="name"
-              autocomplete="off"
-              class="w-full outline-none font-bold border-b border-transparent duration-200 transition-colors text-lg bg-transparent focus:border-b-primary"
-              :class="{
-                'border-b-primary/30 duration-200 transition-colors hover:border-b-primary/60 text-primary' : editing,
-                'border-b-red' : errors.name
-              }"
-              :disabled="!editing"
-            >
-          </InputWrapper>
-        </slot>
+        <slot name="title" :item="item as T" :editing="editing" :errors="errors" />
 
         <div class="h-full md:hidden pt-1">
           <slot name="data" :item="item as T" :editing="editing" :errors="errors" />
@@ -85,12 +64,12 @@ const showDeleteMessage = ref(false)
       </div>
 
       <div class="flex flex-col sm:flex-row pl-5 gap-5 h-fit">
-        <button v-if="!editing" title="Edytuj" @click="editing = true">
-          <PencilIcon class="icon slide-up-animation" />
-        </button>
-
         <template v-if="!editing">
-          <slot name="actions" :show-delete-msg="() => showDeleteMessage = true" />
+          <button v-if="!disableEditButton" title="Edytuj" @click="editing = true">
+            <PencilIcon class="icon slide-up-animation" />
+          </button>
+
+          <slot name="actions" :show-delete-msg="() => showDeleteMessage = true" :edit-mode="(mode) => editing = mode" />
         </template>
 
         <template v-if="editing">
@@ -104,6 +83,8 @@ const showDeleteMessage = ref(false)
           <RequestWrapper
             title="Zapisz zmiany"
             method="patch"
+            preserve-state
+            preserve-scroll
             :href="`/admin/${resourceName}/${item.id}`"
             :data="{ ...item as RequestPayload }"
             @success="editing = false"
