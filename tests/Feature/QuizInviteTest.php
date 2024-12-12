@@ -84,7 +84,7 @@ class QuizInviteTest extends TestCase
         $this->actingAs($this->admin)
             ->post("/admin/quizzes/{$this->quiz->id}/invite/assign", ["ids" => $userIds])
             ->assertRedirect()
-            ->assertSessionHas("status", "Użytkownicy zostali przypisani do quizu.");
+            ->assertSessionHas("status", "Użytkownicy zostali przypisani do testu.");
 
         foreach ($userIds as $userId) {
             $this->assertDatabaseHas("quiz_assignments", [
@@ -95,7 +95,7 @@ class QuizInviteTest extends TestCase
 
         $this->actingAs($this->admin)
             ->post("/admin/quizzes/{$this->quiz->id}/invite/assign", ["ids" => $userIds])
-            ->assertRedirect()->assertSessionHas("status", "Użytkownicy zostali przypisani do quizu.");
+            ->assertRedirect()->assertSessionHas("status", "Użytkownicy zostali przypisani do testu.");
     }
 
     public function testSkipAlreadyAssignedUsersWhileAssigningToQuiz(): void
