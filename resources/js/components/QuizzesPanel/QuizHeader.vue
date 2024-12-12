@@ -3,7 +3,7 @@ import { type Errors } from '@inertiajs/core'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import CustomDatepicker from '@/components/Common/CustomDatepicker.vue'
 import { formatDate } from '@/Helpers/Format'
-import CrudInput from "@/components/Crud/CrudInput.vue";
+import CrudInput from '@/components/Crud/CrudInput.vue'
 
 defineProps<{
   editing:boolean
