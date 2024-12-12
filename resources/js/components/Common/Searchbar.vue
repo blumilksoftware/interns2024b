@@ -57,7 +57,6 @@ watch(
 
 <template>
   <InputWrapper
-    v-click-outside="() => isFocused = false"
     class="text-sm font-medium leading-6"
     wrapper-class="gap-2"
     :label="label"
@@ -65,6 +64,7 @@ watch(
     column
   >
     <List
+      v-click-outside="() => isFocused = false"
       :options
       :opened="isFocused"
       :use-lazy-loading="!searchQuery"
