@@ -1,16 +1,24 @@
 <script setup lang="ts" generic="T">
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
+import {nextTick} from "vue";
 
 const value = defineModel<T>({ required: true })
 
-defineProps<{
+const props = defineProps<{
   editing: boolean
   label?: string
   name: string
   error?: string
   password?: boolean
+  format?: (value: T) => T,
 }>()
+
+function handleInput() {
+  if (props.format) {
+    nextTick(() => value.value = props.format!(value.value))
+  }
+}
 </script>
 
 <template>
@@ -33,6 +41,7 @@ defineProps<{
         'border-b-red' : !!error,
       }"
       :disabled="!editing"
+      @input="handleInput"
     >
   </InputWrapper>
 </template>
