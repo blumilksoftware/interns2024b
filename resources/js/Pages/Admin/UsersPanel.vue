@@ -65,7 +65,7 @@ function customQueries(): string[] {
 
     <template #title="{item, editing, errors: editErrors}">
       <div class="flex gap-1">
-        <label v-if="editing" for="name">
+        <label v-if="editing" for="firstname">
           Imię:
         </label>
 
@@ -76,22 +76,41 @@ function customQueries(): string[] {
           type="text"
           name="firstname"
           autocomplete="off"
-          class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
+          class="text-md h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
           :class="{
-            'border-b-primary/30 hover:border-b-primary/60 text-primary text-center' : editing,
+            'border-b-primary/30 hover:border-b-primary/60 text-primary text-center duration-200 transition-colors' : editing,
             'border-b-red' : !!editErrors.firstname,
           }"
           :disabled="!editing"
         >
 
-        <p v-if="!editing" class="font-bold">
-          {{ item.surname }}
-        </p>
+        <label v-if="editing" for="surname">
+          Nazwisko:
+        </label>
+
+        <input
+          id="surname"
+          v-model="item.surname"
+          v-dynamic-input-width
+          type="text"
+          name="surname"
+          autocomplete="off"
+          class="text-md h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
+          :class="{
+            'border-b-primary/30 hover:border-b-primary/60 text-primary text-center duration-200 transition-colors' : editing,
+            'border-b-red' : !!editErrors.surname,
+          }"
+          :disabled="!editing"
+        >
       </div>
 
-      <span v-if="editErrors.firstname" class="text-red text-sm truncate">
+      <div v-if="editErrors.firstname" class="text-red text-sm truncate">
         {{ editErrors.firstname }}
-      </span>
+      </div>
+
+      <div v-if="editErrors.surname" class="text-red text-sm truncate">
+        {{ editErrors.surname }}
+      </div>
     </template>
 
     <template #itemActions="{item, editMode}">
@@ -106,15 +125,6 @@ function customQueries(): string[] {
 
     <template #itemData="{ item, errors, editing }">
       <div class="flex flex-col duration-200 min-h-6.5" :class="{'text-sm text-gray-600': !editing}">
-        <CrudInput
-          v-if="editing"
-          v-model="item.surname"
-          name="surname"
-          label="Nazwisko:"
-          :error="errors.surname"
-          :editing="editing"
-        />
-
         <CrudInput
           v-model="item.email"
           name="email"
