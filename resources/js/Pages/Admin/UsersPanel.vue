@@ -124,7 +124,7 @@ function customQueries(): string[] {
     </template>
 
     <template #itemData="{ item, errors, editing }">
-      <div class="flex flex-col duration-200 min-h-6.5" :class="{'text-sm text-gray-600': !editing}">
+      <div class="flex flex-col duration-200 gap-2 pt-2 min-h-6.5" :class="{'text-sm text-gray-600': !editing}">
         <CrudInput
           v-model="item.email"
           name="email"
