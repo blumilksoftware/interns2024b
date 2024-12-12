@@ -8,7 +8,7 @@ import WarningMessageBox from '@/components/Common/WarningMessageBox.vue'
 import { ref } from 'vue'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import { type PageProps } from '@/Types/PageProps'
-import { TrashIcon, PencilIcon } from '@heroicons/vue/24/outline'
+import { UserMinusIcon, PencilIcon } from '@heroicons/vue/24/outline'
 import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
 import Expand from '@/components/Common/Expand.vue'
 
@@ -119,7 +119,7 @@ function customQueries(): string[] {
       </button>
 
       <button v-if="user?.isSuperAdmin && !item.isAnonymized" title="Anonimizuj" @click="showWarning[item.id] = true">
-        <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
+        <UserMinusIcon class="icon slide-up-animation text-red hover:text-red-500" />
       </button>
     </template>
 
