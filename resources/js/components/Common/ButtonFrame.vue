@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { type ButtonFrameProps } from '@/Types/ButtonFrameProps'
 
+const slots = defineSlots()
 defineProps<ButtonFrameProps>()
+
+function childIsText(index: number){
+  return slots.default()[0]?.children?.at(index)?.type !== Symbol.for('v-txt')
+}
 </script>
 
 <template>
@@ -16,6 +21,8 @@ defineProps<ButtonFrameProps>()
       'bg-primary text-white hover:bg-primary-dark py-2.5 font-bold': !text,
       'rounded-xl px-4 py-2.5': !text && !icon,
       'opacity-50 pointer-events-none': disabled,
+      'pl-3': childIsText(0),
+      'pr-3': childIsText(-1),
     }"
   >
     <slot />
