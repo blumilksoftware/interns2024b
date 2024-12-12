@@ -3,4 +3,3 @@ interface Mode {
   text: string
   name: string
 }
-  

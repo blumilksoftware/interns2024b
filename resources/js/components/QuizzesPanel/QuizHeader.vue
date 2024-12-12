@@ -6,9 +6,9 @@ import { formatDate } from '@/Helpers/Format'
 import CrudInput from '@/components/Crud/CrudInput.vue'
 
 defineProps<{
-  editing:boolean
-  selected:boolean
-  errors:Errors
+  editing: boolean
+  selected: boolean
+  errors: Errors
 }>()
 const quiz = defineModel<Quiz>({ required: true })
 </script>
@@ -32,7 +32,13 @@ const quiz = defineModel<Quiz>({ required: true })
         :error="errors.scheduled_at"
         :hide-error="!editing"
       >
-        <b v-if="!editing" class="whitespace-nowrap">{{ formatDate(quiz.scheduledAt) }}</b>
+        <b
+          v-if="!editing"
+          class="whitespace-nowrap"
+        >
+          {{ formatDate(quiz.scheduledAt) }}
+        </b>
+
         <CustomDatepicker
           v-else
           v-model="quiz.scheduledAt"

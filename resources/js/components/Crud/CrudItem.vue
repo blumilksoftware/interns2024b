@@ -29,9 +29,15 @@ const showDeleteMessage = ref(false)
 </script>
 
 <template>
-  <WarningMessageBox :open="showDeleteMessage" @close="showDeleteMessage = false">
+  <WarningMessageBox
+    :open="showDeleteMessage"
+    @close="showDeleteMessage = false"
+  >
     <template #message>
-      <slot name="deleteMessage" :item="item as T" />
+      <slot
+        name="deleteMessage"
+        :item="item as T"
+      />
     </template>
 
     <template #buttons>
@@ -47,29 +53,56 @@ const showDeleteMessage = ref(false)
     </template>
   </WarningMessageBox>
 
-  <div v-auto-animate class="flex flex-col gap-1 p-5 bg-white/70 border-2 rounded-xl shadow-sm">
+  <div
+    v-auto-animate
+    class="flex flex-col gap-1 p-5 bg-white/70 border-2 rounded-xl shadow-sm"
+  >
     <Transition>
-      <div v-show="processing" class="absolute bg-white/50 backdrop-blur-md z-10 size-full left-0 flex items-center justify-center -mt-4 rounded-xl">
-        <div class="inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status" />
+      <div
+        v-show="processing"
+        class="absolute bg-white/50 backdrop-blur-md z-10 size-full left-0 flex items-center justify-center -mt-4 rounded-xl"
+      >
+        <div
+          class="inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
+          role="status"
+        />
       </div>
     </Transition>
 
     <div class="flex justify-between">
       <div class="size-full md:h-auto px-0">
-        <slot name="title" :item="item as T" :editing="editing" :errors="errors" />
+        <slot
+          name="title"
+          :item="item as T"
+          :editing="editing"
+          :errors="errors"
+        />
 
         <div class="h-full md:hidden pt-1">
-          <slot name="data" :item="item as T" :editing="editing" :errors="errors" />
+          <slot
+            name="data"
+            :item="item as T"
+            :editing="editing"
+            :errors="errors"
+          />
         </div>
       </div>
 
       <div class="flex flex-col sm:flex-row pl-5 gap-5 h-fit">
         <template v-if="!editing">
-          <button v-if="!disableEditButton" title="Edytuj" @click="editing = true">
+          <button
+            v-if="!disableEditButton"
+            title="Edytuj"
+            @click="editing = true"
+          >
             <PencilIcon class="icon slide-up-animation" />
           </button>
 
-          <slot name="actions" :show-delete-msg="() => showDeleteMessage = true" :edit-mode="(mode) => editing = mode" />
+          <slot
+            name="actions"
+            :show-delete-msg="() => showDeleteMessage = true"
+            :edit-mode="(mode) => editing = mode"
+          />
         </template>
 
         <template v-if="editing">
@@ -89,23 +122,43 @@ const showDeleteMessage = ref(false)
             :data="{ ...item as RequestPayload }"
             @success="editing = false"
           >
-            <CheckIcon class="icon" title="Zapisz zmiany" />
+            <CheckIcon
+              class="icon"
+              title="Zapisz zmiany"
+            />
           </RequestWrapper>
         </template>
 
-        <button v-if="deletable" title="Usuń" @click="showDeleteMessage = true">
+        <button
+          v-if="deletable"
+          title="Usuń"
+          @click="showDeleteMessage = true"
+        >
           <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
         </button>
       </div>
     </div>
 
     <div class="w-full hidden md:block">
-      <slot name="data" :item="item as T" :editing="editing" :errors="errors" />
+      <slot
+        name="data"
+        :item="item as T"
+        :editing="editing"
+        :errors="errors"
+      />
     </div>
 
-    <footer v-if="editing" class="flex flex-col justify-end text-right sm:flex-row gap-x-4">
-      <span class="text-gray-400 text-xs"> Utworzony: {{ formatDate(item.createdAt) }}</span>
-      <span class="text-gray-400 text-xs"> Ostatnio edytowany: {{ formatDate(item.updatedAt) }}</span>
+    <footer
+      v-if="editing"
+      class="flex flex-col justify-end text-right sm:flex-row gap-x-4"
+    >
+      <span class="text-gray-400 text-xs">
+        Utworzony: {{ formatDate(item.createdAt) }}
+      </span>
+
+      <span class="text-gray-400 text-xs">
+        Ostatnio edytowany: {{ formatDate(item.updatedAt) }}
+      </span>
     </footer>
   </div>
 </template>

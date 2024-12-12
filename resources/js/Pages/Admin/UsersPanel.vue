@@ -5,7 +5,7 @@ import CrudInput from '@/components/Crud/CrudInput.vue'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 import CrudSchoolInput from '@/components/Crud/CrudSchoolInput.vue'
 import WarningMessageBox from '@/components/Common/WarningMessageBox.vue'
-import {computed, ref} from 'vue'
+import { computed, ref } from 'vue'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import { type PageProps } from '@/Types/PageProps'
 import { UserMinusIcon, PencilIcon } from '@heroicons/vue/24/outline'
@@ -15,7 +15,7 @@ import Expand from '@/components/Common/Expand.vue'
 const props = defineProps<{ users: Pagination<User>, schools: School[] } & PageProps>()
 const users = computed(() => ({
   ...props.users,
-  data: props.users.data.map(user => ({...user, school_id: user.school.id })),
+  data: props.users.data.map(user => ({ ...user, school_id: user.school.id })),
 }))
 
 const showWarning = ref<Record<string, boolean>>({})
@@ -26,7 +26,7 @@ const sortOptions: SortOption[] = [
   { text: 'Po nazwie (Z–A)', key: 'firstname', desc: true },
   { text: 'Po szkole (A-Z)', key: 'school' },
   { text: 'Po szkole (Z-A)', key: 'school',  desc: true },
-  { text: 'Od najnowszych' , key: 'created_at' },
+  { text: 'Od najnowszych', key: 'created_at' },
   { text: 'Od najstarszych', key: 'created_at', desc: true },
   { text: 'Po dacie modyfikacji (rosnąco)', key: 'updated_at' },
   { text: 'Po dacie modyfikacji (malejąco)', key: 'updated_at', desc: true },
@@ -60,7 +60,10 @@ function customQueries(): string[] {
         @click="showAnonymizedUsers = !showAnonymizedUsers"
       >
         <ArchiveDynamicIcon :active="showAnonymizedUsers" />
-        <span class="hidden sm:block">{{ showAnonymizedUsers ? 'Wyświetl' : 'Schowaj' }} zanonimizowanych studentów</span>
+
+        <span class="hidden sm:block">
+          {{ showAnonymizedUsers ? 'Wyświetl' : 'Schowaj' }} zanonimizowanych studentów
+        </span>
       </button>
 
       <Expand />
@@ -68,7 +71,10 @@ function customQueries(): string[] {
 
     <template #title="{item, editing, errors: editErrors}">
       <div class="flex gap-1">
-        <label v-if="editing" for="firstname">
+        <label
+          v-if="editing"
+          for="firstname"
+        >
           Imię:
         </label>
 
@@ -87,7 +93,10 @@ function customQueries(): string[] {
           :disabled="!editing"
         >
 
-        <label v-if="editing" for="surname">
+        <label
+          v-if="editing"
+          for="surname"
+        >
           Nazwisko:
         </label>
 
@@ -107,27 +116,44 @@ function customQueries(): string[] {
         >
       </div>
 
-      <div v-if="editErrors.firstname" class="text-red text-sm truncate">
+      <div
+        v-if="editErrors.firstname"
+        class="text-red text-sm truncate"
+      >
         {{ editErrors.firstname }}
       </div>
 
-      <div v-if="editErrors.surname" class="text-red text-sm truncate">
+      <div
+        v-if="editErrors.surname"
+        class="text-red text-sm truncate"
+      >
         {{ editErrors.surname }}
       </div>
     </template>
 
     <template #itemActions="{item, editMode}">
-      <button v-if="!item.isAnonymized" title="Edytuj" @click="() => editMode(true)">
+      <button
+        v-if="!item.isAnonymized"
+        title="Edytuj"
+        @click="() => editMode(true)"
+      >
         <PencilIcon class="icon slide-up-animation" />
       </button>
 
-      <button v-if="user?.isSuperAdmin && !item.isAnonymized" title="Anonimizuj" @click="showWarning[item.id] = true">
+      <button
+        v-if="user?.isSuperAdmin && !item.isAnonymized"
+        title="Anonimizuj"
+        @click="showWarning[item.id] = true"
+      >
         <UserMinusIcon class="icon slide-up-animation text-red hover:text-red-500" />
       </button>
     </template>
 
     <template #itemData="{ item, errors, editing }">
-      <div class="flex flex-col duration-200 gap-2 pt-2 min-h-6.5" :class="{'text-sm text-gray-600': !editing}">
+      <div
+        class="flex flex-col duration-200 gap-2 pt-2 min-h-6.5"
+        :class="{'text-sm text-gray-600': !editing}"
+      >
         <CrudInput
           v-model="item.email"
           name="email"
@@ -146,10 +172,18 @@ function customQueries(): string[] {
       </div>
 
       <Teleport to="body">
-        <WarningMessageBox :open="!!showWarning[item.id]" @close="showWarning[item.id] = false">
+        <WarningMessageBox
+          :open="!!showWarning[item.id]"
+          @close="showWarning[item.id] = false"
+        >
           <template #message>
-            <b class="text-[1.1rem] text-gray-900">Czy na pewno chcesz zanonimizować "{{ item.firstname }}"?</b>
-            <p class="text-gray-500">Dane zostaną utracone bezpowrotnie.</p>
+            <b class="text-[1.1rem] text-gray-900">
+              Czy na pewno chcesz zanonimizować "{{ item.firstname }}"?
+            </b>
+
+            <p class="text-gray-500">
+              Dane zostaną utracone bezpowrotnie.
+            </p>
           </template>
 
           <template #buttons>

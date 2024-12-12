@@ -5,8 +5,8 @@ import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 
 defineProps<{
-  error?:string
-  format:(content:string) => string
+  error?: string
+  format: (content: string) => string
 }>()
 const model = defineModel<string | number | Date>()
 const datepickerRef = ref<InstanceType<typeof Datepicker>>()
@@ -30,9 +30,16 @@ const datepickerRef = ref<InstanceType<typeof Datepicker>>()
           <CalendarDaysIcon class="icon size-5" />
         </div>
       </template>
+
       <template #action-buttons>
         <div class="flex gap-4">
-          <button class="text-sm font-semibold rounded-md" @click="() => datepickerRef?.toggleMenu()">Anuluj</button>
+          <button
+            class="text-sm font-semibold rounded-md"
+            @click="() => datepickerRef?.toggleMenu()"
+          >
+            Anuluj
+          </button>
+
           <button
             class="bg-primary text-white text-sm font-bold py-2 px-3 rounded-md duration-200 hover:bg-primary-dark"
             @click="() => datepickerRef?.selectDate()"

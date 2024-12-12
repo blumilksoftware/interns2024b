@@ -9,9 +9,13 @@ import { type PageProps } from '@/Types/PageProps'
 const props = defineProps<PageProps>()
 const status = ref<string | undefined>(props.flash.status)
 
-watch(() => props.flash, flash => {
-  status.value = flash.status
-}, { immediate: true })
+watch(
+  () => props.flash, 
+  flash => {
+    status.value = flash.status
+  }, 
+  { immediate: true },
+)
 
 function hideMessage() {
   status.value = undefined
@@ -35,7 +39,7 @@ pages.push(
 )
 
 if (props.user?.isSuperAdmin) {
-  pages.push({ title: 'Administratorzy', href: '/admin/admins'})
+  pages.push({ title: 'Administratorzy', href: '/admin/admins' })
 }
 </script>
 
@@ -43,9 +47,20 @@ if (props.user?.isSuperAdmin) {
   <BackgroundEffect />
 
   <div class="flex flex-col items-center h-full min-h-screen">
-    <Banner :show="!!status" :message="status" @close="hideMessage" />
-    <Header :pages :user="props.user" :app-name="props.appName" />
+    <Banner
+      :show="!!status"
+      :message="status"
+      @close="hideMessage"
+    />
+
+    <Header
+      :pages
+      :user="props.user"
+      :app-name="props.appName"
+    />
+
     <slot />
+
     <Footer />
   </div>
 </template>

@@ -3,19 +3,19 @@ import { Head } from '@inertiajs/vue3'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import CrudInput from '@/components/Crud/CrudInput.vue'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
-import {type PageProps} from '@/Types/PageProps'
+import { type PageProps } from '@/Types/PageProps'
 import { computed } from 'vue'
 
 const props = defineProps<{ users: Pagination<User> } & PageProps>()
 const admins = computed(() => ({
   ...props.users,
-  data: props.users.data.map(admin => ({...admin, school_id: admin.school.id, password: ''})),
+  data: props.users.data.map(admin => ({ ...admin, school_id: admin.school.id, password: '' })),
 }))
 
 const sortOptions: SortOption[] = [
   { text: 'Po nazwie (A–Z)', key: 'firstname' },
   { text: 'Po nazwie (Z–A)', key: 'firstname', desc: true },
-  { text: 'Od najnowszych' , key: 'created_at' },
+  { text: 'Od najnowszych', key: 'created_at' },
   { text: 'Od najstarszych', key: 'created_at', desc: true },
   { text: 'Po dacie modyfikacji (rosnąco)', key: 'updated_at' },
   { text: 'Po dacie modyfikacji (malejąco)', key: 'updated_at', desc: true },
@@ -45,13 +45,21 @@ const sortOptions: SortOption[] = [
     creatable
   >
     <template #deleteMessage="{item}">
-      <b class="text-[1.1rem] text-gray-900">Czy na pewno chcesz usunąć "{{ item.firstname }} {{ item.surname }}"?</b>
-      <p class="text-gray-500">Administrator zostanie usunięty bezpowrotnie.</p>
+      <b class="text-[1.1rem] text-gray-900">
+        Czy na pewno chcesz usunąć "{{ item.firstname }} {{ item.surname }}"?
+      </b>
+
+      <p class="text-gray-500">
+        Administrator zostanie usunięty bezpowrotnie.
+      </p>
     </template>
 
     <template #title="{item, editing, errors: editErrors}">
       <div class="flex gap-1">
-        <label v-if="editing" for="firstname">
+        <label
+          v-if="editing"
+          for="firstname"
+        >
           Imię:
         </label>
 
@@ -70,7 +78,10 @@ const sortOptions: SortOption[] = [
           :disabled="!editing"
         >
 
-        <label v-if="editing" for="surname">
+        <label
+          v-if="editing"
+          for="surname"
+        >
           Nazwisko:
         </label>
 
@@ -90,17 +101,26 @@ const sortOptions: SortOption[] = [
         >
       </div>
 
-      <div v-if="editErrors.firstname" class="text-red text-sm truncate">
+      <div
+        v-if="editErrors.firstname"
+        class="text-red text-sm truncate"
+      >
         {{ editErrors.firstname }}
       </div>
 
-      <div v-if="editErrors.surname" class="text-red text-sm truncate">
+      <div
+        v-if="editErrors.surname"
+        class="text-red text-sm truncate"
+      >
         {{ editErrors.surname }}
       </div>
     </template>
 
     <template #itemData="data">
-      <div class="flex flex-col duration-200 min-h-6.5 gap-2 pt-2" :class="{'text-sm text-gray-600': !data.editing}">
+      <div
+        class="flex flex-col duration-200 min-h-6.5 gap-2 pt-2"
+        :class="{'text-sm text-gray-600': !data.editing}"
+      >
         <CrudInput
           v-model="data.item.email"
           name="email"

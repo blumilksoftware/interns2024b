@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { ref, defineProps, computed} from 'vue'
+import { ref, defineProps, computed } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
-import {type Errors} from '@inertiajs/core'
+import { type Errors } from '@inertiajs/core'
 
 const target = ref()
 onClickOutside(target, () => isFocused.value = false)
@@ -14,20 +14,16 @@ const props = defineProps<{
   value?: number
   errors: Errors
   editing: boolean
-  schools:School[]
+  schools: School[]
 }>()
 
 const emit = defineEmits<{ change: [value: number] }>()
 const selected = ref<School | undefined>(props.schools.find(({ id }) => id === props.value))
 
-const searchResult = computed(() =>
-  props.schools.filter(school =>
-    !school.isDisabled && (
-      school.city.toLowerCase().includes(searchQuery.value) ||
+const searchResult = computed(() => props.schools.filter(school => !school.isDisabled && (
+  school.city.toLowerCase().includes(searchQuery.value) ||
       school.name?.toLowerCase().includes(searchQuery.value)
-    ),
-  ),
-)
+)))
 
 function onOptionClick(option: School) {
   selected.value = option
@@ -37,10 +33,18 @@ function onOptionClick(option: School) {
 </script>
 
 <template>
-  <div ref="target" class="placeholder:text-gray-400">
+  <div
+    ref="target"
+    class="placeholder:text-gray-400"
+  >
     <div class="max-h-12 flex flex-col">
       <div class="flex h-inherit">
-        <label for="school_id" class="pr-1">Szkoła: </label>
+        <label
+          for="school_id"
+          class="pr-1"
+        >
+          Szkoła:
+        </label>
 
         <input
           id="school_id"
@@ -63,7 +67,11 @@ function onOptionClick(option: School) {
         >
       </div>
 
-      <span v-if="editing && errors.school_id" :title="errors.school_id " class="text-red text-sm truncate">
+      <span
+        v-if="editing && errors.school_id"
+        :title="errors.school_id "
+        class="text-red text-sm truncate"
+      >
         {{ errors.school_id }}
       </span>
     </div>
@@ -73,7 +81,11 @@ function onOptionClick(option: School) {
       :class="{'scale-y-100 max-h-80': isFocused }"
     >
       <Transition>
-        <div v-if="editing" v-show="isFocused" class="m-0.5 -mt-px py-2 overflow-auto border rounded-lg border-primary/60">
+        <div
+          v-if="editing"
+          v-show="isFocused"
+          class="m-0.5 -mt-px py-2 overflow-auto border rounded-lg border-primary/60"
+        >
           <div v-if="searchResult.length > 0">
             <div
               v-for="school in searchResult"
@@ -82,11 +94,21 @@ function onOptionClick(option: School) {
               @click="onOptionClick(school)"
               @focus="isFocused=true"
             >
-              <b v-if="school.city" class="text-gray-600">{{ school.city.toUpperCase() }}</b>
+              <b
+                v-if="school.city"
+                class="text-gray-600"
+              >
+                {{ school.city.toUpperCase() }}
+              </b>
+
               <p>{{ school.name }}</p>
             </div>
           </div>
-          <span v-else class="block px-4 py-2 text-sm">
+
+          <span
+            v-else
+            class="block px-4 py-2 text-sm"
+          >
             Nie znaleziono szkoły
           </span>
         </div>

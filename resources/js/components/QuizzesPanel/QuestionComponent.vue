@@ -6,7 +6,7 @@ import ExpansionToggleDynamicIcon from '@/components/Icons/ExpansionToggleDynami
 import AnswerComponent from '@/components/QuizzesPanel/AnswerComponent.vue'
 import getKey from '@/Helpers/KeysManager'
 
-defineProps<{ editing:boolean, index:number, questionsTotal:number, error:string }>()
+defineProps<{ editing: boolean, index: number, questionsTotal: number, error: string }>()
 const emit = defineEmits<{ copy: [question:Question], delete: [index:number, question:Question] }>()
 const question = defineModel<Question>({ required: true })
 const answersPaneExpanded = ref<boolean>(false)
@@ -40,21 +40,40 @@ function setCorrectAnswer(currentAnswer: Answer) {
   >
     <div class="flex flex-col gap-1.5">
       <div class="flex justify-between">
-        <b class="text-lg">Pytanie {{ `${index+1}/${questionsTotal}` }}</b>
+        <b class="text-lg">
+          Pytanie {{ `${index+1}/${questionsTotal}` }}
+        </b>
 
-        <div v-if="editing" class="flex gap-5">
-          <button title="Skopiuj pytanie" @click="emit('copy', question)">
+        <div
+          v-if="editing"
+          class="flex gap-5"
+        >
+          <button
+            title="Skopiuj pytanie"
+            @click="emit('copy', question)"
+          >
             <DocumentDuplicateIcon class="icon slide-up-animation" />
           </button>
 
-          <button title="Usuń pytanie" @click="emit('delete', index, question)">
+          <button
+            title="Usuń pytanie"
+            @click="emit('delete', index, question)"
+          >
             <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
           </button>
         </div>
       </div>
 
-      <span v-if="!editing">{{ question.text }}</span>
-      <textarea v-else v-model="question.text" placeholder="Wpisz pytanie" class="h-12 w-full bg-transparent outline-none border-b border-primary/30 focus:border-primary/60" />
+      <span v-if="!editing">
+        {{ question.text }}
+      </span>
+
+      <textarea
+        v-else
+        v-model="question.text"
+        placeholder="Wpisz pytanie"
+        class="h-12 w-full bg-transparent outline-none border-b border-primary/30 focus:border-primary/60"
+      />
     </div>
 
     <button
@@ -63,7 +82,10 @@ function setCorrectAnswer(currentAnswer: Answer) {
       @click="answersPaneExpanded = !answersPaneExpanded"
     >
       Odpowiedzi
-      <ExpansionToggleDynamicIcon class="size-3.5 stroke-[4]" :expanded="answersPaneExpanded" />
+      <ExpansionToggleDynamicIcon
+        class="size-3.5 stroke-[4]"
+        :expanded="answersPaneExpanded"
+      />
     </button>
 
     <template v-if="answersPaneExpanded && hasAnswers">
@@ -78,7 +100,11 @@ function setCorrectAnswer(currentAnswer: Answer) {
       />
     </template>
 
-    <button v-if="editing" class="icon-button" @click="addAnswer">
+    <button
+      v-if="editing"
+      class="icon-button"
+      @click="addAnswer"
+    >
       <PlusCircleIcon class="icon" /> Dodaj odpowiedź
     </button>
   </div>

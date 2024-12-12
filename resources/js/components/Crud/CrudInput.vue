@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
-import {nextTick} from 'vue'
+import { nextTick } from 'vue'
 
 const value = defineModel<T>({ required: true })
 

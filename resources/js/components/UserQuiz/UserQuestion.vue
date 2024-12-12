@@ -8,8 +8,13 @@ const emit = defineEmits<{ answer: [question: UserQuestion, answerId: number] }>
 <template>
   <div class="rounded-xl bg-white shadow border flex flex-col justify-between gap-5 p-5 pb-6">
     <div class="flex flex-col gap-3">
-      <b class="text-primary text-lg">Pytanie: {{ index + 1 }}/{{ questionsTotal }}</b>
-      <p class="font-medium">{{ question.text }}</p>
+      <b class="text-primary text-lg">
+        Pytanie: {{ index + 1 }}/{{ questionsTotal }}
+      </b>
+
+      <p class="font-medium">
+        {{ question.text }}
+      </p>
     </div>
 
     <form class="flex flex-col gap-5">
