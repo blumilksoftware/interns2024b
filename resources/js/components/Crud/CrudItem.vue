@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends { id: string | number }">
+<script setup lang="ts" generic="T extends { id: string | number, createdAt: string, updatedAt: string }">
 import useRequestResolution from '@/Helpers/RequestResolution'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
@@ -58,28 +58,7 @@ const showDeleteMessage = ref(false)
 
     <div class="flex justify-between">
       <div class="size-full md:h-auto px-0">
-        <slot name="title" :item="item as T" :editing="editing" :errors="errors">
-          <InputWrapper
-            v-if="!slots.title"
-            :has-content="!!item.name || editing"
-            :error="errors.name"
-            :show-error="editing"
-          >
-            <input
-              v-model="item.name"
-              v-dynamic-input-width
-              type="text"
-              name="name"
-              autocomplete="off"
-              class="w-full outline-none font-bold border-b border-transparent duration-200 transition-colors text-lg bg-transparent focus:border-b-primary"
-              :class="{
-                'border-b-primary/30 duration-200 transition-colors hover:border-b-primary/60 text-primary' : editing,
-                'border-b-red' : errors.name
-              }"
-              :disabled="!editing"
-            >
-          </InputWrapper>
-        </slot>
+        <slot name="title" :item="item as T" :editing="editing" :errors="errors" />
 
         <div class="h-full md:hidden pt-1">
           <slot name="data" :item="item as T" :editing="editing" :errors="errors" />
