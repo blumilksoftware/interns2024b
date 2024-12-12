@@ -15,13 +15,13 @@ withDefaults(
     required?: boolean
     placeholder?: string
     autocomplete?: string
+    disabled?: boolean
   }>(), 
   {
     type: 'text',
     required: true,
     autocomplete: 'off',
 
-    value: undefined,
     error: undefined,
     label: undefined,
     ariaLabel: undefined,
@@ -45,7 +45,7 @@ const isFocused = ref<boolean>(false)
   >
     <div
       class="w-full duration-200 max-h-12 flex bg-white/30 rounded-lg border-2 border-primary/30 overflow-hidden px-3 gap-3"
-      :class="{'border-3 border-primary/60':isFocused, 'border-red' : error}"
+      :class="{'border-3 border-primary/60':isFocused, 'border-red' : error, 'opacity-50': disabled}"
     >
       <div
         v-if="slots.left"
@@ -63,6 +63,7 @@ const isFocused = ref<boolean>(false)
         :required="required"
         :placeholder="placeholder"
         :autocomplete="autocomplete"
+        :disabled="disabled"
         @input="({ currentTarget }) => emit('input', (currentTarget as any).value)"
         @focus="isFocused=true; emit('focus')"
         @blur="isFocused=false"
