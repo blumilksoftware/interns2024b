@@ -2,8 +2,8 @@
 import { type Errors } from '@inertiajs/core'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
 import CustomDatepicker from '@/components/Common/CustomDatepicker.vue'
-import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 import { formatDate } from '@/Helpers/Format'
+import CrudInput from '@/components/Crud/CrudInput.vue'
 
 defineProps<{
   editing:boolean
@@ -15,25 +15,12 @@ const quiz = defineModel<Quiz>({ required: true })
 
 <template>
   <div class="flex flex-col gap-1 w-full px-2">
-    <InputWrapper
-      :hide-content="!quiz.title && !editing"
+    <CrudInput
+      v-model="quiz.title"
+      name="title"
       :error="errors.title"
-      :hide-error="!editing"
-    >
-      <input
-        v-model="quiz.title"
-        v-dynamic-input-width
-        type="text"
-        name="title"
-        autocomplete="off"
-        class="w-full outline-none font-bold border-b border-transparent duration-200 transition-colors text-lg bg-transparent focus:border-b-primary"
-        :class="{
-          'border-b-primary/30 duration-200 transition-colors hover:border-b-primary/60 text-primary' : editing,
-          'border-b-red' : errors.title && editing
-        }"
-        :disabled="!editing"
-      >
-    </InputWrapper>
+      :editing="editing"
+    />
 
     <div
       class="flex gap-1 duration-200 min-h-6.5"
@@ -59,28 +46,13 @@ const quiz = defineModel<Quiz>({ required: true })
       class="flex gap-1 duration-200 min-h-6.5"
       :class="{ 'text-sm text-gray-600' : !selected }"
     >
-      <InputWrapper
+      <CrudInput
+        v-model="quiz.duration"
+        name="duration"
         label="Czas trwania testu (min):"
-        :hide-content="!quiz.duration && !editing"
         :error="errors.duration"
-        :hide-error="!editing"
-      >
-        <b v-if="!editing">{{ quiz.duration }}</b>
-        <input
-          v-else
-          v-model="quiz.duration"
-          v-dynamic-input-width
-          type="number"
-          name="title"
-          min="1"
-          autocomplete="off"
-          class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
-          :class="{
-            'border-b-primary/30 hover:border-b-primary/60 text-primary text-center' : editing,
-            'border-b-red' : errors.duration
-          }"
-        >
-      </InputWrapper>
+        :editing="editing"
+      />
     </div>
   </div>
 </template>

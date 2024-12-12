@@ -115,7 +115,6 @@ function customQueries(): string[] {
     new-button-text="Dodaj szkołę"
     :new-item-data="{ name: 'Nowa szkoła', regon: '', apartmentNumber: '', street: '', buildingNumber: '', city: '', numberOfStudents: 0, zipCode: '' }"
     display-search-in-lower-case
-    mobile-nav
     creatable
   >
     <template #actions>
