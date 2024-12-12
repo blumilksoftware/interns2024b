@@ -5,8 +5,8 @@ import InformationButton from '@/components/Home/InformationButton.vue'
 <template>
   <section class="w-full flex flex-col items-center gap-10 p-10">
     <img
-      class="h-40 object-contain"
-      src="@/../assets/header-logo.png"
+      class="h-32 object-contain my-4"
+      src="https://www.collegiumwitelona.pl/img/main_logo.svg"
       alt="logo nagłówka"
     >
 
