@@ -1,4 +1,4 @@
-<script setup lang="ts" generic="T extends { id: string | number }, N">
+<script setup lang="ts" generic="T extends { id: string | number, createdAt: string, updatedAt: string }, N">
 import { PlusCircleIcon } from '@heroicons/vue/20/solid'
 import { ArrowsUpDownIcon } from '@heroicons/vue/24/outline'
 import { vAutoAnimate } from '@formkit/auto-animate'
@@ -23,7 +23,7 @@ const props = defineProps<{
   displaySearchInLowerCase?: boolean
   resourceName: string
   newButtonText?: string
-  newItemData?: N
+  newItemData?: Partial<N>
   disableEditButton?: boolean
   deletable?: boolean
   creatable?: boolean

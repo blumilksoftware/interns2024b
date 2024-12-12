@@ -36,7 +36,7 @@ const sortOptions: SortOption[] = [
       email: '',
       school_id: 1,
       password: '',
-      school: null as any,
+      school: null,
       isAnonymized: false,
       isAdmin: false,
       isSuperAdmin: false
