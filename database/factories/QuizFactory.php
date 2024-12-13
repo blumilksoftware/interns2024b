@@ -37,4 +37,13 @@ class QuizFactory extends Factory
             "ranking_published_at" => null,
         ]);
     }
+
+    public function withRanking(): static
+    {
+        return $this->state(fn(array $attributes): array => [
+            "scheduled_at" => Carbon::now()->subMinutes(30),
+            "locked_at" => Carbon::now()->subMinutes(15),
+            "ranking_published_at" => Carbon::now(),
+        ]);
+    }
 }

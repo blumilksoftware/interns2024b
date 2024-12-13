@@ -50,6 +50,11 @@ class UserQuiz extends Model
         return Attribute::get(fn(): bool => $this->closed_at <= Carbon::now());
     }
 
+    public function wasClosedManually(): bool
+    {
+        return $this->closed_at->ne($this->quiz->closeAt);
+    }
+
     public function points(): Attribute
     {
         return Attribute::get(function (): int {

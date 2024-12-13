@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\QuestionRequest;
 use App\Models\Question;
 use App\Models\Quiz;
+use App\Services\QuizCloneService;
 use Illuminate\Http\RedirectResponse;
 
 class QuizQuestionController extends Controller
@@ -35,9 +36,9 @@ class QuizQuestionController extends Controller
         return redirect()->back();
     }
 
-    public function clone(Question $question, Quiz $quiz): RedirectResponse
+    public function clone(QuizCloneService $service, Question $question, Quiz $quiz): RedirectResponse
     {
-        $question->cloneTo($quiz);
+        $service->cloneQuestion($question, $quiz);
 
         return redirect()
             ->back()

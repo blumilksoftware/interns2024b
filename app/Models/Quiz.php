@@ -95,12 +95,12 @@ class Quiz extends Model
 
     public function canBeUnlocked(): Attribute
     {
-        return Attribute::get(fn(): bool => $this->isLocked && $this->scheduled_at > Carbon::now());
+        return Attribute::get(fn(): bool => $this->isLocked && $this->scheduled_at->isFuture());
     }
 
     public function canBeLocked(): Attribute
     {
-        return Attribute::get(fn(): bool => !$this->isLocked && $this->isReadyToBePublished() && $this->scheduled_at > Carbon::now());
+        return Attribute::get(fn(): bool => !$this->isLocked && $this->isReadyToBePublished() && $this->scheduled_at->isFuture());
     }
 
     public function closeAt(): Attribute
@@ -108,48 +108,19 @@ class Quiz extends Model
         return Attribute::get(fn(): ?Carbon => $this->isReadyToBePublished() ? $this->scheduled_at->copy()->addMinutes($this->duration) : null);
     }
 
-    public function clone(): self
-    {
-        $quizCopy = $this->replicate();
-        $quizCopy->title = $quizCopy->title . " - kopia";
-        $quizCopy->locked_at = null;
-        $quizCopy->duration = null;
-        $quizCopy->scheduled_at = null;
-        $quizCopy->save();
-
-        foreach ($this->questions as $question) {
-            $question->cloneTo($quizCopy);
-        }
-
-        return $quizCopy;
-    }
-
-    public function createUserQuiz(User $user): UserQuiz
-    {
-        $userQuiz = new UserQuiz();
-        $userQuiz->closed_at = $this->closeAt;
-        $userQuiz->quiz()->associate($this);
-        $userQuiz->user()->associate($user);
-        $userQuiz->save();
-
-        foreach ($this->questions as $question) {
-            $userQuestion = new UserQuestion();
-            $userQuestion->userQuiz()->associate($userQuiz);
-            $userQuestion->question()->associate($question);
-            $userQuestion->save();
-        }
-
-        return $userQuiz;
-    }
-
     public function isReadyToBePublished(): bool
     {
-        return $this->scheduled_at !== null && $this->duration !== null && $this->allQuestionsHaveCorrectAnswer();
+        return $this->scheduled_at !== null && $this->duration !== null && $this->questions->count() > 0 && $this->allQuestionsHaveCorrectAnswer();
     }
 
     public function hasUserQuizzesFrom(User $user): bool
     {
         return $this->userQuizzes->where("user_id", $user->id)->isNotEmpty();
+    }
+
+    public function isClosingToday(): bool
+    {
+        return $this->isLocked && $this->closeAt->isFuture() && $this->closeAt->isToday();
     }
 
     protected function allQuestionsHaveCorrectAnswer(): bool

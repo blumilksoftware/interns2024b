@@ -53,6 +53,6 @@ class UserQuestion extends Model
 
     public function isCorrect(): Attribute
     {
-        return Attribute::get(fn(): bool => $this->answer?->isCorrect ?? false);
+        return Attribute::get(fn(): bool => $this->answer->isCorrect ?? false);
     }
 }
