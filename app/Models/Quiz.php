@@ -21,12 +21,14 @@ use Illuminate\Support\Collection;
  * @property ?Carbon $scheduled_at
  * @property ?Carbon $ranking_published_at
  * @property ?Carbon $locked_at
+ * @property bool $is_local
  * @property ?int $duration
  * @property bool $isLocked
  * @property bool $isPublished
  * @property bool $canBeLocked
  * @property bool $canBeUnlocked
  * @property string $state
+ * @property ?string $description
  * @property bool $isRankingPublished
  * @property ?Carbon $closeAt
  * @property Collection<Question> $questions
@@ -43,6 +45,7 @@ class Quiz extends Model
         "scheduled_at",
         "duration",
         "ranking_published_at",
+        "description",
     ];
     protected $guarded = [];
 

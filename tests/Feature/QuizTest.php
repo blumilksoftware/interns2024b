@@ -432,7 +432,7 @@ class QuizTest extends TestCase
         $quiz->locked_at = null;
         $quiz->save();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->post("admin/quizzes/{$quiz->id}/lock")
             ->assertStatus(403);
@@ -453,7 +453,7 @@ class QuizTest extends TestCase
     {
         $quiz = Quiz::factory()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->post("/admin/quizzes/{$quiz->id}/unlock")
             ->assertStatus(403);
@@ -465,10 +465,35 @@ class QuizTest extends TestCase
             "scheduled_at" => Carbon::now()->subMinutes(60),
         ]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->post("/admin/quizzes/{$quiz->id}/unlock")
             ->assertStatus(403);
+    }
+
+    public function testAdminCanSetUnlockedQuizToLocalAndOnline(): void
+    {
+        $quiz = Quiz::factory()->create();
+
+        $this->actingAs($this->admin)
+            ->post("/admin/quizzes/{$quiz->id}/local")
+            ->assertRedirect("/")
+            ->assertSessionHas(["status" => "Zmiana quizu na stacjonarny"]);
+
+        $this->assertDatabaseHas("quizzes", [
+            "is_local" => true,
+            "id" => $quiz->id,
+        ]);
+
+        $this->actingAs($this->admin)
+            ->post("/admin/quizzes/{$quiz->id}/online")
+            ->assertRedirect("/")
+            ->assertSessionHas(["status" => "Zmiana quizu na online"]);
+
+        $this->assertDatabaseHas("quizzes", [
+            "is_local" => false,
+            "id" => $quiz->id,
+        ]);
     }
 
     public function testUserCanStartQuiz(): void

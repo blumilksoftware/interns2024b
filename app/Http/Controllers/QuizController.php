@@ -7,6 +7,8 @@ namespace App\Http\Controllers;
 use App\Actions\AssignToQuizAction;
 use App\Actions\CreateUserQuizAction;
 use App\Actions\LockQuizAction;
+use App\Actions\SetQuizLocalAction;
+use App\Actions\SetQuizOnlineAction;
 use App\Actions\UnlockQuizAction;
 use App\Helpers\SortHelper;
 use App\Http\Requests\QuizRequest;
@@ -107,6 +109,24 @@ class QuizController extends Controller
         return redirect()
             ->back()
             ->with("status", "Przypisano do testu");
+    }
+
+    public function makeLocal(SetQuizLocalAction $action, Quiz $quiz): RedirectResponse
+    {
+        $action->execute($quiz);
+
+        return redirect()
+            ->back()
+            ->with("status", "Zmiana quizu na stacjonarny");
+    }
+
+    public function makeOnline(SetQuizOnlineAction $action, Quiz $quiz): RedirectResponse
+    {
+        $action->execute($quiz);
+
+        return redirect()
+            ->back()
+            ->with("status", "Zmiana quizu na online");
     }
 
     private function filterArchivedQuizzes(Builder $query, Request $request): Builder

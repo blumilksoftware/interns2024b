@@ -44,6 +44,8 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::get("/quizzes", [QuizController::class, "index"])->name("admin.quizzes.index");
     Route::get("/quizzes/{quiz}", [QuizController::class, "show"])->name("admin.quizzes.demo");
     Route::post("/quizzes", [QuizController::class, "store"])->name("admin.quizzes.store");
+    Route::post("/quizzes/{quiz}/local", [QuizController::class, "makeLocal"])->can("update,quiz,update")->name("admin.quizzes.make.local");
+    Route::post("/quizzes/{quiz}/online", [QuizController::class, "makeOnline"])->can("update,quiz")->name("admin.quizzes.make.online");
     Route::patch("/quizzes/{quiz}", [QuizController::class, "update"])->can("update,quiz")->name("admin.quizzes.update");
     Route::delete("/quizzes/{quiz}", [QuizController::class, "destroy"])->can("delete,quiz")->name("admin.quizzes.destroy");
     Route::post("/quizzes/{quiz}/clone", [QuizController::class, "clone"])->name("admin.quizzes.clone");
