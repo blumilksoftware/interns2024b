@@ -22,6 +22,7 @@ use Illuminate\Support\Collection;
  * @property ?Carbon $ranking_published_at
  * @property ?Carbon $locked_at
  * @property ?int $duration
+ * @property bool $is_public
  * @property bool $isLocked
  * @property bool $isPublished
  * @property bool $canBeLocked
@@ -43,6 +44,7 @@ class Quiz extends Model
         "scheduled_at",
         "duration",
         "ranking_published_at",
+        "is_public",
     ];
     protected $guarded = [];
 

@@ -19,6 +19,10 @@ class QuizRequest extends FormRequest
         if ($this->has("scheduledAt")) {
             $this->merge(["scheduled_at" => $this->input("scheduledAt")]);
         }
+
+        if ($this->has("isPublic")) {
+            $this->merge(["is_public" => $this->input("isPublic")]);
+        }
     }
 
     /**
@@ -30,6 +34,7 @@ class QuizRequest extends FormRequest
             "title" => ["required", "string", "max:255"],
             "scheduled_at" => ["date", "after:now"],
             "duration" => ["numeric", "min:1", "max:2147483647"],
+            "is_public" => ["boolean"],
         ];
     }
 }

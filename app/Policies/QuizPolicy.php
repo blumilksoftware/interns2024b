@@ -27,7 +27,7 @@ class QuizPolicy
 
     public function submit(User $user, Quiz $quiz): bool
     {
-        return $quiz->isLocked;
+        return $quiz->isLocked && ($quiz->is_public || $quiz->assignedUsers()->where("user_id", $user->id)->exists());
     }
 
     public function lock(User $user, Quiz $quiz): bool
@@ -42,7 +42,7 @@ class QuizPolicy
 
     public function assign(User $user, Quiz $quiz): bool
     {
-        return $quiz->isLocked && !$quiz->isPublished && !$quiz->hasUserQuizzesFrom($user);
+        return $quiz->isLocked && !$quiz->isPublished && $quiz->is_public && !$quiz->hasUserQuizzesFrom($user);
     }
 
     public function viewAdminRanking(User $user, Quiz $quiz): Response

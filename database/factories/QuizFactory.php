@@ -17,6 +17,7 @@ class QuizFactory extends Factory
     {
         return [
             "title" => fake()->name(),
+            "is_public" => true,
             "duration" => fake()->numberBetween(60, 120),
         ];
     }
@@ -44,6 +45,13 @@ class QuizFactory extends Factory
             "scheduled_at" => Carbon::now()->subMinutes(30),
             "locked_at" => Carbon::now()->subMinutes(15),
             "ranking_published_at" => Carbon::now(),
+        ]);
+    }
+
+    public function private(): static
+    {
+        return $this->state(fn(array $attributes): array => [
+            "is_public" => false,
         ]);
     }
 }

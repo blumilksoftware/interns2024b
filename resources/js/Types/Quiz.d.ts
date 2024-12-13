@@ -9,6 +9,7 @@ interface Quiz {
   state:'published' | 'locked' | 'unlocked'
   isUserAssigned: boolean
   isRankingPublished: boolean
+  isPublic: boolean
   questions: Question[]
 }
 
