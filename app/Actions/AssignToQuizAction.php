@@ -11,12 +11,12 @@ use Illuminate\Support\Collection;
 class AssignToQuizAction
 {
     /**
-     * @param Collection<User> $users
+     * @param Collection<int> $userIds
      */
-    public function execute(Quiz $quiz, Collection $users): void
+    public function execute(Quiz $quiz, Collection $userIds): void
     {
-        $assignedUsers = $quiz->assignedUsers;
-        $users = User::query()->whereIn("id", $users)->get();
+        $assignedUsers = $quiz->assignedUsers()->get();
+        $users = User::query()->whereIn("id", $userIds)->get();
 
         $users = $users->filter(fn(User $user) => !$assignedUsers->contains($user));
         $quiz->assignedUsers()->attach($users);

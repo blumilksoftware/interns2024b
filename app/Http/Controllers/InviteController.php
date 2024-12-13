@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Actions\AssignToQuizAction;
-use App\Actions\UnassignToQuizAction;
+use App\Actions\UnassignFromQuizAction;
 use App\Helpers\SortHelper;
 use App\Http\Requests\InviteQuizRequest;
 use App\Http\Resources\UserResource;
@@ -49,7 +49,7 @@ class InviteController extends Controller
             ->with("status", "Użytkownicy zostali przypisani do testu.");
     }
 
-    public function unassign(Quiz $quiz, InviteQuizRequest $request, UnassignToQuizAction $unassignAction): RedirectResponse
+    public function unassign(Quiz $quiz, InviteQuizRequest $request, UnassignFromQuizAction $unassignAction): RedirectResponse
     {
         $this->authorize("invite", $quiz);
 

@@ -18,7 +18,7 @@ const questions = ref(props.userQuiz.questions)
 const emit = defineEmits<{ answer: [question: UserQuestion, selectedAnswer: number] }>()
 
 const allQuestionsAnswered = computed(
-  () => questions.value.every(question => question.selectedAnswer !== undefined),
+  () => questions.value.every(question => !!question.selectedAnswer ),
 )
 
 const timeout = ref(false)
@@ -52,7 +52,7 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
 
 <template>
   <Head :title="userQuiz.title" />
-  
+
   <Banner
     class="bg-white !text-primary border-b font-semibold"
     :message="timeLeft"
@@ -89,24 +89,24 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
 
     <div
       v-if="!timeout"
-      class="h-80 mx-5 flex flex-col gap-8 items-center justify-center"
+       class="h-80 mx-5 flex flex-col gap-8 items-center justify-center"
     >
       <p class="font-semibold text-primary text-xl text-center">
         To już wszystkie pytania. Czy chcesz oddać test?
       </p>
-      
+
       <FormButton
-        v-if="allQuestionsAnswered" 
+        v-if="allQuestionsAnswered"
         large
-        :href="requestCloseQuiz.href" 
+        :href="requestCloseQuiz.href"
         :method="requestCloseQuiz.method"
       >
         Oddaj test
       </FormButton>
-      
+
       <Button
         v-else
-        large 
+        large
         @click="emptyAnswerMessage = true"
       >
         Oddaj test
@@ -120,10 +120,10 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
       <p class="font-semibold text-primary text-xl text-center">
         Czas przewidziany na ten test dobiegł końca. <br> Twój test został przesłany do ocenienia
       </p>
-      
-      <FormButton 
+
+      <FormButton
         large
-        :href="requestCloseQuiz.href" 
+        :href="requestCloseQuiz.href"
         :method="requestCloseQuiz.method"
       >
         Podsumowanie
@@ -152,9 +152,9 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
         Wróć
       </Button>
 
-      <FormButton 
+      <FormButton
         small
-        :href="requestCloseQuiz.href" 
+        :href="requestCloseQuiz.href"
         :method="requestCloseQuiz.method"
       >
         Oddaj mimo to

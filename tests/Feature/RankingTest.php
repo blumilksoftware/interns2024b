@@ -17,7 +17,6 @@ class RankingTest extends TestCase
     use RefreshDatabase;
 
     protected User $user;
-    protected UserQuizSeeder $seeder;
     protected User $admin;
     protected Quiz $quiz;
     protected Quiz $unlockedQuiz;
@@ -26,14 +25,13 @@ class RankingTest extends TestCase
     {
         parent::setUp();
 
-        $this->seeder = new UserQuizSeeder();
-        $this->seeder->run();
+        $this->seed(UserQuizSeeder::class);
 
         $this->user = User::factory()->create();
         $this->admin = User::factory()->admin()->create();
 
-        $this->quiz = $this->seeder->quiz;
-        $this->seeder->createUserQuizForUser($this->user, 2);
+        $this->quiz = Quiz::query()->firstOrFail();
+        UserQuizSeeder::createUserQuizForUser($this->quiz, $this->user, 2);
 
         $this->unlockedQuiz = Quiz::factory()->create();
     }
@@ -51,7 +49,7 @@ class RankingTest extends TestCase
     public function testUserPointsAreCalculatedCorrectly(): void
     {
         $user2 = User::factory()->create();
-        $this->seeder->createUserQuizForUser($user2, 3);
+        UserQuizSeeder::createUserQuizForUser($this->quiz, $user2, 3);
 
         $userQuiz1 = UserQuiz::where("user_id", $this->user->id)
             ->where("quiz_id", $this->quiz->id)
