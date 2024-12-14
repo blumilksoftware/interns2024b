@@ -123,10 +123,10 @@ class Quiz extends Model
 
     public function isClosingToday(): bool
     {
-        return $this->isLocked && $this->closeAt->isFuture() && $this->closeAt->isToday();
+        return $this->isLocked && $this->closeAt !== null && $this->closeAt->isFuture() && $this->closeAt->isToday();
     }
 
-    protected function allQuestionsHaveCorrectAnswer(): bool
+    public function allQuestionsHaveCorrectAnswer(): bool
     {
         return $this->questions->every(fn(Question $question): bool => $question->hasCorrectAnswer);
     }

@@ -380,7 +380,9 @@ class QuizTest extends TestCase
 
     public function testAdminCanLockQuiz(): void
     {
-        $quiz = Quiz::factory()->has(Question::factory()->locked())->create(["scheduled_at" => Carbon::now(), "duration" => 30, "locked_at" => null]);
+        $quiz = Quiz::factory()
+            ->has(Question::factory()->locked())
+            ->create(["scheduled_at" => Carbon::now()->addDay(), "duration" => 30, "locked_at" => null]);
 
         $this->actingAs($this->admin)
             ->from("/")
@@ -429,6 +431,8 @@ class QuizTest extends TestCase
         $answer->question->save();
 
         $quiz = $answer->question->quiz;
+        $quiz->duration = 30;
+        $quiz->scheduled_at = Carbon::now()->addDay();
         $quiz->locked_at = null;
         $quiz->save();
 
