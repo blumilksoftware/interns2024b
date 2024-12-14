@@ -113,7 +113,12 @@ class Quiz extends Model
 
     public function isReadyToBePublished(): bool
     {
-        return $this->scheduled_at !== null && $this->duration !== null && $this->questions->count() > 0 && $this->allQuestionsHaveCorrectAnswer();
+        return $this->scheduled_at !== null && $this->duration !== null && $this->hasValidQuestionsForOnline();
+    }
+
+    protected function hasValidQuestionsForOnline(): bool
+    {
+        return $this->is_local || $this->questions->count() > 0 && $this->allQuestionsHaveCorrectAnswer();
     }
 
     public function hasUserQuizzesFrom(User $user): bool
@@ -126,7 +131,7 @@ class Quiz extends Model
         return $this->isLocked && $this->closeAt !== null && $this->closeAt->isFuture() && $this->closeAt->isToday();
     }
 
-    public function allQuestionsHaveCorrectAnswer(): bool
+    protected function allQuestionsHaveCorrectAnswer(): bool
     {
         return $this->questions->every(fn(Question $question): bool => $question->hasCorrectAnswer);
     }
