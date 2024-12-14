@@ -31,13 +31,14 @@ class UpdateQuizRequest extends FormRequest
             "title" => ["required", "string", "max:255"],
             "scheduled_at" => ["date", "after:now"],
             "duration" => ["integer", "min:1", "max:2147483647"],
+            "description" => ["string", "nullable"],
             "questions" => ["array"],
-            "questions.*.id" => "integer|min:0",
-            "questions.*.text" => "required|string",
-            "questions.*.answers" => "array",
-            "questions.*.answers.*.id" => "integer|min:0",
-            "questions.*.answers.*.text" => "nullable|string",
-            "questions.*.answers.*.correct" => "boolean",
+            "questions.*.id" => ["integer", "min:0"],
+            "questions.*.text" => ["required", "string"],
+            "questions.*.answers" => ["array"],
+            "questions.*.answers.*.id" => ["integer", "min:0"],
+            "questions.*.answers.*.text" => ["nullable", "string"],
+            "questions.*.answers.*.correct" => ["boolean"],
         ];
     }
 

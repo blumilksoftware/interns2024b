@@ -13,7 +13,7 @@ class QuizUpdateService
     {
         $quiz->fill($data);
 
-        if (array_key_exists("questions", $data)) {
+        if (array_key_exists("questions", $data) && !$quiz->is_local) {
             $questions = collect($data["questions"]);
             $quiz->questions()->whereNotIn("id", $questions->pluck("id")->whereNotNull())->delete();
 

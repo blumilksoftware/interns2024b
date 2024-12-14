@@ -46,4 +46,12 @@ class QuizFactory extends Factory
             "ranking_published_at" => Carbon::now(),
         ]);
     }
+
+    public function local(): static
+    {
+        return $this->state(fn(array $attributes): array => [
+            "is_local" => true,
+            "description" => fake()->text(100),
+        ]);
+    }
 }
