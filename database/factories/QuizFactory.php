@@ -54,4 +54,12 @@ class QuizFactory extends Factory
             "is_public" => false,
         ]);
     }
+
+    public function local(): static
+    {
+        return $this->state(fn(array $attributes): array => [
+            "is_local" => true,
+            "description" => fake()->text(100),
+        ]);
+    }
 }

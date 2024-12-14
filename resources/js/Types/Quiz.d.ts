@@ -7,6 +7,8 @@ interface Quiz {
   createdAt: string
   updatedAt: string
   state:'published' | 'locked' | 'unlocked'
+  isLocal: boolean
+  description?: string
   isUserAssigned: boolean
   isRankingPublished: boolean
   isPublic: boolean

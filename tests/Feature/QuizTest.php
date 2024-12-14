@@ -56,16 +56,44 @@ class QuizTest extends TestCase
             );
     }
 
+    public function testLocalQuizHasNoQuestionsVisible(): void
+    {
+        $quiz = Quiz::factory()->local()->create();
+        Question::factory()->count(5)->create(["quiz_id" => $quiz->id]);
+
+        $this->actingAs($this->admin)
+            ->get("/admin/quizzes")
+            ->assertInertia(
+                fn(Assert $page) => $page
+                    ->component("Admin/Quizzes")
+                    ->has("quizzes.data", 1)
+                    ->has("quizzes.data.0.questions", 0),
+            );
+
+        $quiz->is_local = false;
+        $quiz->save();
+
+        $this->actingAs($this->admin)
+            ->get("/admin/quizzes")
+            ->assertInertia(
+                fn(Assert $page) => $page
+                    ->component("Admin/Quizzes")
+                    ->has("quizzes.data", 1)
+                    ->has("quizzes.data.0.questions", 5),
+            );
+    }
+
     public function testAdminCanCreateQuiz(): void
     {
         $this->actingAs($this->admin)
             ->from("/")
-            ->post("/admin/quizzes", ["title" => "Example quiz", "scheduled_at" => "2024-02-10 11:40:00"])
+            ->post("/admin/quizzes", ["title" => "Example quiz", "description" => "test", "scheduled_at" => "2024-02-10 11:40:00"])
             ->assertRedirect("/");
 
         $this->assertDatabaseHas("quizzes", [
             "title" => "Example quiz",
             "scheduled_at" => "2024-02-10 11:40:00",
+            "description" => "test",
         ]);
     }
 
@@ -160,6 +188,7 @@ class QuizTest extends TestCase
             "scheduled_at" => "2024-08-28 15:00:00",
             "duration" => 120,
             "is_public" => true,
+            "description" => "test",
             "questions" => [
                 [
                     "id" => $question->id,
@@ -176,6 +205,7 @@ class QuizTest extends TestCase
         $this->assertDatabaseHas("quizzes", [
             "id" => $quiz->id,
             "title" => "Quiz Name",
+            "description" => "test",
             "scheduled_at" => "2024-08-28 15:00:00",
             "duration" => 120,
             "is_public" => true,
@@ -241,6 +271,26 @@ class QuizTest extends TestCase
                 [
                     "questions" => "Każde pytanie może mieć maksymalnie jedną poprawną odpowiedź."],
             );
+    }
+
+    public function testAdminCannotEditLocalQuizQuestions(): void
+    {
+        $quiz = Quiz::factory()->local()->has(Question::factory()->locked())->create(["title" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
+        $this->assertDatabaseCount("questions", 2);
+
+        $data = [
+            "title" => "Quiz Name",
+            "scheduled_at" => "2024-08-28 15:00:00",
+            "duration" => 120,
+            "questions" => [],
+        ];
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->patch("/admin/quizzes/{$quiz->id}", $data)
+            ->assertRedirect("/");
+
+        $this->assertDatabaseCount("questions", 2);
     }
 
     public function testAdminCannotEditQuizThatNotExisted(): void
@@ -382,7 +432,9 @@ class QuizTest extends TestCase
 
     public function testAdminCanLockQuiz(): void
     {
-        $quiz = Quiz::factory()->has(Question::factory()->locked())->create(["scheduled_at" => Carbon::now(), "duration" => 30, "locked_at" => null]);
+        $quiz = Quiz::factory()
+            ->has(Question::factory()->locked())
+            ->create(["scheduled_at" => Carbon::now()->addDay(), "duration" => 30, "locked_at" => null]);
 
         $this->actingAs($this->admin)
             ->from("/")
@@ -431,13 +483,35 @@ class QuizTest extends TestCase
         $answer->question->save();
 
         $quiz = $answer->question->quiz;
+        $quiz->duration = 30;
+        $quiz->scheduled_at = Carbon::now()->addDay();
         $quiz->locked_at = null;
         $quiz->save();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->post("admin/quizzes/{$quiz->id}/lock")
             ->assertStatus(403);
+    }
+
+    public function testAdminCanLockLocalQuizThatHasQuestionsWithoutCorrectAnswer(): void
+    {
+        $answer = Answer::factory()->locked()->create();
+        $answer->question->correct_answer_id = null;
+        $answer->question->save();
+
+        $quiz = $answer->question->quiz;
+        $quiz->duration = 30;
+        $quiz->scheduled_at = Carbon::now()->addDay();
+        $quiz->locked_at = null;
+        $quiz->is_local = true;
+        $quiz->save();
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->post("/admin/quizzes/{$quiz->id}/lock")
+            ->assertRedirect("/")
+            ->assertSessionHas(["status" => "Test oznaczony jako gotowy do publikacji"]);
     }
 
     public function testAdminCanUnlockQuiz(): void
@@ -455,7 +529,7 @@ class QuizTest extends TestCase
     {
         $quiz = Quiz::factory()->create();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->post("/admin/quizzes/{$quiz->id}/unlock")
             ->assertStatus(403);
@@ -467,10 +541,35 @@ class QuizTest extends TestCase
             "scheduled_at" => Carbon::now()->subMinutes(60),
         ]);
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->from("/")
             ->post("/admin/quizzes/{$quiz->id}/unlock")
             ->assertStatus(403);
+    }
+
+    public function testAdminCanSetUnlockedQuizToLocalAndOnline(): void
+    {
+        $quiz = Quiz::factory()->create();
+
+        $this->actingAs($this->admin)
+            ->post("/admin/quizzes/{$quiz->id}/local")
+            ->assertRedirect("/")
+            ->assertSessionHas(["status" => "Tryb testu został zmieniony na stacjonarny."]);
+
+        $this->assertDatabaseHas("quizzes", [
+            "is_local" => true,
+            "id" => $quiz->id,
+        ]);
+
+        $this->actingAs($this->admin)
+            ->post("/admin/quizzes/{$quiz->id}/online")
+            ->assertRedirect("/")
+            ->assertSessionHas(["status" => "Tryb testu został zmieniony na zdalny."]);
+
+        $this->assertDatabaseHas("quizzes", [
+            "is_local" => false,
+            "id" => $quiz->id,
+        ]);
     }
 
     public function testUserCanStartQuiz(): void
@@ -573,6 +672,18 @@ class QuizTest extends TestCase
             ->assertRedirect("/quizzes/{$userQuiz->id}/");
 
         $this->assertDatabaseCount("user_quizzes", 1);
+    }
+
+    public function testUserCannotStartLocalQuiz(): void
+    {
+        $quiz = Quiz::factory()->local()->locked()->create();
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->post("/quizzes/{$quiz->id}/start")
+            ->assertStatus(403);
+
+        $this->assertDatabaseCount("user_quizzes", 0);
     }
 
     public function testUserCannotStartUnlockedQuiz(): void

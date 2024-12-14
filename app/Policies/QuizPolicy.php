@@ -27,7 +27,7 @@ class QuizPolicy
 
     public function submit(User $user, Quiz $quiz): bool
     {
-        return $quiz->isLocked && ($quiz->is_public || $quiz->assignedUsers()->where("user_id", $user->id)->exists());
+        return $quiz->isLocked && !$quiz->is_local && ($quiz->is_public || $quiz->assignedUsers()->where("user_id", $user->id)->exists());
     }
 
     public function lock(User $user, Quiz $quiz): bool

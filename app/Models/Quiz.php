@@ -21,8 +21,10 @@ use Illuminate\Support\Collection;
  * @property ?Carbon $scheduled_at
  * @property ?Carbon $ranking_published_at
  * @property ?Carbon $locked_at
- * @property ?int $duration
+ * @property bool $is_local
  * @property bool $is_public
+ * @property ?int $duration
+ * @property ?string $description
  * @property bool $isLocked
  * @property bool $isPublished
  * @property bool $canBeLocked
@@ -44,6 +46,7 @@ class Quiz extends Model
         "scheduled_at",
         "duration",
         "ranking_published_at",
+        "description",
         "is_public",
     ];
     protected $guarded = [];
@@ -112,7 +115,7 @@ class Quiz extends Model
 
     public function isReadyToBePublished(): bool
     {
-        return $this->scheduled_at !== null && $this->duration !== null && $this->questions->count() > 0 && $this->allQuestionsHaveCorrectAnswer();
+        return $this->scheduled_at !== null && $this->duration !== null && $this->hasValidQuestionsForOnline();
     }
 
     public function hasUserQuizzesFrom(User $user): bool
@@ -122,7 +125,12 @@ class Quiz extends Model
 
     public function isClosingToday(): bool
     {
-        return $this->isLocked && $this->closeAt->isFuture() && $this->closeAt->isToday();
+        return $this->isLocked && $this->closeAt !== null && $this->closeAt->isFuture() && $this->closeAt->isToday();
+    }
+
+    protected function hasValidQuestionsForOnline(): bool
+    {
+        return $this->is_local || $this->questions->count() > 0 && $this->allQuestionsHaveCorrectAnswer();
     }
 
     protected function allQuestionsHaveCorrectAnswer(): bool
