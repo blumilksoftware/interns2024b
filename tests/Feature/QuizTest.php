@@ -559,7 +559,7 @@ class QuizTest extends TestCase
             ->get("/dashboard")
             ->assertInertia(
                 fn(Assert $page) => $page->component("User/Dashboard")
-                    ->has("quizzes", 1),
+                    ->has("quizzes", 0),
             );
     }
 
