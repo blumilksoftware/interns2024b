@@ -28,7 +28,7 @@ const quiz = defineModel<Quiz>({ required: true })
     >
       <InputWrapper
         label="Rozpoczęcie testu:"
-        :hide-content="false"
+        :hide-content="!quiz.scheduledAt && !editing"
         :error="errors.scheduled_at"
         :hide-error="!editing"
       >

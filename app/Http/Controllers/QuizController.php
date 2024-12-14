@@ -7,8 +7,6 @@ namespace App\Http\Controllers;
 use App\Actions\AssignToQuizAction;
 use App\Actions\CreateUserQuizAction;
 use App\Actions\LockQuizAction;
-use App\Actions\MakeQuizPrivateAction;
-use App\Actions\MakeQuizPublicAction;
 use App\Actions\UnlockQuizAction;
 use App\Helpers\SortHelper;
 use App\Http\Requests\QuizRequest;
@@ -93,24 +91,6 @@ class QuizController extends Controller
         return redirect()
             ->back()
             ->with("status", "Publikacja testu została wycofana");
-    }
-
-    public function makePublic(MakeQuizPublicAction $action, Quiz $quiz): RedirectResponse
-    {
-        $action->execute($quiz);
-
-        return redirect()
-            ->back()
-            ->with("status", "Test został udostępniony publicznie. Teraz każdy ma do niego dostęp.");
-    }
-
-    public function makePrivate(MakeQuizPrivateAction $action, Quiz $quiz): RedirectResponse
-    {
-        $action->execute($quiz);
-
-        return redirect()
-            ->back()
-            ->with("status", "Test został oznaczony jako prywatny. Dostęp mają tylko zaproszone osoby.");
     }
 
     public function createUserQuiz(CreateUserQuizAction $action, Request $request, Quiz $quiz): RedirectResponse
