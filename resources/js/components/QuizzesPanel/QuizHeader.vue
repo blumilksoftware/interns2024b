@@ -84,7 +84,7 @@ const quiz = defineModel<Quiz>({ required: true })
           after:transition-all
           "
         />
-        <b class="select-none" :class="{'pl-2 text-primary': editing, 'pl-1': !editing}">{{quiz.isPublic ? 'Dostępny dla wszystkich' : 'Dostępny tylko dla zaproszonych'}}</b>
+        <b class="select-none" :class="{'pl-2 text-primary': editing, 'pl-1': !editing}">{{ quiz.isPublic ? 'Dostępny dla wszystkich' : 'Dostępny tylko dla zaproszonych' }}</b>
       </label>
     </div>
   </div>
