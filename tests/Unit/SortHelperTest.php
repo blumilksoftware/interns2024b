@@ -5,34 +5,21 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use App\Helpers\SortHelper;
-use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Lang;
 use Mockery;
-use Mockery\MockInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tests\TestCase;
+use Throwable;
 
 class SortHelperTest extends TestCase
 {
-    private Container $originalContainer;
-
-    /** @var MockInterface<Container> */
-    private MockInterface $container;
-
-    protected function setUp(): void
-    {
-        $this->originalContainer = Container::getInstance();
-        $this->container = Mockery::mock(Container::class);
-        Container::setInstance($this->container);
-    }
-
     protected function tearDown(): void
     {
+        parent::tearDown();
         Mockery::close();
-        Container::setInstance($this->originalContainer);
     }
 
     public function testGetSortParametersReturnsDefaultValues(): void
@@ -97,18 +84,21 @@ class SortHelperTest extends TestCase
     public function testSortThrowsExceptionForUnsupportedField(): void
     {
         Lang::shouldReceive("get")
-            ->with("validation.custom.sorting.unsupported_field", ["attribute" => "invalid_field"]);
-
-        $this->container->shouldReceive("abort")->once()->andThrow(HttpException::class, 400);
-        $this->expectException(HttpException::class);
+            ->with("validation.custom.sorting.unsupported_field", ["attribute" => "invalid_field"])->once()->andReturn("unsupported_field");
 
         $request = Request::create("/?sort=invalid_field&order=asc", "GET");
         $builderMock = Mockery::mock(Builder::class);
 
         $helper = new SortHelper($request);
-        $result = $helper->sort($builderMock, ["name", "email"], []);
+        $error = null;
 
-        $this->assertSame($builderMock, $result);
+        try {
+            $helper->sort($builderMock, ["name", "email"], []);
+        } catch (Throwable $e) {
+            $error = $e;
+        }
+
+        $this->assertEquals(new HttpException(400, "unsupported_field"), $error);
     }
 
     public function testSearch(): void

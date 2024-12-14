@@ -13,6 +13,7 @@ class QuizResource extends JsonResource
         return [
             "id" => $this->id,
             "title" => $this->title,
+            "description" => $this->description,
             "createdAt" => $this->created_at,
             "updatedAt" => $this->updated_at,
             "scheduledAt" => $this->scheduled_at,
@@ -20,9 +21,10 @@ class QuizResource extends JsonResource
             "state" => $this->state,
             "canBeLocked" => $this->canBeLocked,
             "canBeUnlocked" => $this->canBeUnlocked,
-            "questions" => QuestionResource::collection($this->questions),
+            "questions" => $this->is_local ? [] : QuestionResource::collection($this->questions),
             "isUserAssigned" => $this->isUserAssigned($request->user()),
             "isRankingPublished" => $this->isRankingPublished,
+            "isLocal" => $this->is_local,
         ];
     }
 }

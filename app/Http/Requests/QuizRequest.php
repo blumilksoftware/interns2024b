@@ -30,6 +30,7 @@ class QuizRequest extends FormRequest
             "title" => ["required", "string", "max:255"],
             "scheduled_at" => ["date", "after:now"],
             "duration" => ["numeric", "min:1", "max:2147483647"],
+            "description" => ["string", "nullable"],
         ];
     }
 }

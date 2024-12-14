@@ -27,7 +27,7 @@ class QuizPolicy
 
     public function submit(User $user, Quiz $quiz): bool
     {
-        return $quiz->isLocked;
+        return $quiz->isLocked && !$quiz->is_local;
     }
 
     public function lock(User $user, Quiz $quiz): bool

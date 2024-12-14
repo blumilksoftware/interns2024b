@@ -128,6 +128,15 @@ class QuizModelTest extends TestCase
         $this->assertFalse($quiz4->isReadyToBePublished());
     }
 
+    public function testLocalQuizIsReadyToBePublishedWithOrWithoutQuestions(): void
+    {
+        $quiz1 = Quiz::factory()->local()->has(Question::factory()->locked())->create(["scheduled_at" => Carbon::now()->addHour(), "duration" => 30]);
+        $quiz2 = Quiz::factory()->local()->create(["scheduled_at" => Carbon::now()->addHour(), "duration" => 30]);
+
+        $this->assertTrue($quiz1->isReadyToBePublished());
+        $this->assertTrue($quiz2->isReadyToBePublished());
+    }
+
     public function testHasUserQuizzesFrom(): void
     {
         $user1 = User::factory()->create();
