@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\ForceChangePasswordAction;
 use App\Helpers\SortHelper;
 use App\Http\Requests\AdminRequest;
 use App\Http\Requests\Auth\RegisterAdminRequest;
@@ -32,7 +33,7 @@ class AdminController extends Controller
         ]);
     }
 
-    public function store(RegisterAdminRequest $request): RedirectResponse
+    public function store(RegisterAdminRequest $request, ForceChangePasswordAction $action): RedirectResponse
     {
         $school = School::query()->where(["is_admin_school" => true])->firstOrFail();
         $userExists = User::query()->where("email", $request->email)->exists();
@@ -44,6 +45,8 @@ class AdminController extends Controller
             $user->save();
             $user->syncRoles("admin");
             event(new Registered($user));
+            $action->execute($user);
+
         }
 
         return redirect()
