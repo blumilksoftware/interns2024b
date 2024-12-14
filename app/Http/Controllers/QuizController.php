@@ -117,7 +117,7 @@ class QuizController extends Controller
 
         return redirect()
             ->back()
-            ->with("status", "Zmiana quizu na stacjonarny");
+            ->with("status", "Tryb testu został zmieniony na stacjonarny.");
     }
 
     public function makeOnline(SetQuizOnlineAction $action, Quiz $quiz): RedirectResponse
@@ -126,7 +126,7 @@ class QuizController extends Controller
 
         return redirect()
             ->back()
-            ->with("status", "Zmiana quizu na online");
+            ->with("status", "Tryb testu został zmieniony na zdalny.");
     }
 
     private function filterArchivedQuizzes(Builder $query, Request $request): Builder
