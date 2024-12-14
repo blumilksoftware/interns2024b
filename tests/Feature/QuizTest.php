@@ -552,7 +552,7 @@ class QuizTest extends TestCase
         $this->actingAs($this->admin)
             ->post("/admin/quizzes/{$quiz->id}/local")
             ->assertRedirect("/")
-            ->assertSessionHas(["status" => "Zmiana quizu na stacjonarny"]);
+            ->assertSessionHas(["status" => "Tryb testu został zmieniony na stacjonarny."]);
 
         $this->assertDatabaseHas("quizzes", [
             "is_local" => true,
@@ -562,7 +562,7 @@ class QuizTest extends TestCase
         $this->actingAs($this->admin)
             ->post("/admin/quizzes/{$quiz->id}/online")
             ->assertRedirect("/")
-            ->assertSessionHas(["status" => "Zmiana quizu na online"]);
+            ->assertSessionHas(["status" => "Tryb testu został zmieniony na zdalny."]);
 
         $this->assertDatabaseHas("quizzes", [
             "is_local" => false,
