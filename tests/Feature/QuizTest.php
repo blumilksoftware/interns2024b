@@ -60,12 +60,13 @@ class QuizTest extends TestCase
     {
         $this->actingAs($this->admin)
             ->from("/")
-            ->post("/admin/quizzes", ["title" => "Example quiz", "scheduled_at" => "2024-02-10 11:40:00"])
+            ->post("/admin/quizzes", ["title" => "Example quiz", "description" => "test", "scheduled_at" => "2024-02-10 11:40:00"])
             ->assertRedirect("/");
 
         $this->assertDatabaseHas("quizzes", [
             "title" => "Example quiz",
             "scheduled_at" => "2024-02-10 11:40:00",
+            "description" => "test",
         ]);
     }
 
@@ -159,6 +160,7 @@ class QuizTest extends TestCase
             "title" => "Quiz Name",
             "scheduled_at" => "2024-08-28 15:00:00",
             "duration" => 120,
+            "description" => "test",
             "questions" => [
                 [
                     "id" => $question->id,
@@ -175,6 +177,7 @@ class QuizTest extends TestCase
         $this->assertDatabaseHas("quizzes", [
             "id" => $quiz->id,
             "title" => "Quiz Name",
+            "description" => "test",
             "scheduled_at" => "2024-08-28 15:00:00",
             "duration" => 120,
         ]);
@@ -239,6 +242,26 @@ class QuizTest extends TestCase
                 [
                     "questions" => "Każde pytanie może mieć maksymalnie jedną poprawną odpowiedź."],
             );
+    }
+
+    public function testAdminCannotEditLocalQuizQuestions(): void
+    {
+        $quiz = Quiz::factory()->local()->has(Question::factory()->locked())->create(["title" => "Old quiz", "scheduled_at" => "2024-02-10 11:40:00"]);
+        $this->assertDatabaseCount("questions", 2);
+
+        $data = [
+            "title" => "Quiz Name",
+            "scheduled_at" => "2024-08-28 15:00:00",
+            "duration" => 120,
+            "questions" => [],
+        ];
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->patch("/admin/quizzes/{$quiz->id}", $data)
+            ->assertRedirect("/");
+
+        $this->assertDatabaseCount("questions", 2);
     }
 
     public function testAdminCannotEditQuizThatNotExisted(): void
@@ -442,6 +465,26 @@ class QuizTest extends TestCase
             ->assertStatus(403);
     }
 
+    public function testAdminCanLockLocalQuizThatHasQuestionsWithoutCorrectAnswer(): void
+    {
+        $answer = Answer::factory()->locked()->create();
+        $answer->question->correct_answer_id = null;
+        $answer->question->save();
+
+        $quiz = $answer->question->quiz;
+        $quiz->duration = 30;
+        $quiz->scheduled_at = Carbon::now()->addDay();
+        $quiz->locked_at = null;
+        $quiz->is_local = true;
+        $quiz->save();
+
+        $this->actingAs($this->admin)
+            ->from("/")
+            ->post("/admin/quizzes/{$quiz->id}/lock")
+            ->assertRedirect("/")
+            ->assertSessionHas(["status" => "Test oznaczony jako gotowy do publikacji"]);
+    }
+
     public function testAdminCanUnlockQuiz(): void
     {
         $quiz = Quiz::factory()->locked()->create();
@@ -526,6 +569,18 @@ class QuizTest extends TestCase
             ->assertRedirect("/quizzes/{$userQuiz->id}/");
 
         $this->assertDatabaseCount("user_quizzes", 1);
+    }
+
+    public function testUserCannotStartLocalQuiz(): void
+    {
+        $quiz = Quiz::factory()->local()->locked()->create();
+
+        $this->actingAs($this->user)
+            ->from("/")
+            ->post("/quizzes/{$quiz->id}/start")
+            ->assertStatus(403);
+
+        $this->assertDatabaseCount("user_quizzes", 0);
     }
 
     public function testUserCannotStartUnlockedQuiz(): void

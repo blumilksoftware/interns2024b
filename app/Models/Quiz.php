@@ -116,11 +116,6 @@ class Quiz extends Model
         return $this->scheduled_at !== null && $this->duration !== null && $this->hasValidQuestionsForOnline();
     }
 
-    protected function hasValidQuestionsForOnline(): bool
-    {
-        return $this->is_local || $this->questions->count() > 0 && $this->allQuestionsHaveCorrectAnswer();
-    }
-
     public function hasUserQuizzesFrom(User $user): bool
     {
         return $this->userQuizzes->where("user_id", $user->id)->isNotEmpty();
@@ -129,6 +124,11 @@ class Quiz extends Model
     public function isClosingToday(): bool
     {
         return $this->isLocked && $this->closeAt !== null && $this->closeAt->isFuture() && $this->closeAt->isToday();
+    }
+
+    protected function hasValidQuestionsForOnline(): bool
+    {
+        return $this->is_local || $this->questions->count() > 0 && $this->allQuestionsHaveCorrectAnswer();
     }
 
     protected function allQuestionsHaveCorrectAnswer(): bool
