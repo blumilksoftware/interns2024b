@@ -6,6 +6,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class AuthenticateSessionTest extends TestCase
@@ -14,13 +15,42 @@ class AuthenticateSessionTest extends TestCase
 
     public function testUserCanLogin(): void
     {
-        $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
+        User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
 
         $this->post("/auth/login", [
             "email" => "test@example.com",
             "password" => "goodPassword",
-        ])
-            ->assertRedirect("/");
+        ])->assertRedirect("/");
+    }
+
+    public function testRememberCookieIsCreatedWhenUserLoginWithRememberMeOn(): void
+    {
+        $user = User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
+
+        $response = $this->post("/auth/login", [
+            "email" => "test@example.com",
+            "password" => "goodPassword",
+            "remember" => true,
+        ]);
+
+        $response->assertCookie(Auth::guard()->getRecallerName(), vsprintf("%s|%s|%s", [
+            $user->id,
+            $user->getRememberToken(),
+            $user->password,
+        ]));
+    }
+
+    public function testRememberCookieIsNotCreatedWhenUserLoginWithRememberMeOff(): void
+    {
+        User::factory()->create(["email" => "test@example.com", "password" => "goodPassword"]);
+
+        $response = $this->post("/auth/login", [
+            "email" => "test@example.com",
+            "password" => "goodPassword",
+            "remember" => false,
+        ]);
+
+        $response->assertCookieMissing(Auth::guard()->getRecallerName());
     }
 
     public function testUserCanNotLoginWithWrongPassword(): void
