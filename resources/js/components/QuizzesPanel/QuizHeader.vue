@@ -42,17 +42,50 @@ const quiz = defineModel<Quiz>({ required: true })
       </InputWrapper>
     </div>
 
+    <CrudInput
+      v-model="quiz.duration"
+      :hide-content="!quiz.duration && !editing"
+      name="duration"
+      label="Czas trwania testu (min):"
+      :error="errors.duration"
+      :editing="editing"
+      class="min-h-6.5 duration-200"
+      :class="{ 'text-sm text-gray-600' : !editing }"
+    />
+
     <div
-      class="flex gap-1 duration-200 min-h-6.5"
+      class="flex items-center duration-200 min-h-6.5"
       :class="{ 'text-sm text-gray-600' : !selected }"
     >
-      <CrudInput
-        v-model="quiz.duration"
-        name="duration"
-        label="Czas trwania testu (min):"
-        :error="errors.duration"
-        :editing="editing"
-      />
+      <p>Widoczność: </p>
+      <label
+        class="inline-flex items-center cursor-pointer border-b border-transparent bg-transparent focus:border-b-primary"
+        :class="{'pl-2 border-b-primary/30 hover:border-b-primary/60 text-primary text-center duration-200 transition-colors': editing}"
+      >
+        <input v-if="editing" type="checkbox" class="sr-only peer" :checked="quiz.isPublic" @click="(event: any) => quiz.isPublic = event.currentTarget.checked">
+        <div v-if="editing" class="
+          relative
+          w-7
+          h-4
+          bg-primary
+          peer-focus:outline-none
+          peer-focus:ring-2
+          rounded-full
+
+          after:bg-white
+          after:content-['']
+          after:start-0.5
+          after:absolute after:top-0.5
+          after:border
+          after:rounded-full
+          after:size-3
+          peer-checked:after:translate-x-full
+          rtl:peer-checked:after:-translate-x-full
+          after:transition-all
+          "
+        />
+        <b class="select-none" :class="{'pl-2 text-primary': editing, 'pl-1': !editing}">{{ quiz.isPublic ? 'Dostępny dla wszystkich' : 'Dostępny tylko dla zaproszonych' }}</b>
+      </label>
     </div>
   </div>
 </template>
