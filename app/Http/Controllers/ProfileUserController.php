@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\ProfileUserPasswordResetRequest;
 use App\Http\Resources\UserResource;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,6 +34,8 @@ class ProfileUserController extends Controller
         $user = $request->user();
         $user->password = $hasher->make($validated["password"]);
         $user->save();
+
+        event(new PasswordReset($user));
 
         return redirect()->back()
             ->with("status", "Zaktualizowano hasło");

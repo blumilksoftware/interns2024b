@@ -42,6 +42,6 @@ class QuizQuestionController extends Controller
 
         return redirect()
             ->back()
-            ->with("success", "Pytanie zostało skopiowane");
+            ->with("status", "Pytanie zostało skopiowane");
     }
 }
