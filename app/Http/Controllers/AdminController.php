@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\CreateAdminAction;
 use App\Actions\ForceChangePasswordAction;
 use App\Helpers\SortHelper;
 use App\Http\Requests\AdminRequest;
 use App\Http\Requests\Auth\RegisterAdminRequest;
 use App\Http\Resources\UserResource;
-use App\Models\School;
 use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
@@ -33,25 +32,14 @@ class AdminController extends Controller
         ]);
     }
 
-    public function store(RegisterAdminRequest $request, ForceChangePasswordAction $action): RedirectResponse
+    public function store(RegisterAdminRequest $request, ForceChangePasswordAction $forceChangePasswordAction, CreateAdminAction $createAdminAction): RedirectResponse
     {
-        $school = School::query()->where(["is_admin_school" => true])->firstOrFail();
-        $userExists = User::query()->where("email", $request->email)->exists();
-
-        if (!$userExists) {
-            $user = new User($request->validated());
-            $user->password = Hash::make($request->password);
-            $user->school()->associate($school);
-            $user->save();
-            $user->syncRoles("admin");
-            event(new Registered($user));
-            $action->execute($user);
-
-        }
+        $user = $createAdminAction->execute($request->validated());
+        $forceChangePasswordAction->execute($user);
 
         return redirect()
             ->route("admin.admins.index")
-            ->with("success", "Administrator został utworzony pomyślnie.");
+            ->with("status", "Administrator został utworzony pomyślnie.");
     }
 
     public function update(AdminRequest $request, User $user): RedirectResponse
@@ -72,7 +60,7 @@ class AdminController extends Controller
 
         return redirect()
             ->route("admin.admins.index")
-            ->with("success", "Administrator zaktualizowany pomyślnie.");
+            ->with("status", "Administrator zaktualizowany pomyślnie.");
     }
 
     public function destroy(User $user): RedirectResponse

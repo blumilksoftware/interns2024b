@@ -176,4 +176,25 @@ class ResetPasswordTest extends TestCase
             ->patch(route("profile.password.update"))
             ->assertRedirect("/auth/login");
     }
+
+    public function testChangingPasswordResetForcePasswordChange(): void
+    {
+        $user = User::factory()->create([
+            "password" => Hash::make("current-password"),
+            "force_password_change" => true,
+        ]);
+
+        $this->actingAs($user)
+            ->from("/profile")
+            ->patch(route("profile.password.update"), [
+                "current_password" => "current-password",
+                "password" => "new-password",
+                "password_confirmation" => "new-password",
+            ]);
+
+        $this->assertDatabaseHas("users", [
+            "id" => $user->id,
+            "force_password_change" => false,
+        ]);
+    }
 }
