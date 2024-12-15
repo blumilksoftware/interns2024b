@@ -19,6 +19,7 @@ class QuizResource extends JsonResource
             "scheduledAt" => $this->scheduled_at,
             "duration" => $this->duration,
             "state" => $this->state,
+            "isPublic" => $this->is_public,
             "canBeLocked" => $this->canBeLocked,
             "canBeUnlocked" => $this->canBeUnlocked,
             "questions" => $this->is_local ? [] : QuestionResource::collection($this->questions),

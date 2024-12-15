@@ -39,8 +39,12 @@ class ContestController extends Controller
             ->with(["userQuestions.question.answers", "quiz"])
             ->get();
 
+        $assignedQuizzes = $user->assignedQuizzes->pluck("id");
+
         $quizzes = Quiz::query()
             ->whereNotNull("locked_at")
+            ->where("is_public", true)
+            ->orWhereIn("id", $assignedQuizzes)
             ->with("questions.answers")
             ->get();
 
