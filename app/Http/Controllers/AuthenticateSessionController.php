@@ -17,8 +17,9 @@ class AuthenticateSessionController extends Controller
     public function authenticate(AuthenticateSessionRequest $request): RedirectResponse
     {
         $credentials = $request->only("email", "password");
+        $remember = $request->input("remember", false);
 
-        if (auth()->attempt($credentials)) {
+        if (auth()->attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
             return redirect()->route("home");
