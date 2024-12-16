@@ -18,7 +18,7 @@ const questions = ref(props.userQuiz.questions)
 const emit = defineEmits<{ answer: [question: UserQuestion, selectedAnswer: number] }>()
 
 const allQuestionsAnswered = computed(
-  () => questions.value.every(question => !!question.selectedAnswer ),
+  () => questions.value.every(question => !!question.selectedAnswer),
 )
 
 const timeout = ref(false)
@@ -89,7 +89,7 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
 
     <div
       v-if="!timeout"
-       class="h-80 mx-5 flex flex-col gap-8 items-center justify-center"
+      class="h-80 mx-5 flex flex-col gap-8 items-center justify-center"
     >
       <p class="font-semibold text-primary text-xl text-center">
         To już wszystkie pytania. Czy chcesz oddać test?
