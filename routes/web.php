@@ -19,6 +19,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserQuestionController;
 use App\Http\Controllers\UserQuizController;
 use App\Http\Middleware\EnsureQuizIsNotAlreadyStarted;
+use App\Http\Middleware\EnsureUserPasswordWasChanged;
 use App\Models\Answer;
 use App\Models\Question;
 use Illuminate\Support\Facades\Route;
@@ -41,7 +42,7 @@ Route::middleware(["guest"])->group(function (): void {
 Route::get("/auth/password/reset/{token}", [PasswordResetLinkController::class, "resetCreate"])->name("password.reset");
 Route::post("/auth/password/reset", [PasswordResetLinkController::class, "resetStore"])->name("password.update");
 
-Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_admin"]], function (): void {
+Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_admin", EnsureUserPasswordWasChanged::class]], function (): void {
     Route::get("/quizzes", [QuizController::class, "index"])->name("admin.quizzes.index");
     Route::get("/quizzes/{quiz}", [QuizController::class, "show"])->name("admin.quizzes.demo");
     Route::post("/quizzes", [QuizController::class, "store"])->name("admin.quizzes.store");
@@ -95,7 +96,7 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     });
 });
 
-Route::middleware(["auth", "verified"])->group(function (): void {
+Route::middleware(["auth", "verified", EnsureUserPasswordWasChanged::class])->group(function (): void {
     Route::post("/quizzes/{quiz}/assign", [QuizController::class, "assign"])->can("assign,quiz")->name("quizzes.assign");
     Route::post("/quizzes/{quiz}/start", [QuizController::class, "createUserQuiz"])->middleware(EnsureQuizIsNotAlreadyStarted::class)->can("submit,quiz")->name("quizzes.start");
     Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "indexUser"])->can("viewUserRanking,quiz")->name("quizzes.ranking");
@@ -104,6 +105,6 @@ Route::middleware(["auth", "verified"])->group(function (): void {
     Route::get("/quizzes/{userQuiz}/result", [UserQuizController::class, "result"])->can("result,userQuiz")->name("userQuizzes.result");
     Route::patch("/questions/{userQuestion}/{answer}", [UserQuestionController::class, "answer"])->can("answer,userQuestion,answer")->name("questions.answer");
     Route::get("/dashboard", [ContestController::class, "create"])->name("dashboard");
-    Route::get("/profile", [ProfileUserController::class, "create"])->name("profile");
-    Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update");
+    Route::get("/profile", [ProfileUserController::class, "create"])->name("profile")->withoutMiddleware(EnsureUserPasswordWasChanged::class);
+    Route::patch("/profile/password", [ProfileUserController::class, "update"])->name("profile.password.update")->withoutMiddleware(EnsureUserPasswordWasChanged::class);
 });

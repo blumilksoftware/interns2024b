@@ -12,6 +12,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -30,6 +31,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon $updated_at
  * @property School $school
  * @property boolean $is_anonymized
+ * @property boolean $force_password_change
  * @property Collection<UserQuiz> $userQuizzes
  * @property Collection<Quiz> $assignedQuizzes
  */
@@ -45,6 +47,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         "email",
         "school_id",
         "is_anonymized",
+        "force_password_change",
     ];
     protected $hidden = [
         "remember_token",
@@ -70,7 +73,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         return $this->hasMany(UserQuiz::class);
     }
 
-    public function assignedQuizzes()
+    public function assignedQuizzes(): BelongsToMany
     {
         return $this->belongsToMany(Quiz::class, "quiz_assignments");
     }

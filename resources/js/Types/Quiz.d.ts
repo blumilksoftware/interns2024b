@@ -11,6 +11,7 @@ interface Quiz {
   description?: string
   isUserAssigned: boolean
   isRankingPublished: boolean
+  isPublic: boolean
   questions: Question[]
 }
 

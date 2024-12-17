@@ -15,6 +15,7 @@ return new class() extends Migration {
             $table->timestamp("locked_at")->nullable();
             $table->string("title");
             $table->text("description")->nullable();
+            $table->boolean("is_public")->default(false);
         });
     }
 
