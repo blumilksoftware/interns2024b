@@ -27,9 +27,9 @@ Route::get("/email/verify", [EmailVerifyController::class, "create"])->name("ver
 Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["auth", "throttle:6,1"])->name("verification.verify");
 Route::post("/email/verification-notification", [EmailVerifyController::class, "send"])->middleware("throttle:3,60")->name("verification.send");
 Route::post("/auth/logout", [AuthenticateSessionController::class, "logout"])->middleware("auth")->name("logout");
+Route::get("/schools/search", [SchoolsController::class, "search"])->name("schools.search");
 
 Route::middleware(["guest"])->group(function (): void {
-    Route::get("/schools/search", [SchoolsController::class, "search"])->name("schools.search");
     Route::get("/", [ContestController::class, "index"])->name("home");
     Route::post("/auth/register", [RegisterUserController::class, "store"])->name("register");
     Route::get("/auth/login", fn() => redirect("/"))->name("login");
@@ -79,7 +79,6 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::delete("/schools/{school}", [SchoolsController::class, "destroy"])->name("admin.schools.destroy")->can("delete,school");
     Route::post("/schools/{school}/disable", [SchoolsController::class, "disable"])->name("admin.schools.disable")->can("disable,school");
     Route::post("/schools/{school}/enable", [SchoolsController::class, "enable"])->name("admin.schools.enable")->can("enable,school");
-    Route::get("/schools/search", [SchoolsController::class, "search"])->name("admin.schools.search");
 
     Route::post("/schools/fetch", [SchoolsController::class, "fetch"])->name("admin.schools.fetch");
     Route::get("/schools/status", [SchoolsController::class, "status"])->name("admin.schools.status");

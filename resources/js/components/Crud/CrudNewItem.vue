@@ -69,10 +69,7 @@ const { processing, errors } = useRequestResolution()
           :data="{ ...item as RequestPayload }"
           @success="emit('done')"
         >
-          <CheckIcon
-            class="icon"
-            title="Zapisz"
-          />
+          <CheckIcon class="icon" />
         </RequestWrapper>
       </div>
     </div>

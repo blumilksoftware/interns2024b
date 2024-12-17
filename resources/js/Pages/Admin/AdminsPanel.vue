@@ -81,6 +81,7 @@ const sortOptions: SortOption[] = [
         <label
           v-if="editing"
           for="surname"
+          class="ml-2"
         >
           Nazwisko:
         </label>
@@ -117,27 +118,25 @@ const sortOptions: SortOption[] = [
     </template>
 
     <template #itemData="data">
-      <div
-        class="flex flex-col duration-200 min-h-6.5 gap-2 pt-2"
-        :class="{'text-sm text-gray-600': !data.editing}"
-      >
-        <CrudInput
-          v-model="data.item.email"
-          name="email"
-          label="E-mail:"
-          :error="data.errors.email"
-          :editing="data.editing"
-        />
+      <CrudInput
+        v-model="data.item.email"
+        name="email"
+        label="E-mail:"
+        :error="data.errors.email"
+        :editing="data.editing"
+      />
 
+      <Transition>
         <CrudInput
+          v-show="data.editing"
           v-model="data.item.password"
-          name="password"
+          name="pass"
           label="Hasło:"
-          password
+          type="password"
           :error="data.errors.password"
           :editing="data.editing"
         />
-      </div>
+      </Transition>
     </template>
   </CrudPage>
 </template>

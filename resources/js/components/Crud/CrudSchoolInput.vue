@@ -1,118 +1,108 @@
 <script lang="ts" setup>
-import { ref, defineProps, computed } from 'vue'
-import { onClickOutside } from '@vueuse/core'
+import { computed, ref, watch } from 'vue'
+import CrudInput from '@/components/Crud/CrudInput.vue'
+import { nanoid } from 'nanoid'
+import { useDebounceFn } from '@vueuse/core'
+import List from '@/components/Common/List.vue'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
-import { type Errors } from '@inertiajs/core'
-
-const target = ref()
-onClickOutside(target, () => isFocused.value = false)
-
-const isFocused = ref(false)
-const searchQuery = ref('')
+import vClickOutside from '@/Helpers/vClickOutside'
 
 const props = defineProps<{
-  value?: number
-  errors: Errors
   editing: boolean
-  schools: School[]
+  school?: School
+  schools: Pagination<School>
+  error?: string
+  isFetching: boolean
+  noFetchText?: string
 }>()
+const emit = defineEmits<{ change: [option:School], requestData: [search?: string] }>()
 
-const emit = defineEmits<{ change: [value: number] }>()
-const selected = ref<School | undefined>(props.schools.find(({ id }) => id === props.value))
+const value = computed(() => `${props.school?.city} - ${props.school?.name}`)
+const searchQuery = ref('')
 
-const searchResult = computed(() => props.schools.filter(school => !school.isDisabled && (
-  school.city.toLowerCase().includes(searchQuery.value) ||
-      school.name?.toLowerCase().includes(searchQuery.value)
-)))
+const isDebouncing = ref(false)
+const isFocused = ref(false)
 
-function onOptionClick(option: School) {
-  selected.value = option
+const options = computed(() => props.schools.data.map(schoolToSchoolOption).filter(
+  option => option.text.toLocaleUpperCase().includes(searchQuery.value.toLocaleUpperCase()) ||
+      option.title?.toLocaleUpperCase().includes(searchQuery.value.toLocaleUpperCase()),
+))
+
+const debouncedRequest = useDebounceFn(
+  () => {
+    emit('requestData', searchQuery.value.toLocaleUpperCase())
+    isDebouncing.value = false
+  }, 
+  500,
+)
+
+function handleInput(value: string) {
+  searchQuery.value = value
+  isDebouncing.value = true
+  debouncedRequest()
+}
+
+watch(
+  () => isFocused.value ? '' : value.value ?? '', 
+  search => searchQuery.value = search,
+)
+
+
+function onOptionClick(school: School) {
   isFocused.value = false
-  emit('change', option.id)
+  emit('change', school)
+}
+
+function schoolToSchoolOption(school: School): School & Option {
+  return {
+    ...school,
+    key: nanoid(), 
+    title: school.city,
+    text: school.name, 
+  }
 }
 </script>
 
 <template>
-  <div
-    ref="target"
-    class="placeholder:text-gray-400"
+  <CrudInput
+    v-model="value"
+    v-click-outside="()=>isFocused=false"
+    label="Szkoła:"
+    :editing
   >
-    <div class="max-h-12 flex flex-col">
-      <div class="flex h-inherit">
-        <label
-          for="school_id"
-          class="pr-1"
-        >
-          Szkoła:
-        </label>
-
-        <input
-          id="school_id"
-          v-dynamic-input-width
-          autocomplete="off"
-          name="school_id"
-          type="text"
-          required
-          :value="isFocused ? searchQuery : selected ? `${selected?.city} - ${selected?.name}` : ''"
-          class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
-          :class="{
-            'border-b-primary/30 hover:border-b-primary/60 text-primary duration-200 transition-colors' : editing,
-            'border-b-red' : !!errors.school_id,
-            'cursor-pointer' : !isFocused && editing
-          }"
-          :disabled="!editing"
-          :placeholder="selected ? `${selected?.city} - ${selected?.name}` : ''"
-          @input="(e:any)=>searchQuery=e.currentTarget.value"
-          @focus="isFocused=true"
-        >
-      </div>
-
-      <span
-        v-if="editing && errors.school_id"
-        :title="errors.school_id "
-        class="text-red text-sm truncate"
+    <div class="flex flex-col">
+      <input
+        v-dynamic-input-width
+        :value="searchQuery"
+        autocomplete="off"
+        name="school"
+        type="text"
+        class="text-md transition-colors h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
+        :class="{
+          'border-b-primary/30 hover:border-b-primary/60 text-primary duration-200 transition-colors' : editing,
+          'border-b-red' : !!error,
+          'cursor-pointer' : !isFocused && editing
+        }"
+        :disabled="!editing"
+        :placeholder="value"
+        @input="(e:any)=>handleInput(e.currentTarget.value)"
+        @focus="isFocused=true"
       >
-        {{ errors.school_id }}
-      </span>
-    </div>
 
-    <div
-      class=" max-h-12 flex flex-col duration-200"
-      :class="{'scale-y-100 max-h-80': isFocused }"
-    >
       <Transition>
-        <div
-          v-if="editing"
-          v-show="isFocused"
-          class="m-0.5 -mt-px py-2 overflow-auto border rounded-lg border-primary/60"
-        >
-          <div v-if="searchResult.length > 0">
-            <div
-              v-for="school in searchResult"
-              :key="school.id"
-              class="cursor-pointer block px-4 py-2 hover:bg-primary/10 focus:bg-primary/10 text-[0.9rem] w-full text-left"
-              @click="onOptionClick(school)"
-              @focus="isFocused=true"
-            >
-              <b
-                v-if="school.city"
-                class="text-gray-600"
-              >
-                {{ school.city.toUpperCase() }}
-              </b>
-
-              <p>{{ school.name }}</p>
-            </div>
-          </div>
-
-          <span
-            v-else
-            class="block px-4 py-2 text-sm"
-          >
-            Nie znaleziono szkoły
-          </span>
-        </div>
+        <List
+          v-if="isFocused"
+          no-results-text="Nie znaleziono szkoły"
+          class="mt-2 bg-white/70 backdrop-blur rounded-lg"
+          :options
+          :opened="isFocused"
+          :use-lazy-loading="!searchQuery"
+          :fetching="isFetching || isDebouncing"
+          :no-fetch-text
+          @option-click="onOptionClick"
+          @lazyload="emit('requestData')"
+        />
       </Transition>
     </div>
-  </div>
+  </CrudInput>
 </template>

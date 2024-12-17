@@ -22,9 +22,9 @@ function calculateDynamicWidth(input: HTMLInputElement, binding?: DirectiveBindi
 
   const { fontWeight, fontSize, fontFamily } = window.getComputedStyle(input)
   context.font = `${fontWeight} ${fontSize} ${fontFamily}`
-  const width = `${context.measureText(input.value || input.placeholder).width}px`
+  const width = context.measureText(input.value || input.placeholder).width
 
-  input.style.width = `clamp(1.1rem,${width},100%)`
+  input.style.width = `clamp(1.1rem,${width}px,100%)`
 }
 
 function removeDynamicWidthCalc(input: HTMLInputElement & { _calculateDynamicWidth: () => void }) {

@@ -122,10 +122,7 @@ const showDeleteMessage = ref(false)
             :data="{ ...item as RequestPayload }"
             @success="editing = false"
           >
-            <CheckIcon
-              class="icon"
-              title="Zapisz zmiany"
-            />
+            <CheckIcon class="icon" />
           </RequestWrapper>
         </template>
 
