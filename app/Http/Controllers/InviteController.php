@@ -15,8 +15,6 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -27,7 +25,6 @@ class InviteController extends Controller
         $this->authorize("invite", $quiz);
 
         $query = User::query()->role("user")->with("school")->whereNotNull("email_verified_at");
-        $query = $this->groupBySchool($query, $request);
         $query = $sort->sort($query, ["id"], ["name", "school"]);
         $query = $this->sortByName($query, $sort);
         $query = $this->sortBySchool($query, $sort);
@@ -39,23 +36,6 @@ class InviteController extends Controller
             "quiz" => $quiz->id,
             "assigned" => $quiz->assignedUsers->pluck("id"),
         ]);
-    }
-
-    protected function groupBySchool(Builder $query, Request $request): Builder {
-        $groupBySchool = $request->query('groupBySchool', 'false');
-
-        if ($groupBySchool !== 'true') {
-            return $query;
-        }
-
-        $schoolIds = School::query()
-            ->select('id')
-            ->join('users', 'schools.id', '=', 'users.school_id')
-            ->groupBy('schools.id')
-            ->orderBy('schools.id')
-            ->pluck('id');
-
-        return $query->whereIn('school_id', $schoolIds)->orderBy('school_id');
     }
 
     public function assign(Quiz $quiz, InviteQuizRequest $request, AssignToQuizAction $assignAction): RedirectResponse
@@ -78,6 +58,24 @@ class InviteController extends Controller
         return redirect()
             ->back()
             ->with("status", "Użytkownicy zostali wypisani z testu.");
+    }
+
+    protected function groupBySchool(Builder $query, Request $request): Builder
+    {
+        $groupBySchool = $request->query("groupBySchool", "false");
+
+        if ($groupBySchool !== "true") {
+            return $query;
+        }
+
+        $schoolIds = School::query()
+            ->select("id")
+            ->join("users", "schools.id", "=", "users.school_id")
+            ->groupBy("schools.id")
+            ->orderBy("schools.id")
+            ->pluck("id");
+
+        return $query->whereIn("school_id", $schoolIds)->orderBy("school_id");
     }
 
     private function filterByMode(Builder $query, Request $request)
