@@ -296,7 +296,7 @@ class SchoolTest extends TestCase
     {
         School::factory(["name" => "TEST"])->create();
 
-        $this->actingAs($this->admin)->get("/admin/schools/search?search=TEST")
+        $this->actingAs($this->admin)->get("/schools/search?search=TEST")
             ->assertStatus(200)
             ->assertJsonCount(1, "data")
             ->assertJsonPath("data.0.name", "TEST");
@@ -305,8 +305,6 @@ class SchoolTest extends TestCase
     public function testGuestCanSearchForSchools(): void
     {
         School::factory(["name" => "TEST"])->create();
-
-        $this->get("/admin/schools/search")->assertRedirect();
 
         $this->get("/schools/search?search=TEST")
             ->assertStatus(200)

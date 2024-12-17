@@ -132,10 +132,7 @@ function sanitizeData() {
         :data="{ ...quiz, scheduledAt: formatDate(quiz.scheduledAt, false) }"
         @success="emit('toggleEditing', false); sanitizeData()"
       >
-        <CheckIcon
-          class="icon"
-          title="Zapisz edytowany test"
-        />
+        <CheckIcon class="icon" />
       </RequestWrapper>
     </template>
 

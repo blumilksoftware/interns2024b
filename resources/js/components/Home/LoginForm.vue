@@ -2,8 +2,8 @@
 import CustomInput from '@/components/Common/CustomInput.vue'
 import { useForm } from '@inertiajs/vue3'
 import { type Errors } from '@inertiajs/core'
-import PasswordInput from '@/components/Common//PasswordInput.vue'
 import Checkbox from '@/components/Common/Checkbox.vue'
+import PasswordInput from '@/components/Common/PasswordInput.vue'
 
 const { errors } = defineProps<{ errors: Errors }>()
 const form = useForm({

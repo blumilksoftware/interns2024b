@@ -138,7 +138,7 @@ function startFetching() {
         :disabled="!status"
         class="rounded-xl"
         :class="{'cursor-pointer': status}"
-        @click="startFetching()"
+        @click="startFetching"
       >
         <ArrowDownCircleIcon class="size-6 text-white" /> Importuj szkoły
       </Button>
@@ -205,26 +205,26 @@ function startFetching() {
     </template>
 
     <template #itemData="data">
-      <div
-        class="flex flex-col duration-200 min-h-6.5 gap-2"
-        :class="{'text-sm text-gray-600': !data.editing}"
-      >
-        <p>Liczba uczniów: <b>{{ data.item.numberOfStudents }}</b></p>
+      <CrudInput
+        v-model="data.item.numberOfStudents"
+        name="students"
+        label="Liczba uczniów:"
+        :selected="data.editing"
+      />
 
-        <CrudInput
-          v-model="data.item.regon"
-          name="regon"
-          label="REGON:"
-          :editing="data.editing"
-          :error="data.errors.regon"
-        />
+      <CrudInput
+        v-model="data.item.regon"
+        name="regon"
+        label="REGON:"
+        :editing="data.editing"
+        :error="data.errors.regon"
+      />
 
-        <AddressInput
-          v-model="data.item"
-          :errors="data.errors"
-          :disabled="!data.editing"
-        />
-      </div>
+      <AddressInput
+        v-model="data.item"
+        :errors="data.errors"
+        :disabled="!data.editing"
+      />
     </template>
   </CrudPage>
 </template>

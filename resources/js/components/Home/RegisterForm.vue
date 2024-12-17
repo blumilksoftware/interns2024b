@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import qs from 'query-string'
 import { computed, onMounted, ref } from 'vue'
 import { nanoid } from 'nanoid'
 import { useForm } from '@inertiajs/vue3'
@@ -8,7 +7,7 @@ import CustomCheckbox from '@/components/Common/CustomCheckbox.vue'
 import Searchbar from '@/components/Common/Searchbar.vue'
 import CustomInput from '@/components/Common/CustomInput.vue'
 import PasswordInput from '@/components/Common/PasswordInput.vue'
-import { axiosRequest } from '@/Helpers/AxiosRequest'
+import { schoolsFetcher } from '@/Helpers/SchoolsFetcher'
 
 defineProps<{ errors: Errors }>()
 
@@ -33,31 +32,14 @@ const filteredSchoolOptions = computed(() => schools.value.data.map(
 const isFetchingSchools = ref(false)
 const searchErrorMessage = ref('')
 
-onMounted(fetchSchoolsPortion)
+onMounted(fetchSchools)
 
-function fetchSchoolsPortion(search?: string) {
-  const page = schools.value.meta?.current_page ?? 0
-
-  const paramsString = qs.stringify({
-    search: search,
-    page: search ? undefined : page + 1,
-  })
-
-  axiosRequest<Pagination<School>>({
-    uri: `/schools/search?${paramsString}`,
-    onStart: () => searchErrorMessage.value = '',
-    onPendingStateChange: isPending => isFetchingSchools.value = isPending,
-    onError: () => searchErrorMessage.value = 'Nie udało się pobrać więcej szkół',
-    onSuccess: pagination => schools.value = {
-      ...pagination,
-      data: [
-        ...schools.value.data, 
-        ...(!search ? pagination.data : pagination.data.filter(
-          x => !schools.value.data.some(y => y.id === x.id),
-        )),
-      ], 
-    },
-  })
+async function fetchSchools(search?: string) {
+  [
+    schools.value,
+    isFetchingSchools.value,
+    searchErrorMessage.value,
+  ] = await schoolsFetcher(schools.value, search)
 }
 
 function submit() {
@@ -96,7 +78,7 @@ function submit() {
       :error="errors.school_id"
       :is-fetching="isFetchingSchools"
       :no-fetch-text="searchErrorMessage"
-      @request-data="fetchSchoolsPortion"
+      @request-data="fetchSchools"
       @change="school => form.school_id = school.id.toString()"
     />
 

@@ -56,6 +56,7 @@ function handleSearch(text: string | undefined, mode?: string) {
 
 function pageSwitch(isLeftSwitch: boolean) {
   const currentPage = pagination.value.meta.current_page ?? queryParams.page
+  console.log(pagination.value.meta.links)
   queryParams.page = isLeftSwitch ? currentPage -1 : currentPage + 1
 }
 </script>
@@ -103,8 +104,8 @@ function pageSwitch(isLeftSwitch: boolean) {
     </div>
 
     <div class="flex w-full px-4 mt-2 justify-between gap-2">
-      <SearchBar 
-        class="w-full" 
+      <SearchBar
+        class="w-full"
         :default-value="displaySearchInLowerCase ? queryParams.search?.toLowerCase() : queryParams.search"
         :modes="searchBarModes"
         @search="handleSearch"

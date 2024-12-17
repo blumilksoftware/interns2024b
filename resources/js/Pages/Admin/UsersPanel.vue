@@ -5,14 +5,15 @@ import CrudInput from '@/components/Crud/CrudInput.vue'
 import vDynamicInputWidth from '@/Helpers/vDynamicInputWidth'
 import CrudSchoolInput from '@/components/Crud/CrudSchoolInput.vue'
 import WarningMessageBox from '@/components/Common/WarningMessageBox.vue'
-import { computed, ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import RequestWrapper from '@/components/Common/RequestWrapper.vue'
 import { type PageProps } from '@/Types/PageProps'
 import { UserMinusIcon, PencilIcon } from '@heroicons/vue/24/outline'
 import ArchiveDynamicIcon from '@/components/Icons/ArchiveDynamicIcon.vue'
 import Expand from '@/components/Common/Expand.vue'
+import { schoolsFetcher } from '@/Helpers/SchoolsFetcher'
 
-const props = defineProps<{ users: Pagination<User>, schools: School[] } & PageProps>()
+const props = defineProps<{ users: Pagination<User> } & PageProps>()
 const users = computed(() => ({
   ...props.users,
   data: props.users.data.map(user => ({ ...user, school_id: user.school.id })),
@@ -20,6 +21,7 @@ const users = computed(() => ({
 
 const showWarning = ref<Record<string, boolean>>({})
 const showAnonymizedUsers = ref<boolean>(true)
+const customQueries = computed(() => ({ anonymized: !showAnonymizedUsers.value }))
 
 const sortOptions: SortOption[] = [
   { text: 'Po nazwie (A–Z)', key: 'firstname' },
@@ -32,14 +34,18 @@ const sortOptions: SortOption[] = [
   { text: 'Po dacie modyfikacji (malejąco)', key: 'updated_at', desc: true },
 ]
 
-function customQueries(): string[] {
-  let query: string[] = []
+const schools = ref<Pagination<School>>({ data: [] } as any)
+const isFetchingSchools = ref(false)
+const searchErrorMessage = ref('')
 
-  if (!showAnonymizedUsers.value) {
-    query.push(`anonymized=${true}`)
-  }
+onMounted(fetchSchools)
 
-  return query
+async function fetchSchools(search?: string) {
+  [
+    schools.value,
+    isFetchingSchools.value,
+    searchErrorMessage.value,
+  ] = await schoolsFetcher(schools.value, search)
 }
 </script>
 
@@ -150,26 +156,24 @@ function customQueries(): string[] {
     </template>
 
     <template #itemData="{ item, errors, editing }">
-      <div
-        class="flex flex-col duration-200 gap-2 pt-2 min-h-6.5"
-        :class="{'text-sm text-gray-600': !editing}"
-      >
-        <CrudInput
-          v-model="item.email"
-          name="email"
-          label="E-mail:"
-          :error="errors.email"
-          :editing="editing"
-        />
+      <CrudInput
+        v-model="item.email"
+        name="email"
+        label="E-mail:"
+        :error="errors.email"
+        :editing="editing"
+      />
 
-        <CrudSchoolInput
-          :value="item.school?.id"
-          :schools="schools"
-          :errors="errors"
-          :editing="editing"
-          @change="school => item.school_id = school"
-        />
-      </div>
+      <CrudSchoolInput
+        :editing="editing"
+        :school="item.school"
+        :schools="schools"
+        :error="errors.school_id"
+        :is-fetching="isFetchingSchools"
+        :no-fetch-text="searchErrorMessage"
+        @request-data="fetchSchools"
+        @change="(school:School) => [item.school, item.school_id] = [school, school.id]"
+      />
 
       <Teleport to="body">
         <WarningMessageBox

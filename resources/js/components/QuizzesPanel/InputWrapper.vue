@@ -30,7 +30,7 @@ const wrapper = ref<HTMLElement>()
     >
       <label
         v-if="label"
-        class="w-fit"
+        class="size-fit"
         @click="wrapper?.querySelector('input')?.focus()"
       >
         {{ label }}

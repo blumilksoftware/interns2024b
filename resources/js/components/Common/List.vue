@@ -17,7 +17,7 @@ const emit = defineEmits<{ lazyload: [], optionClick: [option:Option|any] }>()
 
 <template>
   <div
-    class="flex flex-col overflow-hidden max-h-12 font-medium text-sm leading-6 text-gray-900 bg-white/30 placeholder:text-gray-400 rounded-lg ring-inset duration-200"
+    class="z-10 flex flex-col overflow-hidden max-h-12 font-medium text-sm leading-6 text-gray-900 bg-white/30 placeholder:text-gray-400 rounded-lg ring-inset duration-200"
     :class="{ 'max-h-80 ring-2 ring-primary/30': opened }"
   >
     <slot />

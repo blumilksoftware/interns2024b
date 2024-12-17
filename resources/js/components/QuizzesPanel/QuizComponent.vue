@@ -142,11 +142,11 @@ function toggleEditing(isEditing: boolean){
       v-if="selected"
       class="flex flex-col justify-end text-right sm:flex-row gap-x-4"
     >
-      <span class="text-gray-400 text-sm">
+      <span class="text-gray-400 text-xs">
         Utworzony: {{ formatDate(quiz.createdAt) }}
       </span>
 
-      <span class="text-gray-400 text-sm">
+      <span class="text-gray-400 text-xs">
         Ostatnio edytowany: {{ formatDate(quiz.updatedAt) }}
       </span>
     </footer>
