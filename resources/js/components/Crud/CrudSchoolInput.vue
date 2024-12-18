@@ -67,6 +67,7 @@ function schoolToSchoolOption(school: School): School & Option {
   <CrudInput
     v-model="value"
     v-click-outside="()=>isFocused=false"
+    class="w-fit"
     label="Szkoła:"
     :editing
   >
@@ -93,7 +94,7 @@ function schoolToSchoolOption(school: School): School & Option {
         <List
           v-if="isFocused"
           no-results-text="Nie znaleziono szkoły"
-          class="mt-2 bg-white/70 backdrop-blur rounded-lg"
+          class="mt-2 bg-white/70 backdrop-blur rounded-lg w-fit"
           :options
           :opened="isFocused"
           :use-lazy-loading="!searchQuery"

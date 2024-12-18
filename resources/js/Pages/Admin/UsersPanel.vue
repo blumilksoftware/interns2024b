@@ -102,6 +102,7 @@ async function fetchSchools(search?: string) {
         <label
           v-if="editing"
           for="surname"
+          :class="{'ml-1':editing }"
         >
           Nazwisko:
         </label>
