@@ -7,7 +7,7 @@ defineProps<{
 
 <template>
   <div class="flex flex-col gap-3 p-5 w-full border rounded-xl overflow-hidden bg-white/70 shadow">
-    <b class="text-primary">
+    <b class="text-primary transition-colors">
       {{ label }}
     </b>
     

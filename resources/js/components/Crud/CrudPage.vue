@@ -56,7 +56,6 @@ function handleSearch(text: string | undefined, mode?: string) {
 
 function pageSwitch(isLeftSwitch: boolean) {
   const currentPage = pagination.value.meta.current_page ?? queryParams.page
-  console.log(pagination.value.meta.links)
   queryParams.page = isLeftSwitch ? currentPage -1 : currentPage + 1
 }
 </script>

@@ -3,7 +3,7 @@ const slots = defineSlots()
 </script>
 
 <template>
-  <div class="w-full flex flex-col 2xs:flex-row 2xs:items-center">
+  <div class="w-full flex flex-col 2xs:flex-row 2xs:items-center px-5 xs:px-0">
     <div class="xs:mx-4 w-0 xs:w-7 border-t border-primary duration-200 transition-colors" />
 
     <slot />

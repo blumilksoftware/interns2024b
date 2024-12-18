@@ -13,7 +13,7 @@ import { keysWrapper } from '@/Helpers/KeysManager'
 defineProps<{
   errors: Errors
   users: Pagination<User>
-  quiz: number
+  quiz: Quiz
   assigned: number[]
 }>()
 
@@ -36,11 +36,16 @@ const searchBarModes = keysWrapper([
 
 <template>
   <Head title="Zaproszenia - Panel administracyjny" />
+
+  <div class="w-full bg-primary text-white text-center font-bold p-1">
+    Zaproszenie do testu {{ quiz.title }}
+  </div>
+
   
   <CrudPage
     :items="users"
     :options="options"
-    :resource-name="`quizzes/${quiz}/invite`"
+    :resource-name="`quizzes/${quiz.id}/invite`"
     :search-bar-modes="searchBarModes"
   >
     <template #actions>
@@ -56,7 +61,7 @@ const searchBarModes = keysWrapper([
         />
 
         <span class="hidden md:block">
-          Wybierz wszystkich
+          {{ selectedUsers.length > 0 ? 'Odznacz wszystkich' : 'Wybierz wszystkich' }}
         </span>
       </label>
 
@@ -67,7 +72,7 @@ const searchBarModes = keysWrapper([
           title="Przypisz zaznaczonych"
           method="post"
           :data="{ ids: selectedUsers }"
-          :href="`/admin/quizzes/${quiz}/invite/assign`"
+          :href="`/admin/quizzes/${quiz.id}/invite/assign`"
         >
           <CheckCircleIcon class="icon size-7 md:size-6" />
 
@@ -82,7 +87,7 @@ const searchBarModes = keysWrapper([
           title="Wypisz zaznaczonych"
           method="post"
           :data="{ ids: selectedUsers }"
-          :href="`/admin/quizzes/${quiz}/invite/unassign`"
+          :href="`/admin/quizzes/${quiz.id}/invite/unassign`"
         >
           <MinusCircleIcon class="icon size-7 md:size-6" />
 

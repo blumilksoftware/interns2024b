@@ -33,7 +33,7 @@ class InviteController extends Controller
 
         return Inertia::render("Admin/Invite", [
             "users" => UserResource::collection($sort->paginate($query)),
-            "quiz" => $quiz->id,
+            "quiz" => $quiz,
             "assigned" => $quiz->assignedUsers->pluck("id"),
         ]);
     }

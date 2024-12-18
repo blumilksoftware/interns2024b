@@ -27,7 +27,7 @@ function handleInput() {
 
 <template>
   <div
-    class="flex gap-1 duration-200 h-7.5"
+    class="flex gap-1 duration-200 min-h-7"
     :class="{ 'text-sm text-gray-600' : !selected && !editing && !large, 'text-lg h-8': large }"
   >
     <InputWrapper

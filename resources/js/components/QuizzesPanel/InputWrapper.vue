@@ -49,7 +49,7 @@ const wrapper = ref<HTMLElement>()
     <span
       v-if="!hideError && error"
       :title="error"
-      class="text-red text-sm truncate"
+      class="text-red text-sm"
     >
       {{ error }}
     </span>

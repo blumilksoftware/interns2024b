@@ -14,7 +14,7 @@ defineProps<{
 <template>
   <Head title="Profil" />
   
-  <div class="flex flex-col justify-center gap-x-[8vw] gap-y-12 px-[5vw] w-full lg:flex-row py-4 lg:py-16">
+  <div class="flex flex-col justify-center gap-x-[8vw] gap-y-12 px-5 w-full lg:flex-row py-4 lg:py-16">
     <UserData :user="user" />
 
     <PasswordUpdate :errors="errors" />
