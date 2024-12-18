@@ -14,7 +14,7 @@ defineProps<{ user: User }>()
       </b>
     </Divider>
 
-    <div class="flex flex-col gap-4 sm:max-w-96 w-full sm:min-w-96">
+    <div class="flex flex-col gap-4 w-full sm:min-w-96">
       <CustomOutput
         label="Imię i Nazwisko"
         :value="`${user.firstname}  ${user.surname}`"

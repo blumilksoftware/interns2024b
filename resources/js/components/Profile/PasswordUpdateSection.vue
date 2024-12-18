@@ -34,7 +34,7 @@ function updatePassword() {
 
     <div class="flex lg:justify-center sm:min-w-96 justify-center">
       <form
-        class="flex flex-col gap-4 w-full sm:max-w-96"
+        class="flex flex-col gap-4 w-full px-5"
         @submit.prevent="updatePassword"
       >
         <CustomInput
