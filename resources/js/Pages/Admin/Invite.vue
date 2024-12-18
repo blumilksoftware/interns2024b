@@ -56,7 +56,7 @@ const searchBarModes = keysWrapper([
         />
 
         <span class="hidden md:block">
-          Wybierz wszystkich
+          {{ selectedUsers.length > 0 ? 'Odznacz wszystkich' : 'Wybierz wszystkich' }}
         </span>
       </label>
 
