@@ -3,7 +3,7 @@ import { type Errors } from '@inertiajs/core'
 import CustomDatepicker from '@/components/Common/CustomDatepicker.vue'
 import { formatDate } from '@/Helpers/Format'
 import CrudInput from '@/components/Crud/CrudInput.vue'
-import CrudSelect from '@/components/Crud/CrudSelect.vue'
+import { computed } from 'vue'
 
 defineProps<{
   editing: boolean
@@ -11,6 +11,7 @@ defineProps<{
   errors: Errors
 }>()
 const quiz = defineModel<Quiz>({ required: true })
+const publicAvailabityString = computed(() => quiz.value.isPublic ? 'Dostępny dla wszystkich' : 'Dostępny tylko dla zaproszonych')
 </script>
 
 <template>
@@ -49,24 +50,20 @@ const quiz = defineModel<Quiz>({ required: true })
       :editing
       :selected
     />
-
-
-    <div
-      class="flex items-center duration-200 min-h-6.5"
-      :class="{ 'text-sm text-gray-600' : !selected }"
+    
+    <CrudInput
+      v-model="publicAvailabityString"
+      label="Widoczność:"
+      :error="errors.is_public"
+      :editing
+      :selected
     >
-      <CrudSelect
-        label="Widoczność: "
-        :editing="editing"
-        :is-selected="selected"
-        :value="quiz.isPublic?.toString() ?? 'false'"
-        :error="errors.is_public"
-        :items="[
-          { key: 'false', text: 'Dostępny tylko dla zaproszonych' },
-          { key: 'true', text: 'Dostępny dla wszystkich' }
-        ]"
-        @change="quiz.isPublic = $event === 'true'"
-      />
-    </div>
+      <button
+        class="font-bold text-primary border-b border-primary/30 hover:border-primary transition-colors"
+        @click="quiz.isPublic = !quiz.isPublic"
+      >
+        {{ publicAvailabityString }}
+      </button>
+    </CrudInput>
   </div>
 </template>
