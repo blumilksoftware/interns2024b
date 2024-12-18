@@ -30,7 +30,7 @@ defineProps<{ user: User }>()
         :value="user.school.name"
       />
 
-      <ThemeSwitch class="mx-4 my-3" />
+      <ThemeSwitch class="mx-4 my-2" />
     </div>
   </div>
 </template>
