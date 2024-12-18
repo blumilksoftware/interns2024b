@@ -12,6 +12,7 @@ const props = defineProps<{
   value?: string
   error?: string
   editing: boolean
+  isSelected: boolean
   label: string
   items: Array<{ key: string, text: string }>
 }>()
@@ -46,6 +47,7 @@ function onOptionClick(option: { key: string, text: string }) {
           :value="selected?.text"
           class="text-md transition-none h-fit w-full outline-none font-bold border-b border-transparent bg-transparent focus:border-b-primary"
           :class="{
+            'text-sm': !editing && !isSelected,
             'border-b-primary/30 hover:border-b-primary/60 text-primary duration-200 transition-colors' : editing,
             'border-b-red' : !!error,
             'cursor-pointer' : !isFocused && editing

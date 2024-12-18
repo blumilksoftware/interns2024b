@@ -58,6 +58,7 @@ const quiz = defineModel<Quiz>({ required: true })
       <CrudSelect
         label="Widoczność: "
         :editing="editing"
+        :is-selected="selected"
         :value="quiz.isPublic?.toString() ?? 'false'"
         :error="errors.is_public"
         :items="[
