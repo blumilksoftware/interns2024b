@@ -21,8 +21,8 @@ function childIsNotText(index: number){
       'bg-primary text-white hover:bg-primary-dark py-2.5 font-bold': !text,
       'rounded-xl px-4 py-2.5': !text && !icon,
       'opacity-50 pointer-events-none': disabled,
-      'pl-3': childIsNotText(0),
-      'pr-3': childIsNotText(-1),
+      'pl-3': childIsNotText(0) && !text,
+      'pr-3': childIsNotText(-1) && !text,
     }"
   >
     <slot />

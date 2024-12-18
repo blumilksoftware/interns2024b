@@ -37,7 +37,7 @@ const searchBarModes = keysWrapper([
 <template>
   <Head title="Zaproszenia - Panel administracyjny" />
 
-  <div class="w-full bg-primary text-white text-center font-bold mb-4 p-1">
+  <div class="w-full bg-primary text-white text-center font-bold p-1">
     Zaproszenie do testu {{ quiz.title }}
   </div>
 
