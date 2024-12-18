@@ -60,24 +60,6 @@ class InviteController extends Controller
             ->with("status", "Użytkownicy zostali wypisani z testu.");
     }
 
-    protected function groupBySchool(Builder $query, Request $request): Builder
-    {
-        $groupBySchool = $request->query("groupBySchool", "false");
-
-        if ($groupBySchool !== "true") {
-            return $query;
-        }
-
-        $schoolIds = School::query()
-            ->select("id")
-            ->join("users", "schools.id", "=", "users.school_id")
-            ->groupBy("schools.id")
-            ->orderBy("schools.id")
-            ->pluck("id");
-
-        return $query->whereIn("school_id", $schoolIds)->orderBy("school_id");
-    }
-
     private function filterByMode(Builder $query, Request $request)
     {
         $mode = $request->query("mode", "user");
