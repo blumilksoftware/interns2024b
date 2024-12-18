@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import FormButton from '@/components/Common/FormButton.vue'
-import { TransitionRoot, Dialog, TransitionChild, DialogPanel, DialogTitle } from '@headlessui/vue'
-import { Bars3Icon, FlagIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { ref } from 'vue'
 import LogoIcon from '@/components/Icons/LogoIcon.vue'
-import Expand from './Expand.vue'
 
 defineProps<{ pages: Page[], user?: User, appName: string, title?: string }>()
 const open = ref<boolean>(false)
