@@ -63,6 +63,9 @@ input[type="number"] {
   appearance: textfield;
   -moz-appearance: textfield;
 }
+html{
+  overflow: hidden;
+}
 
 .slide-left-enter-active,
 .slide-right-enter-active,
