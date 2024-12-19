@@ -104,7 +104,7 @@ class QuizController extends Controller
 
     public function assign(AssignToQuizAction $action, Request $request, Quiz $quiz): RedirectResponse
     {
-        $action->execute($quiz, collect([$request->user()->id]));
+        $action->execute($quiz, collect([$request->user()->id]), $request->user());
 
         return redirect()
             ->back()

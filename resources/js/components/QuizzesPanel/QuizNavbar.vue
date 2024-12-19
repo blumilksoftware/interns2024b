@@ -7,28 +7,28 @@ import { formatDate } from '@/Helpers/Format'
 import WarningMessageBox from '@/components/Common/WarningMessageBox.vue'
 
 const props = defineProps<{
-  archived:boolean
-  unlocked:boolean
-  locked:boolean
-  editing:boolean
-  startTimeNotReached:boolean
+  archived: boolean
+  unlocked: boolean
+  locked: boolean
+  editing: boolean
+  startTimeNotReached: boolean
 }>()
 const quiz = defineModel<Quiz>({ required: true })
-const emit = defineEmits<{ toggleEditing:[editing:boolean], cancelChanges:[] }>()
+const emit = defineEmits<{ toggleEditing: [editing:boolean], cancelChanges: [] }>()
 const showDeleteMessage = ref(false)
 
 const questionsHaveOneCorrectAnswer = computed(
-  ()=> quiz.value.questions.every(
+  () => quiz.value.questions.every(
     (question: Question) => {
       const correctIdx = question.answers.findIndex(answer => answer.correct)
       return correctIdx !== -1 && question.answers.slice(correctIdx+1).every(
-        (answer:Answer) => !answer.correct,
+        (answer: Answer) => !answer.correct,
       )
     },
   ),
 )
 
-const assertions = computed<Record<string, [boolean, string]>>(()=>({
+const assertions = computed<Record<string, [boolean, string]>>(() => ({
   hasCorrectAnswers: [questionsHaveOneCorrectAnswer.value, 'Żadne pytanie nie zawiera zaznaczonej prawidłowej odpowiedzi.'],
   hasQuestions: [quiz.value.questions.length > 0, 'Test nie zawiera żadnego pytania.'],
   duration: [!!quiz.value.duration, 'Czas trwania testu nie jest ustawiony.'],
@@ -72,10 +72,18 @@ function sanitizeData() {
 </script>
 
 <template>
-  <WarningMessageBox :open="showDeleteMessage" @close="showDeleteMessage = false">
+  <WarningMessageBox
+    :open="showDeleteMessage"
+    @close="showDeleteMessage = false"
+  >
     <template #message>
-      <b class="text-[1.1rem] text-gray-900">Usunąć test "{{ quiz.title }}"?</b>
-      <p class="text-gray-500">Test zostanie usunięty bezpowrotnie.</p>
+      <b class="text-[1.1rem] text-gray-900">
+        Usunąć test "{{ quiz.title }}"?
+      </b>
+
+      <p class="text-gray-500">
+        Test zostanie usunięty bezpowrotnie.
+      </p>
     </template>
 
     <template #buttons>
@@ -96,11 +104,16 @@ function sanitizeData() {
       v-if="locked"
       title="Zaproś uczestników"
       class="flex items-center"
+      :href="`/admin/quizzes/${quiz.id}/invite`"
     >
       <UserPlusIcon class="icon slide-up-animation" />
     </a>
 
-    <button v-if="unlocked && !editing" title="Edytuj test" @click="emit('toggleEditing', true)">
+    <button
+      v-if="unlocked && !editing"
+      title="Edytuj test"
+      @click="emit('toggleEditing', true)"
+    >
       <PencilIcon class="icon slide-up-animation" />
     </button>
 
@@ -119,7 +132,7 @@ function sanitizeData() {
         :data="{ ...quiz, scheduledAt: formatDate(quiz.scheduledAt, false) }"
         @success="emit('toggleEditing', false); sanitizeData()"
       >
-        <CheckIcon class="icon" title="Zapisz edytowany test" />
+        <CheckIcon class="icon" />
       </RequestWrapper>
     </template>
 
@@ -132,7 +145,11 @@ function sanitizeData() {
       <DocumentDuplicateIcon class="icon slide-up-animation" />
     </RequestWrapper>
 
-    <button v-if="!archived && !locked" title="Usuń test" @click="showDeleteMessage = true">
+    <button
+      v-if="!archived && !locked"
+      title="Usuń test"
+      @click="showDeleteMessage = true"
+    >
       <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
     </button>
 

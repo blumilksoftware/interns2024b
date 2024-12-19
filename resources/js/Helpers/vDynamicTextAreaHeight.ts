@@ -1,6 +1,6 @@
 import { type DirectiveBinding } from 'vue'
 
-function initDynamicHeightCalc(input:HTMLTextAreaElement & { _calculateDynamicHeight:() => void }, binding?:DirectiveBinding<boolean>) {
+function initDynamicHeightCalc(input: HTMLTextAreaElement & { _calculateDynamicHeight: () => void }, binding?: DirectiveBinding<boolean>) {
   input._calculateDynamicHeight = () => calculateDynamicHeight(input, binding)
 
   document.fonts.addEventListener('loadingdone', input._calculateDynamicHeight)
@@ -10,7 +10,7 @@ function initDynamicHeightCalc(input:HTMLTextAreaElement & { _calculateDynamicHe
   input.style.resize = 'none'
 }
 
-function calculateDynamicHeight(input:HTMLTextAreaElement, binding?:DirectiveBinding<boolean>){
+function calculateDynamicHeight(input: HTMLTextAreaElement, binding?: DirectiveBinding<boolean>){
   if (binding?.value === false) {
     return
   }
@@ -21,7 +21,7 @@ function calculateDynamicHeight(input:HTMLTextAreaElement, binding?:DirectiveBin
   input.style.height = `${input.scrollHeight}px`
 }
 
-function removeDynamicHeightCalc(input:HTMLTextAreaElement & { _calculateDynamicHeight:() => void }) {
+function removeDynamicHeightCalc(input: HTMLTextAreaElement & { _calculateDynamicHeight: () => void }) {
   document.fonts.removeEventListener('loadingdone', input._calculateDynamicHeight)
   input.removeEventListener('transitionend', input._calculateDynamicHeight)
 }

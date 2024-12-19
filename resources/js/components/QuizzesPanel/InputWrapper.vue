@@ -1,22 +1,55 @@
 <script setup lang="ts">
-defineProps<{ label?:string, error?:string, hideError?:boolean, hideContent?:boolean }>()
+import { ref } from 'vue'
+
+defineProps<{
+  label?: string
+  error?: string
+  hideError?: boolean
+  hideContent?: boolean
+  column?: boolean
+  row?: boolean
+  wrapperClass?: string
+}>()
+
+const wrapper = ref<HTMLElement>()
 </script>
 
 <template>
-  <div class="flex flex-1 flex-col min-h-6.5">
-    <label v-if="label" class="flex flex-1 flex-col 2xs:flex-row 2xs:gap-1">
-      {{ label }}
-      <b v-if="hideContent" aria-label="brak danych">-</b>
+  <div class="flex flex-1 flex-col">
+    <div
+      ref="wrapper"
+      class="flex flex-1"
+      :class="[
+        wrapperClass,
+        {
+          'flex-col': column,
+          'flex-row': row,
+          'flex-col 2xs:flex-row 2xs:gap-1': column === row,
+        }
+      ]"
+    >
+      <label
+        v-if="label"
+        class="size-fit"
+        @click="wrapper?.querySelector('input')?.focus()"
+      >
+        {{ label }}
+      </label>
+    
+      <b
+        v-if="hideContent"
+        aria-label="brak danych"
+      >
+        -
+      </b>
+
       <slot v-else />
-    </label>
-    <template v-else>
-      <b v-if="hideContent" aria-label="brak danych">-</b>
-      <slot v-else />
-    </template>
+    </div>
+
     <span
       v-if="!hideError && error"
       :title="error"
-      class="text-red text-sm truncate"
+      class="text-red text-sm"
     >
       {{ error }}
     </span>

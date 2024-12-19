@@ -28,6 +28,7 @@ Route::get("/email/verify", [EmailVerifyController::class, "create"])->name("ver
 Route::get("/email/{id}/{hash}", EmailVerifyController::class)->middleware(["auth", "throttle:6,1"])->name("verification.verify");
 Route::post("/email/verification-notification", [EmailVerifyController::class, "send"])->middleware("throttle:3,60")->name("verification.send");
 Route::post("/auth/logout", [AuthenticateSessionController::class, "logout"])->middleware("auth")->name("logout");
+Route::get("/schools/search", [SchoolsController::class, "search"])->name("schools.search");
 
 Route::middleware(["guest"])->group(function (): void {
     Route::get("/", [ContestController::class, "index"])->name("home");

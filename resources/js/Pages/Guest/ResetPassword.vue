@@ -27,7 +27,8 @@ const form = useForm({
 })
 
 function submit() {
-  form.post('/auth/password/reset')}
+  form.post('/auth/password/reset')
+}
 </script>
 
 <template>
@@ -37,19 +38,48 @@ function submit() {
     <div class="text-md font-medium leading-6 text-gray-900 px-[5vw] text-center flex flex-col gap-1">
       <p>Wprowadź nowe hasło, z którego będziesz korzystać w aplikacji.</p>
     </div>
-    <form class="p-6 gap-4 flex flex-col size-full sm:rounded-lg sm:max-w-lg sm:h-fit" @submit.prevent="submit">
-      <CustomInput v-model="form.password" label="Nowe hasło" :error="errors?.password" name="password" :type="isVisiblePassword ? 'text' : 'password'">
-        <div class="cursor-pointer text-primary/70" @click="isVisiblePassword=!isVisiblePassword">
+
+    <form
+      class="p-6 gap-4 flex flex-col size-full sm:rounded-lg sm:max-w-lg sm:h-fit"
+      @submit.prevent="submit"
+    >
+      <CustomInput
+        v-model="form.password"
+        label="Nowe hasło"
+        :error="errors?.password"
+        name="password"
+        :type="isVisiblePassword ? 'text' : 'password'"
+      >
+        <div
+          class="cursor-pointer text-primary/70"
+          @click="isVisiblePassword=!isVisiblePassword"
+        >
           <EyeDynamicIcon :opened="isVisiblePassword" />
         </div>
       </CustomInput>
-      <CustomInput v-model="form.password_confirmation" label="Powtórz hasło" :error="errors?.password_confirmation" name="password_confirmation" :type="isVisibleConfirmPassword ? 'text' : 'password'">
-        <div class="cursor-pointer text-primary/70" @click="isVisibleConfirmPassword=!isVisibleConfirmPassword">
+
+      <CustomInput
+        v-model="form.password_confirmation"
+        label="Powtórz hasło"
+        :error="errors?.password_confirmation"
+        name="password_confirmation"
+        :type="isVisibleConfirmPassword ? 'text' : 'password'"
+      >
+        <div
+          class="cursor-pointer text-primary/70"
+          @click="isVisibleConfirmPassword=!isVisibleConfirmPassword"
+        >
           <EyeDynamicIcon :opened="isVisibleConfirmPassword" />
         </div>
       </CustomInput>
+
       <DisplayError :error="errors?.email" />
-      <button :disabled="form.processing" type="submit" class="bg-primary text-white font-bold py-3 px-4 rounded-lg disabled:bg-primary/70">
+
+      <button
+        :disabled="form.processing"
+        type="submit"
+        class="bg-primary text-white font-bold py-3 px-4 rounded-lg disabled:bg-primary/70"
+      >
         Zmień hasło
       </button>
     </form>

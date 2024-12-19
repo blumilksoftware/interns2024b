@@ -24,13 +24,25 @@ function handleAnswer(question: UserQuestion, selectedAnswer: number) {
     @answer="handleAnswer"
   />
 
-  <MessageBox :open="networkErrorMessage" @close="networkErrorMessage = false">
-    <template #title>Nie udało się wysłać odpowiedzi</template>
+  <MessageBox
+    :open="networkErrorMessage"
+    @close="networkErrorMessage = false"
+  >
+    <template #title>
+      Nie udało się wysłać odpowiedzi
+    </template>
 
-    <template #message>Wystąpił problem z wysłaniem Twojej odpowiedzi. Sprawdź swoje połączenie internetowe i spróbuj ponownie.</template>
+    <template #message>
+      Wystąpił problem z wysłaniem Twojej odpowiedzi. Sprawdź swoje połączenie internetowe i spróbuj ponownie.
+    </template>
 
     <template #buttons>
-      <Button small @click="networkErrorMessage = false">Ok</Button>
+      <Button
+        small
+        @click="networkErrorMessage = false"
+      >
+        Ok
+      </Button>
     </template>
   </MessageBox>
 </template>

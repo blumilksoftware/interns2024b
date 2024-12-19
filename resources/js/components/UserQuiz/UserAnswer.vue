@@ -22,6 +22,12 @@ const emit = defineEmits<{ change: [answerId: number] }>()
       :checked
       @change="emit('change', answer.id)"
     />
-    {{ answer.text }}
+
+    <span
+      class="duration-200 transition-colors"
+      :class="{'text-primary':checked}"
+    >
+      {{ answer.text }}
+    </span>
   </label>
 </template>

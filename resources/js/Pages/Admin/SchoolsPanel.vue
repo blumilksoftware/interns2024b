@@ -6,7 +6,7 @@ import AddressInput from '@/components/Common/AddressInput.vue'
 import CrudPage from '@/components/Crud/CrudPage.vue'
 import Expand from '@/components/Common/Expand.vue'
 import InputWrapper from '@/components/QuizzesPanel/InputWrapper.vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import axios from 'axios'
 import Button from '@/components/Common/Button.vue'
 import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
@@ -30,7 +30,7 @@ const sortOptions: SortOption[] = [
   { text: 'Po REGON (malejąco)', key: 'regon', desc: true },
   { text: 'Po adresie (rosnąco)', key: 'address' },
   { text: 'Po adresie (malejąco)', key: 'address', desc: true },
-  { text: 'Od najnowszych' , key: 'created_at', desc: true },
+  { text: 'Od najnowszych', key: 'created_at', desc: true },
   { text: 'Od najstarszych', key: 'created_at' },
   { text: 'Po dacie modyfikacji (rosnąco)', key: 'updated_at' },
   { text: 'Po dacie modyfikacji (malejąco)', key: 'updated_at', desc: true },
@@ -40,6 +40,7 @@ const status = ref<boolean | null>(null)
 const message = ref<string>()
 const schoolTranslation = usePlurals('szkołę', 'szkoły', 'szkół')
 const showDisabledSchools = ref<boolean>(true)
+const customQueries = computed(() => ({ disabled: !showDisabledSchools.value }))
 
 function hideMessage() {
   message.value = undefined
@@ -57,22 +58,25 @@ async function isImportingFinished(): Promise<[boolean, number | null]> {
   }
 }
 
-setInterval(async () => {
-  if (!status.value) {
-    const [done, count] = (await isImportingFinished())
-    const isFirstCheck = status.value === null
+setInterval(
+  async () => {
+    if (!status.value) {
+      const [done, count] = (await isImportingFinished())
+      const isFirstCheck = status.value === null
 
-    if (!isFirstCheck && done && count !== null) {
-      message.value = `Zaimportowano ${count} ${schoolTranslation(count)}.`
+      if (!isFirstCheck && done && count !== null) {
+        message.value = `Zaimportowano ${count} ${schoolTranslation(count)}.`
 
-      if (count > 0) {
-        router.reload({ only: ['schools'] })
+        if (count > 0) {
+          router.reload({ only: ['schools'] })
+        }
       }
-    }
 
-    status.value = done
-  }
-}, 1000)
+      status.value = done
+    }
+  }, 
+  1000,
+)
 
 function startFetching() {
   if (status.value) {
@@ -80,36 +84,34 @@ function startFetching() {
     axios.post('/admin/schools/fetch')
   }
 }
-
-function customQueries(): string[] {
-  let query: string[] = []
-
-  if (!showDisabledSchools.value) {
-    query.push(`disabled=${true}`)
-  }
-
-  return query
-}
 </script>
 
 <template>
-  <Head>
-    <title>Szkoły - Panel administracyjny</title>
-  </Head>
+  <Head title="Szkoły - Panel administracyjny" />
 
-  <Banner :show="!!message" :message="message" @close="hideMessage" />
+  <Banner
+    :show="!!message"
+    :message="message"
+    @close="hideMessage"
+  />
 
   <Transition>
-    <div v-show="status === false" class="fixed bg-white/50 backdrop-blur-md z-10 size-full left-0 top-0 flex items-center justify-center gap-2">
-      <div class="inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status" />
-      <p>Trwa importowanie szkół.</p>
+    <div
+      v-show="status === false"
+      class="fixed bg-white/50 backdrop-blur-md z-10 size-full left-0 top-0 flex items-center justify-center gap-4"
+    >
+      <div
+        class="inline-block size-8 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
+        role="status"
+      />
+
+      <p>Trwa importowanie szkół...</p>
     </div>
   </Transition>
 
   <CrudPage
     :options="sortOptions"
     :items="schools"
-    :custom-search="(text) => text?.toLocaleUpperCase()"
     :custom-queries="customQueries"
     resource-name="schools"
     new-button-text="Dodaj szkołę"
@@ -124,7 +126,10 @@ function customQueries(): string[] {
         @click="showDisabledSchools = !showDisabledSchools"
       >
         <ArchiveDynamicIcon :active="showDisabledSchools" />
-        <span class="hidden sm:block">{{ showDisabledSchools ? 'Wyświetl' : 'Schowaj' }} zablokowane szkoły</span>
+
+        <span class="hidden sm:block">
+          {{ showDisabledSchools ? 'Wyświetl' : 'Schowaj' }} zablokowane szkoły
+        </span>
       </button>
 
       <Expand class="hidden sm:block" />
@@ -133,15 +138,20 @@ function customQueries(): string[] {
         :disabled="!status"
         class="rounded-xl"
         :class="{'cursor-pointer': status}"
-        @click="startFetching()"
+        @click="startFetching"
       >
         <ArrowDownCircleIcon class="size-6 text-white" /> Importuj szkoły
       </Button>
     </template>
 
     <template #deleteMessage="{item}">
-      <b class="text-[1.1rem] text-gray-900">Czy na pewno chcesz usunąć "{{ item.name }}"?</b>
-      <p class="text-gray-500">Szkoła zostanie usunięta bezpowrotnie.</p>
+      <b class="text-[1.1rem] text-gray-900">
+        Czy na pewno chcesz usunąć "{{ item.name }}"?
+      </b>
+
+      <p class="text-gray-500">
+        Szkoła zostanie usunięta bezpowrotnie.
+      </p>
     </template>
 
     <template #title="{item, editing, errors}">
@@ -185,25 +195,36 @@ function customQueries(): string[] {
         <ArchiveBoxXMarkIcon class="icon slide-up-animation" />
       </RequestWrapper>
 
-      <button v-if="!item.isDisabled && item.numberOfStudents === 0" title="Usuń" @click="showDeleteMsg">
+      <button
+        v-if="!item.isDisabled && item.numberOfStudents === 0"
+        title="Usuń"
+        @click="showDeleteMsg"
+      >
         <TrashIcon class="icon slide-up-animation text-red hover:text-red-500" />
       </button>
     </template>
 
     <template #itemData="data">
-      <div class="flex flex-col duration-200 min-h-6.5 gap-2" :class="{'text-sm text-gray-600': !data.editing}">
-        <p>Liczba uczniów: <b>{{ data.item.numberOfStudents }}</b></p>
+      <CrudInput
+        v-model="data.item.numberOfStudents"
+        name="students"
+        label="Liczba uczniów:"
+        :selected="data.editing"
+      />
 
-        <CrudInput
-          v-model="data.item.regon"
-          name="regon"
-          label="REGON:"
-          :editing="data.editing"
-          :error="data.errors.regon"
-        />
+      <CrudInput
+        v-model="data.item.regon"
+        name="regon"
+        label="REGON:"
+        :editing="data.editing"
+        :error="data.errors.regon"
+      />
 
-        <AddressInput v-model="data.item" :errors="data.errors" :disabled="!data.editing" />
-      </div>
+      <AddressInput
+        v-model="data.item"
+        :errors="data.errors"
+        :disabled="!data.editing"
+      />
     </template>
   </CrudPage>
 </template>

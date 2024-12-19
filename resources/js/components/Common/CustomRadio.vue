@@ -1,13 +1,16 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
+withDefaults(
+  defineProps<{
   disabled?: boolean
   checked?: boolean
   name?: string
   size?: number
-}>(), {
-  name: undefined,
-  size: 1,
-})
+}>(), 
+  {
+    name: undefined,
+    size: 1,
+  },
+)
 const emit = defineEmits<{ change: [] }>()
 </script>
 

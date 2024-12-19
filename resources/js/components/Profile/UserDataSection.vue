@@ -1,27 +1,36 @@
 <script setup lang="ts">
+import Divider from '@/components/Common/Divider.vue'
+import CustomOutput from '@/components/Common/CustomOutput.vue'
+import ThemeSwitch from '@/components/Common/ThemeSwitch.vue'
+
 defineProps<{ user: User }>()
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 justify-content">
-    <b class="text-[1.2rem] sm:text-center lg:text-left">Dane o profilu</b>
-    <div class="flex flex-col sm:grid sm:grid-cols-2 gap-4">
-      <div class="w-full rounded-lg overflow-hidden bg-white/30 flex flex-col">
-        <b class="bg-primary w-full text-white p-2 px-3">Imię</b>
-        <p class="p-4 text-[1.1rem] border-2 border-t-0 h-full rounded-b-lg border-primary/30">{{ user.firstname }}</p>
-      </div>
-      <div class="w-full rounded-lg overflow-hidden bg-white/30 flex flex-col">
-        <b class="bg-primary w-full text-white p-2 px-3">Nazwisko</b>
-        <p class="p-4 text-[1.1rem] border-2 border-t-0 h-full rounded-b-lg border-primary/30">{{ user.surname }}</p>
-      </div>
-      <div class="w-full rounded-lg overflow-hidden bg-white/30 flex flex-col">
-        <b class="bg-primary w-full text-white p-2 px-3">E-mail</b>
-        <p class="p-4 text-[1.1rem] border-2 border-t-0 h-full rounded-b-lg border-primary/30">{{ user.email }}</p>
-      </div>
-      <div class="w-full rounded-lg overflow-hidden bg-white/30 flex flex-col">
-        <b class="bg-primary w-full text-white p-2 px-3">Szkoła</b>
-        <p class="p-4 text-[1.1rem] border-2 border-t-0 h-full rounded-b-lg border-primary/30">{{ user.school.name }}</p>
-      </div>
+  <div class="flex flex-col gap-4 items-center">
+    <Divider>
+      <b class="text-lg text-primary duration-200 transition-colors">
+        Dane o profilu
+      </b>
+    </Divider>
+
+    <div class="flex flex-col gap-4 w-full sm:min-w-96">
+      <CustomOutput
+        label="Imię i Nazwisko"
+        :value="`${user.firstname}  ${user.surname}`"
+      />
+
+      <CustomOutput
+        label="E-mail"
+        :value="user.email"
+      />
+
+      <CustomOutput
+        label="Szkoła"
+        :value="user.school.name"
+      />
+
+      <ThemeSwitch class="mx-4 my-2" />
     </div>
   </div>
 </template>

@@ -6,7 +6,7 @@ import ButtonFrame from '@/components/Common/ButtonFrame.vue'
 import { type ButtonFrameProps } from '@/Types/ButtonFrameProps'
 
 withDefaults(
-  defineProps<{ href:string, buttonClass?:string } & ButtonFrameProps & VisitOptions>(),
+  defineProps<{ href: string, buttonClass?: string } & ButtonFrameProps & VisitOptions>(),
   { buttonClass: undefined, preserveState: true, preserveScroll: true },
 )
 
@@ -18,7 +18,7 @@ const emit = defineEmits<{
 
 const processing = ref(false)
 
-function onProcessing(isProcessing:boolean) {
+function onProcessing(isProcessing: boolean) {
   processing.value = isProcessing
   emit('processing', isProcessing)
 }
@@ -55,7 +55,11 @@ function onProcessing(isProcessing:boolean) {
     <ButtonFrame
       :disabled="disabled || processing"
       :class="buttonClass"
-      :small :extra-small :large :text :icon
+      :small
+      :extra-small
+      :large
+      :text
+      :icon
     >
       <slot />
     </ButtonFrame>

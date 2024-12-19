@@ -6,9 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\SortHelper;
 use App\Http\Requests\UserRequest;
-use App\Http\Resources\SchoolResource;
 use App\Http\Resources\UserResource;
-use App\Models\School;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -21,10 +19,6 @@ class UserController extends Controller
     public function index(SortHelper $sorter, Request $request): Response
     {
         $users = User::query()->role("user")->with("school");
-        $schools = School::query()
-            ->where("is_admin_school", false)
-            ->orderBy("name")
-            ->get();
 
         $query = $sorter->sort($users, ["id", "email", "updated_at", "created_at"], ["firstname", "school"]);
         $query = $this->filterAnonymizedUsers($query, $request);
@@ -34,7 +28,6 @@ class UserController extends Controller
 
         return Inertia::render("Admin/UsersPanel", [
             "users" => UserResource::collection($query->paginate()),
-            "schools" => SchoolResource::collection($schools),
         ]);
     }
 

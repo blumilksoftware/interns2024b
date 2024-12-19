@@ -9,8 +9,17 @@ const isVisible = ref<boolean>(false)
 </script>
 
 <template>
-  <CustomInput v-model="model" :error="error" label="Hasło" name="password" :type="isVisible ? 'text' : 'password'">
-    <div class="cursor-pointer text-primary/70" @click="isVisible=!isVisible">
+  <CustomInput
+    v-model="model"
+    :error="error"
+    label="Hasło"
+    name="password"
+    :type="isVisible ? 'text' : 'password'"
+  >
+    <div
+      class="cursor-pointer text-primary/70"
+      @click="isVisible=!isVisible"
+    >
       <EyeDynamicIcon :opened="isVisible" />
     </div>
   </CustomInput>

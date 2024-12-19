@@ -39,7 +39,7 @@
 }
  
 ::-webkit-scrollbar-thumb {
-  background: #E4007D26;
+  background: rgb(var(--color-primary) / .15);
   border-radius: 1rem;
   border: 2px solid transparent;
   background-clip: content-box;
@@ -47,7 +47,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #E4007D4c;
+  background: rgb(var(--color-primary) / .3);
   border: 2px solid transparent;
   background-clip: content-box;
   position: fixed;
@@ -62,4 +62,22 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
   appearance: textfield;
   -moz-appearance: textfield;
+}
+
+.slide-left-enter-active,
+.slide-right-enter-active,
+.slide-left-leave-active,
+.slide-right-leave-active {
+  transition: all .3s;
+  transition-timing-function: cubic-bezier(0,.5,.5,1);
+}
+.slide-left-enter-from,
+.slide-right-leave-to {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+.slide-left-leave-to,
+.slide-right-enter-from {
+    transform: translateX(100%);
+    opacity: 0;
 }

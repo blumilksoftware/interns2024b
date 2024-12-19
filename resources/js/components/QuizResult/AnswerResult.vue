@@ -14,8 +14,7 @@ defineProps<{
     :class="{
       'text-red': !correct && checked && revealAnswers,
       'text-green-700': correct && revealAnswers,
-      'text-primary': !correct && !checked || !revealAnswers,
-      'font-semibold': checked,
+      'font-semibold text-primary': checked,
     }"
   >
     <CustomRadio
@@ -23,6 +22,7 @@ defineProps<{
       disabled
       :checked="checked"
     />
+
     <slot />
   </label>
 </template>
