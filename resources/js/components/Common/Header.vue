@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import FormButton from '@/components/Common/FormButton.vue'
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import LogoIcon from '@/components/Icons/LogoIcon.vue'
 
 defineProps<{ pages: Page[], user?: User, appName: string, title?: string }>()
 const open = ref<boolean>(false)
 const isSelected = (page: Page) => page.href === window.location.pathname
+watch(open, isOpen => document.body.style.overflow = isOpen ? 'hidden' : '')
 </script>
 
 <template>
@@ -68,47 +69,52 @@ const isSelected = (page: Page) => page.href === window.location.pathname
     </nav>
 
     <div
-      class="bg-white h-full top-0 absolute left-full duration-200 flex flex-col gap-4 p-4 sm:hidden min-w-[50%] scale-95"
-      :class="{'-translate-x-full shadow-lg !scale-100':open}"
+      class="w-screen h-screen top-0 fixed sm:hidden pointer-events-none duration-200"
+      :class="{'bg-primary/[.02] backdrop-blur-md pointer-events-auto':open}"
     >
-      <div class="flex justify-between option !py-3">
-        <span class="font-bold">
-          {{ appName }}
+      <div
+        class="bg-white h-full top-0 absolute left-full duration-200 flex flex-col gap-4 p-4 min-w-[50%] scale-95 overflow-y-auto"
+        :class="{'-translate-x-full shadow-lg !scale-100':open}"
+      >
+        <div class="flex justify-between option !py-3">
+          <span class="font-bold">
+            {{ appName }}
+          </span>
+
+          <button @click="open=false">
+            <XMarkIcon class="size-5 stroke-2" />
+          </button>
+        </div>
+
+        <span class="text-sm text-gray-400 px-3">
+          Opcje
         </span>
 
-        <button @click="open=false">
-          <XMarkIcon class="size-5 stroke-2" />
-        </button>
-      </div>
-
-      <span class="text-sm text-gray-400 px-3">
-        Opcje
-      </span>
-
-      <a
-        v-for="page in pages"
-        :key="page.title"
-        :href="page.href"
-        class="option"
-        :class="{'!text-primary': isSelected(page) }"
-      >
-        {{ page.title }}
-      </a>
-
-      <span class="text-sm text-gray-400 px-3 mt-auto">
-        Sesja
-      </span>
-
-      <label class="option">
-        <FormButton
-          v-if="user"
-          method="post"
-          href="/auth/logout"
-          text
+        <a
+          v-for="page in pages"
+          :key="page.title"
+          :href="page.href"
+          class="option"
+          :class="{'!text-primary': isSelected(page) }"
         >
-          Wyloguj
-        </FormButton>
-      </label>
+          {{ page.title }}
+        </a>
+
+        <span class="text-sm text-gray-400 px-3 mt-auto">
+          Sesja
+        </span>
+
+        <label class="option">
+          <FormButton
+            v-if="user"
+            method="post"
+            href="/auth/logout"
+            text
+          >
+            Wyloguj
+          </FormButton>
+        </label>
+      </div>
     </div>
   </header>
 </template>
