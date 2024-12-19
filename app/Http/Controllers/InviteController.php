@@ -50,11 +50,11 @@ class InviteController extends Controller
     {
         $this->authorize("invite", $quiz);
 
-        $assignAction->execute($quiz, collect($request->input("ids")));
+        $assignAction->execute($quiz, collect($request->input("ids")), $request->user());
 
         return redirect()
             ->back()
-            ->with("status", "Użytkownicy zostali przypisani do testu.");
+            ->with("status", "Użytkownicy zostali przypisani do testu.  Za 15 minut zostaną o tym powiadomieni drogą mailową. Jeżeli w ciągu 15 minut anulujesz zaproszenie, mail nie zostanie wysłany.");
     }
 
     public function unassign(Quiz $quiz, InviteQuizRequest $request, UnassignFromQuizAction $unassignAction): RedirectResponse
