@@ -31,8 +31,6 @@ class SendInvitedToQuizNotificationTest extends TestCase
         parent::setUp();
 
         Bus::fake();
-        Cache::shouldReceive("get")->andReturn(null);
-        Cache::shouldReceive("set")->andReturn(true);
 
         $this->now = Carbon::create(2024, 12, 19, 12, 0, 0);
         Carbon::setTestNow($this->now);
@@ -53,10 +51,11 @@ class SendInvitedToQuizNotificationTest extends TestCase
         $listener = new SendInvitedToQuizNotification();
         $listener->handle(new UserInvitedToQuiz($this->quiz, $this->invitee, $this->inviter));
 
-        Cache::shouldReceive("set")->with(
-            "send_invite-" . $this->quiz->id . "-" . $this->invitee->id,
-            Mockery::type("string"),
-        );
+        $cacheKey = "send_invite-" . $this->quiz->id . "-" . $this->invitee->id;
+        $cacheValue = Cache::get($cacheKey);
+
+        $this->assertNotNull($cacheValue);
+        $this->assertIsString($cacheValue);
 
         Bus::assertBatched(function ($batch) {
             $job = $batch->jobs->first();
@@ -70,11 +69,11 @@ class SendInvitedToQuizNotificationTest extends TestCase
 
     public function testHandleCancelsExistingBatch(): void
     {
-        $existingBatchId = "existing-batch-id";
-        Cache::shouldReceive("get")->andReturn($existingBatchId);
-
         $fakeBatch = Mockery::mock(BatchFake::class);
         $fakeBatch->shouldReceive("cancel");
+
+        $busName = "send_invite-" . $this->quiz->id . "-" . $this->invitee->id;
+        Cache::put($busName, $fakeBatch->id);
 
         Bus::dispatch($fakeBatch);
 
