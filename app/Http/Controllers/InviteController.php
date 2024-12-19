@@ -8,9 +8,9 @@ use App\Actions\AssignToQuizAction;
 use App\Actions\UnassignFromQuizAction;
 use App\Helpers\SortHelper;
 use App\Http\Requests\InviteQuizRequest;
+use App\Http\Resources\QuizResource;
 use App\Http\Resources\UserResource;
 use App\Models\Quiz;
-use App\Models\School;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -31,9 +31,17 @@ class InviteController extends Controller
         $query = $this->filterByMode($query, $request);
         $query = $this->filterBySchool($query, $request);
 
+        $quizzes = Quiz::query()
+            ->select("id", "title")
+            ->whereNotNull("scheduled_at")
+            ->where("scheduled_at", ">", now())
+            ->whereNotNull("locked_at")
+            ->get();
+
         return Inertia::render("Admin/Invite", [
             "users" => UserResource::collection($sort->paginate($query)),
-            "quiz" => $quiz,
+            "quiz" => QuizResource::make($quiz),
+            "quizzes" => $quizzes,
             "assigned" => $quiz->assignedUsers->pluck("id"),
         ]);
     }
@@ -58,24 +66,6 @@ class InviteController extends Controller
         return redirect()
             ->back()
             ->with("status", "Użytkownicy zostali wypisani z testu.");
-    }
-
-    protected function groupBySchool(Builder $query, Request $request): Builder
-    {
-        $groupBySchool = $request->query("groupBySchool", "false");
-
-        if ($groupBySchool !== "true") {
-            return $query;
-        }
-
-        $schoolIds = School::query()
-            ->select("id")
-            ->join("users", "schools.id", "=", "users.school_id")
-            ->groupBy("schools.id")
-            ->orderBy("schools.id")
-            ->pluck("id");
-
-        return $query->whereIn("school_id", $schoolIds)->orderBy("school_id");
     }
 
     private function filterByMode(Builder $query, Request $request)
