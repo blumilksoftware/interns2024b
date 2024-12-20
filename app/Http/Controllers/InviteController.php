@@ -54,7 +54,7 @@ class InviteController extends Controller
 
         return redirect()
             ->back()
-            ->with("status", "Użytkownicy zostali przypisani do testu.  Za 15 minut zostaną o tym powiadomieni drogą mailową. Jeżeli w ciągu 15 minut anulujesz zaproszenie, mail nie zostanie wysłany.");
+            ->with("status", "Użytkownicy zostali przypisani do testu. Za 15 minut zostaną o tym powiadomieni drogą mailową. Jeżeli w ciągu 15 minut anulujesz zaproszenie, e-mail nie zostanie wysłany.");
     }
 
     public function unassign(Quiz $quiz, InviteQuizRequest $request, UnassignFromQuizAction $unassignAction): RedirectResponse
