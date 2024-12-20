@@ -30,6 +30,7 @@ class InviteUserNotification extends Notification implements ShouldQueue
             ->view("emails.auth.invite-user", [
                 "user" => $notifiable,
                 "quiz" => $this->quiz,
+                "url" => url("/dashboard")
             ]);
     }
 }

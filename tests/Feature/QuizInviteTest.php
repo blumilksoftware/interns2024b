@@ -84,7 +84,7 @@ class QuizInviteTest extends TestCase
         $this->actingAs($this->admin)
             ->post("/admin/quizzes/{$this->quiz->id}/invite/assign", ["ids" => $userIds])
             ->assertRedirect()
-            ->assertSessionHas("status", "Użytkownicy zostali przypisani do testu.  Za 15 minut zostaną o tym powiadomieni drogą mailową. Jeżeli w ciągu 15 minut anulujesz zaproszenie, mail nie zostanie wysłany.");
+            ->assertSessionHas("status", "Użytkownicy zostali przypisani do testu. Za 15 minut zostaną o tym powiadomieni drogą mailową. Jeżeli w ciągu 15 minut anulujesz zaproszenie, e-mail nie zostanie wysłany.");
 
         foreach ($userIds as $userId) {
             $this->assertDatabaseHas("quiz_assignments", [
@@ -95,7 +95,7 @@ class QuizInviteTest extends TestCase
 
         $this->actingAs($this->admin)
             ->post("/admin/quizzes/{$this->quiz->id}/invite/assign", ["ids" => $userIds])
-            ->assertRedirect()->assertSessionHas("status", "Użytkownicy zostali przypisani do testu.  Za 15 minut zostaną o tym powiadomieni drogą mailową. Jeżeli w ciągu 15 minut anulujesz zaproszenie, mail nie zostanie wysłany.");
+            ->assertRedirect()->assertSessionHas("status", "Użytkownicy zostali przypisani do testu. Za 15 minut zostaną o tym powiadomieni drogą mailową. Jeżeli w ciągu 15 minut anulujesz zaproszenie, e-mail nie zostanie wysłany.");
     }
 
     public function testSkipAlreadyAssignedUsersWhileAssigningToQuiz(): void
