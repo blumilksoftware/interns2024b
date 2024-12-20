@@ -6,8 +6,8 @@ import { injectRequestResolutionEmitter } from '@/Helpers/RequestResolution'
 
 const resolution = injectRequestResolutionEmitter()
 const props = withDefaults(
-  defineProps<VisitOptions & { href:string, disabled?:boolean, type?:'button'|'submit'|'reset' }>(),
-  { type: undefined, preserveState: true, preserveScroll: true},
+  defineProps<VisitOptions & { href: string, disabled?: boolean, type?: 'button'|'submit'|'reset' }>(),
+  { type: undefined, preserveState: true, preserveScroll: true },
 )
 const processing = ref(false)
 const emit = defineEmits<{ processing: [processing:boolean], errors: [errors:Errors], click: [] }>()
@@ -22,7 +22,7 @@ function onRequestStart(pending: PendingVisit) {
   resolution.emitRequestErrors({})
 }
 
-function onRequestError(errors:Errors){
+function onRequestError(errors: Errors){
   if (props.onError) props.onError(errors)
   processing.value = false
   emit('errors', errors)
@@ -30,7 +30,7 @@ function onRequestError(errors:Errors){
   resolution.emitRequestErrors(errors)
 }
 
-function onRequestFinish(finish:ActiveVisit) {
+function onRequestFinish(finish: ActiveVisit) {
   if (props.onFinish) props.onFinish(finish)
   processing.value = false
   emit('processing', processing.value)
@@ -40,7 +40,8 @@ function onRequestFinish(finish:ActiveVisit) {
 
 function visit() {
   router.visit(
-    props.href, {
+    props.href, 
+    {
       method: props.method ?? 'get',
       data: props.data,
       replace: props.replace,

@@ -9,10 +9,8 @@ use App\Actions\UnassignFromQuizAction;
 use App\Helpers\SortHelper;
 use App\Http\Requests\InviteQuizRequest;
 use App\Http\Resources\QuizResource;
-use App\Http\Resources\SchoolResource;
 use App\Http\Resources\UserResource;
 use App\Models\Quiz;
-use App\Models\School;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -25,17 +23,25 @@ class InviteController extends Controller
     public function index(Quiz $quiz, SortHelper $sort, Request $request): Response
     {
         $this->authorize("invite", $quiz);
+
         $query = User::query()->role("user")->with("school")->whereNotNull("email_verified_at");
         $query = $sort->sort($query, ["id"], ["name", "school"]);
         $query = $this->sortByName($query, $sort);
         $query = $this->sortBySchool($query, $sort);
-        $query = $this->filterByName($query, $request);
+        $query = $this->filterByMode($query, $request);
         $query = $this->filterBySchool($query, $request);
+
+        $quizzes = Quiz::query()
+            ->select("id", "title")
+            ->whereNotNull("scheduled_at")
+            ->where("scheduled_at", ">", now())
+            ->whereNotNull("locked_at")
+            ->get();
 
         return Inertia::render("Admin/Invite", [
             "users" => UserResource::collection($sort->paginate($query)),
             "quiz" => QuizResource::make($quiz),
-            "schools" => SchoolResource::collection(School::all()),
+            "quizzes" => $quizzes,
             "assigned" => $quiz->assignedUsers->pluck("id"),
         ]);
     }
@@ -44,11 +50,11 @@ class InviteController extends Controller
     {
         $this->authorize("invite", $quiz);
 
-        $assignAction->execute($quiz, collect($request->input("ids")));
+        $assignAction->execute($quiz, collect($request->input("ids")), $request->user());
 
         return redirect()
             ->back()
-            ->with("status", "Użytkownicy zostali przypisani do quizu.");
+            ->with("status", "Użytkownicy zostali przypisani do testu. Za 15 minut zostaną o tym powiadomieni drogą mailową. Jeżeli w ciągu 15 minut anulujesz zaproszenie, e-mail nie zostanie wysłany.");
     }
 
     public function unassign(Quiz $quiz, InviteQuizRequest $request, UnassignFromQuizAction $unassignAction): RedirectResponse
@@ -59,7 +65,18 @@ class InviteController extends Controller
 
         return redirect()
             ->back()
-            ->with("status", "Użytkownicy zostali wypisani z quizu.");
+            ->with("status", "Użytkownicy zostali wypisani z testu.");
+    }
+
+    private function filterByMode(Builder $query, Request $request)
+    {
+        $mode = $request->query("mode", "user");
+
+        if ($mode === "school") {
+            return $this->filterBySchoolName($query, $request);
+        }
+
+        return $this->filterByName($query, $request);
     }
 
     private function filterByName(Builder $query, Request $request): Builder
@@ -69,6 +86,19 @@ class InviteController extends Controller
         if ($searchName) {
             return $query->where("users.firstname", "ilike", "%$searchName%")
                 ->orWhere("users.surname", "ilike", "%$searchName%");
+        }
+
+        return $query;
+    }
+
+    private function filterBySchoolName(Builder $query, Request $request): Builder
+    {
+        $searchName = $request->query("search");
+
+        if ($searchName) {
+            return $query->whereHas("school", function (Builder $schoolQuery) use ($searchName): void {
+                $schoolQuery->where("name", "ilike", "%$searchName%");
+            });
         }
 
         return $query;

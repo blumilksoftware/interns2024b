@@ -7,9 +7,13 @@ const isInformationVisible = ref(false)
 
 <template>
   <div class="flex h-12 justify-center items-center">
-    <button class="text-primary text-2xl font-bold duration-200 hover:text-primary-bright hover:scale-105" @click="isInformationVisible = true">
+    <button
+      class="text-primary text-2xl font-bold duration-200 hover:text-primary-bright hover:scale-105"
+      @click="isInformationVisible = true"
+    >
       INFORMACJE O KONKURSIE
     </button>
   </div>
+
   <InformationModalWindow v-model:is-visible="isInformationVisible" />
 </template>

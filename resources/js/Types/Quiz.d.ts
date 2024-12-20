@@ -6,7 +6,7 @@ interface Quiz {
   duration?: number
   createdAt: string
   updatedAt: string
-  state:'published' | 'locked' | 'unlocked'
+  state: 'published' | 'locked' | 'unlocked'
   isLocal: boolean
   description?: string
   isUserAssigned: boolean

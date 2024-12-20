@@ -1,143 +1,157 @@
 <script setup lang="ts">
-import { defineProps, ref, computed } from 'vue'
+import { ref } from 'vue'
+import { Head, router } from '@inertiajs/vue3'
+import { type Errors } from '@inertiajs/core'
+import { CheckIcon } from '@heroicons/vue/20/solid'
+import { CheckCircleIcon, MinusCircleIcon, UserPlusIcon } from '@heroicons/vue/24/outline'
 import FormButton from '@/components/Common/FormButton.vue'
-import { useForm } from '@inertiajs/vue3'
-import { useParams } from '@/Helpers/Params'
+import CrudPage from '@/components/Crud/CrudPage.vue'
+import Expand from '@/components/Common/Expand.vue'
+import CustomCheckbox from '@/components/Common/CustomCheckbox.vue'
+import { keysWrapper } from '@/Helpers/KeysManager'
+import Dropdown from '@/components/Common/Dropdown.vue'
 
-const sortOptions = [
-  {
-    name: 'ID',
-    value: 'id',
-  },
-  {
-    name: 'Imię',
-    value: 'name',
-  },
-  {
-    name: 'Szkoła',
-    value: 'school',
-  },
-]
-
-const orderOptions = [
-  { name: 'Rosnąco',
-    value: 'asc',
-  },
-  { name: 'Malejąco',
-    value: 'desc',
-  },
-]
-
-const props = defineProps<{
+defineProps<{
+  errors: Errors
   users: Pagination<User>
   quiz: Quiz
-  schools: {
-    id: number
-    name: string
-    city: string
-  }
   assigned: number[]
+  quizzes: Array<{ id: number, title: string }>
 }>()
 
-const params = useParams()
+const selectedUsers = ref<number[]>([])
 
-const form = useForm({
-  search: params.name ?? '',
-  sort: params.sort ?? 'id',
-  order: params.order ?? 'asc',
-  schoolId: params.schoolId ?? null,
-  limit: params.limit ?? null,
-})
+const options: SortOption[] = [
+  { text: 'Po id (rosnąco)', key: 'id' },
+  { text: 'Po id (malejąco)', key: 'id', desc: true },
+  { text: 'Po nazwie (A–Z)', key: 'name' },
+  { text: 'Po nazwie (Z–A)', key: 'name', desc: true },
+  { text: 'Po szkole (A-Z)', key: 'school' },
+  { text: 'Po szkole (Z-A)', key: 'school', desc: true },
+]
 
-const selectedUserIds = ref<number[]>([])
+const searchBarModes = keysWrapper([
+  { text: 'Według uczniów', name: 'user' },
+  { text: 'Według szkół', name: 'school' },
+]) as Mode[]
 
-const toggleUserSelection = (userId: number) => {
-  if (selectedUserIds.value.includes(userId)) {
-    selectedUserIds.value = selectedUserIds.value.filter(id => id !== userId)
-  } else {
-    selectedUserIds.value.push(userId)
-  }
+function changeQuiz(id: number) {
+  router.get(`/admin/quizzes/${id}/invite`)
 }
-
-const showPagination = computed(() => {
-  return !params.limit
-})
 </script>
 
 <template>
-  <h1>Quiz: {{ quiz.title }}</h1>
-  Wyszukiwarka użytkowników do zapraszania do testów
+  <Head title="Zaproszenia - Panel administracyjny" />
 
-  <form @submit.prevent="form.get(`/admin/quizzes/${quiz.id}/invite`, { preserveState: true, replace: true })">
-    <div>
-      <label for="search">Wyszukaj użytkownika:</label>
-      <input v-model="form.search" type="text" placeholder="Wpisz nazwę użytkownika">
+  <CrudPage
+    :items="users"
+    :options="options"
+    :resource-name="`quizzes/${quiz.id}/invite`"
+    :search-bar-modes="searchBarModes"
+  >
+    <template #actions>
+      <Dropdown
+        pointer-position="left"
+        :options="quizzes.map(item => ({ key: item.id, text: item.title }))"
+        @option-click="(option: any) => changeQuiz(option.key)"
+      >
+        <div class="flex group items-center gap-2 p-2 hover:bg-primary/5 hover:text-primary rounded-lg duration-200 whitespace-nowrap">
+          <UserPlusIcon class="icon stroke-gray-800 group-hover:stroke-primary" />
 
-      <label for="sort">Sortowanie:</label>
-      <select v-model="form.sort" class="sorting-dropdown">
-        <option v-for="option in sortOptions" :key="option.value" :value="option.value">
-          {{ option.name }}
-        </option>
-      </select>
+          <div class="flex text-gray-800 items-center">
+            Zaproś do
+          </div>
 
-      <label for="order">Kierunek:</label>
-      <select v-model="form.order" class="order-dropdown">
-        <option v-for="option in orderOptions" :key="option.value" :value="option.value">
-          {{ option.name }}
-        </option>
-      </select>
+          <span class="font-bold  nowrap">
+            {{ quiz.title }}
+          </span>
+        </div>
+      </Dropdown>
 
-      <label for="school">Filtruj po szkołe:</label>
-      <select v-model="form.schoolId" class="school-dropdown">
-        <option :value="null">Wszystkie szkoły</option>
-        <option v-for="school in props.schools" :key="school.id" :value="school.id">
-          {{ school.name }}, {{ school.city }}
-        </option>
-      </select>
+      <Expand class="hidden sm:block" />
+    </template>
 
-      <label for="limit">Liczba wyników:</label>
-      <input v-model.number="form.limit" type="number" min="1" placeholder="Wpisz liczbę wyników">
+    <template #itemsActions>
+      <label class="flex gap-4 font-medium border-2 border-transparent">
+        <CustomCheckbox
+          :checked="selectedUsers.length > 0 && users.data.every(user=>selectedUsers.includes(user.id))"
+          :some-checked="selectedUsers.length > 0"
+          @check="checked => checked ? selectedUsers = users.data.map(user => user.id) : selectedUsers = []"
+        />
 
+        <span class="hidden md:block cursor-pointer select-none">
+          {{
+            selectedUsers.length == 0 ? 'Zaznacz wszystkich' : users.data.every(user=>selectedUsers.includes(user.id)) ? 'Odznacz wszystkich' : 'Odznacz zaznaczonych'
+          }}
+        </span>
+      </label>
 
-      <button type="submit">Apply Filters</button>
-    </div>
-  </form>
+      <div class="flex gap-4">
+        <FormButton
+          button-class="!font-medium"
+          text
+          title="Przypisz zaznaczonych"
+          method="post"
+          :data="{ ids: selectedUsers }"
+          :href="`/admin/quizzes/${quiz.id}/invite/assign`"
+        >
+          <CheckCircleIcon class="icon size-7 md:size-6" />
 
-  <div>
-    <table>
-      <thead>
-        <tr>
-          <th />
-          <th>ID Użytkownika</th>
-          <th>Imię</th>
-          <th>Nazwisko</th>
-          <th>Szkoła</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in users.data" :key="user.id">
-          <td>
-            <input
-              type="checkbox"
-              :value="user.id"
-              @change="toggleUserSelection(user.id)"
+          <span class="hidden md:block">
+            Przypisz zaznaczonych
+          </span>
+        </FormButton>
+
+        <FormButton
+          button-class="!font-medium"
+          text
+          title="Wypisz zaznaczonych"
+          method="post"
+          :data="{ ids: selectedUsers }"
+          :href="`/admin/quizzes/${quiz.id}/invite/unassign`"
+        >
+          <MinusCircleIcon class="icon size-7 md:size-6" />
+
+          <span class="hidden md:block">
+            Wypisz zaznaczonych
+          </span>
+        </FormButton>
+      </div>
+    </template>
+
+    <template #item="{item}">
+      <div
+        class="flex p-5 bg-white/70 border-2 justify-between items-center rounded-xl shadow-sm duration-200 transition-colors relative"
+        :class="{ 'border-primary': selectedUsers.includes(item.id) }"
+      >
+        <div class="flex gap-4">
+          <CustomCheckbox
+            :checked="selectedUsers.includes(item.id)"
+            @check="selectedUsers.includes(item.id) ? selectedUsers = selectedUsers.filter(id => id !== item.id) : selectedUsers.push(item.id)"
+          />
+
+          <div class="flex flex-col gap-1">
+            <div class="w-full font-bold text-lg">
+              {{ item.firstname }} {{ item.surname }}
+            </div>
+
+            <div class="text-gray-500">
+              {{ item.school.name }}
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end items-center">
+          <Transition>
+            <div
+              v-if="assigned.includes(item.id)"
+              class="flex justify-center bg-primary size-full max-w-16 absolute items-center right-0 rounded-r-xl ring-2 ring-primary"
             >
-          </td>
-          <td>{{ user.id }}</td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.surname }}</td>
-          <td>{{ user.school.name }}</td>
-          <td>{{ assigned.includes(user.id) }}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div v-if="showPagination">
-      <FormButton :disabled="!users.links.prev" method="get" :href="users.links.prev" preserve-scroll small>Poprzednia</FormButton>
-      <FormButton :disabled="!users.links.next" method="get" :href="users.links.next" preserve-scroll small>Następna</FormButton>
-    </div>
-    <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite/assign`" preserve-scroll>Przypisz zaznaczonych użytkowników</FormButton>
-    <FormButton :data="{ ids: selectedUserIds }" method="post" :href="`/admin/quizzes/${quiz.id}/invite/unassign`" preserve-scroll>Wypisz zaznaczonych użytkowników</FormButton>
-  </div>
+              <CheckIcon class="size-6 text-white stroke-[3.5] rotate-6" />
+            </div>
+          </Transition>
+        </div>
+      </div>
+    </template>
+  </CrudPage>
 </template>

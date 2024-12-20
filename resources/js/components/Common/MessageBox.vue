@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {Dialog, DialogPanel, TransitionRoot, TransitionChild} from '@headlessui/vue'
+import { Dialog, DialogPanel, TransitionRoot, TransitionChild } from '@headlessui/vue'
 import { type VNode } from 'vue'
 
 defineSlots<{
@@ -14,8 +14,14 @@ const emit = defineEmits(['close'])
 
 <template>
   <Teleport to="body">
-    <TransitionRoot :show="open" as="template">
-      <Dialog class="relative z-50 duration-200" @close="emit('close')">
+    <TransitionRoot
+      :show="open"
+      as="template"
+    >
+      <Dialog
+        class="relative z-50 duration-200"
+        @close="emit('close')"
+      >
         <TransitionChild
           as="template"
           enter="duration-200 ease-out"
@@ -43,9 +49,11 @@ const emit = defineEmits(['close'])
                 <h3 class="font-semibold leading-6 text-xl text-primary">
                   <slot name="title" />
                 </h3>
+
                 <div class="mt-2 max-w-xl text-black">
                   <slot name="message" />
                 </div>
+
                 <div class="mt-5 flex gap-4 justify-end">
                   <slot name="buttons" />
                 </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide, type Ref, ref } from 'vue'
+import { computed, provide, type Ref, ref } from 'vue'
 import { Head } from '@inertiajs/vue3'
 import Expand from '@/components/Common/Expand.vue'
 import QuizComponent from '@/components/QuizzesPanel/QuizComponent.vue'
@@ -30,21 +30,11 @@ const sortOptions: SortOption[] = [
 const params = useParams()
 const hideArchivedQuizzes = ref<boolean>(params.archived !== 'true')
 
-function customQueries(): string[] {
-  let query: string[] = []
-
-  if (!hideArchivedQuizzes.value) {
-    query.push(`archived=${true}`)
-  }
-
-  return query
-}
+const customQueries = computed(() => ({ archived: !hideArchivedQuizzes.value }))
 </script>
 
 <template>
-  <Head>
-    <title>Testy - Panel administracyjny</title>
-  </Head>
+  <Head title="Testy - Panel administracyjny" />
 
   <CrudPage
     :options="sortOptions"
@@ -61,7 +51,10 @@ function customQueries(): string[] {
         @click="hideArchivedQuizzes = !hideArchivedQuizzes"
       >
         <ArchiveDynamicIcon :active="hideArchivedQuizzes" />
-        <span class="hidden sm:block">{{ hideArchivedQuizzes ? 'Wyświetl' : 'Schowaj' }} zarchiwizowane testy</span>
+
+        <span class="hidden sm:block">
+          {{ hideArchivedQuizzes ? 'Wyświetl' : 'Schowaj' }} zarchiwizowane testy
+        </span>
       </button>
 
       <Expand class="hidden md:block" />
@@ -78,9 +71,7 @@ function customQueries(): string[] {
     </template>
 
     <template #item="{item}">
-      <QuizComponent
-        :quiz="item"
-      />
+      <QuizComponent :quiz="item" />
     </template>
 
     <template #noContent="{search}">

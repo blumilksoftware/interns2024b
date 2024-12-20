@@ -11,9 +11,9 @@ export function calcSecondsLeftToDate(date: string | number | Dayjs = 0): number
 
 export function secondsToHour(seconds: number): TimeObject {
   return {
-    'h': Math.floor(seconds / 3600),
-    'm': Math.floor(seconds % 3600  / 60),
-    's': seconds % 60,
+    h: Math.floor(seconds / 3600),
+    m: Math.floor(seconds % 3600  / 60),
+    s: seconds % 60,
   }
 }
 
@@ -25,7 +25,7 @@ const translateHoursLeft = usePlurals('godzina', 'godziny', 'godzin')
 export function timeToString(time: TimeObject, withLeft = false): string {
   const { s, m, h } = time
 
-  function formatTime(h:number|undefined, m:number|undefined, s:number|undefined) {
+  function formatTime(h: number|undefined, m: number|undefined, s: number|undefined) {
     const hours = h ? `${h} ${translateHoursLeft(h)}` : ''
     const minutes = m ? `${m} ${translateMinutesLeft(m)}` : ''
     const seconds =  s ? `${s} ${translateSecondsLeft(s)}` : ''
@@ -35,16 +35,16 @@ export function timeToString(time: TimeObject, withLeft = false): string {
   }
 
   if (h) {
-    return formatTime(h,m,undefined)
+    return formatTime(h, m, undefined)
   }
 
   if (m < 10) {
-    return formatTime(undefined,m,s)
+    return formatTime(undefined, m, s)
   }
 
   if (m) {
-    return formatTime(undefined,m,undefined)
+    return formatTime(undefined, m, undefined)
   }
 
-  return formatTime(undefined,undefined,s)
+  return formatTime(undefined, undefined, s)
 }

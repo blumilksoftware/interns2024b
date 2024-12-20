@@ -28,33 +28,59 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
 
   <div class="flex flex-col w-full p-5 gap-5 max-w-6xl">
     <Divider v-if="started.length > 0">
-      <h1 class="font-bold text-lg text-primary whitespace-nowrap">Trwające konkursy</h1>
+      <h1 class="font-bold text-lg text-primary whitespace-nowrap">
+        Trwające konkursy
+      </h1>
     </Divider>
+
     <QuizItem
       v-for="quiz in started"
       :key="quiz.id"
       :title="quiz.title"
       :time="quiz.scheduledAt"
     >
-      <FormButton button-class="min-w-32 w-full 2xs:w-fit" class="w-full 2xs:w-fit" method="post" :href="`/quizzes/${quiz.id}/start`" preserve-scroll>
+      <FormButton
+        button-class="min-w-32 w-full 2xs:w-fit"
+        class="w-full 2xs:w-fit"
+        method="post"
+        :href="`/quizzes/${quiz.id}/start`"
+        preserve-scroll
+      >
         Weź udział
       </FormButton>
     </QuizItem>
 
     <Divider v-if="scheduled.length > 0 || started.length == 0">
-      <h1 class="font-bold text-lg text-primary whitespace-nowrap">Nadchodzące konkursy</h1>
+      <h1 class="font-bold text-lg text-primary whitespace-nowrap">
+        Nadchodzące konkursy
+      </h1>
     </Divider>
+
     <QuizItem
       v-for="quiz in scheduled"
       :key="quiz.id"
       :title="quiz.title"
       :time="quiz.scheduledAt"
     >
-      <FormButton v-if="!quiz.isUserAssigned" button-class="min-w-32 w-full 2xs:w-fit" class="w-full 2xs:w-fit" method="post" :href="`/quizzes/${quiz.id}/assign`" preserve-scroll>
+      <FormButton
+        v-if="!quiz.isUserAssigned"
+        button-class="min-w-32 w-full 2xs:w-fit"
+        class="w-full 2xs:w-fit"
+        method="post"
+        :href="`/quizzes/${quiz.id}/assign`"
+        preserve-scroll
+      >
         Zapisz się
       </FormButton>
 
-      <FormButton v-else button-class="min-w-32 w-full 2xs:w-fit" class="w-full 2xs:w-fit" disabled method="post" :href="`/quizzes/${quiz.id}/assign`">
+      <FormButton
+        v-else
+        button-class="min-w-32 w-full 2xs:w-fit"
+        class="w-full 2xs:w-fit"
+        disabled
+        method="post"
+        :href="`/quizzes/${quiz.id}/assign`"
+      >
         Zapisano
       </FormButton>
     </QuizItem>
@@ -64,15 +90,22 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
     </div>
 
     <Divider v-if="history.length > 0">
-      <h1 class="font-bold text-lg text-primary whitespace-nowrap">Historia</h1>
+      <h1 class="font-bold text-lg text-primary whitespace-nowrap">
+        Historia
+      </h1>
     </Divider>
+
     <QuizItem
       v-for="userQuiz in history"
       :key="userQuiz.id"
       :title="userQuiz.title"
       :time="userQuiz.closedAt"
     >
-      <LinkButton class="min-w-32 w-full 2xs:w-fit" button-class="justify-center" :href="`/quizzes/${userQuiz.id}/result`">
+      <LinkButton
+        class="min-w-32 w-full 2xs:w-fit"
+        button-class="justify-center"
+        :href="`/quizzes/${userQuiz.id}/result`"
+      >
         Wyniki
       </LinkButton>
     </QuizItem>

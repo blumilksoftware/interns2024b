@@ -2,14 +2,14 @@ import { type DirectiveBinding } from 'vue'
 
 const canvas = document.createElement('canvas')
 
-function initDynamicWidthCalc(input:HTMLInputElement & { _calculateDynamicWidth:() => void }, binding?:DirectiveBinding<boolean>) {
+function initDynamicWidthCalc(input: HTMLInputElement & { _calculateDynamicWidth: () => void }, binding?: DirectiveBinding<boolean>) {
   input._calculateDynamicWidth = () => calculateDynamicWidth(input, binding)
   document.fonts.addEventListener('loadingdone', input._calculateDynamicWidth)
   input.addEventListener('transitionend', input._calculateDynamicWidth)
   input._calculateDynamicWidth()
 }
 
-function calculateDynamicWidth(input:HTMLInputElement, binding?:DirectiveBinding<boolean>){
+function calculateDynamicWidth(input: HTMLInputElement, binding?: DirectiveBinding<boolean>){
   if (binding?.value === false) {
     return
   }
@@ -22,12 +22,12 @@ function calculateDynamicWidth(input:HTMLInputElement, binding?:DirectiveBinding
 
   const { fontWeight, fontSize, fontFamily } = window.getComputedStyle(input)
   context.font = `${fontWeight} ${fontSize} ${fontFamily}`
-  const width = `${context.measureText(input.value || input.placeholder).width}px`
+  const width = context.measureText(input.value || input.placeholder).width
 
-  input.style.width = `clamp(1.1rem,${width},100%)`
+  input.style.width = `clamp(1.1rem,${width}px,100%)`
 }
 
-function removeDynamicWidthCalc(input:HTMLInputElement & { _calculateDynamicWidth:() => void }) {
+function removeDynamicWidthCalc(input: HTMLInputElement & { _calculateDynamicWidth: () => void }) {
   document.fonts.removeEventListener('loadingdone', input._calculateDynamicWidth)
   input.removeEventListener('transitionend', input._calculateDynamicWidth)
 }

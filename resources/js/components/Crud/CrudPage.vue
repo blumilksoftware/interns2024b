@@ -5,31 +5,31 @@ import { vAutoAnimate } from '@formkit/auto-animate'
 import Expand from '@/components/Common/Expand.vue'
 import Dropdown from '@/components/Common/Dropdown.vue'
 import { type Errors } from '@inertiajs/core'
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import Button from '@/components/Common/Button.vue'
 import CrudNewItem from '@/components/Crud/CrudNewItem.vue'
 import CrudItem from '@/components/Crud/CrudItem.vue'
-import { useSorter } from '@/Helpers/Sorter'
+import { useQuery } from '@/Helpers/Query'
 import SearchBar from '@/components/Crud/SearchBar.vue'
-import Pagination from '@/components/Common/Pagination.vue'
-import { useParams } from '@/Helpers/Params'
+import PaginationSwitch from '@/components/Common/PaginationSwitch.vue'
 import NoContent from '@/components/Common/NoContent.vue'
 
 const props = defineProps<{
   items: Pagination<T>
   options: SortOption[]
-  customQueries?: () => string[]
+  customQueries?: Record<string, any>
   customSearch?: (text: string | undefined) => string | undefined
   displaySearchInLowerCase?: boolean
   resourceName: string
   newButtonText?: string
   newItemData?: Partial<N>
   disableEditButton?: boolean
+  searchBarModes?: Mode[]
   deletable?: boolean
   creatable?: boolean
 }>()
 
-defineSlots<{
+const slots = defineSlots<{
   actions: () => any
   title: (scope: { item: T, editing: boolean, errors: Errors }) => any
   deleteMessage: (scope: { item: T }) => any
@@ -38,41 +38,56 @@ defineSlots<{
   itemActions: (scope: { item: T, showDeleteMsg: () => void, editMode: (enabled: boolean) => void }) => any
   itemData: (scope: { item: T, editing: boolean, errors: Errors }) => any
   noContent: (scope: { search: boolean }) => any
+  itemsActions: () => any
 }>()
 
-const pagination = props.items
+const pagination = computed(() => props.items)
 const newItemMode = ref(false)
-const params = useParams()
-const searchValue = ref<string | undefined>(params.search)
 
-function handleSearch(text: string | undefined) {
-  if (props.customSearch) {
-    searchValue.value = props.customSearch(text)
-  } else {
-    searchValue.value = text
-  }
+const queryParams = useQuery<Record<string, any>>(() => ({ page: 1, ...props.customQueries }))
+
+const isSearchbarEmpty = ref(!queryParams.search)
+watch(() => props.items.data, () => isSearchbarEmpty.value = !queryParams.search)
+
+function handleSearch(text: string | undefined, mode?: string) {
+  queryParams.search = props.customSearch ? props.customSearch(text) : text?.toLocaleUpperCase()
+  queryParams.mode = mode?.toLocaleLowerCase()
 }
 
-const isSearchbarEmpty = ref(!params.search)
-watch(() => props.items.data, () => {
-  isSearchbarEmpty.value = !searchValue.value
-})
-
-const [query, options] = useSorter(props.options, searchValue, props.customQueries)
+function pageSwitch(isLeftSwitch: boolean) {
+  const currentPage = pagination.value.meta.current_page ?? queryParams.page
+  queryParams.page = isLeftSwitch ? currentPage -1 : currentPage + 1
+}
 </script>
 
 <template>
   <div class="flex flex-col w-full pb-3">
-    <div data-name="toolbar" class="flex flex-col xs:flex-row px-4 gap-2">
-      <Dropdown pointer-position="left" class-btn="rounded-lg" class="mr-auto" :options="options" title="Sortuj">
+    <div
+      data-name="toolbar"
+      class="flex flex-col xs:flex-row px-4 gap-2"
+    >
+      <Dropdown
+        pointer-position="left"
+        class-btn="rounded-lg"
+        class="mr-auto"
+        title="Sortuj"
+        :options="props.options"
+        @option-click="(option: SortOption) => {
+          queryParams.sort = option.key
+          queryParams.order = option.desc ? 'desc' : 'asc'
+        }"
+      >
         <div class="flex gap-2 hover:bg-primary/5 hover:text-primary duration-200 p-2 rounded-lg h-fit">
           <ArrowsUpDownIcon class="size-6" />
-          <span class="hidden sm:block">Sortuj</span>
+
+          <span class="hidden sm:block">
+            Sortuj
+          </span>
         </div>
       </Dropdown>
 
       <slot name="actions">
-        <Expand class="hidden md:block" />
+        <Expand class="hidden sm:block" />
       </slot>
 
       <Button
@@ -83,58 +98,123 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
         :disabled="newItemMode"
         @click="newItemMode = true"
       >
-        <PlusCircleIcon class="size-6 text-white" />
-        {{ newButtonText }}
+        <PlusCircleIcon class="size-6 text-white" /> {{ newButtonText }}
       </Button>
     </div>
 
     <div class="flex w-full px-4 mt-2 justify-between gap-2">
-      <SearchBar class="w-full" :default-value="displaySearchInLowerCase ? params.search?.toLowerCase() : params.search" @search="handleSearch" />
-      <Pagination v-if="items.data.length > 0" :data="pagination" :query="query" />
+      <SearchBar
+        class="w-full"
+        :default-value="displaySearchInLowerCase ? queryParams.search?.toLowerCase() : queryParams.search"
+        :modes="searchBarModes"
+        @search="handleSearch"
+      />
+
+      <PaginationSwitch
+        v-if="items.data.length > 0"
+        :disabled-left="!pagination.links.prev"
+        :disabled-right="!pagination.links.next"
+        :from="pagination.meta.from"
+        :to="pagination.meta.to"
+        @switch="pageSwitch"
+      />
     </div>
 
-    <div v-auto-animate class="flex flex-col gap-4 p-4">
+    <div
+      v-if="!!slots.itemsActions"
+      class="flex gap-4 pt-4 px-9 justify-between items-center"
+    >
+      <slot name="itemsActions" />
+    </div>
+
+    <div
+      v-auto-animate
+      class="flex flex-col gap-4 p-4"
+    >
       <template v-if="newItemMode">
-        <slot name="newItem" :new-item-mode="newItemMode">
-          <CrudNewItem :new-item-data="newItemData" :resource-name="resourceName" @done="newItemMode = false">
+        <slot
+          name="newItem"
+          :new-item-mode="newItemMode"
+        >
+          <CrudNewItem
+            :new-item-data="newItemData"
+            :resource-name="resourceName"
+            @done="newItemMode = false"
+          >
             <template #title="data">
-              <slot name="title" v-bind="data as any" />
+              <slot
+                name="title"
+                v-bind="(data as any)"
+              />
             </template>
 
             <template #data="data">
-              <slot name="itemData" v-bind="data as any" />
+              <slot
+                name="itemData"
+                v-bind="(data as any)"
+              />
             </template>
           </CrudNewItem>
         </slot>
       </template>
 
-      <slot v-for="item of items.data" :key="item.id" name="item" :item="item">
-        <CrudItem :item="item" :resource-name="resourceName" :deletable="deletable" :disable-edit-button="disableEditButton">
+      <slot
+        v-for="item of items.data"
+        :key="item.id"
+        name="item"
+        :item="item"
+      >
+        <CrudItem
+          :item="item"
+          :resource-name="resourceName"
+          :deletable="deletable"
+          :disable-edit-button="disableEditButton"
+        >
           <template #deleteMessage="data">
-            <slot name="deleteMessage" v-bind="data" />
+            <slot
+              name="deleteMessage"
+              v-bind="data"
+            />
           </template>
 
           <template #title="data">
-            <slot name="title" v-bind="data" />
+            <slot
+              name="title"
+              v-bind="data"
+            />
           </template>
 
           <template #actions="{editMode, showDeleteMsg}">
-            <slot name="itemActions" :item="item" :show-delete-msg="showDeleteMsg" :edit-mode="editMode" />
+            <slot
+              name="itemActions"
+              :item="item"
+              :show-delete-msg="showDeleteMsg"
+              :edit-mode="editMode"
+            />
           </template>
 
           <template #data="data">
-            <slot name="itemData" v-bind="data" />
+            <slot
+              name="itemData"
+              v-bind="data"
+            />
           </template>
         </CrudItem>
       </slot>
 
       <template v-if="items.data.length === 0">
-        <slot name="noContent" :search="!isSearchbarEmpty">
+        <slot
+          name="noContent"
+          :search="!isSearchbarEmpty"
+        >
           <NoContent :description="!isSearchbarEmpty ? `Wygląda na to że nie mamy tego czego szukasz.` : undefined">
             <div v-if="isSearchbarEmpty">
-              <Button class="rounded-xl" button-class="pl-3 font-bold" @click="newItemMode = true">
-                <PlusCircleIcon class="size-6 text-white" />
-                {{ newButtonText }}
+              <Button
+                class="rounded-xl"
+                button-class="pl-3 font-bold"
+                @click="newItemMode = true"
+              >
+                <PlusCircleIcon class="size-6 text-white" /> {{ newButtonText }}
               </Button>
             </div>
           </NoContent>
@@ -142,8 +222,18 @@ const [query, options] = useSorter(props.options, searchValue, props.customQueri
       </template>
     </div>
 
-    <div v-if="items.data.length > 0" class="flex justify-center">
-      <Pagination :data="pagination" :query="query" />
+    <div
+      v-if="items.data.length > 0"
+      class="flex justify-center"
+    >
+      <PaginationSwitch
+        v-if="items.data.length > 0"
+        :disabled-left="!pagination.links.prev"
+        :disabled-right="!pagination.links.next"
+        :from="pagination.meta.from"
+        :to="pagination.meta.to"
+        @switch="pageSwitch"
+      />
     </div>
   </div>
 </template>

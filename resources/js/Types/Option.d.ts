@@ -1,6 +1,6 @@
 interface Option{
   key: number | string
-  title? : string
+  title?: string
   text: string
   action?: () => void
 }

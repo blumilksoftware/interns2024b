@@ -8,6 +8,7 @@ use App\Enums\Voivodeship;
 use App\Helpers\SortHelper;
 use App\Http\Requests\SchoolRequest;
 use App\Http\Resources\SchoolResource;
+use App\Http\Resources\SchoolSearchResource;
 use App\Jobs\FetchSchoolsJob;
 use App\Models\School;
 use Illuminate\Bus\Batch;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
@@ -29,16 +31,16 @@ class SchoolsController extends Controller
 {
     public function index(SortHelper $sorter, Request $request): Response
     {
-        $query = School::query()->where("is_admin_school", false);
-        $query = $sorter->sort($query, ["id", "name", "regon", "updated_at", "created_at"], ["students", "address"]);
-        $query = $this->sortByStudents($query, $sorter);
-        $query = $this->sortByAddress($query, $sorter);
-        $query = $this->filterDisabledSchools($query, $request);
-        $query = $sorter->search($query, "name");
+        $schools = $this->searchQuery($sorter, $request);
 
-        return Inertia::render("Admin/SchoolsPanel", [
-            "schools" => SchoolResource::collection($sorter->paginate($query)),
-        ]);
+        return Inertia::render("Admin/SchoolsPanel", ["schools" => SchoolResource::collection($schools)]);
+    }
+
+    public function search(SortHelper $sorter, Request $request): JsonResponse
+    {
+        $schools = $this->searchQuery($sorter, $request);
+
+        return SchoolSearchResource::collection($schools)->response();
     }
 
     public function store(SchoolRequest $request): RedirectResponse
@@ -132,6 +134,18 @@ class SchoolsController extends Controller
         }
 
         return Bus::findBatch($batchId);
+    }
+
+    private function searchQuery(SortHelper $sorter, Request $request): LengthAwarePaginator
+    {
+        $query = School::query()->where("is_admin_school", false);
+        $query = $sorter->sort($query, ["id", "name", "regon", "updated_at", "created_at"], ["students", "address"]);
+        $query = $this->sortByStudents($query, $sorter);
+        $query = $this->sortByAddress($query, $sorter);
+        $query = $this->filterDisabledSchools($query, $request);
+        $query = $sorter->search($query, "name");
+
+        return $sorter->paginate($query);
     }
 
     private function sortByStudents(Builder $query, SortHelper $sorter): Builder

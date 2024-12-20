@@ -8,16 +8,19 @@ defineProps<{
 }>()
 
 const emit = defineEmits(['close'])
-
 </script>
 
 <template>
-  <MessageBox :open="open" @close="emit('close')">
+  <MessageBox
+    :open="open"
+    @close="emit('close')"
+  >
     <template #message>
       <div class="flex gap-5">
         <div class="bg-red/10 p-5 rounded-full h-fit">
           <ExclamationTriangleIcon class="size-6 text-red" />
         </div>
+
         <div>
           <slot name="message" />
         </div>
@@ -25,7 +28,11 @@ const emit = defineEmits(['close'])
     </template>
 
     <template #buttons>
-      <button v-if="!hideCancelButton" class="px-2 font-bold" @click="emit('close')">
+      <button
+        v-if="!hideCancelButton"
+        class="px-2 font-bold"
+        @click="emit('close')"
+      >
         Anuluj
       </button>
 

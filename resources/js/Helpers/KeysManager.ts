@@ -2,16 +2,16 @@ import { nanoid } from 'nanoid'
 
 const keyedObjects = new WeakSet()
 
-export function keysWrapper<T extends object & {key?:string}>(objects: T[]): Array<T & {key:string}>{
+export function keysWrapper<T extends object & {key?: string}>(objects: T[]): Array<T & {key: string}>{
   if (!keyedObjects.has(objects)) 
     for (const obj of objects)
       obj.key ??= nanoid()
-  return objects as Array<T & {key:string}>
+  return objects as Array<T & {key: string}>
 }
 
-const itemsAsKeys = new WeakMap<object,string>()
+const itemsAsKeys = new WeakMap<object, string>()
 
-export default function getKey(item: object) : string{
+export default function getKey(item: object): string{
   if (!itemsAsKeys.has(item)) 
     itemsAsKeys.set(item, nanoid())
   return itemsAsKeys.get(item) ?? nanoid()
