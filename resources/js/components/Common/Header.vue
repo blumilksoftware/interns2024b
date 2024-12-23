@@ -73,7 +73,7 @@ watch(open, isOpen => document.body.style.overflow = isOpen ? 'hidden' : '')
       :class="{'bg-primary/[.02] backdrop-blur-md pointer-events-auto':open}"
     >
       <div
-        class="bg-white h-full top-0 absolute left-full duration-200 flex flex-col gap-4 p-4 min-w-[50%] scale-95 overflow-y-auto"
+        class="bg-white h-full top-0 absolute left-full duration-200 flex flex-col gap-4 p-4 min-w-80 scale-95 overflow-y-auto"
         :class="{'-translate-x-full shadow-lg !scale-100':open}"
       >
         <div class="flex justify-between option !py-3">
