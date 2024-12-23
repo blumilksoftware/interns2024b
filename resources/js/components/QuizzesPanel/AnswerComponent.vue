@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import CheckDynamicIcon from '@/components/Icons/CheckDynamicIcon.vue'
-import vDynamicInputHeight from '@/Helpers/vDynamicTextAreaHeight'
+import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 
 defineProps<{ editing: boolean }>()
@@ -30,7 +30,7 @@ const emit = defineEmits<{ delete: [answer:Answer], setCorrect: [answer:Answer]}
       <textarea
         v-else
         v-model="answer.text"
-        v-dynamic-input-height
+        v-dynamic-text-area-height
         placeholder="Wpisz odpowiedź"
         class="h-12 w-full p-2 bg-transparent outline-none border-b border-primary/30 focus:border-primary/60"
       />

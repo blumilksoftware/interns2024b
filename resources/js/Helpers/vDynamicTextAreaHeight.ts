@@ -8,6 +8,7 @@ function initDynamicHeightCalc(input: HTMLTextAreaElement & { _calculateDynamicH
 
   input._calculateDynamicHeight()
   input.style.resize = 'none'
+  input.style.overflowY = 'hidden'
 }
 
 function calculateDynamicHeight(input: HTMLTextAreaElement, binding?: DirectiveBinding<boolean>){
@@ -26,10 +27,10 @@ function removeDynamicHeightCalc(input: HTMLTextAreaElement & { _calculateDynami
   input.removeEventListener('transitionend', input._calculateDynamicHeight)
 }
 
-const vDynamicInputHeight = {
+const vDynamicTextAreaHeight = {
   mounted: initDynamicHeightCalc,
   updated: calculateDynamicHeight,
   unmounted: removeDynamicHeightCalc,
 }
 
-export default vDynamicInputHeight
+export default vDynamicTextAreaHeight
