@@ -5,7 +5,6 @@ import { formatDate } from '@/Helpers/Format'
 import CrudInput from '@/components/Crud/CrudInput.vue'
 import { computed } from 'vue'
 import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
-import { vAutoAnimate } from '@formkit/auto-animate'
 
 defineProps<{
   editing: boolean
@@ -18,10 +17,7 @@ const quizModeString = computed(() => quiz.value.isLocal ? 'Offline' : 'Online')
 </script>
 
 <template>
-  <div
-    v-auto-animate
-    class="flex flex-col flex-1 w-full px-2"
-  >
+  <div class="flex flex-col flex-1 w-full px-2">
     <CrudInput
       v-model="quiz.title"
       name="title"
