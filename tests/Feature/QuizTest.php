@@ -55,7 +55,7 @@ class QuizTest extends TestCase
                     ->has("quizzes.data.1.questions", 5),
             );
     }
-    
+
     public function testAdminCanCreateQuiz(): void
     {
         $this->actingAs($this->admin)
