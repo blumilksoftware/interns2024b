@@ -131,7 +131,7 @@ function toggleEditing(isEditing: boolean){
     </template>
 
     <button
-      v-if="editing"
+      v-if="editing && !quiz.isLocal"
       class="icon-button px-2"
       @click="addQuestion"
     >
