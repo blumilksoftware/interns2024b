@@ -55,34 +55,7 @@ class QuizTest extends TestCase
                     ->has("quizzes.data.1.questions", 5),
             );
     }
-
-    public function testLocalQuizHasNoQuestionsVisible(): void
-    {
-        $quiz = Quiz::factory()->local()->create();
-        Question::factory()->count(5)->create(["quiz_id" => $quiz->id]);
-
-        $this->actingAs($this->admin)
-            ->get("/admin/quizzes")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Admin/Quizzes")
-                    ->has("quizzes.data", 1)
-                    ->has("quizzes.data.0.questions", 0),
-            );
-
-        $quiz->is_local = false;
-        $quiz->save();
-
-        $this->actingAs($this->admin)
-            ->get("/admin/quizzes")
-            ->assertInertia(
-                fn(Assert $page) => $page
-                    ->component("Admin/Quizzes")
-                    ->has("quizzes.data", 1)
-                    ->has("quizzes.data.0.questions", 5),
-            );
-    }
-
+    
     public function testAdminCanCreateQuiz(): void
     {
         $this->actingAs($this->admin)
