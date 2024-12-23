@@ -14,6 +14,7 @@ class UserQuizResource extends JsonResource
         return [
             "id" => $this->id,
             "title" => $this->quiz->title,
+            "description" => $this->quiz->description,
             "createdAt" => $this->created_at,
             "updatedAt" => $this->updated_at,
             "closedAt" => $this->closed_at,

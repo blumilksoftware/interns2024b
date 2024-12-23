@@ -24,6 +24,10 @@ class UpdateQuizRequest extends FormRequest
         if ($this->has("isPublic")) {
             $this->merge(["is_public" => $this->input("isPublic")]);
         }
+
+        if ($this->has("isLocal")) {
+            $this->merge(["is_local" => $this->input("isLocal")]);
+        }
     }
 
     /**
@@ -35,6 +39,7 @@ class UpdateQuizRequest extends FormRequest
             "title" => ["required", "string", "max:255"],
             "scheduled_at" => ["date", "after:now"],
             "is_public" => ["boolean"],
+            "is_local" => ["boolean"],
             "duration" => ["integer", "min:1", "max:2147483647"],
             "description" => ["string", "nullable"],
             "questions" => ["array"],

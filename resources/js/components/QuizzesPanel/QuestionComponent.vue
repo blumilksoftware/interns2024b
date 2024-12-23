@@ -5,6 +5,7 @@ import { vAutoAnimate } from '@formkit/auto-animate'
 import ExpansionToggleDynamicIcon from '@/components/Icons/ExpansionToggleDynamicIcon.vue'
 import AnswerComponent from '@/components/QuizzesPanel/AnswerComponent.vue'
 import getKey from '@/Helpers/KeysManager'
+import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
 
 defineProps<{ editing: boolean, index: number, questionsTotal: number, error: string }>()
 const emit = defineEmits<{ copy: [question:Question], delete: [index:number, question:Question] }>()
@@ -71,6 +72,7 @@ function setCorrectAnswer(currentAnswer: Answer) {
       <textarea
         v-else
         v-model="question.text"
+        v-dynamic-text-area-height
         placeholder="Wpisz pytanie"
         class="h-12 w-full bg-transparent outline-none border-b border-primary/30 focus:border-primary/60"
       />

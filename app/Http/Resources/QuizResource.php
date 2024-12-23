@@ -22,7 +22,7 @@ class QuizResource extends JsonResource
             "isPublic" => $this->is_public,
             "canBeLocked" => $this->canBeLocked,
             "canBeUnlocked" => $this->canBeUnlocked,
-            "questions" => $this->is_local ? [] : QuestionResource::collection($this->questions),
+            "questions" => QuestionResource::collection($this->questions),
             "isUserAssigned" => $this->isUserAssigned($request->user()),
             "isRankingPublished" => $this->isRankingPublished,
             "isLocal" => $this->is_local,

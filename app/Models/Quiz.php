@@ -48,6 +48,7 @@ class Quiz extends Model
         "ranking_published_at",
         "description",
         "is_public",
+        "is_local",
     ];
     protected $guarded = [];
 

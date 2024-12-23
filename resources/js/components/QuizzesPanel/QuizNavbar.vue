@@ -29,8 +29,8 @@ const questionsHaveOneCorrectAnswer = computed(
 )
 
 const assertions = computed<Record<string, [boolean, string]>>(() => ({
-  hasCorrectAnswers: [questionsHaveOneCorrectAnswer.value, 'Żadne pytanie nie zawiera zaznaczonej prawidłowej odpowiedzi.'],
-  hasQuestions: [quiz.value.questions.length > 0, 'Test nie zawiera żadnego pytania.'],
+  hasCorrectAnswers: [questionsHaveOneCorrectAnswer.value || quiz.value.isLocal, 'Żadne pytanie nie zawiera zaznaczonej prawidłowej odpowiedzi.'],
+  hasQuestions: [quiz.value.questions.length > 0 || quiz.value.isLocal, 'Test nie zawiera żadnego pytania.'],
   duration: [!!quiz.value.duration, 'Czas trwania testu nie jest ustawiony.'],
   startTimeNotReached: [props.startTimeNotReached, 'Czas rozpoczęcia testu upłynął.'],
 }))

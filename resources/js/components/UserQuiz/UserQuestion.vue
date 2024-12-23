@@ -6,7 +6,7 @@ const emit = defineEmits<{ answer: [question: UserQuestion, answerId: number] }>
 </script>
 
 <template>
-  <div class="rounded-xl bg-white shadow border flex flex-col justify-between gap-5 p-5 pb-6">
+  <div class="rounded-xl bg-white/70 shadow border flex flex-col justify-between gap-5 p-5 pb-6">
     <div class="flex flex-col gap-3">
       <b class="text-primary text-lg">
         Pytanie: {{ index + 1 }}/{{ questionsTotal }}

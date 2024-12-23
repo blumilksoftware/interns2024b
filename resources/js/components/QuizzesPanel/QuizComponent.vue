@@ -112,7 +112,7 @@ function toggleEditing(isEditing: boolean){
       :errors="errors"
     />
 
-    <template v-if="selected">
+    <template v-if="selected && !quiz.isLocal">
       <InputWrapper
         v-for="(question, idx) of quiz.questions"
         :key="getKey(question)"
@@ -131,7 +131,7 @@ function toggleEditing(isEditing: boolean){
     </template>
 
     <button
-      v-if="editing"
+      v-if="editing && !quiz.isLocal"
       class="icon-button px-2"
       @click="addQuestion"
     >
