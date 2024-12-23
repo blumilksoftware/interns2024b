@@ -41,6 +41,7 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
       :time="quiz.scheduledAt"
     >
       <FormButton
+        v-if="!quiz.isLocal"
         button-class="min-w-32 w-full 2xs:w-fit"
         class="w-full 2xs:w-fit"
         method="post"
@@ -64,27 +65,29 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
       :description="quiz.description"
       :time="quiz.scheduledAt"
     >
-      <FormButton
-        v-if="!quiz.isUserAssigned"
-        button-class="min-w-32 w-full 2xs:w-fit"
-        class="w-full 2xs:w-fit"
-        method="post"
-        :href="`/quizzes/${quiz.id}/assign`"
-        preserve-scroll
-      >
-        Zapisz się
-      </FormButton>
+      <template v-if="!quiz.isLocal">
+        <FormButton
+          v-if="!quiz.isUserAssigned"
+          button-class="min-w-32 w-full 2xs:w-fit"
+          class="w-full 2xs:w-fit"
+          method="post"
+          :href="`/quizzes/${quiz.id}/assign`"
+          preserve-scroll
+        >
+          Zapisz się
+        </FormButton>
      
-      <FormButton
-        v-else
-        button-class="min-w-32 w-full 2xs:w-fit"
-        class="w-full 2xs:w-fit"
-        disabled
-        method="post"
-        :href="`/quizzes/${quiz.id}/assign`"
-      >
-        Zapisano
-      </FormButton>
+        <FormButton
+          v-else
+          button-class="min-w-32 w-full 2xs:w-fit"
+          class="w-full 2xs:w-fit"
+          disabled
+          method="post"
+          :href="`/quizzes/${quiz.id}/assign`"
+        >
+          Zapisano
+        </FormButton>
+      </template>
     </QuizItem>
 
     <div v-if="scheduled.length == 0 && started.length == 0">
