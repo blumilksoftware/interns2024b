@@ -5,6 +5,7 @@ import { formatDate } from '@/Helpers/Format'
 import CrudInput from '@/components/Crud/CrudInput.vue'
 import { computed } from 'vue'
 import vDynamicTextAreaHeight from '@/Helpers/vDynamicTextAreaHeight'
+import { vAutoAnimate } from '@formkit/auto-animate'
 
 defineProps<{
   editing: boolean
@@ -17,7 +18,10 @@ const quizModeString = computed(() => quiz.value.isLocal ? 'Offline' : 'Online')
 </script>
 
 <template>
-  <div class="flex flex-col w-full px-2">
+  <div
+    v-auto-animate
+    class="flex flex-col flex-1 w-full px-2"
+  >
     <CrudInput
       v-model="quiz.title"
       name="title"
@@ -83,29 +87,30 @@ const quizModeString = computed(() => quiz.value.isLocal ? 'Offline' : 'Online')
       </button>
     </CrudInput>
 
-    <Transition>
+    <template v-if="quiz.description || editing">
       <CrudInput
-        v-if="quiz.description || editing"
         v-model="quiz.description"
         label="Opis:"
-        :column="selected"
         :error="errors.is_public"
         :editing
         :selected
       >
-        <textarea
-          v-model="quiz.description"
-          v-dynamic-text-area-height
-          name="name"
-          autocomplete="off"
-          class="size-full bg-transparent outline-none font-bold"
-          :disabled="!editing"
-          :class="{
-            'border-b border-b-primary/30 duration-200 transition-colors hover:border-b-primary/60 text-primary' : editing,
-            'border-b-red' : errors.name
-          }"
-        />
+        <div />
       </CrudInput>
-    </Transition>
+
+      <textarea
+        v-show="editing"
+        v-model="quiz.description"
+        v-dynamic-text-area-height
+        name="name"
+        autocomplete="off"
+        class="bg-transparent outline-none font-bold"
+        :disabled="!editing"
+        :class="{
+          'border-b border-b-primary/30 transition-colors hover:border-b-primary/60 text-primary' : editing,
+          'border-b-red' : errors.name
+        }"
+      />
+    </template>
   </div>
 </template>
