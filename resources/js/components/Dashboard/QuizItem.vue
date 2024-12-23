@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 
 const props = defineProps<{
   title: string
+  description?: string
   time?: string
 }>()
 </script>
@@ -15,6 +16,10 @@ const props = defineProps<{
       </p>
 
       <p class="text-gray-600 text-sm">
+        {{ description }}
+      </p>
+
+      <p class="text-gray-600 font-medium text-sm">
         {{ props.time ? dayjs(props.time).fromNow() : '' }}
       </p>
     </div>

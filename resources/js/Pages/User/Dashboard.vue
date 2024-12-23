@@ -37,6 +37,7 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
       v-for="quiz in started"
       :key="quiz.id"
       :title="quiz.title"
+      :description="quiz.description"
       :time="quiz.scheduledAt"
     >
       <FormButton
@@ -60,6 +61,7 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
       v-for="quiz in scheduled"
       :key="quiz.id"
       :title="quiz.title"
+      :description="quiz.description"
       :time="quiz.scheduledAt"
     >
       <FormButton
@@ -72,7 +74,7 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
       >
         Zapisz się
       </FormButton>
-
+     
       <FormButton
         v-else
         button-class="min-w-32 w-full 2xs:w-fit"
@@ -99,6 +101,7 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
       v-for="userQuiz in history"
       :key="userQuiz.id"
       :title="userQuiz.title"
+      :description="userQuiz.description"
       :time="userQuiz.closedAt"
     >
       <LinkButton
