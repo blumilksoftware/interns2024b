@@ -1,14 +1,13 @@
 import { type DirectiveBinding } from 'vue'
 
 function initDynamicHeightCalc(input: HTMLTextAreaElement & { _calculateDynamicHeight: () => void }, binding?: DirectiveBinding<boolean>) {
+  input.style.resize = 'none'
   input._calculateDynamicHeight = () => calculateDynamicHeight(input, binding)
 
   document.fonts.addEventListener('loadingdone', input._calculateDynamicHeight)
   input.addEventListener('transitionend', input._calculateDynamicHeight)
 
   input._calculateDynamicHeight()
-  input.style.resize = 'none'
-  input.style.overflowY = 'hidden'
 }
 
 function calculateDynamicHeight(input: HTMLTextAreaElement, binding?: DirectiveBinding<boolean>){
@@ -18,8 +17,8 @@ function calculateDynamicHeight(input: HTMLTextAreaElement, binding?: DirectiveB
 
   // Reset the height to a minimal value to refresh scrollHeight.
   // This ensures the textarea will shrink when text is removed.
-  input.style.height = '5px'
-  input.style.height = `${input.scrollHeight}px`
+  input.style.height = '0'
+  input.style.height = `${input.scrollHeight+1}px`
 }
 
 function removeDynamicHeightCalc(input: HTMLTextAreaElement & { _calculateDynamicHeight: () => void }) {

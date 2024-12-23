@@ -13,6 +13,8 @@ const props = defineProps<{
     error?: string
     password?: boolean
     large?: boolean
+    row?: boolean
+    column?: boolean
     format?: (value: T) => any
   } & InputProps>()
 
@@ -28,10 +30,12 @@ function handleInput() {
 <template>
   <div
     class="flex gap-1 duration-200 min-h-7"
-    :class="{ 'text-sm text-gray-600' : !selected && !editing && !large, 'text-lg h-8': large }"
+    :class="{ 'text-sm text-gray-600' : !selected && !editing && !large, 'text-lg min-h-8': large }"
   >
     <InputWrapper
       :label
+      :row
+      :column
       :hide-content="!value && !editing"
       :error="error"
       :hide-error="!editing"
@@ -41,6 +45,7 @@ function handleInput() {
           <b
             v-if="!editing"
             class="row-start-1 col-start-1"
+            :class="{'text-nowrap truncate': !selected}"
           >
             {{ format ? format(value) : value }}
           </b>
