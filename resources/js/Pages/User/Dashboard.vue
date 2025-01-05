@@ -37,9 +37,11 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
       v-for="quiz in started"
       :key="quiz.id"
       :title="quiz.title"
+      :description="quiz.description"
       :time="quiz.scheduledAt"
     >
       <FormButton
+        v-if="!quiz.isLocal"
         button-class="min-w-32 w-full 2xs:w-fit"
         class="w-full 2xs:w-fit"
         method="post"
@@ -60,29 +62,32 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
       v-for="quiz in scheduled"
       :key="quiz.id"
       :title="quiz.title"
+      :description="quiz.description"
       :time="quiz.scheduledAt"
     >
-      <FormButton
-        v-if="!quiz.isUserAssigned"
-        button-class="min-w-32 w-full 2xs:w-fit"
-        class="w-full 2xs:w-fit"
-        method="post"
-        :href="`/quizzes/${quiz.id}/assign`"
-        preserve-scroll
-      >
-        Zapisz się
-      </FormButton>
-
-      <FormButton
-        v-else
-        button-class="min-w-32 w-full 2xs:w-fit"
-        class="w-full 2xs:w-fit"
-        disabled
-        method="post"
-        :href="`/quizzes/${quiz.id}/assign`"
-      >
-        Zapisano
-      </FormButton>
+      <template v-if="!quiz.isLocal">
+        <FormButton
+          v-if="!quiz.isUserAssigned"
+          button-class="min-w-32 w-full 2xs:w-fit"
+          class="w-full 2xs:w-fit"
+          method="post"
+          :href="`/quizzes/${quiz.id}/assign`"
+          preserve-scroll
+        >
+          Zapisz się
+        </FormButton>
+     
+        <FormButton
+          v-else
+          button-class="min-w-32 w-full 2xs:w-fit"
+          class="w-full 2xs:w-fit"
+          disabled
+          method="post"
+          :href="`/quizzes/${quiz.id}/assign`"
+        >
+          Zapisano
+        </FormButton>
+      </template>
     </QuizItem>
 
     <div v-if="scheduled.length == 0 && started.length == 0">
@@ -99,6 +104,7 @@ const history = computed(() => props.userQuizzes.filter(userQuiz => userQuiz.clo
       v-for="userQuiz in history"
       :key="userQuiz.id"
       :title="userQuiz.title"
+      :description="userQuiz.description"
       :time="userQuiz.closedAt"
     >
       <LinkButton

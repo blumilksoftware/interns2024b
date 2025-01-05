@@ -24,6 +24,7 @@ function calculateDynamicWidth(input: HTMLInputElement, binding?: DirectiveBindi
   context.font = `${fontWeight} ${fontSize} ${fontFamily}`
   const width = context.measureText(input.value || input.placeholder).width
 
+  input.style.minWidth = `${width}px`
   input.style.width = `clamp(1.1rem,${width}px,100%)`
 }
 
