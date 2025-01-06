@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import InformationModalWindow from '@/components/Home/InformationModalWindow.vue'
 import { ref } from 'vue'
+import ModalWindow from '@/components/Common/ModalWindow.vue'
 
 const isInformationVisible = ref(false)
 </script>
@@ -15,5 +15,12 @@ const isInformationVisible = ref(false)
     </button>
   </div>
 
-  <InformationModalWindow v-model:is-visible="isInformationVisible" />
+  <ModalWindow
+    v-model="isInformationVisible"
+    title="Informacje o konkursie"
+  >
+    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+    Esse corrupti provident voluptas ducimus neque libero reprehenderit eos voluptate quisquam minus.
+    Dolorum quos animi fugit blanditiis repellendus voluptas sequi ex ea.
+  </ModalWindow>
 </template>
