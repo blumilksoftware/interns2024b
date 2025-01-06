@@ -1,16 +1,12 @@
 <script setup lang="ts">
-const props = defineProps<{ isVisible: boolean }>()
-const emit = defineEmits<(e: 'update:isVisible', value: boolean) => void>()
-
-function setHidden() {
-  emit('update:isVisible', false)
-}
+defineProps<{ title: string }>()
+const isVisible = defineModel<boolean>()
 </script>
 
 <template>
   <Transition>
-    <div 
-      v-show="props.isVisible"
+    <div
+      v-show="isVisible"
       class="inset-0 h-screen w-full bg-black/15 backdrop-blur-md fixed z-20 p-5 flex justify-center items-center"
       @click="setHidden"
     >
@@ -22,7 +18,7 @@ function setHidden() {
           class="p-5 font-bold text-xl outline-none focus:shadow-md duration-200"
           tabindex="0"
         >
-          Title
+          {{ title }}
         </h1>
 
         <hr>
@@ -31,9 +27,7 @@ function setHidden() {
           class="p-5 text-[1.1rem] outline-none focus:shadow-md duration-200"
           tabindex="0"
         >
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          Esse corrupti provident voluptas ducimus neque libero reprehenderit eos voluptate quisquam minus.
-          Dolorum quos animi fugit blanditiis repellendus voluptas sequi ex ea.
+          <slot />
         </p>
 
         <hr>
@@ -41,7 +35,7 @@ function setHidden() {
         <div class="flex justify-end p-5">
           <button
             class="font-bold text-primary"
-            @click="setHidden"
+            @click="isVisible = false"
           >
             Powrót
           </button>
