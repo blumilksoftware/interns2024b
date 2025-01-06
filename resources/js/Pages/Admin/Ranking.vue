@@ -1,18 +1,30 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import Divider from '@/components/Common/Divider.vue'
 import FormButton from '@/components/Common/FormButton.vue'
 import { groupBy } from '@/Helpers/GroupBy'
 import { type PageProps } from '@/Types/PageProps'
+import ModalWindow from '@/components/Common/ModalWindow.vue'
+import Dropdown from '@/components/Common/Dropdown.vue'
+import { UserPlusIcon } from '@heroicons/vue/24/outline'
+import Button from '@/components/Common/Button.vue'
+import { router } from '@inertiajs/vue3'
 
 const props = defineProps<{
   quiz: Quiz
+  quizzes: Array<{ id: number, title: string }>
   rankings: Ranking[]
 } & PageProps>()
 
 const sorted = computed(() => [...props.rankings].toSorted((a, b) => `${a.user.firstname} ${a.user.surname}`.localeCompare(`${b.user.firstname} ${b.user.surname}`)))
-
 const grouped = computed(() => groupBy('points', sorted.value))
+const showInviteModal = ref(false)
+const inviteTo = ref<{ id: number, title: string }>()
+
+function openGroupInvite(key: number) {
+  inviteTo.value = props.quizzes.find(quiz => quiz.id == key)
+  router.get(`/admin/quizzes/${props.quiz.id}/ranking/invite/${key}`)
+}
 </script>
 
 <template>
@@ -75,6 +87,7 @@ const grouped = computed(() => groupBy('points', sorted.value))
       </div>
     </div>
 
+
     <div class="flex gap-4 p-4 pl-0">
       <FormButton
         :disabled="quiz.isRankingPublished || rankings.length == 0"
@@ -95,6 +108,37 @@ const grouped = computed(() => groupBy('points', sorted.value))
       >
         Wycofaj publikacje
       </FormButton>
+
+      <Button
+        small
+        preserve-scroll
+        @click="showInviteModal = true"
+      >
+        Zaproś do innego testu
+      </Button>
     </div>
   </div>
+
+  <ModalWindow
+    v-model="showInviteModal"
+    title="Zaproś do testu"
+  >
+    <Dropdown
+      pointer-position="left"
+      :options="quizzes.map(item => ({ key: item.id, text: item.title }))"
+      @option-click="(option: any) => openGroupInvite(option.key)"
+    >
+      <div class="flex group items-center gap-2 p-2 hover:bg-primary/5 hover:text-primary rounded-lg duration-200 whitespace-nowrap">
+        <UserPlusIcon class="icon stroke-gray-800 group-hover:stroke-primary" />
+
+        <div class="flex text-gray-800 items-center">
+          Zaproś do
+        </div>
+
+        <span class="font-bold  nowrap">
+          {{ inviteTo?.title ?? "Brak" }}
+        </span>
+      </div>
+    </Dropdown>
+  </ModalWindow>
 </template>

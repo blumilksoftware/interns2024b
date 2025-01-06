@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthenticateSessionController;
 use App\Http\Controllers\ContestController;
 use App\Http\Controllers\EmailVerifyController;
+use App\Http\Controllers\GroupInviteController;
 use App\Http\Controllers\InviteController;
 use App\Http\Controllers\PasswordResetLinkController;
 use App\Http\Controllers\ProfileUserController;
@@ -59,6 +60,8 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
     Route::post("/quizzes/{quiz}/invite/unassign", [InviteController::class, "unassign"])->name("admin.quizzes.invite.unassign");
 
     Route::get("/quizzes/{quiz}/ranking", [RankingController::class, "index"])->can("viewAdminRanking,quiz")->name("admin.quizzes.ranking");
+    Route::get("/quizzes/{from}/ranking/invite/{to}", [GroupInviteController::class, "index"])->name("admin.quizzes.ranking.invite");
+
     Route::post("/quizzes/{quiz}/ranking/publish", [RankingController::class, "publish"])->can("publish,quiz")->name("admin.quizzes.ranking.publish");
     Route::post("/quizzes/{quiz}/ranking/unpublish", [RankingController::class, "unpublish"])->can("publish,quiz")->name("admin.quizzes.ranking.unpublish");
 
