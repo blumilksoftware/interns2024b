@@ -25,82 +25,89 @@ class DatabaseSeeder extends Seeder
 
         $archivedQuiz = Quiz::factory(["title" => "Konkurs wiedzy o WH40K"])->create(["locked_at" => Carbon::now()->subDays(2), "duration" => 60, "scheduled_at" => Carbon::now()->subDay()]);
 
-        $this->createQuestion($archivedQuiz,
+        $this->createQuestion(
+            $archivedQuiz,
             "W którym tysiąc leciu dzieje się aktualna akcja świata Warhammera 40,000?",
             ["39", "40", "41"],
-            "42"
+            "42",
         );
 
-        $this->createQuestion($archivedQuiz,
+        $this->createQuestion(
+            $archivedQuiz,
             "W jaki sposób podróżuje większość statków kosmicznych?",
             ["prędkość światła", "przez czarne dziury", "hipernapęd"],
-            "przez Osnowę (Warp)"
+            "przez Osnowę (Warp)",
         );
 
-        $this->createQuestion($archivedQuiz,
+        $this->createQuestion(
+            $archivedQuiz,
             "Który z bogów chaosu jest najmłodszy?",
             ["Nurgle", "Gork", "Khorn"],
-            "Slaanesh"
+            "Slaanesh",
         );
 
-        $this->createQuestion($archivedQuiz,
+        $this->createQuestion(
+            $archivedQuiz,
             "Ile legionów kosmicznych marines stworzył imperator podczas 1 fundacji?",
             ["5", "100", "Imperator nie zna limitów"],
-            "20"
+            "20",
         );
 
-        $this->createQuestion($archivedQuiz,
+        $this->createQuestion(
+            $archivedQuiz,
             "Jak nazywają się bogowie orków?",
             ["Tork i Hork", "Ork i Mork", "Kork i Tork"],
-            "Gork i Mork"
+            "Gork i Mork",
         );
 
-        $this->createQuestion($archivedQuiz,
+        $this->createQuestion(
+            $archivedQuiz,
             "Jak nazywa się planeta na której powstał Kult Mechanikus?",
             ["Terra", "Mechan Prime", "Caliban"],
-            "Mars"
+            "Mars",
         );
 
-        $this->createQuestion($archivedQuiz,
+        $this->createQuestion(
+            $archivedQuiz,
             "Jak nazywa się jedna z najstarszych ras przypominająca Elfy?",
             ["Tau", "Nekroni", "Orkowie", "Ludzie", "Mózgole"],
-            "Eldarzy"
+            "Eldarzy",
         );
 
-        $this->createQuestion($archivedQuiz,
+        $this->createQuestion(
+            $archivedQuiz,
             "Która rasa stworzyła doktrynę większego dobra?",
             ["Eldarzy", "Nekroni", "Orkowie", "Ludzie", "Mózgole"],
-            "Tau"
+            "Tau",
         );
 
-        $this->createQuestion($archivedQuiz,
+        $this->createQuestion(
+            $archivedQuiz,
             "Która rasa nie jest organiczna",
             ["Eldarzy", "Tau", "Orkowie", "Ludzie", "Mózgole"],
-            "Nekroni"
+            "Nekroni",
         );
 
-        $this->createQuestion($archivedQuiz,
+        $this->createQuestion(
+            $archivedQuiz,
             "Jak nazywa się patriarcha który rozpoczął wojne domową w imperium przeciw imperatorowi?",
             ["Magnus", "Lion el Johnson", "Leman Russ", "Ghazghkull Mag Uruk Thraka"],
-            "Horus"
+            "Horus",
         );
 
-        $this->createQuestion($archivedQuiz,
+        $this->createQuestion(
+            $archivedQuiz,
             "Jakiej jednoski jest to motto: \"W życiu, wojna. W śmierci, pokój. W życiu, wstyd. W śmierci, pokuta.\"",
             ["Adeptus Astartes", "Adeptus Astartes Primaris", "Adepta Sororitas", "Ordo Hereticus", "Ordo Xenos"],
-            "Kriegańskie Korpusy Śmierci"
+            "Kriegańskie Korpusy Śmierci",
         );
 
-        $this->createQuestion($archivedQuiz,
+        $this->createQuestion(
+            $archivedQuiz,
             "Po jakim wydarzeniu bogowie Gork i Mork objawili się Ghazghkull'owi mag Uruk Thraka?",
             ["Śmierć", "Wygrana wojna", "Przejęcie dowodzenia nad orkami", "Zabójstwo imperatora ludzi"],
-            "Utrata połowy mózgu"
+            "Utrata połowy mózgu",
         );
-
-
-        foreach (Quiz::all() as $quiz) {
-            PublishedQuizSeeder::selectRandomCorrectAnswer($quiz);
-        }
 
         for ($i = 0; $i < 5; $i++) {
             $school = School::factory([
@@ -131,7 +138,7 @@ class DatabaseSeeder extends Seeder
             ["email" => "user2@example.com"],
             [
                 "firstname" => "Example",
-                    "surname" => "User Two",
+                "surname" => "User Two",
                 "email_verified_at" => Carbon::now(),
                 "password" => Hash::make("interns2024b"),
                 "remember_token" => Str::random(10),
@@ -156,11 +163,12 @@ class DatabaseSeeder extends Seeder
         $user3->syncRoles("user");
     }
 
-    function createQuestion(Quiz $quiz, string $text, array $invalid_answers, string $correct)
+    public function createQuestion(Quiz $quiz, string $text, array $invalid_answers, string $correct): void
     {
         $question = Question::factory([
             "text" => $text,
             "quiz_id" => $quiz->id,
+            "correct_answer_id" => null,
         ])->create();
 
         foreach ($invalid_answers as $answer) {
@@ -175,7 +183,7 @@ class DatabaseSeeder extends Seeder
             "question_id" => $question->id,
         ])->create();
 
-        $question->correctAnswer()->associate($answer);
+        $question->correct_answer_id = $answer->id;
         $question->save();
     }
 }
