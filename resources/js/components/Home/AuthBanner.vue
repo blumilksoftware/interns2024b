@@ -6,12 +6,6 @@ const isHidden = ref(false)
 const props = defineProps<{isLogin?: boolean}>()
 const emit = defineEmits<{scrollToAuth: [isLogin:boolean]}>()
 const isLoginRef = ref<boolean>(props.isLogin)
-const banner = ref()
-const height = ref(0)
-
-onMounted(() => {
-  height.value = banner.value.offsetHeight
-})
 
 function setBannerVisibility() {
   isHidden.value = window.scrollY / 100 >= 5
@@ -36,10 +30,7 @@ function gotoLoginSection() {
 
 <template>
   <div class="flex h-fit">
-    <div
-      :style="{height: `${height}px`}"
-      class="lg:hidden"
-    />
+    <div class="h-16 lg:hidden" />
 
     <div
       ref="banner"
