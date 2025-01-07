@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import Divider from '@/components/Common/Divider.vue'
 import { groupBy } from '@/Helpers/GroupBy'
 import type { PageProps } from '@/Types/PageProps'
+import { Head } from '@inertiajs/vue3'
 
 const props = defineProps<{
   quiz: Quiz
@@ -13,10 +14,12 @@ const grouped = computed(() => groupBy('points', props.rankings))
 </script>
 
 <template>
+  <Head :title="`${quiz.title} - Ranking`" />
+
   <div class="w-full p-2 md:max-w-8xl">
     <Divider>
       <h1 class="font-bold text-xl text-primary text-center py-4 whitespace-nowrap">
-        {{ quiz.name }} - Ranking
+        {{ quiz.title }} - Ranking
       </h1>
     </Divider>
 
