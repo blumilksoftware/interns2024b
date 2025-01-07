@@ -32,20 +32,7 @@ class AdminSeeder extends Seeder
         $superAdmin = User::firstOrCreate(
             ["email" => "superadmin@example.com"],
             [
-                "firstname" => "Example",
-                "surname" => "Super Admin",
-                "email_verified_at" => Carbon::now(),
-                "password" => Hash::make("interns2024b"),
-                "remember_token" => Str::random(10),
-                "school_id" => $school->id,
-            ],
-        );
-        $superAdmin->syncRoles("super_admin");
-
-        $admin = User::firstOrCreate(
-            ["email" => "admin@example.com"],
-            [
-                "firstname" => "Example",
+                "firstname" => "Super",
                 "surname" => "Admin",
                 "email_verified_at" => Carbon::now(),
                 "password" => Hash::make("interns2024b"),
@@ -53,19 +40,7 @@ class AdminSeeder extends Seeder
                 "school_id" => $school->id,
             ],
         );
-        $admin->syncRoles("admin");
 
-        $user = User::firstOrCreate(
-            ["email" => "user@example.com"],
-            [
-                "firstname" => "Example",
-                "surname" => "User",
-                "email_verified_at" => Carbon::now(),
-                "password" => Hash::make("interns2024b"),
-                "remember_token" => Str::random(10),
-                "school_id" => School::factory()->create()->id,
-            ],
-        );
-        $user->syncRoles("user");
+        $superAdmin->syncRoles("super_admin");
     }
 }
