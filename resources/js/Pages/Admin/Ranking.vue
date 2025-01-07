@@ -8,7 +8,7 @@ import ModalWindow from '@/components/Common/ModalWindow.vue'
 import Dropdown from '@/components/Common/Dropdown.vue'
 import { UserPlusIcon } from '@heroicons/vue/24/outline'
 import Button from '@/components/Common/Button.vue'
-import { router } from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 
 const props = defineProps<{
   quiz: Quiz
@@ -28,6 +28,8 @@ function openGroupInvite(key: number) {
 </script>
 
 <template>
+  <Head :title="`${quiz.title} - Ranking`" />
+
   <div class="w-full p-2 md:max-w-8xl">
     <Divider>
       <h1 class="font-bold text-xl text-primary text-center py-4 whitespace-nowrap">
@@ -106,7 +108,7 @@ function openGroupInvite(key: number) {
         small
         preserve-scroll
       >
-        Wycofaj publikacje
+        Wycofaj publikację
       </FormButton>
 
       <Button
