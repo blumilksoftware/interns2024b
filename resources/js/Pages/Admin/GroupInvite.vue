@@ -11,7 +11,6 @@ import { keysWrapper } from '@/Helpers/KeysManager'
 import Dropdown from '@/components/Common/Dropdown.vue'
 import { groupBy } from '@/Helpers/GroupBy'
 import SearchBar from '@/components/Crud/SearchBar.vue'
-import Divider from '@/components/Common/Divider.vue'
 
 const props = defineProps<{
   errors: Errors
@@ -117,7 +116,7 @@ function search(text?: string, mode?: string) {
         :options="fromQuizzes.map(item => ({ key: item.id, text: item.title }))"
         @option-click="(option: any) => changeQuiz(option.key, to.id)"
       >
-        <div class="flex group items-center gap-2 p-2 pr-0 hover:bg-primary/5 hover:text-primary rounded-lg duration-200 whitespace-nowrap">
+        <div class="flex group items-center gap-2 p-2 xs:pr-0 hover:bg-primary/5 hover:text-primary rounded-lg duration-200 whitespace-nowrap">
           <UserPlusIcon class="icon stroke-gray-800 group-hover:stroke-primary" />
 
           <div class="flex text-gray-800 items-center">
@@ -135,12 +134,18 @@ function search(text?: string, mode?: string) {
         :options="toQuizzes.map(item => ({ key: item.id, text: item.title }))"
         @option-click="(option: any) => changeQuiz(from.id, option.key)"
       >
-        <div class="flex group items-center gap-2 p-2 pl-0 hover:bg-primary/5 hover:text-primary rounded-lg duration-200 whitespace-nowrap">
-          <div class="flex text-gray-800 items-center">
+        <div class="flex group items-center gap-2 p-2 xs:pl-0 hover:bg-primary/5 hover:text-primary rounded-lg duration-200 whitespace-nowrap">
+          <UserPlusIcon class="icon stroke-gray-800 group-hover:stroke-primary xs:hidden" />
+
+          <div class="flextext-gray-800 items-center xs:hidden">
+            Zaproś do
+          </div>
+
+          <div class="flextext-gray-800 items-cente hidden xs:block">
             do
           </div>
 
-          <span class="font-bold  nowrap">
+          <span class="font-bold nowrap">
             {{ to.title }}
           </span>
         </div>
@@ -232,11 +237,15 @@ function search(text?: string, mode?: string) {
         :key="ranking.school.id"
         class="flex flex-col gap-4 p-4"
       >
-        <Divider>
-          <h1 class="font-bold text-xl text-primary text-center py-4 whitespace-nowrap">
+        <div class="w-full flex flex-row items-center xs:px-5 px-0">
+          <div class="mr-1 md:mr-4 w-7 border-t border-primary duration-200 transition-colors" />
+
+          <h1 class="font-bold text-xl text-primary text-center w-1/2 md:whitespace-nowrap md:w-min py-4">
             {{ ranking.school.name }}
           </h1>
-        </Divider>
+
+          <div class="ml-1 md:mx-7 flex-1 w-full border-t border-primary duration-200 transition-colors" />
+        </div>
 
         <div
           v-for="item of ranking.users"
