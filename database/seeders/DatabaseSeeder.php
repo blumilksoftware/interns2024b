@@ -97,11 +97,6 @@ class DatabaseSeeder extends Seeder
             "Utrata połowy mózgu"
         );
 
-
-        foreach (Quiz::all() as $quiz) {
-            PublishedQuizSeeder::selectRandomCorrectAnswer($quiz);
-        }
-
         for ($i = 0; $i < 5; $i++) {
             $school = School::factory([
                 "name" => "Szkoła numer " . $i + 1 . " w Legnicy",
@@ -161,6 +156,7 @@ class DatabaseSeeder extends Seeder
         $question = Question::factory([
             "text" => $text,
             "quiz_id" => $quiz->id,
+            "correct_answer_id" => null,
         ])->create();
 
         foreach ($invalid_answers as $answer) {
@@ -175,7 +171,7 @@ class DatabaseSeeder extends Seeder
             "question_id" => $question->id,
         ])->create();
 
-        $question->correctAnswer()->associate($answer);
+        $question->correct_answer_id = $answer->id;
         $question->save();
     }
 }
