@@ -8,7 +8,7 @@ import ModalWindow from '@/components/Common/ModalWindow.vue'
 import Dropdown from '@/components/Common/Dropdown.vue'
 import { UserPlusIcon } from '@heroicons/vue/24/outline'
 import Button from '@/components/Common/Button.vue'
-import {Head, router} from '@inertiajs/vue3'
+import { Head, router } from '@inertiajs/vue3'
 
 const props = defineProps<{
   quiz: Quiz
