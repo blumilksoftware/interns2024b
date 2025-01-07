@@ -23,8 +23,16 @@ class RankingController extends Controller
             ->with("user.school")
             ->get();
 
+        $quizzes = Quiz::query()
+            ->select("id", "title")
+            ->whereNotNull("scheduled_at")
+            ->where("scheduled_at", ">", now())
+            ->whereNotNull("locked_at")
+            ->get();
+
         return Inertia::render("Admin/Ranking", [
             "quiz" => QuizResource::make($quiz),
+            "quizzes" => $quizzes,
             "rankings" => RankingResource::collection($userQuizzes),
         ]);
     }
