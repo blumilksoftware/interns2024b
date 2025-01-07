@@ -1,0 +1,63 @@
+networks:
+    interns2024b-prod:
+        driver: bridge
+
+volumes:
+    interns2024b-postgres-prod-data:
+        name: interns2024b-postgres-prod-data
+    interns2024b-redis-prod-data:
+        name: interns2024b-redis-prod-data
+
+services:
+    app:
+        build:
+            context: ./environment/dev/app
+            dockerfile: Dockerfile
+            args:
+                - INSTALL_XDEBUG=false
+                - USER_ID=${DOCKER_HOST_USER_ID:-1000}
+
+        container_name: interns2024b-app-prod
+        working_dir: /application
+        volumes:
+            - ./environment/dev/app/nginx.conf:/etc/nginx/nginx.conf:ro
+            - ./environment/dev/app/php.ini:/usr/local/etc/php/conf.d/zzz-overrides.ini:ro
+            - ./environment/dev/app/php-fpm.conf:/usr/local/etc/php-fpm.d/zzz-overrides.conf:ro
+            - ./environment/dev/app/supervisord.conf:/etc/supervisor/custom-supervisord.conf:ro
+            - .:/application
+        ports:
+            - ${DOCKER_APP_HOST_PORT:-63851}:80
+        networks:
+            - interns2024b-prod
+        restart: unless-stopped
+        depends_on:
+            database:
+                condition: service_healthy
+
+    database:
+        image: postgres:16.3-alpine3.18@sha256:64e18e8fb3e9c9aac89ac590c5dd8306b862478404f76cd9b5f7720d012b4c47
+        container_name: interns2024b-db-prod
+        environment:
+            - POSTGRES_USER=${DB_USERNAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_DB=${DB_DATABASE}
+            - PGDATA=/var/lib/postgresql/data
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready --dbname ${DB_DATABASE} --username ${DB_USERNAME}"]
+            interval: 3s
+            timeout: 3s
+            retries: 5
+        volumes:
+            - interns2024b-postgres-prod-data:/var/lib/postgresql/data
+        networks:
+            - interns2024b-prod
+        restart: unless-stopped
+
+    redis:
+        image: redis:7.2.5-alpine3.19@sha256:8f157725f8eee31e65a8d4765f1f986d76aedc1a0503345dfb63a2b1b5a441ee
+        container_name: interns2024b-redis-prod
+        volumes:
+            - interns2024b-redis-prod-data:/data
+        networks:
+            - interns2024b-prod
+        restart: unless-stopped
