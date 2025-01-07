@@ -31,6 +31,7 @@ const emit = defineEmits<{ lazyload: [], optionClick: [option:Option|any] }>()
         <a
           v-for="option of options"
           :key="option.key"
+          tabindex="0"
           class="block cursor-pointer px-4 py-2 hover:bg-primary/10 outline-none focus:bg-primary/10 text-[0.9rem] w-full text-left"
           @click="emit('optionClick', option)"
         >
