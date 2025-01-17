@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -33,6 +34,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property boolean $is_anonymized
  * @property boolean $force_password_change
  * @property Collection<UserQuiz> $userQuizzes
+ * @property Collection<Disqualification> $disqualifications
  * @property Collection<Quiz> $assignedQuizzes
  */
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
@@ -71,6 +73,11 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     public function userQuizzes(): HasMany
     {
         return $this->hasMany(UserQuiz::class);
+    }
+
+    public function disqualifications(): HasManyThrough
+    {
+        return $this->hasManyThrough(Disqualification::class, UserQuiz::class);
     }
 
     public function assignedQuizzes(): BelongsToMany

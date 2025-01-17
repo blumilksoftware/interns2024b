@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\PublishQuizRankingAction;
 use App\Actions\UnpublishQuizRankingAction;
+use App\Http\Requests\DisqualifyUserRequest;
 use App\Http\Resources\QuizResource;
 use App\Http\Resources\RankingResource;
 use App\Models\Quiz;
@@ -68,5 +69,9 @@ class RankingController extends Controller
         return redirect()
             ->back()
             ->with("status", "Ranking został wycofany.");
+    }
+
+    public function disqualify(UserQuiz $userQuiz, DisqualifyUserRequest) {
+
     }
 }
