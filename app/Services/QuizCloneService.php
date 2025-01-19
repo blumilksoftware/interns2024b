@@ -17,6 +17,7 @@ class QuizCloneService
         $quizCopy->locked_at = null;
         $quizCopy->duration = null;
         $quizCopy->scheduled_at = null;
+        $quizCopy->ranking_published_at = null;
         $quizCopy->save();
 
         foreach ($quiz->questions as $question) {
