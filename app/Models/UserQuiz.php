@@ -47,7 +47,6 @@ class UserQuiz extends Model
         return $this->hasOne(Disqualification::class);
     }
 
-
     public function userQuestions(): HasMany
     {
         return $this->hasMany(UserQuestion::class);

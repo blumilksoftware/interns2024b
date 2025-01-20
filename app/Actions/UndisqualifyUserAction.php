@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Models\Disqualification;
 use App\Models\UserQuiz;
-use App\Notifications\DisqualificationNotification;
 
 class UndisqualifyUserAction
 {
     public function __construct() {}
 
-    public function execute(UserQuiz $userQuiz)
+    public function execute(UserQuiz $userQuiz): void
     {
         $userQuiz->disqualification()->delete();
     }

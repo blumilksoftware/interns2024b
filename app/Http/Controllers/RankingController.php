@@ -33,7 +33,7 @@ class RankingController extends Controller
             ->whereNotNull("locked_at")
             ->get();
 
-        return Inertia::rendeQuestior("Admin/Ranking", [
+        return Inertia::render("Admin/Ranking", [
             "quiz" => QuizResource::make($quiz),
             "quizzes" => $quizzes,
             "rankings" => RankingResource::collection($userQuizzes),
@@ -73,17 +73,19 @@ class RankingController extends Controller
             ->with("status", "Ranking został wycofany.");
     }
 
-    public function disqualify(DisqualifyUserAction $action, UserQuiz $userQuiz, DisqualifyUserRequest $request) {
+    public function disqualify(DisqualifyUserAction $action, UserQuiz $userQuiz, DisqualifyUserRequest $request)
+    {
         $this->authorize("disqualify", $userQuiz);
 
-        $action->execute($userQuiz,  $request->validated()["reason"], $request->validated()["sendEmail"]);
+        $action->execute($userQuiz, $request->validated()["reason"], $request->validated()["sendEmail"]);
 
         return redirect()
             ->back()
             ->with("status", "Użytkownik został zdyskwalifikowany.");
     }
 
-    public function undisqualify(UndisqualifyUserAction $action, UserQuiz $userQuiz) {
+    public function undisqualify(UndisqualifyUserAction $action, UserQuiz $userQuiz)
+    {
         $this->authorize("undisqualify", $userQuiz);
 
         $action->execute($userQuiz);
