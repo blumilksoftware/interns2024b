@@ -200,21 +200,21 @@ class RankingTest extends TestCase
 
     public function testAdminCannotDisqualifyUserTestThatDoesNotExist(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get("/admin/quizzes/disqualify/123123")
             ->assertNotFound();
     }
 
     public function testAdminCannotUndisqualifyUserTestThatDoesNotExist(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get("/admin/quizzes/undisqualify/123123")
             ->assertNotFound();
     }
 
     public function testAdminCannotUndisqualifyNotDisqualifiedUserTest(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get("/admin/quizzes/undisqualify/{$this->userQuiz->id}")
             ->assertForbidden();
     }
@@ -226,7 +226,7 @@ class RankingTest extends TestCase
         $disqualification->userQuiz()->associate($this->userQuiz);
         $disqualification->save();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get("/admin/quizzes/undisqualify/{$this->userQuiz->id}")
             ->assertSessionHas("status", "Dyskwalifikacją użytkownika została cofnięta.");
 
@@ -241,14 +241,14 @@ class RankingTest extends TestCase
         $disqualification->userQuiz()->associate($this->userQuiz);
         $disqualification->save();
 
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get("/admin/quizzes/disqualify/{$this->userQuiz->id}")
             ->assertForbidden();
     }
 
     public function testAdminCanDisqualifyUserTest(): void
     {
-        $this->actingAs($this->user)
+        $this->actingAs($this->admin)
             ->get("/admin/quizzes/disqualify/{$this->userQuiz->id}")
             ->assertSessionHas("status", "Użytkownik został zdyskwalifikowany.");
 
