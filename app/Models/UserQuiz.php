@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 
 /**
@@ -24,6 +25,7 @@ use Illuminate\Support\Collection;
  * @property bool $isClosed
  * @property Quiz $quiz
  * @property User $user
+ * @property ?Disqualification $disqualification
  * @property Collection<UserQuestion> $userQuestions
  */
 class UserQuiz extends Model
@@ -39,6 +41,12 @@ class UserQuiz extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function disqualification(): HasOne
+    {
+        return $this->hasOne(Disqualification::class);
+    }
+
 
     public function userQuestions(): HasMany
     {

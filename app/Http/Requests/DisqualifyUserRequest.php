@@ -21,7 +21,7 @@ class DisqualifyUserRequest extends FormRequest
     {
         return [
             "reason" => ["required", "string"],
-            "send_email" => ["required", "boolean"],
+            "sendEmail" => ["required", "boolean"],
         ];
     }
 }

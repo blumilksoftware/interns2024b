@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DisqualifyUserRequest;
+use App\Http\Requests\AnswerRequest;
 use App\Models\Answer;
 use App\Models\Question;
 use App\Services\QuizCloneService;
@@ -12,7 +12,7 @@ use Illuminate\Http\RedirectResponse;
 
 class QuestionAnswerController extends Controller
 {
-    public function store(Question $question, DisqualifyUserRequest $request): RedirectResponse
+    public function store(Question $question, AnswerRequest $request): RedirectResponse
     {
         Answer::query()
             ->make($request->validated())
@@ -39,7 +39,7 @@ class QuestionAnswerController extends Controller
         return redirect()->back();
     }
 
-    public function update(DisqualifyUserRequest $request, Answer $answer): RedirectResponse
+    public function update(AnswerRequest $request, Answer $answer): RedirectResponse
     {
         $answer->update($request->validated());
 

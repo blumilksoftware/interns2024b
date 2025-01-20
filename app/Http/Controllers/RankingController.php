@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\DisqualifyUserAction;
 use App\Actions\PublishQuizRankingAction;
+use App\Actions\UndisqualifyUserAction;
 use App\Actions\UnpublishQuizRankingAction;
 use App\Http\Requests\DisqualifyUserRequest;
 use App\Http\Resources\QuizResource;
@@ -31,7 +33,7 @@ class RankingController extends Controller
             ->whereNotNull("locked_at")
             ->get();
 
-        return Inertia::render("Admin/Ranking", [
+        return Inertia::rendeQuestior("Admin/Ranking", [
             "quiz" => QuizResource::make($quiz),
             "quizzes" => $quizzes,
             "rankings" => RankingResource::collection($userQuizzes),
@@ -71,7 +73,23 @@ class RankingController extends Controller
             ->with("status", "Ranking został wycofany.");
     }
 
-    public function disqualify(UserQuiz $userQuiz, DisqualifyUserRequest) {
+    public function disqualify(DisqualifyUserAction $action, UserQuiz $userQuiz, DisqualifyUserRequest $request) {
+        $this->authorize("disqualify", $userQuiz);
 
+        $action->execute($userQuiz,  $request->validated()["reason"], $request->validated()["sendEmail"]);
+
+        return redirect()
+            ->back()
+            ->with("status", "Użytkownik został zdyskwalifikowany.");
+    }
+
+    public function undisqualify(UndisqualifyUserAction $action, UserQuiz $userQuiz) {
+        $this->authorize("undisqualify", $userQuiz);
+
+        $action->execute($userQuiz);
+
+        return redirect()
+            ->back()
+            ->with("status", "Dyskwalifikacją użytkownika została cofnięta.");
     }
 }
