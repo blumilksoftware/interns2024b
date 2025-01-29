@@ -64,6 +64,8 @@ Route::group(["prefix" => "admin", "middleware" => ["auth", "role:admin|super_ad
 
     Route::post("/quizzes/{quiz}/ranking/publish", [RankingController::class, "publish"])->can("publish,quiz")->name("admin.quizzes.ranking.publish");
     Route::post("/quizzes/{quiz}/ranking/unpublish", [RankingController::class, "unpublish"])->can("publish,quiz")->name("admin.quizzes.ranking.unpublish");
+    Route::post("/quizzes/ranking/disqualify/{userQuiz}", [RankingController::class, "disqualify"])->name("admin.quizzes.ranking.disqualify");
+    Route::post("/quizzes/ranking/undisqualify/{userQuiz}", [RankingController::class, "undisqualify"])->name("admin.quizzes.ranking.undisqualify");
 
     Route::post("/quizzes/{quiz}/questions", [QuizQuestionController::class, "store"])->can("create," . Question::class . ",quiz")->name("admin.questions.store");
     Route::patch("/questions/{question}", [QuizQuestionController::class, "update"])->can("update,question")->name("admin.questions.update");

@@ -23,4 +23,14 @@ class UserQuizPolicy
     {
         return $user->id === $userQuiz->user_id && $userQuiz->isClosed;
     }
+
+    public function disqualify(User $user, UserQuiz $userQuiz): bool
+    {
+        return $userQuiz->disqualification()->doesntExist();
+    }
+
+    public function undisqualify(User $user, UserQuiz $userQuiz): bool
+    {
+        return $userQuiz->disqualification()->exists();
+    }
 }
