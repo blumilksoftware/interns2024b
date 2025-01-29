@@ -19,7 +19,7 @@
         "@vuepic/vue-datepicker": "^9.0.3",
         "@vueuse/core": "^11.1.0",
         "dayjs": "^1.11.13",
-        "laravel-vite-plugin": "^1.0.5",
+        "laravel-vite-plugin": "^1.2.0",
         "lodash": "^4.17.21",
         "nanoid": "^5.0.9",
         "query-string": "^9.1.1",
@@ -29,7 +29,7 @@
     "devDependencies": {
         "@blumilksoftware/eslint-config": "^2.0.0",
         "@typescript-eslint/eslint-plugin": "^8.7.0",
-        "@vitejs/plugin-vue": "^5.1.4",
+        "@vitejs/plugin-vue": "^5.2.1",
         "autoprefixer": "^10.4.20",
         "eslint": "^8.57.1",
         "eslint-config-prettier": "^9.1.0",
