@@ -201,21 +201,21 @@ class RankingTest extends TestCase
     public function testAdminCannotDisqualifyUserTestThatDoesNotExist(): void
     {
         $this->actingAs($this->admin)
-            ->get("/admin/quizzes/disqualify/123123")
+            ->post("/admin/quizzes/ranking/disqualify/123123")
             ->assertNotFound();
     }
 
     public function testAdminCannotUndisqualifyUserTestThatDoesNotExist(): void
     {
         $this->actingAs($this->admin)
-            ->get("/admin/quizzes/undisqualify/123123")
+            ->post("/admin/quizzes/ranking/undisqualify/123123")
             ->assertNotFound();
     }
 
     public function testAdminCannotUndisqualifyNotDisqualifiedUserTest(): void
     {
         $this->actingAs($this->admin)
-            ->get("/admin/quizzes/undisqualify/{$this->userQuiz->id}")
+            ->post("/admin/quizzes/ranking/undisqualify/{$this->userQuiz->id}")
             ->assertForbidden();
     }
 
@@ -227,7 +227,7 @@ class RankingTest extends TestCase
         $disqualification->save();
 
         $this->actingAs($this->admin)
-            ->get("/admin/quizzes/undisqualify/{$this->userQuiz->id}")
+            ->post("/admin/quizzes/ranking/undisqualify/{$this->userQuiz->id}")
             ->assertSessionHas("status", "Dyskwalifikacją użytkownika została cofnięta.");
 
         $this->quiz->refresh();
@@ -242,14 +242,14 @@ class RankingTest extends TestCase
         $disqualification->save();
 
         $this->actingAs($this->admin)
-            ->get("/admin/quizzes/disqualify/{$this->userQuiz->id}")
+            ->post("/admin/quizzes/ranking/disqualify/{$this->userQuiz->id}", ["reason" => "Disqualification", "sendEmail" => false])
             ->assertForbidden();
     }
 
     public function testAdminCanDisqualifyUserTest(): void
     {
         $this->actingAs($this->admin)
-            ->get("/admin/quizzes/disqualify/{$this->userQuiz->id}")
+            ->post("/admin/quizzes/ranking/disqualify/{$this->userQuiz->id}", ["reason" => "Disqualification", "sendEmail" => false])
             ->assertSessionHas("status", "Użytkownik został zdyskwalifikowany.");
 
         $this->quiz->refresh();
@@ -271,15 +271,11 @@ class RankingTest extends TestCase
             ->assertForbidden();
 
         $this->actingAs($this->user)
-            ->post("/admin/quizzes/{$this->quiz->id}/ranking/unpublish")
+            ->post("/admin/quizzes/ranking/disqualify/{$this->userQuiz->id}")
             ->assertForbidden();
 
         $this->actingAs($this->user)
-            ->post("/admin/quizzes/ranking/{$this->userQuiz}/unpublish")
-            ->assertForbidden();
-
-        $this->actingAs($this->user)
-            ->post("/admin/quizzes/ranking/{$this->userQuiz}/unpublish")
+            ->post("/admin/quizzes/ranking/undisqualify/{$this->userQuiz->id}")
             ->assertForbidden();
     }
 }

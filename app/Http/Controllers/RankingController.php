@@ -73,7 +73,7 @@ class RankingController extends Controller
             ->with("status", "Ranking został wycofany.");
     }
 
-    public function disqualify(DisqualifyUserAction $action, UserQuiz $userQuiz, DisqualifyUserRequest $request)
+    public function disqualify(DisqualifyUserAction $action, UserQuiz $userQuiz, DisqualifyUserRequest $request): RedirectResponse
     {
         $this->authorize("disqualify", $userQuiz);
 
@@ -84,7 +84,7 @@ class RankingController extends Controller
             ->with("status", "Użytkownik został zdyskwalifikowany.");
     }
 
-    public function undisqualify(UndisqualifyUserAction $action, UserQuiz $userQuiz)
+    public function undisqualify(UndisqualifyUserAction $action, UserQuiz $userQuiz): RedirectResponse
     {
         $this->authorize("undisqualify", $userQuiz);
 
