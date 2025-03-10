@@ -8,21 +8,21 @@
         "php": "^8.3.4",
         "ext-pdo": "*",
         "guzzlehttp/guzzle": "^7.9.2",
-        "inertiajs/inertia-laravel": "^1.3.0",
+        "inertiajs/inertia-laravel": "^1.3.2",
         "laravel/framework": "^11.25.0",
-        "laravel/sanctum": "^4.0.3",
-        "laravel/tinker": "^2.10.0",
+        "laravel/sanctum": "^4.0.8",
+        "laravel/tinker": "^2.10.1",
         "saloonphp/pagination-plugin": "^2.2.0",
-        "spatie/laravel-permission": "^6.9"
+        "spatie/laravel-permission": "^6.16.0"
     },
     "require-dev": {
         "blumilksoftware/codestyle": "^v3.3.0",
-        "fakerphp/faker": "^1.23.1",
+        "fakerphp/faker": "^1.24.1",
         "mockery/mockery": "^1.6.12",
-        "nunomaduro/collision": "^8.4.0",
-        "larastan/larastan": "^3.0.2",
-        "phpunit/phpunit": "^11.3.6",
-        "spatie/laravel-ignition": "^2.8.0"
+        "nunomaduro/collision": "^8.6.1",
+        "larastan/larastan": "^3.1.0",
+        "phpunit/phpunit": "^11.5.12",
+        "spatie/laravel-ignition": "^2.9.1"
     },
     "autoload": {
         "psr-4": {
