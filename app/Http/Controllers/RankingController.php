@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Actions\DisqualifyUserAction;
 use App\Actions\PublishQuizRankingAction;
+use App\Actions\UndisqualifyUserAction;
 use App\Actions\UnpublishQuizRankingAction;
+use App\Http\Requests\DisqualifyUserRequest;
 use App\Http\Resources\QuizResource;
 use App\Http\Resources\RankingResource;
 use App\Models\Quiz;
@@ -68,5 +71,27 @@ class RankingController extends Controller
         return redirect()
             ->back()
             ->with("status", "Ranking został wycofany.");
+    }
+
+    public function disqualify(DisqualifyUserAction $action, UserQuiz $userQuiz, DisqualifyUserRequest $request): RedirectResponse
+    {
+        $this->authorize("disqualify", $userQuiz);
+
+        $action->execute($userQuiz, $request->validated()["reason"], $request->validated()["sendEmail"]);
+
+        return redirect()
+            ->back()
+            ->with("status", "Użytkownik został zdyskwalifikowany.");
+    }
+
+    public function undisqualify(UndisqualifyUserAction $action, UserQuiz $userQuiz): RedirectResponse
+    {
+        $this->authorize("undisqualify", $userQuiz);
+
+        $action->execute($userQuiz);
+
+        return redirect()
+            ->back()
+            ->with("status", "Dyskwalifikacją użytkownika została cofnięta.");
     }
 }

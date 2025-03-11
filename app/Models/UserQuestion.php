@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property int $id
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $isCorrect
  * @property UserQuiz $userQuiz
  * @property Question $question
+ * @property ?Disqualification $disqualification
  * @property ?Answer $answer
  */
 class UserQuestion extends Model
@@ -44,6 +46,11 @@ class UserQuestion extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class);
+    }
+
+    public function disqualifications(): HasOne
+    {
+        return $this->hasOne(Disqualification::class);
     }
 
     public function isClosed(): Attribute
